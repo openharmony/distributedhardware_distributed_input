@@ -2,7 +2,7 @@
 
 ## **简介**
 
-分布式输入提供了跨设备的输入外设控制能力，使一台设备可以使用另一台设备的输入外设（如鼠标，键盘，触摸板等）在本设备进行输入操作（如鼠标移动，键盘打字，触摸板滑动等），对端设备的外设输入事件在本机生效。  
+分布式输入提供了跨设备的输入外设控制能力，使一台设备可以使用另一台设备的输入外设（如鼠标，键盘，触摸板等）在本设备进行输入操作（如鼠标点击，键盘打字，触摸板滑动等），对端设备的外设输入事件在本机生效。  
 分布式输入不提供北向接口，由[多模输入子系统](https://gitee.com/openharmony/multimodalinput_input)提供[分布式输入业务接口](https://gitee.com/openharmony/interface_sdk-js/blob/master/api/@ohos.multimodalInput.inputDeviceCooperate.d.ts)供开发者调用分布式输入的能力。
 
 ### **概念说明**
