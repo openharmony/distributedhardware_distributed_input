@@ -65,6 +65,8 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "//base/security/access_token/interfaces/innerkits/token_setproc/include",
     "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
     "${distributedinput_path}/services/sink/sinkmanager/test/sinkmanagerunittest/mock/",
+    "${sevices_source_path}/inputinject/include",
+    "//foundation/distributedhardware/distributed_input/inputdevicehandler/include",
   ]
 
   sources = [
@@ -76,6 +78,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/src/distributed_input_sink_manager.cpp",
     "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_switch.cpp",
     "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_transport.cpp",
+    "//foundation/distributedhardware/distributed_input/services/transportbase/src/distributed_input_transport_base.cpp",
     "distributed_input_sinkmanager_test.cpp",
     "${common_path}/test/mock/session_mock.cpp",
     "${common_path}/test/mock/softbus_bus_center_mock.cpp",
@@ -96,6 +99,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004100",
+    "COMPILE_TEST_MODE"
   ]
 
   deps = [
@@ -119,6 +123,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "hitrace_native:hitrace_meter",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

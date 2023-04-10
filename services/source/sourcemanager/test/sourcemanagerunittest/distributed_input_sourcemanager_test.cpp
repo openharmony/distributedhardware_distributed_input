@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -238,6 +238,15 @@ HWTEST_F(DistributedInputSourceManagerTest, Init01, testing::ext::TestSize.Level
 
 HWTEST_F(DistributedInputSourceManagerTest, CheckRegisterParam_01, testing::ext::TestSize.Level1)
 {
+    sourceManager_->UnregisterDHFwkPublisher();
+
+    sourceManager_->startDScreenListener_ = nullptr;
+    sourceManager_->stopDScreenListener_ = nullptr;
+    sourceManager_->deviceOfflineListener_ = nullptr;
+    sourceManager_->UnregisterDHFwkPublisher();
+
+
+
     std::string devId = "";
     std::string dhId = "";
     std::string parameters = "";
@@ -2124,6 +2133,68 @@ HWTEST_F(DistributedInputSourceManagerTest, OnReceiveRelayStopTypeResult_02, tes
     std::vector<std::u16string> args;
     int32_t ret = sourceManager_->Dump(fd, args);
     EXPECT_EQ(ERR_DH_INPUT_HIDUMP_DUMP_PROCESS_FAIL, ret);
+}
+
+HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_01, testing::ext::TestSize.Level1)
+{
+    DistributedInputSourceManager::StopDScreenListener stopListener;
+
+    stopListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, "message_test");
+    std::string messages = "";
+    stopListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, messages);
+
+    std::string sinkDevId = "";
+    uint64_t sourceWinId = 0;
+    nlohmann::json jsonObj;
+    jsonObj[SINK_DEVICE_ID] = 100;
+    int32_t ret = stopListener.ParseMessage(jsonObj.dump(), sinkDevId, sourceWinId);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SINK_DEVICE_ID] = "asd4a65sd46as4da6s4d6asdasdafwebrb";
+    jsonObj[SOURCE_WINDOW_ID] = "source_window_id_test";
+    ret = stopListener.ParseMessage(jsonObj.dump(), sinkDevId, sourceWinId);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SOURCE_WINDOW_ID] = 100;
+    ret = stopListener.ParseMessage(jsonObj.dump(), sinkDevId, sourceWinId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_02, testing::ext::TestSize.Level1)
+{
+    DistributedInputSourceManager::StartDScreenListener startListener;
+
+    startListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, "message_test");
+    std::string message = (SCREEN_MSG_MAX + 1, 'a');
+    startListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, message);
+    std::string messages = "";
+    startListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, messages);
+
+    std::string sinkDevId = "";
+    SrcScreenInfo srcScreenInfo = {};
+    nlohmann::json jsonObj;
+    jsonObj[SINK_DEVICE_ID] = 100;
+    int32_t ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SINK_DEVICE_ID] = "asd4a65sd46as4da6s4d6asdasdafwebrb";
+    jsonObj[SOURCE_WINDOW_ID] = "source_window_id_test";
+    ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SOURCE_WINDOW_ID] = 100;
+    jsonPbj[SOURCE_WINDOW_WIDTH] = "source_window_width_test";
+    ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SOURCE_WINDOW_WIDTH] = 100;
+    jsonPbj[SOURCE_WINDOW_HEIGHT] = "source_window_height_test";
+    ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
+    EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
+
+    jsonObj[SOURCE_WINDOW_HEIGHT] = 100;
+    ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
