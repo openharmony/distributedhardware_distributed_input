@@ -2137,7 +2137,7 @@ HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_01, testing::ext::TestS
 {
     DistributedInputSourceManager::StopDScreenListener stopListener;
 
-    stopListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, "message_test");
+    stopListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, "msessage_test");
     std::string messages = "";
     stopListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, messages);
 
@@ -2162,7 +2162,7 @@ HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_02, testing::ext::TestS
 {
     DistributedInputSourceManager::StartDScreenListener startListener;
 
-    startListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, "message_test");
+    startListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, "msessage_test");
     std::string message(SCREEN_MSG_MAX + 1, 'a');
     startListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, message);
     std::string messages = "";
