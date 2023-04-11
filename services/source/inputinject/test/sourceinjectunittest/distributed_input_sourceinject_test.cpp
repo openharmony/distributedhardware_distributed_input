@@ -442,14 +442,14 @@ HWTEST_F(DistributedInputSourceInjectTest, openDevicesNode_001, testing::ext::Te
 
 HWTEST_F(DistributedInputSourceInjectTest, openDevicesNode_002, testing::ext::TestSize.Level1)
 {
-    std::string devId(DEV_ID_LENGTH_MAX + 1. 'a');
+    std::string devId(DEV_ID_LENGTH_MAX + 1, 'a');
     std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
     std::string parameters = "parameters_test";
     int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->openDevicesNode(devId, dhId, parameters);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL, ret);
 
     devId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::string dhIds(DEV_ID_LENGTH_MAX + 1. 'a');
+    std::string dhIds(DH_ID_LENGTH_MAX + 1. 'a');
     ret = DistributedInputInject::GetInstance().inputNodeManager_->openDevicesNode(devId, dhIds, parameters);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL, ret);
 

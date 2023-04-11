@@ -65,7 +65,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "//base/security/access_token/interfaces/innerkits/token_setproc/include",
     "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
     "${distributedinput_path}/services/sink/sinkmanager/test/sinkmanagerunittest/mock/",
-    "${sevices_source_path}/inputinject/include",
+    "${services_source_path}/inputinject/include",
     "//foundation/distributedhardware/distributed_input/inputdevicehandler/include",
   ]
 
@@ -112,7 +112,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "//foundation/window/window_manager/dm:libdm",
     "//foundation/distributedhardware/distributed_input/services/sink/transport:libdinput_sink_trans",
-    "//foundation/distributedhardware/distributed_input/services/transportbase:libdinput_trans_base",
     "//base/security/access_token/interfaces/innerkits/accesstoken:libaccesstoken_sdk",
     "//base/security/access_token/interfaces/innerkits/nativetoken:libnativetoken",
     "//base/security/access_token/interfaces/innerkits/token_setproc:libtoken_setproc",

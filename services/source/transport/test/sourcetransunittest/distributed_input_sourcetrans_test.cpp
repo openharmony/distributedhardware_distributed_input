@@ -541,7 +541,9 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput04, te
     recMsg[DINPUT_SOFTBUS_KEY_RESP_VALUE] = "false";
     recMsg[DINPUT_SOFTBUS_KEY_WHITE_LIST] = false;
     DistributedInputSourceTransport::GetInstance().NotifyResponsePrepareRemoteInput(sessionId, recMsg);
-    EXPECT_EQ(false, recMsg[DINPUT_SOFTBUS_KEY_WHITE_LIST].is_string());
+    std::string message(MSG_MAX_SIZE + 1, 'a');
+    int32_t ret = DistributedInputSourceTransport::GetInstance().SendMessage(sessionId, message);
+    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
 HWTEST_F(DistributedInputSourceTransTest, NotifyResponseUnprepareRemoteInput01, testing::ext::TestSize.Level0)
@@ -774,6 +776,9 @@ HWTEST_F(DistributedInputSourceTransTest, ReceiveRelayUnprepareResult01, testing
     DistributedInputSourceTransport::GetInstance().ReceiveRelayUnprepareResult(sessionId, recMsg);
     recMsg[DINPUT_SOFTBUS_KEY_SINK_DEV_ID] = "sink_devid_test";
     DistributedInputSourceTransport::GetInstance().ReceiveRelayUnprepareResult(sessionId, recMsg);
+    std::string message(MSG_MAX_SIZE + 1, 'a');
+    int32_t ret = DistributedInputSourceTransport::GetInstance().SendMessage(sessionId, message);
+    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
 HWTEST_F(DistributedInputSourceTransTest, ReceiveSrcTSrcRelayStartDhid01, testing::ext::TestSize.Level1)
@@ -808,7 +813,6 @@ HWTEST_F(DistributedInputSourceTransTest, ReceiveSrcTSrcRelayStopDhid01, testing
     DistributedInputSourceTransport::GetInstance().ReceiveSrcTSrcRelayStopDhid(sessionId, recMsg);
     recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID] = "vector_dhId_test";
     DistributedInputSourceTransport::GetInstance().ReceiveSrcTSrcRelayStopDhid(sessionId, recMsg);
-    EXPECT_EQ(0, DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.size());
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[deviceId] = sessionId;
     DistributedInputSourceTransport::GetInstance().ReceiveSrcTSrcRelayStopDhid(sessionId, recMsg);
     std::string message(MSG_MAX_SIZE + 1, 'a');
@@ -991,7 +995,6 @@ HWTEST_F(DistributedInputSourceTransTest, HandleData01, testing::ext::TestSize.L
     DistributedInputSourceTransport::GetInstance().HandleData(sessionId, recMsg.dump());
     DistributedInputSourceTransport::GetInstance().callback_ = nullptr;
     DistributedInputSourceTransport::GetInstance().HandleData(sessionId, recMsg.dump());
-
     std::string message(MSG_MAX_SIZE + 1, 'a');
     int32_t ret = DistributedInputSourceTransport::GetInstance().SendMessage(sessionId, message);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);

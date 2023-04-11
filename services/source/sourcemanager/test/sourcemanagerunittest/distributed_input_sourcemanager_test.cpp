@@ -245,8 +245,6 @@ HWTEST_F(DistributedInputSourceManagerTest, CheckRegisterParam_01, testing::ext:
     sourceManager_->deviceOfflineListener_ = nullptr;
     sourceManager_->UnregisterDHFwkPublisher();
 
-
-
     std::string devId = "";
     std::string dhId = "";
     std::string parameters = "";
@@ -2165,7 +2163,7 @@ HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_02, testing::ext::TestS
     DistributedInputSourceManager::StartDScreenListener startListener;
 
     startListener.OnMessage(DHTopic::TOPIC_STOP_DSCREEN, "message_test");
-    std::string message = (SCREEN_MSG_MAX + 1, 'a');
+    std::string message(SCREEN_MSG_MAX + 1, 'a');
     startListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, message);
     std::string messages = "";
     startListener.OnMessage(DHTopic::TOPIC_START_DSCREEN, messages);
@@ -2183,12 +2181,12 @@ HWTEST_F(DistributedInputSourceManagerTest, ParseMessage_02, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
 
     jsonObj[SOURCE_WINDOW_ID] = 100;
-    jsonPbj[SOURCE_WINDOW_WIDTH] = "source_window_width_test";
+    jsonObj[SOURCE_WINDOW_WIDTH] = "source_window_width_test";
     ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
     EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
 
     jsonObj[SOURCE_WINDOW_WIDTH] = 100;
-    jsonPbj[SOURCE_WINDOW_HEIGHT] = "source_window_height_test";
+    jsonObj[SOURCE_WINDOW_HEIGHT] = "source_window_height_test";
     ret = startListener.ParseMessage(jsonObj.dump(), sinkDevId, srcScreenInfo);
     EXPECT_EQ(ERR_DH_INPUT_JSON_PARSE_FAIL, ret);
 
