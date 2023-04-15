@@ -105,7 +105,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${distributedinput_path}services/sink/transport:libdinput_sink_trans",
+    "${distributedinput_path}/services/sink/transport:libdinput_sink_trans",
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
