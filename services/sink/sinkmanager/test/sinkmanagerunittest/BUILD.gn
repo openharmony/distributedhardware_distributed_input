@@ -14,6 +14,7 @@
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+
 module_out_path = "distributed_input/sink_manager"
 
 group("sinkmanagerunittest") {
@@ -31,10 +32,10 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${innerkits_path}/src",
     "${ipc_path}/include",
     "${ipc_path}/src",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/include",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/include",
-    "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/include",
-    "//foundation/distributedhardware/distributed_input/frameworks/include",
+    "${distributedinput_path}/services/transportbase/include",
+    "${distributedinput_path}/services/sink/transport/include",
+    "${distributedinput_path}/services/sink/sinkmanager/include",
+    "${distributedinput_path}/frameworks/include",
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
     "${common_path}/include",
@@ -65,23 +66,26 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "//base/security/access_token/interfaces/innerkits/token_setproc/include",
     "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
     "${distributedinput_path}/services/sink/sinkmanager/test/sinkmanagerunittest/mock/",
+    "${services_source_path}/inputinject/include",
+    "${distributedinput_path}/inputdevicehandler/include",
   ]
 
   sources = [
     "${common_path}/include/input_hub.cpp",
     "${common_path}/include/white_list_util.cpp",
-    "${ipc_path}/src/distributed_input_sink_stub.cpp",
-    "${services_sink_path}/inputcollector/src/distributed_input_collector.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/src/distributed_input_sink_event_handler.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/src/distributed_input_sink_manager.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_switch.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_transport.cpp",
-    "distributed_input_sinkmanager_test.cpp",
     "${common_path}/test/mock/session_mock.cpp",
     "${common_path}/test/mock/softbus_bus_center_mock.cpp",
+    "${distributedinput_path}/services/sink/sinkmanager/src/distributed_input_sink_event_handler.cpp",
+    "${distributedinput_path}/services/sink/sinkmanager/src/distributed_input_sink_manager.cpp",
+    "${distributedinput_path}/services/sink/sinkmanager/test/sinkmanagerunittest/mock/mock_process.cpp",
+    "${distributedinput_path}/services/sink/transport/src/distributed_input_sink_switch.cpp",
+    "${distributedinput_path}/services/sink/transport/src/distributed_input_sink_transport.cpp",
+    "${distributedinput_path}/services/transportbase/src/distributed_input_transport_base.cpp",
+    "${ipc_path}/src/distributed_input_sink_stub.cpp",
     "${ipc_path}/src/get_sink_screen_infos_call_back_stub.cpp",
     "${ipc_path}/src/sharing_dhid_listener_stub.cpp",
-    "${distributedinput_path}/services/sink/sinkmanager/test/sinkmanagerunittest/mock/mock_process.cpp",
+    "${services_sink_path}/inputcollector/src/distributed_input_collector.cpp",
+    "distributed_input_sinkmanager_test.cpp",
   ]
 
   cflags = [
@@ -96,26 +100,27 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004100",
+    "COMPILE_TEST_MODE",
   ]
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/sink/transport:libdinput_sink_trans",
+    "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
+    "${window_manager_path}/dm:libdm",
     "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_static",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "//foundation/window/window_manager/dm:libdm",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport:libdinput_sink_trans",
-    "//foundation/distributedhardware/distributed_input/services/transportbase:libdinput_trans_base",
     "//base/security/access_token/interfaces/innerkits/accesstoken:libaccesstoken_sdk",
     "//base/security/access_token/interfaces/innerkits/nativetoken:libnativetoken",
     "//base/security/access_token/interfaces/innerkits/token_setproc:libtoken_setproc",
+    "//third_party/libevdev:libevdev",
+    "//third_party/openssl:libcrypto_static",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "hitrace_native:hitrace_meter",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
