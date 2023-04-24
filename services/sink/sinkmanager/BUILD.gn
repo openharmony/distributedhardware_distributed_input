@@ -23,8 +23,6 @@ ohos_shared_library("libdinput_sink") {
     "${innerkits_path}/src",
     "${ipc_path}/include",
     "${ipc_path}/src",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
@@ -38,17 +36,6 @@ ohos_shared_library("libdinput_sink") {
     "${utils_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
-    "//foundation/window/window_manager/interfaces/innerkits/dm",
-    "//foundation/window/window_manager/utils/include/",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
-    "//third_party/libevdev/libevdev/"
   ]
 
   sources = [
@@ -66,22 +53,24 @@ ohos_shared_library("libdinput_sink") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_utils_path}:distributedhardwareutils",
-    "${utils_path}:libdinput_utils",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "//foundation/distributedhardware/distributed_input/interfaces/inner_kits:libdinput_sdk",
-    "//foundation/distributedhardware/distributed_input/services/sink/inputcollector:libdinput_collector",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport:libdinput_sink_trans",
     "${fwk_interfaces_path}:libdhfwk_sdk",
-    "//foundation/window/window_manager/dm:libdm",
+    "${fwk_utils_path}:distributedhardwareutils",
+    "${innerkits_path}:libdinput_sdk",
+    "${services_sink_path}/inputcollector:libdinput_collector",
+    "${services_sink_path}/transport:libdinput_sink_trans",
+    "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "graphic_standard:surface",
+    "hisysevent_native:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "window_manager:libdm",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,8 +19,6 @@ ohos_shared_library("libdinput_collector") {
   include_dirs = [
     "include",
     "${common_path}/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
@@ -28,12 +26,8 @@ ohos_shared_library("libdinput_collector") {
     "${fwk_utils_path}/include",
     "${utils_path}/include",
     "//third_party/json/include",
-    "//third_party/libevdev/libevdev/",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
-    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
   ]
 
   sources = [
@@ -50,13 +44,17 @@ ohos_shared_library("libdinput_collector") {
   deps = [
     "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "//third_party/openssl:libcrypto_static",
     "//third_party/libevdev:libevdev",
+    "//third_party/openssl:libcrypto_static",
+    "//third_party/openssl:libcrypto_static",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

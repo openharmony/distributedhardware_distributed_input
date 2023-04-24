@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+
 module_out_path = "distributed_input/trans_base"
 
 group("transbaseunittest") {
@@ -27,11 +28,9 @@ ohos_unittest("distributed_input_transbase_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "//foundation/distributedhardware/distributed_input/services/source/transport/include",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/include",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
+    "${distributedinput_path}/services/source/transport/include",
+    "${distributedinput_path}/services/sink/transport/include",
+    "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_common_path}/log/include",
@@ -44,21 +43,18 @@ ohos_unittest("distributed_input_transbase_test") {
     "${utils_path}/include",
     "${frameworks_path}/include",
     "//third_party/json/include",
-    "//third_party/libevdev/libevdev/",
     "${distributedinput_path}/inputdevicehandler/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
-    "//base/notification/eventhandler/interfaces/inner_api",
     "${common_path}/test/mock",
   ]
 
   sources = [
-    "//foundation/distributedhardware/distributed_input/services/source/transport/src/distributed_input_source_transport.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_transport.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_switch.cpp",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/src/distributed_input_transport_base.cpp",
-    "distributed_input_transbase_test.cpp",
     "${common_path}/test/mock/session_mock.cpp",
     "${common_path}/test/mock/softbus_bus_center_mock.cpp",
+    "${distributedinput_path}/services/transportbase/src/distributed_input_transport_base.cpp",
+    "${services_sink_path}/transport/src/distributed_input_sink_switch.cpp",
+    "${services_sink_path}/transport/src/distributed_input_sink_transport.cpp",
+    "${services_source_path}/transport/src/distributed_input_source_transport.cpp",
+    "distributed_input_transbase_test.cpp",
   ]
 
   cflags = [
@@ -73,21 +69,21 @@ ohos_unittest("distributed_input_transbase_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004100",
-    "COMPILE_TEST_MODE"
+    "COMPILE_TEST_MODE",
   ]
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "//foundation/distributedhardware/distributed_input/services/source/inputinject:libdinput_inject",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "eventhandler:libeventhandler",
     "hitrace_native:hitrace_meter",
   ]
 

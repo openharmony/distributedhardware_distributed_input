@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,15 +21,12 @@ import(
 ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
   module_out_path = "distributed_input/system"
 
-  fuzz_config_file = "//foundation/distributedhardware/distributed_input/test/fuzztest/distributedinputsourcetransport_fuzzer"
+  fuzz_config_file = "${distributedinput_path}/test/fuzztest/distributedinputsourcetransport_fuzzer"
 
   include_dirs = [
-    "//foundation/distributedhardware/distributed_input/services/source/transport/include",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
+    "${services_source_path}/transport/include",
+    "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
-    "//commonlibrary/c_utils/base/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/include",
@@ -39,14 +36,10 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
     "${services_source_path}/inputinject/include",
     "${services_source_path}/transport/include",
     "//third_party/json/include",
-    "//third_party/libevdev/libevdev/",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "${frameworks_path}/include",
     "${distributedinput_path}/inputdevicehandler/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk",
   ]
 
   cflags = [
@@ -57,25 +50,27 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
   ]
 
   sources = [
-    "//foundation/distributedhardware/distributed_input/services/source/transport/src/distributed_input_source_transport.cpp",
+    "${services_source_path}/transport/src/distributed_input_source_transport.cpp",
     "distributed_input_source_transport_fuzzer.cpp",
   ]
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "//foundation/distributedhardware/distributed_input/services/source/inputinject:libdinput_inject",
     "//third_party/libevdev:libevdev",
-    "//foundation/distributedhardware/distributed_input/services/transportbase:libdinput_trans_base",
   ]
 
   external_deps = [
     "c_utils:utils",
     "dsoftbus:softbus_client",
+    "eventhandler:libeventhandler",
     "hitrace_native:hitrace_meter",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
   ]
 
   defines = [

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+
 module_out_path = "distributed_input/ipc"
 
 group("ipcunittest") {
@@ -40,30 +41,24 @@ ohos_unittest("distributed_input_ipc_test") {
     "${ipc_path}/include",
     "${ipc_path}/src",
     "${utils_path}/include",
-    "//commonlibrary/c_utils/base/include",
     "//third_party/json/include",
-    "//utils/system/safwk/native/include",
-    "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk",
-    "//foundation/communication/dsoftbus/interfaces/kits/bus_center",
-    "//foundation/communication/dsoftbus/interfaces/kits/common",
   ]
 
   sources = [
-    "distributed_input_ipc_test.cpp",
-    "${common_path}/include/white_list_util.cpp",
     "${common_path}/include/input_check_param.cpp",
+    "${common_path}/include/white_list_util.cpp",
     "${ipc_path}/src/add_white_list_infos_call_back_proxy.cpp",
     "${ipc_path}/src/add_white_list_infos_call_back_stub.cpp",
     "${ipc_path}/src/del_white_list_infos_call_back_proxy.cpp",
     "${ipc_path}/src/del_white_list_infos_call_back_stub.cpp",
-    "${ipc_path}/src/get_sink_screen_infos_call_back_proxy.cpp",
-    "${ipc_path}/src/get_sink_screen_infos_call_back_stub.cpp",
     "${ipc_path}/src/dinput_sa_manager.cpp",
     "${ipc_path}/src/distributed_input_client.cpp",
     "${ipc_path}/src/distributed_input_sink_proxy.cpp",
     "${ipc_path}/src/distributed_input_sink_stub.cpp",
     "${ipc_path}/src/distributed_input_source_proxy.cpp",
     "${ipc_path}/src/distributed_input_source_stub.cpp",
+    "${ipc_path}/src/get_sink_screen_infos_call_back_proxy.cpp",
+    "${ipc_path}/src/get_sink_screen_infos_call_back_stub.cpp",
     "${ipc_path}/src/input_node_listener_proxy.cpp",
     "${ipc_path}/src/input_node_listener_stub.cpp",
     "${ipc_path}/src/prepare_d_input_call_back_proxy.cpp",
@@ -86,6 +81,7 @@ ohos_unittest("distributed_input_ipc_test") {
     "${ipc_path}/src/unprepare_d_input_call_back_stub.cpp",
     "${ipc_path}/src/unregister_d_input_call_back_proxy.cpp",
     "${ipc_path}/src/unregister_d_input_call_back_stub.cpp",
+    "distributed_input_ipc_test.cpp",
   ]
 
   cflags = [
@@ -107,12 +103,14 @@ ohos_unittest("distributed_input_ipc_test") {
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "dsoftbus:softbus_client",
+    "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 
