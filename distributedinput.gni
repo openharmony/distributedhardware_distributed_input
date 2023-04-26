@@ -16,8 +16,6 @@ distributedinput_path = "//foundation/distributedhardware/distributed_input"
 distributedhardwarefwk_path =
     "//foundation/distributedhardware/distributed_hardware_fwk"
 
-window_manager_path = "//foundation/window/window_manager"
-
 common_path = "${distributedinput_path}/common"
 
 utils_path = "${distributedinput_path}/utils"
