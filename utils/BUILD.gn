@@ -29,10 +29,7 @@ ohos_shared_library("libdinput_utils") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${dfx_utils_path}/include",
-    "//commonlibrary/c_utils/base/include",
     "${frameworks_path}/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
   ]
 
   sources = [
@@ -48,16 +45,18 @@ ohos_shared_library("libdinput_utils") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "${fwk_interfaces_path}:libdhfwk_sdk",
+    "${fwk_utils_path}:distributedhardwareutils",
     "//third_party/openssl:libcrypto_static",
   ]
 
   external_deps = [
-    "dsoftbus:softbus_client",
-    "samgr:samgr_proxy",
     "c_utils:utils",
+    "dsoftbus:softbus_client",
+    "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "samgr:samgr_proxy",
   ]
 
   subsystem_name = "distributedhardware"

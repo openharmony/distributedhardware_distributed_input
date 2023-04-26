@@ -14,6 +14,7 @@
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+
 module_out_path = "distributed_input/sink_trans"
 
 group("sinktransunittest") {
@@ -27,10 +28,8 @@ ohos_unittest("distributed_input_sinktrans_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/include",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
+    "${services_sink_path}/transport/include",
+    "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
@@ -40,40 +39,28 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "${fwk_utils_path}/include",
     "${service_common}/include",
     "//third_party/json/include",
-    "//third_party/libevdev/libevdev/",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "${common_path}/test/mock",
-    "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/include",
+    "${services_sink_path}/sinkmanager/include",
     "${fwk_interfaces_path}/include/ipc",
-    "//foundation/window/window_manager/interfaces/innerkits/dm",
-    "//foundation/window/window_manager/utils/include/",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",
     "${ipc_path}/src",
     "${services_sink_path}/inputcollector/include",
     "${services_source_path}/inputinject/include",
-    "//foundation/distributedhardware/distributed_input/inputdevicehandler/include",
+    "${distributedinput_path}/inputdevicehandler/include",
   ]
 
   sources = [
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_switch.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/src/distributed_input_sink_transport.cpp",
-    "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/src/distributed_input_sink_manager.cpp",
-    "//foundation/distributedhardware/distributed_input/services/transportbase/src/distributed_input_transport_base.cpp",
-    "distributed_input_sinktrans_test.cpp",
     "${common_path}/test/mock/session_mock.cpp",
     "${common_path}/test/mock/softbus_bus_center_mock.cpp",
+    "${distributedinput_path}/services/transportbase/src/distributed_input_transport_base.cpp",
+    "${services_sink_path}/sinkmanager/src/distributed_input_sink_manager.cpp",
+    "${services_sink_path}/transport/src/distributed_input_sink_switch.cpp",
+    "${services_sink_path}/transport/src/distributed_input_sink_transport.cpp",
+    "distributed_input_sinktrans_test.cpp",
   ]
 
   cflags = [
@@ -88,27 +75,29 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004100",
-    "COMPILE_TEST_MODE"
+    "COMPILE_TEST_MODE",
   ]
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${fwk_interfaces_path}:libdhfwk_sdk",
     "${fwk_utils_path}:distributedhardwareutils",
-    "${utils_path}:libdinput_utils",
-    "//base/notification/eventhandler/frameworks/eventhandler:libeventhandler",
-    "${services_sink_path}/sinkmanager:libdinput_sink",
     "${services_sink_path}/inputcollector:libdinput_collector",
-    "//foundation/window/window_manager/dm:libdm",
+    "${services_sink_path}/sinkmanager:libdinput_sink",
+    "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "eventhandler:libeventhandler",
+    "graphic_standard:surface",
+    "hisysevent_native:libhisysevent",
+    "hitrace_native:hitrace_meter",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
-    "hitrace_native:hitrace_meter",
     "samgr:samgr_proxy",
+    "window_manager:libdm",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

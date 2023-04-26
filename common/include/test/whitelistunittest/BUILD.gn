@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+# Copyright (c) 2021-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+
 module_out_path = "distributed_input/white_list_test"
 
 group("whitelistunittest") {
@@ -28,13 +29,9 @@ ohos_unittest("distributed_input_white_list_test") {
 
   include_dirs = [
     "${innerkits_path}/include",
-    "${innerkits_path}/src",
     "${ipc_path}/include",
-    "${ipc_path}/src",
-    "//foundation/distributedhardware/distributed_input/services/sink/transport/include",
-    "//foundation/distributedhardware/distributed_input/frameworks/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
+    "${services_sink_path}/transport/include",
+    "${frameworks_path}/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
@@ -42,10 +39,7 @@ ohos_unittest("distributed_input_white_list_test") {
     "${fwk_utils_path}/include",
     "${service_common}/include",
     "//third_party/json/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/transport",
     "${utils_path}/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//base/notification/eventhandler/interfaces/inner_api",
   ]
 
   sources = [
@@ -70,6 +64,13 @@ ohos_unittest("distributed_input_white_list_test") {
   deps = [
     "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "dsoftbus:softbus_client",
+    "eventhandler:libeventhandler",
+    "ipc:ipc_core",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
