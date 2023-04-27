@@ -40,8 +40,11 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
         case IStartStopResultCallback::Message::RESULT_START: {
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
-
             uint32_t size = data.ReadUint32();
+            if (size > IPC_VECTOR_MAX_SIZE) {
+                DHLOGI("OnRemoteRequest start data size too large.");
+                return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
+            }
             std::vector<std::string> dhIds;
             for (uint32_t i = 0; i < size; i++) {
                 std::string dhId = data.ReadString();
@@ -55,6 +58,10 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
             uint32_t size = data.ReadUint32();
+            if (size > IPC_VECTOR_MAX_SIZE) {
+                DHLOGI("OnRemoteRequest stop data size too large.");
+                return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
+            }
             std::vector<std::string> dhIds;
             for (uint32_t i = 0; i < size; i++) {
                 std::string dhId = data.ReadString();
