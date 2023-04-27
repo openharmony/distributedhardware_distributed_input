@@ -99,6 +99,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "graphic_standard:surface",

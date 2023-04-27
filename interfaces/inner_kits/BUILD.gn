@@ -90,6 +90,7 @@ ohos_shared_library("libdinput_sdk") {
 
   external_deps = [
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",

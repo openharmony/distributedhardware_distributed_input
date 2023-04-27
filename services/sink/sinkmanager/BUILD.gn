@@ -64,6 +64,7 @@ ohos_shared_library("libdinput_sink") {
 
   external_deps = [
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "eventhandler:libeventhandler",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",
