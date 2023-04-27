@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,6 +21,7 @@
 #include <sstream>
 
 #include "anonymous_string.h"
+#include "config_policy_utils.h"
 
 #include "dinput_errcode.h"
 #include "dinput_log.h"
@@ -30,8 +31,9 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
-    const char* const SPLIT_LINE = "|";
-    const char* const SPLIT_COMMA = ",";
+    const char * const SPLIT_LINE = "|";
+    const char * const SPLIT_COMMA = ",";
+    const char * const WHITELIST_FILE_PATH = "etc/distributedhardware/dinput_business_event_whitelist.cfg";
     const int32_t COMB_KEY_VEC_MIN_LEN = 2;
     const int32_t LAST_KEY_ACTION_LEN = 1;
     const int32_t LAST_KEY_LEN = 1;
@@ -61,7 +63,8 @@ WhiteListUtil &WhiteListUtil::GetInstance(void)
 
 int32_t WhiteListUtil::Init()
 {
-    const char* const whiteListFilePath = "/vendor/etc/distributedhardware/dinput_business_event_whitelist.cfg";
+    char buf[MAX_PATH_LEN] = {0};
+    char *whiteListFilePath = GetOneCfgFile(WHITELIST_FILE_PATH, buf, MAX_PATH_LEN);
     std::ifstream inFile(whiteListFilePath, std::ios::in | std::ios::binary);
     if (!inFile.is_open()) {
         DHLOGE("WhiteListUtil Init error, file open fail path=%s", whiteListFilePath);
@@ -78,7 +81,6 @@ int32_t WhiteListUtil::Init()
             DHLOGE("whitelist cfg file has too many lines or too complicated. lineNum is %d", lineNum);
             break;
         }
-        DHLOGI("read whitelist cfg, line=%s", line.c_str());
         vecKeyCode.clear();
         vecCombinationKey.clear();
 
@@ -108,7 +110,6 @@ int32_t WhiteListUtil::Init()
         }
     }
     inFile.close();
-
     std::string localNetworkId = GetLocalDeviceInfo().networkId;
     if (!localNetworkId.empty()) {
         SyncWhiteList(localNetworkId, vecWhiteList);

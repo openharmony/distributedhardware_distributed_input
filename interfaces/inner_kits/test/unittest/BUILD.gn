@@ -103,6 +103,7 @@ ohos_unittest("distributed_input_inner_test") {
 
   external_deps = [
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
   ]

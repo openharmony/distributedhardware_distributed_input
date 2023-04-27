@@ -99,6 +99,7 @@ ohos_shared_library("libdinput_source") {
 
   external_deps = [
     "c_utils:utils",
+    "config_policy:configpolicy_util",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
