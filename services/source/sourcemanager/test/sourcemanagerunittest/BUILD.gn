@@ -43,7 +43,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${fwk_utils_path}/include",
     "${service_common}/include",
     "//third_party/json/include",
-    "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp/include",
     "${services_source_path}/inputinject/include",
     "${services_source_path}/transport/include",
     "${dfx_utils_path}/include",
