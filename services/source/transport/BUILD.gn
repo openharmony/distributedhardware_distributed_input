@@ -26,7 +26,6 @@ ohos_shared_library("libdinput_source_trans") {
     "${fwk_utils_path}/include",
     "//third_party/json/include",
     "${service_common}/include",
-    "//foundation/distributedhardware/device_manager/interfaces/inner_kits/native_cpp/include",
     "${services_source_path}/inputinject/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
