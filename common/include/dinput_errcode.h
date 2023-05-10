@@ -44,6 +44,7 @@ namespace DistributedInput {
     // whilte list error code
     constexpr int32_t ERR_DH_INPUT_WHILTELIST_INIT_FAIL = -61001;
     constexpr int32_t ERR_DH_INPUT_WHILTELIST_GET_WHILTELIST_FAIL = -61002;
+    constexpr int32_t ERR_DH_INPUT_WHILTELIST_FILE_PATH_IS_NULL = -61003;
 
     // handler error code
     constexpr int32_t ERR_DH_INPUT_HANDLER_GET_DEVICE_ID_FAIL = -63000;
