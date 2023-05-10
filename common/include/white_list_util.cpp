@@ -65,6 +65,10 @@ int32_t WhiteListUtil::Init()
 {
     char buf[MAX_PATH_LEN] = {0};
     char *whiteListFilePath = GetOneCfgFile(WHITELIST_FILE_PATH, buf, MAX_PATH_LEN);
+    if (whiteListFilePath == nullptr) {
+        DHLOGE("WhiteListFilePath is null!");
+        return ERR_DH_INPUT_WHILTELIST_FILE_PATH_IS_NULL;
+    }
     std::ifstream inFile(whiteListFilePath, std::ios::in | std::ios::binary);
     if (!inFile.is_open()) {
         DHLOGE("WhiteListUtil Init error, file open fail path=%s", whiteListFilePath);
@@ -83,15 +87,7 @@ int32_t WhiteListUtil::Init()
         }
         vecKeyCode.clear();
         vecCombinationKey.clear();
-
-        std::size_t pos1 = line.find(SPLIT_COMMA);
-        while (pos1 != std::string::npos) {
-            std::string column = line.substr(0, pos1);
-            line = line.substr(pos1 + 1, line.size());
-            pos1 = line.find(SPLIT_COMMA);
-            vecKeyCode.clear();
-            ReadLineDataStepOne(column, vecKeyCode, vecCombinationKey);
-        }
+        SplitCombinationKey(line, vecKeyCode, vecCombinationKey);
 
         if (CheckIsNumber(line)) {
             int32_t keyCode = std::stoi(line);
@@ -176,6 +172,19 @@ void WhiteListUtil::ReadLineDataStepOne(std::string &column, TYPE_KEY_CODE_VEC &
     if (!vecKeyCode.empty()) {
         vecCombinationKey.push_back(vecKeyCode);
         vecKeyCode.clear();
+    }
+}
+
+void WhiteListUtil::SplitCombinationKey(std::string &line, TYPE_KEY_CODE_VEC &vecKeyCode,
+    TYPE_COMBINATION_KEY_VEC &vecCombinationKey) const
+{
+    std::size_t pos1 = line.find(SPLIT_COMMA);
+    while (pos1 != std::string::npos) {
+        std::string column = line.substr(0, pos1);
+        line = line.substr(pos1 + 1, line.size());
+        pos1 = line.find(SPLIT_COMMA);
+        vecKeyCode.clear();
+        ReadLineDataStepOne(column, vecKeyCode, vecCombinationKey);
     }
 }
 

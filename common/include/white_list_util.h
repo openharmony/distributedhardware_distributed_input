@@ -70,6 +70,8 @@ private:
     std::string GetBusinessEventHash(const BusinessEvent &event);
     bool IsValidLine(const std::string &line) const;
     bool CheckIsNumber(const std::string &str) const;
+    void SplitCombinationKey(std::string &line, TYPE_KEY_CODE_VEC &vecKeyCode,
+        TYPE_COMBINATION_KEY_VEC &vecCombinationKey) const;
 private:
     TYPE_DEVICE_WHITE_LIST_MAP mapDeviceWhiteList_;
     std::map<std::string, std::unordered_set<std::string>> combKeysHashMap_;
