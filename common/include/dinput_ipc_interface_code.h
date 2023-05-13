@@ -74,7 +74,7 @@ enum class IGetSinkScreenInfosCBInterfaceCode : uint32_t {
 
 /* SAID: 4810 */
 enum class InputNodeListenerInterfaceCode : uint32_t {
-    RESULT_ON = 0, 
+    RESULT_ON = 0,
     RESULT_OFF = 1
 };
 
