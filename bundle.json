@@ -1,9 +1,9 @@
 {
     "name":"@ohos/distributed_input",
     "description":"distributed hardware input",
-    "version":"3.1",
+    "version":"3.2",
     "author":{},
-    "repository":"https://gitee.com/openharmony/distributed_input",
+    "repository":"https://gitee.com/openharmony/distributedhardware_distributed_input",
     "license":"Apache License 2.0",
     "publishAs":"code-segment",
     "segment":{
@@ -21,8 +21,8 @@
         "adapted_system_type":[
             "standard"
         ],
-        "rom":"2000KB",
-        "ram":"6MB",
+        "rom":"16384KB",
+        "ram":"15360KB",
         "hisysevent_config": [
             "//foundation/distributedhardware/distributed_input/hisysevent.yaml"
         ],
