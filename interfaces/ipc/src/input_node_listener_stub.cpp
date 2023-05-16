@@ -19,7 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h" 
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {

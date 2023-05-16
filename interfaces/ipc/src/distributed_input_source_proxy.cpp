@@ -263,7 +263,8 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string& srcId, 
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_START_FAIL;
-    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT), data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT), data,
+        reply);
     if (ret) {
         result = reply.ReadInt32();
     }

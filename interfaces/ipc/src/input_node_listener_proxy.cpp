@@ -62,7 +62,8 @@ void InputNodeListenerProxy::OnNodeOnLine(const std::string srcDevId, const std:
         DHLOGE("InputNodeListenerProxy write sinkNodeDesc failed");
         return;
     }
-    int32_t ret = remote->SendRequest(static_cast<uint32_t>(InputNodeListenerInterfaceCode::RESULT_ON), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(InputNodeListenerInterfaceCode::RESULT_ON), data, reply,
+        option);
     if (ret != 0) {
         return;
     }
