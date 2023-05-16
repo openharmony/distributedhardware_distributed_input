@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -39,9 +40,9 @@ int32_t StopDInputCallbackStub::OnRemoteRequest(
         DHLOGE("StopDInputCallbackStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    IStopDInputCallback::Message msgCode = static_cast<IStopDInputCallback::Message>(code);
+    IStopDInputCBInterfaceCode msgCode = static_cast<IStopDInputCBInterfaceCode>(code);
     switch (msgCode) {
-        case IStopDInputCallback::Message::RESULT: {
+        case IStopDInputCBInterfaceCode::RESULT: {
             std::string deviceId = data.ReadString();
             uint32_t inputTypes = data.ReadUint32();
             int32_t status = data.ReadInt32();

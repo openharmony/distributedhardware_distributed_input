@@ -15,6 +15,7 @@
 
 #include "del_white_list_infos_call_back_proxy.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "ipc_types.h"
 #include "parcel.h"
 
@@ -50,7 +51,7 @@ void DelWhiteListInfosCallbackProxy::OnResult(const std::string& deviceId)
         DHLOGE("DelWhiteListInfosCallbackProxy write deviceId failed");
         return;
     }
-    remote->SendRequest(static_cast<int32_t>(IDelWhiteListInfosCallback::Message::RESULT), data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDelWhiteListInfosCBInterfaceCode::RESULT), data, reply, option);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

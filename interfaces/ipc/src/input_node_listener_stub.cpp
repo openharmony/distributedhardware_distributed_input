@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h" 
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -35,9 +36,9 @@ int32_t InputNodeListenerStub::OnRemoteRequest(
         DHLOGE("InputNodeListenerStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    InputNodeListener::Message msgCode = static_cast<InputNodeListener::Message>(code);
+    InputNodeListenerInterfaceCode msgCode = static_cast<InputNodeListenerInterfaceCode>(code);
     switch (msgCode) {
-        case InputNodeListener::Message::RESULT_ON: {
+        case InputNodeListenerInterfaceCode::RESULT_ON: {
             std::string srcDevId = data.ReadString();
             std::string sinkDevId = data.ReadString();
             std::string sinkNodeId = data.ReadString();
@@ -45,7 +46,7 @@ int32_t InputNodeListenerStub::OnRemoteRequest(
             OnNodeOnLine(srcDevId, sinkDevId, sinkNodeId, sinkNodeDesc);
             break;
         }
-        case InputNodeListener::Message::RESULT_OFF: {
+        case InputNodeListenerInterfaceCode::RESULT_OFF: {
             std::string srcDevId = data.ReadString();
             std::string sinkDevId = data.ReadString();
             std::string sinkNodeId = data.ReadString();

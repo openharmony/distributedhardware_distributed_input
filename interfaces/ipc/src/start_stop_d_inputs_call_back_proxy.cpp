@@ -18,6 +18,7 @@
 #include "ipc_types.h"
 #include "parcel.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -52,7 +53,7 @@ void StartStopDInputsCallbackProxy::OnResultDhids(const std::string &devId, cons
         DHLOGE("StartStopDInputsCallbackProxy write status valid failed");
         return;
     }
-    int32_t ret = remote->SendRequest(static_cast<int32_t>(IStartStopDInputsCallback::Message::RESULT_STRING),
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(IStartStopDInputsCBInterfaceCode::RESULT_STRING),
                                       data, reply, option);
     if (ret != 0) {
         DHLOGE("OnResultDhids error, ret = %d", ret);

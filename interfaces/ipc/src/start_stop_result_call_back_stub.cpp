@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -35,9 +36,9 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
     if (descriptor != IStartStopResultCallback::GetDescriptor()) {
         return ERR_DH_INPUT_IPC_INVALID_DESCRIPTOR;
     }
-    IStartStopResultCallback::Message msgCode = static_cast<IStartStopResultCallback::Message>(code);
+    IStartStopResultCBInterfaceCode msgCode = static_cast<IStartStopResultCBInterfaceCode>(code);
     switch (msgCode) {
-        case IStartStopResultCallback::Message::RESULT_START: {
+        case IStartStopResultCBInterfaceCode::RESULT_START: {
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
             uint32_t size = data.ReadUint32();
@@ -54,7 +55,7 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
             OnStart(srcId, sinkId, dhIds);
             break;
         }
-        case IStartStopResultCallback::Message::RESULT_STOP: {
+        case IStartStopResultCBInterfaceCode::RESULT_STOP: {
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
             uint32_t size = data.ReadUint32();

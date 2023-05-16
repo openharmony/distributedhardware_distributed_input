@@ -17,6 +17,7 @@
 #include "parcel.h"
 
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 #include "start_stop_result_call_back_proxy.h"
 
@@ -67,7 +68,7 @@ void StartStopResultCallbackProxy::OnStart(
     }
 
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(IStartStopResultCallback::Message::RESULT_START), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(IStartStopResultCBInterfaceCode::RESULT_START), data, reply, option);
     if (ret != 0) {
         DHLOGE("StartStopResultCallbackProxy SendRequest errno:%d", ret);
         return;
@@ -112,7 +113,7 @@ void StartStopResultCallbackProxy::OnStop(
     }
 
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(IStartStopResultCallback::Message::RESULT_STOP), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(IStartStopResultCBInterfaceCode::RESULT_STOP), data, reply, option);
     if (ret != 0) {
         DHLOGE("StartStopResultCallbackProxy SendRequest errno:%d", ret);
         return;

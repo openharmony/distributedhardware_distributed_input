@@ -18,6 +18,7 @@
 #include "ipc_types.h"
 #include "parcel.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -50,7 +51,7 @@ void GetSinkScreenInfosCallbackProxy::OnResult(const std::string& strJson)
         DHLOGE("write strJson failed");
         return;
     }
-    remote->SendRequest(static_cast<int32_t>(IGetSinkScreenInfosCallback::Message::RESULT), data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IGetSinkScreenInfosCBInterfaceCode::RESULT), data, reply, option);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

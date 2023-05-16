@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -39,9 +40,9 @@ int32_t GetSinkScreenInfosCallbackStub::OnRemoteRequest(
         DHLOGE("GetSinkScreenInfosCallbackStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    IGetSinkScreenInfosCallback::Message msgCode = static_cast<IGetSinkScreenInfosCallback::Message>(code);
+    IGetSinkScreenInfosCBInterfaceCode msgCode = static_cast<IGetSinkScreenInfosCBInterfaceCode>(code);
     switch (msgCode) {
-        case IGetSinkScreenInfosCallback::Message::RESULT: {
+        case IGetSinkScreenInfosCBInterfaceCode::RESULT: {
             std::string strJson = data.ReadString();
             OnResult(strJson);
             break;

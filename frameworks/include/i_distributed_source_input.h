@@ -98,32 +98,6 @@ public:
         const std::string &nodeDesc) = 0;
     virtual int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
     virtual int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
-
-    enum class MessageCode {
-        INIT = 0xf001,
-        RELEASE = 0xf002,
-        REGISTER_REMOTE_INPUT = 0xf003,
-        UNREGISTER_REMOTE_INPUT = 0xf004,
-        PREPARE_REMOTE_INPUT = 0xf005,
-        UNPREPARE_REMOTE_INPUT = 0xf006,
-        START_REMOTE_INPUT = 0xf007,
-        STOP_REMOTE_INPUT = 0xf008,
-        PREPARE_RELAY_REMOTE_INPUT = 0xf00a,
-        UNPREPARE_RELAY_REMOTE_INPUT = 0xf00b,
-        START_RELAY_TYPE_REMOTE_INPUT = 0xf00c,
-        STOP_RELAY_TYPE_REMOTE_INPUT = 0xf00d,
-        START_DHID_REMOTE_INPUT = 0xf00e,
-        STOP_DHID_REMOTE_INPUT = 0xf00f,
-        START_RELAY_DHID_REMOTE_INPUT = 0xf010,
-        STOP_RELAY_DHID_REMOTE_INPUT = 0xf011,
-        REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT = 0xf013,
-        REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT = 0xf014,
-        REGISTER_NODE_LISTENER = 0xf015,
-        UNREGISTER_NODE_LISTENER = 0xf016,
-        REGISTER_SIMULATION_EVENT_LISTENER = 0xf017,
-        UNREGISTER_SIMULATION_EVENT_LISTENER = 0xf018,
-        SYNC_NODE_INFO_REMOTE_INPUT = 0xf019,
-    };
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

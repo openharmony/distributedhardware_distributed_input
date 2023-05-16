@@ -18,6 +18,7 @@
 #include "ipc_types.h"
 #include "parcel.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -56,7 +57,7 @@ void RegisterDInputCallbackProxy::OnResult(const std::string& devId, const std::
         return;
     }
     int32_t ret = remote->SendRequest(
-        static_cast<int32_t>(IRegisterDInputCallback::Message::RESULT), data, reply, option);
+        static_cast<uint32_t>(IRegisterDInputCBInterfaceCode::RESULT), data, reply, option);
     if (ret != 0) {
         return;
     }

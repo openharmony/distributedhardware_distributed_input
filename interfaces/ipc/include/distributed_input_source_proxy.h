@@ -85,7 +85,7 @@ public:
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
 
 private:
-    bool SendRequest(const IDistributedSourceInput::MessageCode code, MessageParcel &data, MessageParcel &reply);
+    bool SendRequest(const uint32_t code, MessageParcel &data, MessageParcel &reply);
 
     static inline BrokerDelegator<DistributedInputSourceProxy> delegator_;
 };

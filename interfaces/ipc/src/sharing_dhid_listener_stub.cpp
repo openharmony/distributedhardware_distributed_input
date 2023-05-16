@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -35,9 +36,9 @@ int32_t SharingDhIdListenerStub::OnRemoteRequest(
         DHLOGE("SharingDhIdListenerStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    ISharingDhIdListener::Message msgCode = static_cast<ISharingDhIdListener::Message>(code);
+    ISharingDhIdListenerInterfaceCode msgCode = static_cast<ISharingDhIdListenerInterfaceCode>(code);
     switch (msgCode) {
-        case ISharingDhIdListener::Message::SHARING: {
+        case ISharingDhIdListenerInterfaceCode::SHARING: {
             std::string dhId = data.ReadString();
             int32_t ret = OnSharing(dhId);
             if (!reply.WriteInt32(ret)) {
@@ -46,7 +47,7 @@ int32_t SharingDhIdListenerStub::OnRemoteRequest(
             }
             break;
         }
-        case ISharingDhIdListener::Message::NO_SHARING: {
+        case ISharingDhIdListenerInterfaceCode::NO_SHARING: {
             std::string dhId = data.ReadString();
             int32_t ret = OnNoSharing(dhId);
             if (!reply.WriteInt32(ret)) {

@@ -17,6 +17,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -393,73 +394,73 @@ int32_t DistributedInputSourceStub::OnRemoteRequest(
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     switch (code) {
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::INIT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::INIT): {
             return HandleInitDistributedHardware(reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::RELEASE): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::RELEASE): {
             return HandleReleaseDistributedHardware(reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::REGISTER_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_REMOTE_INPUT): {
             return HandleRegisterDistributedHardware(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::UNREGISTER_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT): {
             return HandleUnregisterDistributedHardware(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::PREPARE_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_REMOTE_INPUT): {
             return HandlePrepareRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::UNPREPARE_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_REMOTE_INPUT): {
             return HandleUnprepareRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::START_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_REMOTE_INPUT): {
             return HandleStartRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::STOP_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_REMOTE_INPUT): {
             return HandleStopRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::START_RELAY_TYPE_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT): {
             return HandleStartRelayTypeRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::STOP_RELAY_TYPE_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_TYPE_REMOTE_INPUT): {
             return HandleStopRelayTypeRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::PREPARE_RELAY_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_RELAY_REMOTE_INPUT): {
             return HandlePrepareRelayRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::UNPREPARE_RELAY_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_RELAY_REMOTE_INPUT): {
             return HandleUnprepareRelayRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::START_DHID_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_DHID_REMOTE_INPUT): {
             return HandleStartDhidRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::STOP_DHID_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_DHID_REMOTE_INPUT): {
             return HandleStopDhidRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::START_RELAY_DHID_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_DHID_REMOTE_INPUT): {
             return HandleStartRelayDhidRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::STOP_RELAY_DHID_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_DHID_REMOTE_INPUT): {
             return HandleStopRelayDhidRemoteInput(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT): {
             return HandleRegisterAddWhiteListCallback(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT): {
             return HandleRegisterDelWhiteListCallback(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::REGISTER_NODE_LISTENER): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_NODE_LISTENER): {
             return HandleRegisterInputNodeListener(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::UNREGISTER_NODE_LISTENER): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_NODE_LISTENER): {
             return HandleUnRegisterInputNodeListener(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::REGISTER_SIMULATION_EVENT_LISTENER): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SIMULATION_EVENT_LISTENER): {
             return HandleRegisterSimulationEventListener(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::UNREGISTER_SIMULATION_EVENT_LISTENER): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SIMULATION_EVENT_LISTENER): {
             return HandleUnregisterSimulationEventListener(data, reply);
         }
-        case static_cast<uint32_t>(IDistributedSourceInput::MessageCode::SYNC_NODE_INFO_REMOTE_INPUT): {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::SYNC_NODE_INFO_REMOTE_INPUT): {
             return HandleSyncNodeInfoRemoteInput(data, reply);
         }
         default:

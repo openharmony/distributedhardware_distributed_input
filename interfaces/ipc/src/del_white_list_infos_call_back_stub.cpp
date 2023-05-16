@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -39,9 +40,9 @@ int32_t DelWhiteListInfosCallbackStub::OnRemoteRequest(
         DHLOGE("DelWhiteListInfosCallbackStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    IDelWhiteListInfosCallback::Message msgCode = static_cast<IDelWhiteListInfosCallback::Message>(code);
+    IDelWhiteListInfosCBInterfaceCode msgCode = static_cast<IDelWhiteListInfosCBInterfaceCode>(code);
     switch (msgCode) {
-        case IDelWhiteListInfosCallback::Message::RESULT: {
+        case IDelWhiteListInfosCBInterfaceCode::RESULT: {
             std::string deviceId = data.ReadString();
             OnResult(deviceId);
             break;

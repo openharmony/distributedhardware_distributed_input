@@ -16,6 +16,7 @@
 #include "distributed_input_source_proxy.h"
 
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -37,7 +38,7 @@ int32_t DistributedInputSourceProxy::Init()
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_INIT_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::INIT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::INIT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -53,7 +54,7 @@ int32_t DistributedInputSourceProxy::Release()
         DHLOGE("DistributedInputSourceProxy write token valid failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::RELEASE, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::RELEASE), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -86,7 +87,7 @@ int32_t DistributedInputSourceProxy::RegisterDistributedHardware(const std::stri
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_REGISTER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::REGISTER_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -115,7 +116,7 @@ int32_t DistributedInputSourceProxy::UnregisterDistributedHardware(const std::st
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_UNREGISTER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::UNREGISTER_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -141,7 +142,7 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_PREPARE_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::PREPARE_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -167,7 +168,7 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &dev
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_UNPREPARE_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::UNPREPARE_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -198,7 +199,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_START_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::START_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -228,7 +229,7 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_STOP_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::STOP_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -262,7 +263,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string& srcId, 
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_START_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::START_RELAY_TYPE_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -296,7 +297,8 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string& srcId, c
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_STOP_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::STOP_RELAY_TYPE_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_TYPE_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -326,7 +328,7 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(const std::string &srcId
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_PREPARE_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::PREPARE_RELAY_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_RELAY_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -356,7 +358,8 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &src
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_UNPREPARE_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::UNPREPARE_RELAY_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_RELAY_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -394,7 +397,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &sinkId,
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_START_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::START_DHID_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_DHID_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -432,7 +435,7 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &sinkId, 
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_STOP_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::STOP_DHID_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_DHID_REMOTE_INPUT), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -474,7 +477,8 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, 
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_START_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::START_RELAY_DHID_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_DHID_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -516,7 +520,8 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, c
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_STOP_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::STOP_RELAY_DHID_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_DHID_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -541,7 +546,8 @@ int32_t DistributedInputSourceProxy::RegisterAddWhiteListCallback(sptr<IAddWhite
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_REGISTER_WHITELIST_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -565,7 +571,8 @@ int32_t DistributedInputSourceProxy::RegisterDelWhiteListCallback(sptr<IDelWhite
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_REGISTER_WHITELIST_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -586,7 +593,8 @@ int32_t DistributedInputSourceProxy::RegisterInputNodeListener(sptr<InputNodeLis
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_REGISTER_NODE_LISTENER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::REGISTER_NODE_LISTENER, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_NODE_LISTENER),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -608,7 +616,8 @@ int32_t DistributedInputSourceProxy::UnregisterInputNodeListener(sptr<InputNodeL
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_UNREGISTER_NODE_LISTENER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::UNREGISTER_NODE_LISTENER, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_NODE_LISTENER),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -637,7 +646,8 @@ int32_t DistributedInputSourceProxy::SyncNodeInfoRemoteInput(const std::string &
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_SYNC_NODE_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::SYNC_NODE_INFO_REMOTE_INPUT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::SYNC_NODE_INFO_REMOTE_INPUT),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -660,7 +670,8 @@ int32_t DistributedInputSourceProxy::RegisterSimulationEventListener(sptr<ISimul
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_REGISTER_SIMULATION_LISTENER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::REGISTER_SIMULATION_EVENT_LISTENER, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SIMULATION_EVENT_LISTENER),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -682,14 +693,15 @@ int32_t DistributedInputSourceProxy::UnregisterSimulationEventListener(sptr<ISim
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SOURCE_PROXY_UNREGISTER_SIMULATION_LISTENER_FAIL;
-    bool ret = SendRequest(IDistributedSourceInput::MessageCode::UNREGISTER_SIMULATION_EVENT_LISTENER, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SIMULATION_EVENT_LISTENER),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
     return result;
 }
 
-bool DistributedInputSourceProxy::SendRequest(const IDistributedSourceInput::MessageCode code, MessageParcel &data,
+bool DistributedInputSourceProxy::SendRequest(const uint32_t code, MessageParcel &data,
                                               MessageParcel &reply)
 {
     sptr<IRemoteObject> remote = Remote();

@@ -19,6 +19,7 @@
 #include "parcel.h"
 
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -53,7 +54,7 @@ int32_t SharingDhIdListenerProxy::OnSharing(std::string dhId)
     }
 
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(ISharingDhIdListener::Message::SHARING), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(ISharingDhIdListenerInterfaceCode::SHARING), data, reply, option);
     if (ret == DH_SUCCESS) {
         result = reply.ReadInt32();
     } else {
@@ -84,7 +85,7 @@ int32_t SharingDhIdListenerProxy::OnNoSharing(std::string dhId)
     }
 
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(ISharingDhIdListener::Message::NO_SHARING), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(ISharingDhIdListenerInterfaceCode::NO_SHARING), data, reply, option);
     if (ret == DH_SUCCESS) {
         result = reply.ReadInt32();
     } else {

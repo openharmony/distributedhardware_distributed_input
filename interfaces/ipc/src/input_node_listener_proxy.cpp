@@ -18,6 +18,7 @@
 #include "ipc_types.h"
 #include "parcel.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -61,7 +62,7 @@ void InputNodeListenerProxy::OnNodeOnLine(const std::string srcDevId, const std:
         DHLOGE("InputNodeListenerProxy write sinkNodeDesc failed");
         return;
     }
-    int32_t ret = remote->SendRequest(static_cast<int32_t>(InputNodeListener::Message::RESULT_ON), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(InputNodeListenerInterfaceCode::RESULT_ON), data, reply, option);
     if (ret != 0) {
         return;
     }
@@ -95,7 +96,7 @@ void InputNodeListenerProxy::OnNodeOffLine(const std::string srcDevId, const std
         return;
     }
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(InputNodeListener::Message::RESULT_OFF), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(InputNodeListenerInterfaceCode::RESULT_OFF), data, reply, option);
     if (ret != 0) {
         return;
     }

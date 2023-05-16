@@ -18,6 +18,7 @@
 #include "anonymous_string.h"
 
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
 #include "i_get_sink_screen_infos_call_back.h"
@@ -41,7 +42,7 @@ int32_t DistributedInputSinkProxy::Init()
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t result = ERR_DH_INPUT_SINK_PROXY_INIT_FAIL;
-    bool ret = SendRequest(INIT, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::INIT), data, reply);
     if (!ret) {
         DHLOGE("SendRequest fail!");
         return ERR_DH_INPUT_SINK_PROXY_INIT_FAIL;
@@ -59,7 +60,7 @@ int32_t DistributedInputSinkProxy::Release()
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t result = ERR_DH_INPUT_SINK_PROXY_RELEASE_FAIL;
-    bool ret = SendRequest(RELEASE, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::RELEASE), data, reply);
     if (!ret) {
         DHLOGE("SendRequest fail!");
         return ERR_DH_INPUT_SINK_PROXY_RELEASE_FAIL;
@@ -85,7 +86,7 @@ int32_t DistributedInputSinkProxy::RegisterGetSinkScreenInfosCallback(sptr<IGetS
     }
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SINK_PROXY_REGISTER_GETSINKSCREENINFOS_FAIL;
-    bool ret = SendRequest(GET_SINK_SCREEN_INFOS, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::GET_SINK_SCREEN_INFOS), data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }
@@ -114,7 +115,7 @@ int32_t DistributedInputSinkProxy::NotifyStartDScreen(const SrcScreenInfo &remot
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t result = ERR_DH_INPUT_NOTIFY_START_DSCREEN_FAIL;
-    bool ret = SendRequest(NOTIFY_START_DSCREEN, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_START_DSCREEN), data, reply);
     if (!ret) {
         DHLOGE("SendRequest fail!");
         return ERR_DH_INPUT_NOTIFY_START_DSCREEN_FAIL;
@@ -136,7 +137,7 @@ int32_t DistributedInputSinkProxy::NotifyStopDScreen(const std::string &srcScree
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t result = ERR_DH_INPUT_NOTIFY_STOP_DSCREEN_FAIL;
-    bool ret = SendRequest(NOTIFY_STOP_DSCREEN, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_STOP_DSCREEN), data, reply);
     if (!ret) {
         DHLOGE("SendRequest fail!");
         return ERR_DH_INPUT_NOTIFY_STOP_DSCREEN_FAIL;
@@ -159,7 +160,8 @@ int32_t DistributedInputSinkProxy::RegisterSharingDhIdListener(sptr<ISharingDhId
 
     MessageParcel reply;
     int32_t result = ERR_DH_INPUT_SINK_PROXY_REGISTER_SHARING_DHID_LISTENER_FAIL;
-    bool ret = SendRequest(REGISTER_SHARING_DHID_LISTENER, data, reply);
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSinkInterfaceCode::REGISTER_SHARING_DHID_LISTENER),
+        data, reply);
     if (ret) {
         result = reply.ReadInt32();
     }

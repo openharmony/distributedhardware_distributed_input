@@ -15,6 +15,7 @@
 
 #include "add_white_list_infos_call_back_proxy.h"
 
+#include "dinput_ipc_interface_code.h"
 #include "ipc_types.h"
 #include "parcel.h"
 
@@ -54,7 +55,7 @@ void AddWhiteListInfosCallbackProxy::OnResult(const std::string& deviceId, const
         DHLOGE("AddWhiteListInfosCallbackProxy write strJson failed");
         return;
     }
-    remote->SendRequest(static_cast<int32_t>(IAddWhiteListInfosCallback::Message::RESULT), data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IAddWhiteListInfosCBInterfaceCode::RESULT), data, reply, option);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
