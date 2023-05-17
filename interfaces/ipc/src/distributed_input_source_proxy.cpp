@@ -702,8 +702,7 @@ int32_t DistributedInputSourceProxy::UnregisterSimulationEventListener(sptr<ISim
     return result;
 }
 
-bool DistributedInputSourceProxy::SendRequest(const uint32_t code, MessageParcel &data,
-                                              MessageParcel &reply)
+bool DistributedInputSourceProxy::SendRequest(const uint32_t code, MessageParcel &data, MessageParcel &reply)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -36,9 +35,9 @@ int32_t InputNodeListenerStub::OnRemoteRequest(
         DHLOGE("InputNodeListenerStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    InputNodeListenerInterfaceCode msgCode = static_cast<InputNodeListenerInterfaceCode>(code);
+    InputNodeListener::Message msgCode = static_cast<InputNodeListener::Message>(code);
     switch (msgCode) {
-        case InputNodeListenerInterfaceCode::RESULT_ON: {
+        case InputNodeListener::Message::RESULT_ON: {
             std::string srcDevId = data.ReadString();
             std::string sinkDevId = data.ReadString();
             std::string sinkNodeId = data.ReadString();
@@ -46,7 +45,7 @@ int32_t InputNodeListenerStub::OnRemoteRequest(
             OnNodeOnLine(srcDevId, sinkDevId, sinkNodeId, sinkNodeDesc);
             break;
         }
-        case InputNodeListenerInterfaceCode::RESULT_OFF: {
+        case InputNodeListener::Message::RESULT_OFF: {
             std::string srcDevId = data.ReadString();
             std::string sinkDevId = data.ReadString();
             std::string sinkNodeId = data.ReadString();

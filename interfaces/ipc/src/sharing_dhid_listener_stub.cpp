@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -36,9 +35,9 @@ int32_t SharingDhIdListenerStub::OnRemoteRequest(
         DHLOGE("SharingDhIdListenerStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    ISharingDhIdListenerInterfaceCode msgCode = static_cast<ISharingDhIdListenerInterfaceCode>(code);
+    ISharingDhIdListener::Message msgCode = static_cast<ISharingDhIdListener::Message>(code);
     switch (msgCode) {
-        case ISharingDhIdListenerInterfaceCode::SHARING: {
+        case ISharingDhIdListener::Message::SHARING: {
             std::string dhId = data.ReadString();
             int32_t ret = OnSharing(dhId);
             if (!reply.WriteInt32(ret)) {
@@ -47,7 +46,7 @@ int32_t SharingDhIdListenerStub::OnRemoteRequest(
             }
             break;
         }
-        case ISharingDhIdListenerInterfaceCode::NO_SHARING: {
+        case ISharingDhIdListener::Message::NO_SHARING: {
             std::string dhId = data.ReadString();
             int32_t ret = OnNoSharing(dhId);
             if (!reply.WriteInt32(ret)) {

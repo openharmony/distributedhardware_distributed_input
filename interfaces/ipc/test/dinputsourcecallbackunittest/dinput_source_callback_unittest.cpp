@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,6 @@
 
 #include <memory>
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -353,10 +352,10 @@ HWTEST_F(DInputSourceCallBackTest, SendRequest01, testing::ext::TestSize.Level1)
 {
     sptr<IRemoteObject> callBackStubPtr = new TestDInputSourceCallBackStub();
     DistributedInputSourceProxy callBackProxy(callBackStubPtr);
-    IDInputSourceInterfaceCode code = IDInputSourceInterfaceCode::INIT;
+    IDistributedSourceInput::MessageCode code = IDistributedSourceInput::MessageCode::INIT;
     MessageParcel data;
     MessageParcel reply;
-    bool ret = callBackProxy.SendRequest(static_cast<uint32_t>(code), data, reply);
+    bool ret = callBackProxy.SendRequest(code, data, reply);
     EXPECT_EQ(false, ret);
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -40,9 +39,9 @@ int32_t StopDInputCallbackStub::OnRemoteRequest(
         DHLOGE("StopDInputCallbackStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    IStopDInputCBInterfaceCode msgCode = static_cast<IStopDInputCBInterfaceCode>(code);
+    IStopDInputCallback::Message msgCode = static_cast<IStopDInputCallback::Message>(code);
     switch (msgCode) {
-        case IStopDInputCBInterfaceCode::RESULT: {
+        case IStopDInputCallback::Message::RESULT: {
             std::string deviceId = data.ReadString();
             uint32_t inputTypes = data.ReadUint32();
             int32_t status = data.ReadInt32();

@@ -21,26 +21,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 /* SAID: 4809 */
-enum class IAddWhiteListInfosCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class IDelWhiteListInfosCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4810 */
-enum class IDInputSinkInterfaceCode : uint32_t {
-    INIT = 0xf011U,
-    RELEASE = 0xf012U,
-    NOTIFY_START_DSCREEN = 0xf013U,
-    NOTIFY_STOP_DSCREEN = 0xf014U,
-    REGISTER_SHARING_DHID_LISTENER = 0xf015U,
-    GET_SINK_SCREEN_INFOS = 0xf016U,
-};
-
-/* SAID: 4809 */
 enum class IDInputSourceInterfaceCode : uint32_t {
     INIT = 0xf001U,
     RELEASE = 0xf002U,
@@ -68,66 +48,13 @@ enum class IDInputSourceInterfaceCode : uint32_t {
 };
 
 /* SAID: 4810 */
-enum class IGetSinkScreenInfosCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4810 */
-enum class InputNodeListenerInterfaceCode : uint32_t {
-    RESULT_ON = 0,
-    RESULT_OFF = 1
-};
-
-/* SAID: 4809 */
-enum class IPrepareDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class IRegisterDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class ISharingDhIdListenerInterfaceCode : uint32_t {
-    SHARING = 0,
-    NO_SHARING = 1
-};
-
-/* SAID: 4809 */
-enum class ISimulationEventListenerInterfaceCode : uint32_t {
-    RESULT_ON = 0
-};
-
-/* SAID: 4809 */
-enum class IStartDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class IStartStopDInputsCBInterfaceCode : uint32_t {
-    RESULT_STRING = 0
-};
-
-/* SAID: 4809 */
-enum class IStartStopResultCBInterfaceCode : uint32_t {
-    RESULT_START = 0,
-    RESULT_STOP = 1
-};
-
-/* SAID: 4809 */
-enum class IStopDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class IUnprepareDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
-};
-
-/* SAID: 4809 */
-enum class IUnregisterDInputCBInterfaceCode : uint32_t {
-    RESULT = 0
+enum class IDInputSinkInterfaceCode : uint32_t {
+    INIT = 0xf011U,
+    RELEASE = 0xf012U,
+    NOTIFY_START_DSCREEN = 0xf013U,
+    NOTIFY_STOP_DSCREEN = 0xf014U,
+    REGISTER_SHARING_DHID_LISTENER = 0xf015U,
+    GET_SINK_SCREEN_INFOS = 0xf016U,
 };
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -36,9 +35,9 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
     if (descriptor != IStartStopResultCallback::GetDescriptor()) {
         return ERR_DH_INPUT_IPC_INVALID_DESCRIPTOR;
     }
-    IStartStopResultCBInterfaceCode msgCode = static_cast<IStartStopResultCBInterfaceCode>(code);
+    IStartStopResultCallback::Message msgCode = static_cast<IStartStopResultCallback::Message>(code);
     switch (msgCode) {
-        case IStartStopResultCBInterfaceCode::RESULT_START: {
+        case IStartStopResultCallback::Message::RESULT_START: {
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
             uint32_t size = data.ReadUint32();
@@ -55,7 +54,7 @@ int32_t StartStopResultCallbackStub::OnRemoteRequest(
             OnStart(srcId, sinkId, dhIds);
             break;
         }
-        case IStartStopResultCBInterfaceCode::RESULT_STOP: {
+        case IStartStopResultCallback::Message::RESULT_STOP: {
             std::string srcId = data.ReadString();
             std::string sinkId = data.ReadString();
             uint32_t size = data.ReadUint32();

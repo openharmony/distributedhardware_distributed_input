@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -36,9 +35,9 @@ int32_t SimulationEventListenerStub::OnRemoteRequest(
         DHLOGE("SimulationEventListenerStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    ISimulationEventListenerInterfaceCode msgCode = static_cast<ISimulationEventListenerInterfaceCode>(code);
+    ISimulationEventListener::Message msgCode = static_cast<ISimulationEventListener::Message>(code);
     switch (msgCode) {
-        case ISimulationEventListenerInterfaceCode::RESULT_ON: {
+        case ISimulationEventListener::Message::RESULT_ON: {
             uint32_t eventType = data.ReadUint32();
             uint32_t eventCode = data.ReadUint32();
             int32_t eventValue = data.ReadInt32();

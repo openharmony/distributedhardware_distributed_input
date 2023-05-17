@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,6 @@
 #include "ipc_types.h"
 #include "parcel.h"
 
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -56,7 +55,7 @@ void UnprepareDInputCallbackProxy::OnResult(const std::string& deviceId, const i
         return;
     }
     int32_t ret = remote->SendRequest(
-        static_cast<uint32_t>(IUnprepareDInputCBInterfaceCode::RESULT), data, reply, option);
+        static_cast<int32_t>(IUnprepareDInputCallback::Message::RESULT), data, reply, option);
     if (ret != 0) {
         return;
     }

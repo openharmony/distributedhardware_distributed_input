@@ -19,7 +19,6 @@
 #include "parcel.h"
 
 #include "dinput_errcode.h"
-#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 
 namespace OHOS {
@@ -60,8 +59,8 @@ int32_t SimulationEventListenerProxy::OnSimulationEvent(uint32_t type, uint32_t 
         DHLOGE("SimulationEventListenerProxy write value failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    int32_t ret = remote->SendRequest(static_cast<uint32_t>(ISimulationEventListenerInterfaceCode::RESULT_ON), data,
-        reply, option);
+    int32_t ret =
+        remote->SendRequest(static_cast<uint32_t>(ISimulationEventListener::Message::RESULT_ON), data, reply, option);
     if (ret == DH_SUCCESS) {
         result = reply.ReadInt32();
     } else {
