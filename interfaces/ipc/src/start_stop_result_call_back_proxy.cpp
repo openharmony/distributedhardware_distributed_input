@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -66,8 +66,8 @@ void StartStopResultCallbackProxy::OnStart(
         }
     }
 
-    int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(IStartStopResultCallback::Message::RESULT_START), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(IStartStopResultCallback::Message::RESULT_START), data,
+        reply, option);
     if (ret != 0) {
         DHLOGE("StartStopResultCallbackProxy SendRequest errno:%d", ret);
         return;
@@ -111,8 +111,8 @@ void StartStopResultCallbackProxy::OnStop(
         }
     }
 
-    int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(IStartStopResultCallback::Message::RESULT_STOP), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(IStartStopResultCallback::Message::RESULT_STOP), data,
+        reply, option);
     if (ret != 0) {
         DHLOGE("StartStopResultCallbackProxy SendRequest errno:%d", ret);
         return;

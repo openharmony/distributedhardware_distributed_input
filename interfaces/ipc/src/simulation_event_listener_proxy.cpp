@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -60,7 +60,7 @@ int32_t SimulationEventListenerProxy::OnSimulationEvent(uint32_t type, uint32_t 
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(ISimulationEventListener::Message::RESULT_ON), data, reply, option);
+        remote->SendRequest(static_cast<uint32_t>(ISimulationEventListener::Message::RESULT_ON), data, reply, option);
     if (ret == DH_SUCCESS) {
         result = reply.ReadInt32();
     } else {

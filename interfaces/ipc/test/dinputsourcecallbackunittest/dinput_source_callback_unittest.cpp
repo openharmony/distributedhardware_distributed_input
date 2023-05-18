@@ -17,6 +17,7 @@
 
 #include <memory>
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -352,10 +353,10 @@ HWTEST_F(DInputSourceCallBackTest, SendRequest01, testing::ext::TestSize.Level1)
 {
     sptr<IRemoteObject> callBackStubPtr = new TestDInputSourceCallBackStub();
     DistributedInputSourceProxy callBackProxy(callBackStubPtr);
-    IDistributedSourceInput::MessageCode code = IDistributedSourceInput::MessageCode::INIT;
+    IDInputSourceInterfaceCode code = IDInputSourceInterfaceCode::INIT;
     MessageParcel data;
     MessageParcel reply;
-    bool ret = callBackProxy.SendRequest(code, data, reply);
+    bool ret = callBackProxy.SendRequest(static_cast<uint32_t>(code), data, reply);
     EXPECT_EQ(false, ret);
 }
 

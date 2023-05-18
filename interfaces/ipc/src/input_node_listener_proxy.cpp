@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -61,7 +61,8 @@ void InputNodeListenerProxy::OnNodeOnLine(const std::string srcDevId, const std:
         DHLOGE("InputNodeListenerProxy write sinkNodeDesc failed");
         return;
     }
-    int32_t ret = remote->SendRequest(static_cast<int32_t>(InputNodeListener::Message::RESULT_ON), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(InputNodeListener::Message::RESULT_ON), data, reply,
+        option);
     if (ret != 0) {
         return;
     }
@@ -94,8 +95,8 @@ void InputNodeListenerProxy::OnNodeOffLine(const std::string srcDevId, const std
         DHLOGE("InputNodeListenerProxy write sinkNodeId failed");
         return;
     }
-    int32_t ret =
-        remote->SendRequest(static_cast<int32_t>(InputNodeListener::Message::RESULT_OFF), data, reply, option);
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(InputNodeListener::Message::RESULT_OFF), data, reply,
+        option);
     if (ret != 0) {
         return;
     }

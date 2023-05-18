@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ void PrepareDInputCallbackProxy::OnResult(const std::string& deviceId, const int
         return;
     }
     int32_t ret = remote->SendRequest(
-        static_cast<int32_t>(IPrepareDInputCallback::Message::RESULT), data, reply, option);
+        static_cast<uint32_t>(IPrepareDInputCallback::Message::RESULT), data, reply, option);
     if (ret != 0) {
         return;
     }

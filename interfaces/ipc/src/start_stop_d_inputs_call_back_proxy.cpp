@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,7 +52,7 @@ void StartStopDInputsCallbackProxy::OnResultDhids(const std::string &devId, cons
         DHLOGE("StartStopDInputsCallbackProxy write status valid failed");
         return;
     }
-    int32_t ret = remote->SendRequest(static_cast<int32_t>(IStartStopDInputsCallback::Message::RESULT_STRING),
+    int32_t ret = remote->SendRequest(static_cast<uint32_t>(IStartStopDInputsCallback::Message::RESULT_STRING),
                                       data, reply, option);
     if (ret != 0) {
         DHLOGE("OnResultDhids error, ret = %d", ret);

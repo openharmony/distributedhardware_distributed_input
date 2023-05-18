@@ -19,6 +19,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
+#include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 #include "i_sharing_dhid_listener.h"
 
@@ -28,12 +29,18 @@ namespace DistributedInput {
 DistributedInputSinkStub::DistributedInputSinkStub()
 {
     DHLOGI("DistributedInputSinkStub ctor!");
-    memberFuncMap_[INIT] = &DistributedInputSinkStub::InitInner;
-    memberFuncMap_[RELEASE] = &DistributedInputSinkStub::ReleaseInner;
-    memberFuncMap_[NOTIFY_START_DSCREEN] = &DistributedInputSinkStub::NotifyStartDScreenInner;
-    memberFuncMap_[NOTIFY_STOP_DSCREEN] = &DistributedInputSinkStub::NotifyStopDScreenInner;
-    memberFuncMap_[REGISTER_SHARING_DHID_LISTENER] = &DistributedInputSinkStub::RegisterSharingDhIdListenerInner;
-    memberFuncMap_[GET_SINK_SCREEN_INFOS] = &DistributedInputSinkStub::RegisterGetSinkScreenInfosInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::INIT)] =
+        &DistributedInputSinkStub::InitInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::RELEASE)] =
+        &DistributedInputSinkStub::ReleaseInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_START_DSCREEN)] =
+        &DistributedInputSinkStub::NotifyStartDScreenInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_STOP_DSCREEN)] =
+        &DistributedInputSinkStub::NotifyStopDScreenInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::REGISTER_SHARING_DHID_LISTENER)] =
+        &DistributedInputSinkStub::RegisterSharingDhIdListenerInner;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::GET_SINK_SCREEN_INFOS)] =
+        &DistributedInputSinkStub::RegisterGetSinkScreenInfosInner;
 }
 
 DistributedInputSinkStub::~DistributedInputSinkStub()
