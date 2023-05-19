@@ -64,14 +64,16 @@ WhiteListUtil &WhiteListUtil::GetInstance(void)
 int32_t WhiteListUtil::Init()
 {
     char buf[MAX_PATH_LEN] = {0};
+    char path[PATH_MAX + 1] = {0x00};
     char *whiteListFilePath = GetOneCfgFile(WHITELIST_FILE_PATH, buf, MAX_PATH_LEN);
-    if (whiteListFilePath == nullptr) {
-        DHLOGE("WhiteListFilePath is null!");
-        return ERR_DH_INPUT_WHILTELIST_FILE_PATH_IS_NULL;
+    if (strlen(whiteListFilePath) == 0 || strlen(whiteListFilePath) > PATH_MAX ||
+        realpath(whiteListFilePath, path) == nullptr) {
+        DHLOGE("File connicailization failed.");
+        return ERR_DH_INPUT_WHILTELIST_INIT_FAIL;
     }
-    std::ifstream inFile(whiteListFilePath, std::ios::in | std::ios::binary);
+    std::ifstream inFile(path, std::ios::in | std::ios::binary);
     if (!inFile.is_open()) {
-        DHLOGE("WhiteListUtil Init error, file open fail path=%s", whiteListFilePath);
+        DHLOGE("WhiteListUtil Init error, file open fail path=%s", path);
         return ERR_DH_INPUT_WHILTELIST_INIT_FAIL;
     }
 
