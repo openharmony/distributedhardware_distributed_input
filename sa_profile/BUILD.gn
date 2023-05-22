@@ -16,13 +16,13 @@ import("//build/ohos/sa_profile/sa_profile.gni")
 import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 
 ohos_sa_profile("distributed_input_source_sa_profile") {
-  sources = [ "4809.xml" ]
+  sources = [ "4809.json" ]
 
   part_name = "distributed_input"
 }
 
 ohos_sa_profile("distributed_input_sink_sa_profile") {
-  sources = [ "4810.xml" ]
+  sources = [ "4810.json" ]
 
   part_name = "distributed_input"
 }
