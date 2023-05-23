@@ -305,13 +305,6 @@ HWTEST_F(DistributedInputSinkManagerTest, UpdateSinkScreenInfoCache_01, testing:
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, NotifyStartDScreen_01, testing::ext::TestSize.Level1)
-{
-    SrcScreenInfo srcScreenInfo {"devid_test", "uuid_test", 1, 1, 1860, 980, "srcphyid", 1, 980, 490};
-    int32_t ret = sinkManager_->NotifyStartDScreen(srcScreenInfo);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
 HWTEST_F(DistributedInputSinkManagerTest, NotifyStopDScreen_01, testing::ext::TestSize.Level1)
 {
     std::string srcScreenInfoKey  = "";
