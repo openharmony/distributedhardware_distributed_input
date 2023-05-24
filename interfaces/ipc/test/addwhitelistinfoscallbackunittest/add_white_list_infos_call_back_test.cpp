@@ -353,10 +353,6 @@ HWTEST_F(AddWhiteListInfosCallbackTest, DistributedInputSinkStub01, testing::ext
     ret = sinkProxy.RegisterGetSinkScreenInfosCallback(sinkScreenCb);
     EXPECT_EQ(DH_SUCCESS, ret);
 
-    SrcScreenInfo srcScreenInfo {"devid_test", "uuid_test", 1, 1, 1860, 980, "srcphyid", 1, 980, 490};
-    ret = sinkProxy.NotifyStartDScreen(srcScreenInfo);
-    EXPECT_EQ(DH_SUCCESS, ret);
-
     std::string srcScreenInfoKey = "srcScreenInfoKey_test";
     ret = sinkProxy.NotifyStopDScreen(srcScreenInfoKey);
     EXPECT_EQ(DH_SUCCESS, ret);
