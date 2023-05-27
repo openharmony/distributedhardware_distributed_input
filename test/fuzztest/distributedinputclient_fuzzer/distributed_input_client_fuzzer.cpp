@@ -37,7 +37,7 @@ class TestRegisterInputCallback : public OHOS::DistributedHardware::RegisterCall
     public:
         TestRegisterInputCallback() = default;
         virtual ~TestRegisterInputCallback() = default;
-        virtual int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+        int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
             const std::string &data) override
         {
             return 0;
@@ -48,7 +48,7 @@ class TestUnregisterInputCallback : public OHOS::DistributedHardware::Unregister
 public:
     TestUnregisterInputCallback() = default;
     virtual ~TestUnregisterInputCallback() = default;
-    virtual int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+    int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
         const std::string &data) override
     {
         return 0;
