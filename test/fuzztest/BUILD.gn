@@ -15,8 +15,12 @@ group("fuzztest") {
   testonly = true
 
   deps = [
-    "dinputsinkhandler_fuzzer:fuzztest",
-    "dinputsourcehandler_fuzzer:fuzztest",
+    "dinputconfigdh_fuzzer:fuzztest",
+    "dinputinitsink_fuzzer:fuzztest",
+    "dinputinitsource_fuzzer:fuzztest",
+    "dinputreleasesink_fuzzer:fuzztest",
+    "dinputreleasesource_fuzzer:fuzztest",
+    "dinputsubscribelocaldh_fuzzer:fuzztest",
     "distributedinputclient_fuzzer:fuzztest",
     "distributedinputkit_fuzzer:fuzztest",
     "distributedinputsinktransport_fuzzer:fuzztest",

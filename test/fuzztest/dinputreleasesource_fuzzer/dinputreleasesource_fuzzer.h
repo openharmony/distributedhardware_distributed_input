@@ -14,9 +14,9 @@
  */
 
 
-#ifndef DINPUT_SINK_HANDLER_FUZZER_H
-#define DINPUT_SINK_HANDLER_FUZZER_H
+#ifndef DINPUT_RELEASE_SOURCE_FUZZER_H
+#define DINPUT_RELEASE_SOURCE_FUZZER_H
 
-#define FUZZ_PROJECT_NAME "dinputsinkhandler_fuzzer"
+#define FUZZ_PROJECT_NAME "dinputreleasesource_fuzzer"
 
-#endif // DINPUT_SINK_HANDLER_FUZZER_H
+#endif // DINPUT_RELEASE_SOURCE_FUZZER_H
