@@ -17,11 +17,11 @@ import("//build/test.gni")
 import("../../../distributedinput.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("DinputSinkHandlerFuzzTest") {
+ohos_fuzztest("DinputReleaseSinkFuzzTest") {
   module_out_path = "distributed_input/system"
 
   fuzz_config_file =
-      "${distributedinput_path}/test/fuzztest/dinputsinkhandler_fuzzer"
+      "${distributedinput_path}/test/fuzztest/dinputreleasesink_fuzzer"
 
   include_dirs = [
     "include",
@@ -30,7 +30,6 @@ ohos_fuzztest("DinputSinkHandlerFuzzTest") {
     "${distributedinput_path}/services/source/sourcemanager/include",
     "${distributedinput_path}/services/sink/sinkmanager/include",
     "${distributedinput_path}/frameworks/include",
-    "${distributedinput_path}/sourcehandler/include",
     "${distributedinput_path}/sinkhandler/include",
     "${distributedinput_path}/inputdevicehandler/include",
     "${service_common}/include",
@@ -53,7 +52,7 @@ ohos_fuzztest("DinputSinkHandlerFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [ "dinput_sink_handler_fuzzer.cpp" ]
+  sources = [ "dinputreleasesink_fuzzer.cpp" ]
 
   deps = [
     "${distributedinput_path}/sinkhandler:libdinput_sink_handler",
@@ -70,7 +69,7 @@ ohos_fuzztest("DinputSinkHandlerFuzzTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"DinputSinkHandlerFuzzTest\"",
+    "DH_LOG_TAG=\"DinputReleaseSinkFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 }
@@ -79,6 +78,6 @@ ohos_fuzztest("DinputSinkHandlerFuzzTest") {
 group("fuzztest") {
   testonly = true
 
-  deps = [ ":DinputSinkHandlerFuzzTest" ]
+  deps = [ ":DinputReleaseSinkFuzzTest" ]
 }
 ###############################################################################

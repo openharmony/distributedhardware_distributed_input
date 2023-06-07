@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dinput_source_handler_fuzzer.h"
+#include "dinputconfigdh_fuzzer.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -26,51 +26,11 @@
 #include "constants_dinput.h"
 #include "distributed_input_handler.h"
 #include "distributed_input_kit.h"
-#include "distributed_input_sink_handler.h"
 #include "distributed_input_source_handler.h"
-#include "i_distributed_sink_input.h"
 #include "i_distributed_source_input.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-class TestRegisterInputCallback : public OHOS::DistributedHardware::RegisterCallback {
-public:
-    TestRegisterInputCallback() = default;
-    virtual ~TestRegisterInputCallback() = default;
-    int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
-        const std::string &data) override
-    {
-        return 0;
-    }
-};
-
-class TestUnregisterInputCallback : public OHOS::DistributedHardware::UnregisterCallback {
-public:
-    TestUnregisterInputCallback() = default;
-    virtual ~TestUnregisterInputCallback() = default;
-    int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
-        const std::string &data) override
-    {
-        return 0;
-    }
-};
-
-void InitSourceFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size == 0)) {
-        return;
-    }
-    std::string params(reinterpret_cast<const char*>(data), size);
-    DistributedInput::DistributedInputSourceHandler::GetInstance().InitSource(params);
-}
-
-void ReleaseSourceFuzzTest(const uint8_t* data, size_t size)
-{
-    (void)data;
-    (void)size;
-    DistributedInput::DistributedInputSourceHandler::GetInstance().ReleaseSource();
-}
-
 void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
@@ -89,8 +49,6 @@ void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::InitSourceFuzzTest(data, size);
-    OHOS::DistributedHardware::ReleaseSourceFuzzTest(data, size);
     OHOS::DistributedHardware::ConfigDistributedHardwareFuzzTest(data, size);
     return 0;
 }

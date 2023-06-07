@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dinput_sink_handler_fuzzer.h"
+#include "dinputsubscribelocaldh_fuzzer.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -27,28 +27,10 @@
 #include "distributed_input_handler.h"
 #include "distributed_input_kit.h"
 #include "distributed_input_sink_handler.h"
-#include "distributed_input_source_handler.h"
 #include "i_distributed_sink_input.h"
-#include "i_distributed_source_input.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void InitSinkFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size == 0)) {
-        return;
-    }
-    std::string params(reinterpret_cast<const char*>(data), size);
-    DistributedInput::DistributedInputSinkHandler::GetInstance().InitSink(params);
-}
-
-void ReleaseSinkFuzzTest(const uint8_t* data, size_t size)
-{
-    (void)data;
-    (void)size;
-    DistributedInput::DistributedInputSinkHandler::GetInstance().ReleaseSink();
-}
-
 void SubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
@@ -57,14 +39,7 @@ void SubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
     std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string params(reinterpret_cast<const char*>(data), size);
     DistributedInput::DistributedInputSinkHandler::GetInstance().SubscribeLocalHardware(dhId, params);
-}
 
-void UnsubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size == 0)) {
-        return;
-    }
-    std::string dhId(reinterpret_cast<const char*>(data), size);
     DistributedInput::DistributedInputSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
 }
 } // namespace DistributedHardware
@@ -74,9 +49,6 @@ void UnsubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::InitSinkFuzzTest(data, size);
-    OHOS::DistributedHardware::ReleaseSinkFuzzTest(data, size);
     OHOS::DistributedHardware::SubscribeLocalHardwareFuzzTest(data, size);
-    OHOS::DistributedHardware::UnsubscribeLocalHardwareFuzzTest(data, size);
     return 0;
 }

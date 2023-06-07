@@ -14,9 +14,9 @@
  */
 
 
-#ifndef DINPUT_SOURCE_HANDLER_FUZZER_H
-#define DINPUT_SOURCE_HANDLER_FUZZER_H
+#ifndef DINPUT_CONFIG_DH_FUZZER_H
+#define DINPUT_CONFIG_DH_FUZZER_H
 
-#define FUZZ_PROJECT_NAME "dinputsourcehandler_fuzzer"
+#define FUZZ_PROJECT_NAME "dinputconfigdh_fuzzer"
 
-#endif // DINPUT_SOURCE_HANDLER_FUZZER_H
+#endif // DINPUT_CONFIG_DH_FUZZER_H
