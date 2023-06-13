@@ -17,7 +17,6 @@
 
 #include <sstream>
 
-#include "anonymous_string.h"
 #include "dh_utils_tool.h"
 #include "nlohmann/json.hpp"
 

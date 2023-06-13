@@ -97,7 +97,6 @@ ohos_unittest("distributed_input_inner_test") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
   ]
 

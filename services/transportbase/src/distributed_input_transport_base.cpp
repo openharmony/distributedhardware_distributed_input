@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <cstring>
 
-#include "anonymous_string.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "ipc_skeleton.h"
 #include "iservice_registry.h"

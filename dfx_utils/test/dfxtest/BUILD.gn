@@ -62,7 +62,6 @@ ohos_unittest("distributed_input_dfx_test") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "//third_party/openssl:libcrypto_static",
   ]
 

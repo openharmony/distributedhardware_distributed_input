@@ -19,7 +19,6 @@
 #include <cstring>
 #include <pthread.h>
 
-#include "anonymous_string.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "ipc_skeleton.h"
 #include "iservice_registry.h"

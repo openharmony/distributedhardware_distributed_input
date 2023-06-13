@@ -28,13 +28,13 @@
 #include <linux/input.h>
 #include <linux/uinput.h>
 
-#include "anonymous_string.h"
 #include "nlohmann/json.hpp"
 
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
 #include "dinput_softbus_define.h"
+#include "dinput_utils_tool.h"
 #include "softbus_bus_center.h"
 
 namespace OHOS {

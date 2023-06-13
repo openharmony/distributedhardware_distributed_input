@@ -19,7 +19,6 @@
 
 #include "linux/input.h"
 
-#include "anonymous_string.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "securec.h"
 

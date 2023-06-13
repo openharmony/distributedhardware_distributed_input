@@ -50,7 +50,7 @@ ohos_shared_library("libdinput_source_handler") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_utils_path}:distributedhardwareutils",
+    "${utils_path}:libdinput_utils",
     "${innerkits_path}:libdinput_sdk",
     "//third_party/libevdev:libevdev",
   ]

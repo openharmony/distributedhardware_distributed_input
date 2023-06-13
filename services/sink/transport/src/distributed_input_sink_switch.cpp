@@ -15,11 +15,10 @@
 
 #include "distributed_input_sink_switch.h"
 
-#include "anonymous_string.h"
-
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
+#include "dinput_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {

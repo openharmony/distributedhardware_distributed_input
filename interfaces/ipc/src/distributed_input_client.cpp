@@ -15,7 +15,6 @@
 
 #include "distributed_input_client.h"
 
-#include "anonymous_string.h"
 #include "iservice_registry.h"
 #include "nlohmann/json.hpp"
 #include "system_ability_definition.h"

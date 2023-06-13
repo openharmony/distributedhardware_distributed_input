@@ -47,6 +47,9 @@ bool IsUInt32(const nlohmann::json& jsonObj, const std::string& key);
 bool IsUInt64(const nlohmann::json& jsonObj, const std::string& key);
 bool IsArray(const nlohmann::json& jsonObj, const std::string& key);
 std::string GetNodeDesc(std::string parameters);
+std::string GetAnonyString(const std::string &value);
+std::string GetAnonyInt32(const int32_t value);
+std::string Sha256(const std::string& string);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

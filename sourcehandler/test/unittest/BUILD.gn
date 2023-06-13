@@ -72,7 +72,7 @@ ohos_unittest("distributed_input_source_handler_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_utils_path}:distributedhardwareutils",
+    "${utils_path}:libdinput_utils",
     "${innerkits_path}:libdinput_sdk",
     "//third_party/libevdev:libevdev",
   ]

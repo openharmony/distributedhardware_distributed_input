@@ -42,7 +42,7 @@ ohos_shared_library("libdinput_dfx_utils") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
+    "${utils_path}:libdinput_utils",
     "//third_party/openssl:libcrypto_static",
   ]
 

@@ -86,8 +86,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_sink_path}/transport:libdinput_sink_trans",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
@@ -95,6 +93,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
   ]
 
   external_deps = [
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "access_token:libaccesstoken_sdk",
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",

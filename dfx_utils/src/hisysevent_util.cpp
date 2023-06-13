@@ -15,9 +15,9 @@
 
 #include "hisysevent_util.h"
 
-#include "anonymous_string.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
+#include "dinput_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {

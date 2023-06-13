@@ -15,12 +15,11 @@
 
 #include "distributed_input_sink_stub.h"
 
-#include "anonymous_string.h"
-
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
+#include "dinput_utils_tool.h"
 #include "i_sharing_dhid_listener.h"
 
 namespace OHOS {

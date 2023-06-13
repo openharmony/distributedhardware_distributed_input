@@ -19,9 +19,8 @@
 #include "iservice_registry.h"
 #include "system_ability_definition.h"
 
-#include "anonymous_string.h"
-
 #include "dinput_log.h"
+#include "dinput_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {

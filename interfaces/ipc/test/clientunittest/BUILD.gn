@@ -108,8 +108,6 @@ ohos_unittest("distributed_input_client_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_sink_path}/sinkmanager:libdinput_sink",
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/sourcemanager:libdinput_source",
@@ -118,6 +116,7 @@ ohos_unittest("distributed_input_client_test") {
   ]
 
   external_deps = [
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "c_utils:utils",
     "config_policy:configpolicy_util",
     "dsoftbus:softbus_client",

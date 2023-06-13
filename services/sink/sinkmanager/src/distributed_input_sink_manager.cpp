@@ -21,7 +21,6 @@
 #include <thread>
 #include <linux/input.h>
 
-#include "anonymous_string.h"
 #include "dinput_softbus_define.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "if_system_ability_manager.h"

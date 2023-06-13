@@ -20,7 +20,6 @@
 #include <dlfcn.h>
 #include <fstream>
 
-#include "anonymous_string.h"
 #include "dinput_softbus_define.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
