@@ -44,9 +44,7 @@ ohos_shared_library("libdinput_utils") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  deps = [
-    "//third_party/openssl:libcrypto_static",
-  ]
+  deps = [ "//third_party/openssl:libcrypto_static" ]
 
   external_deps = [
     "c_utils:utils",
