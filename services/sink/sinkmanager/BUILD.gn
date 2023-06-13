@@ -61,9 +61,9 @@ ohos_shared_library("libdinput_sink") {
   ]
 
   external_deps = [
-    "distributed_hardware_fwk:libdhfwk_sdk",
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",

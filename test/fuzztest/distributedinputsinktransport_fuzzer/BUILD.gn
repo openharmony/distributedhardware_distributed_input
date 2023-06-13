@@ -59,8 +59,8 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
   ]
 
   external_deps = [
-    "distributed_hardware_fwk:libdhfwk_sdk",
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",

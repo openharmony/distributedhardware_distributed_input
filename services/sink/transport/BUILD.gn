@@ -53,8 +53,8 @@ ohos_shared_library("libdinput_sink_trans") {
   ]
 
   external_deps = [
-    "distributed_hardware_fwk:libdhfwk_sdk",
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hitrace_native:hitrace_meter",

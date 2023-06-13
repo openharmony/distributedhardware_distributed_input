@@ -49,8 +49,8 @@ ohos_shared_library("libdinput_utils") {
   ]
 
   external_deps = [
-    "distributed_hardware_fwk:libdhfwk_sdk",
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
