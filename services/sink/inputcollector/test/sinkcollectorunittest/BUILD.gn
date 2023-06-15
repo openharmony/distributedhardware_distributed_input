@@ -33,8 +33,6 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${utils_path}/include",
     "//third_party/json/include",
     "${fwk_interfaces_path}/include",
@@ -64,7 +62,7 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
   deps = [
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_static",
+    "//third_party/openssl:libcrypto_shared",
   ]
 
   external_deps = [

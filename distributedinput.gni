@@ -36,8 +36,6 @@ service_common = "${distributedinput_path}/services/common"
 
 fwk_common_path = "${distributedhardwarefwk_path}/common"
 
-fwk_utils_path = "${distributedhardwarefwk_path}/utils"
-
 fwk_interfaces_path = "${distributedhardwarefwk_path}/interfaces/inner_kits"
 
 distributedinput_ldflags = [ "-lpthread" ]

@@ -19,8 +19,6 @@ ohos_shared_library("libdinput_utils") {
   include_dirs = [
     "${fwk_common_path}/utils/include",
     "${fwk_common_path}/log/include",
-    "${fwk_utils_path}/include",
-    "${fwk_utils_path}/include/log",
     "//third_party/json/include",
     "${utils_path}/include",
     "${common_path}/include",
@@ -44,7 +42,7 @@ ohos_shared_library("libdinput_utils") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  deps = [ "//third_party/openssl:libcrypto_static" ]
+  deps = [ "//third_party/openssl:libcrypto_shared" ]
 
   external_deps = [
     "c_utils:utils",

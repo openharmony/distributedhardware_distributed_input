@@ -46,7 +46,7 @@
             "third_party":[
                 "jsoncpp",
                 "googletest",
-                "libcrypto_static",
+                "libcrypto_shared",
                 "libevdev",
                 "openssl"
             ]

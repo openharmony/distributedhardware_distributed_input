@@ -35,8 +35,6 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "${fwk_common_path}/utils/include",
     "${frameworks_path}/include",
     "${fwk_interfaces_path}/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${service_common}/include",
     "//third_party/json/include",
     "${dfx_utils_path}/include",
