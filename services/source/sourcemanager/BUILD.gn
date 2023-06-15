@@ -88,8 +88,6 @@ ohos_shared_library("libdinput_source") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/transport:libdinput_source_trans",
@@ -100,6 +98,7 @@ ohos_shared_library("libdinput_source") {
   external_deps = [
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",

@@ -20,7 +20,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "anonymous_string.h"
 #include "config_policy_utils.h"
 
 #include "dinput_errcode.h"

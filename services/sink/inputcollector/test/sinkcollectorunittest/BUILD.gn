@@ -62,7 +62,6 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
     "//third_party/openssl:libcrypto_static",

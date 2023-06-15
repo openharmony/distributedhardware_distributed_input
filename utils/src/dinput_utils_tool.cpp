@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,8 +21,8 @@
 
 #include <openssl/sha.h>
 
-#include "anonymous_string.h"
 #include "nlohmann/json.hpp"
+#include "securec.h"
 
 #ifndef COMPILE_TEST_MODE
 #include "softbus_bus_center.h"
@@ -213,6 +213,74 @@ std::string GetNodeDesc(std::string parameters)
 
     return "{ nodeName: " + nodeName + ", physicalPath: " + physicalPath + ", classes: " +
         std::to_string(classes) + " }";
+}
+
+std::string GetAnonyString(const std::string &value)
+{
+    constexpr size_t INT32_SHORT_ID_LENGTH = 20;
+    constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
+    constexpr size_t INT32_MIN_ID_LENGTH = 3;
+    std::string res;
+    std::string tmpStr("******");
+    size_t strLen = value.length();
+    if (strLen < INT32_MIN_ID_LENGTH) {
+        return tmpStr;
+    }
+
+    if (strLen <= INT32_SHORT_ID_LENGTH) {
+        res += value[0];
+        res += tmpStr;
+        res += value[strLen - 1];
+    } else {
+        res.append(value, 0, INT32_PLAINTEXT_LENGTH);
+        res += tmpStr;
+        res.append(value, strLen - INT32_PLAINTEXT_LENGTH, INT32_PLAINTEXT_LENGTH);
+    }
+
+    return res;
+}
+
+std::string GetAnonyInt32(const int32_t value)
+{
+    constexpr int32_t INT32_STRING_LENGTH = 40;
+    char tempBuffer[INT32_STRING_LENGTH] = "";
+    int32_t secRet = sprintf_s(tempBuffer, INT32_STRING_LENGTH, "%d", value);
+    if (secRet <= 0) {
+        std::string nullString("");
+        return nullString;
+    }
+    size_t length = strlen(tempBuffer);
+    for (size_t i = 1; i <= length - 1; i++) {
+        tempBuffer[i] = '*';
+    }
+    if (length == 0x01) {
+        tempBuffer[0] = '*';
+    }
+
+    std::string tempString(tempBuffer);
+    return tempString;
+}
+
+std::string Sha256(const std::string& in)
+{
+    unsigned char out[SHA256_DIGEST_LENGTH * 2 + 1] = {0};
+    SHA256_CTX ctx;
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, in.data(), in.size());
+    SHA256_Final(&out[SHA256_DIGEST_LENGTH], &ctx);
+    // here we translate sha256 hash to hexadecimal. each 8-bit char will be presented by two characters([0-9a-f])
+    constexpr int32_t WIDTH = 4;
+    constexpr unsigned char MASK = 0x0F;
+    const char* hexCode = "0123456789abcdef";
+    constexpr int32_t DOUBLE_TIMES = 2;
+    for (int32_t i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+        unsigned char value = out[SHA256_DIGEST_LENGTH + i];
+        // uint8_t is 2 digits in hexadecimal.
+        out[i * DOUBLE_TIMES] = hexCode[(value >> WIDTH) & MASK];
+        out[i * DOUBLE_TIMES + 1] = hexCode[value & MASK];
+    }
+    out[SHA256_DIGEST_LENGTH * DOUBLE_TIMES] = 0;
+    return reinterpret_cast<char*>(out);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -74,8 +74,6 @@ ohos_unittest("distributed_input_transbase_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
@@ -83,6 +81,7 @@ ohos_unittest("distributed_input_transbase_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hitrace_native:hitrace_meter",
   ]

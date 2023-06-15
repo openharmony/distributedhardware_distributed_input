@@ -57,8 +57,6 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
@@ -66,6 +64,7 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hitrace_native:hitrace_meter",

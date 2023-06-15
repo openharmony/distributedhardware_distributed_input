@@ -49,8 +49,8 @@ ohos_shared_library("libdinput_sink_handler") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${innerkits_path}:libdinput_sdk",
+    "${utils_path}:libdinput_utils",
   ]
 
   external_deps = [

@@ -15,8 +15,6 @@
 
 #include "distributed_input_sink_proxy.h"
 
-#include "anonymous_string.h"
-
 #include "dinput_errcode.h"
 #include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"

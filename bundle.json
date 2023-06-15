@@ -7,7 +7,7 @@
     "license":"Apache License 2.0",
     "publishAs":"code-segment",
     "segment":{
-        "destPath":"foundation/distributedhardware/distributed_input/"
+        "destPath":"foundation/distributedhardware/distributed_input"
     },
     "dirs":{},
     "scripts":{},
@@ -36,12 +36,19 @@
                 "samgr",
                 "dsoftbus",
                 "c_utils",
-                "distributed_hardware_fwk"
+                "distributed_hardware_fwk",
+                "config_policy",
+                "hisysevent_native",
+                "hitrace_native",
+                "graphic_standard",
+                "window_manager"
             ],
             "third_party":[
                 "jsoncpp",
                 "googletest",
-                "libcrypto_static"
+                "libcrypto_static",
+                "libevdev",
+                "openssl"
             ]
         },
         "build":{

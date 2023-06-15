@@ -44,14 +44,11 @@ ohos_shared_library("libdinput_utils") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  deps = [
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
-    "//third_party/openssl:libcrypto_static",
-  ]
+  deps = [ "//third_party/openssl:libcrypto_static" ]
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",

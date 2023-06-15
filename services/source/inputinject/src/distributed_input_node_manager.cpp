@@ -22,7 +22,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#include "anonymous_string.h"
 #include "softbus_bus_center.h"
 
 #include "dinput_context.h"

@@ -96,10 +96,7 @@ ohos_unittest("distributed_input_inner_test") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
-    "${utils_path}:libdinput_utils",
-  ]
+  deps = [ "${utils_path}:libdinput_utils" ]
 
   external_deps = [
     "c_utils:utils",

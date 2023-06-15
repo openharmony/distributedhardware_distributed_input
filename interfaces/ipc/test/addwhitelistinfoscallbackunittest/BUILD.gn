@@ -90,13 +90,12 @@ ohos_unittest("add_white_list_infos_callbackl_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${utils_path}:libdinput_utils",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",

@@ -67,12 +67,13 @@ ohos_unittest("distributed_input_utils_test") {
   ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
+    "${utils_path}:libdinput_utils",
     "//third_party/openssl:libcrypto_static",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",

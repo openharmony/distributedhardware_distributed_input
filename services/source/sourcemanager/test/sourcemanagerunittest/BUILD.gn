@@ -110,8 +110,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${fwk_interfaces_path}:libdhfwk_sdk",
-    "${fwk_utils_path}:distributedhardwareutils",
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/transport:libdinput_source_trans",
     "//third_party/libevdev:libevdev",
@@ -123,6 +121,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
