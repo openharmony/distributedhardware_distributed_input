@@ -27,8 +27,6 @@ ohos_shared_library("libdinput_source") {
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
     "${services_source_path}/transport/include",

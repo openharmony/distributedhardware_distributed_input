@@ -22,8 +22,6 @@ ohos_shared_library("libdinput_trans_base") {
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "//third_party/json/include",
     "${service_common}/include",
     "${dfx_utils_path}/include",

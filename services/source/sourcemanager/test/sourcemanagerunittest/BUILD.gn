@@ -39,8 +39,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${service_common}/include",
     "//third_party/json/include",
     "${services_source_path}/inputinject/include",
@@ -113,7 +111,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/transport:libdinput_source_trans",
     "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_static",
+    "//third_party/openssl:libcrypto_shared",
   ]
 
   external_deps = [

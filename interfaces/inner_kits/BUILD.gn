@@ -23,8 +23,6 @@ config("input_sdk_public_config") {
     "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
-    "${fwk_utils_path}/include",
-    "${fwk_utils_path}/include/log",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",

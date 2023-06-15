@@ -26,8 +26,6 @@ ohos_shared_library("libdinput_sink") {
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${service_common}/include",
     "${services_sink_path}/transport/include",
     "${services_sink_path}/inputcollector/include",

@@ -22,8 +22,6 @@ ohos_shared_library("libdinput_collector") {
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
-    "${fwk_utils_path}/include/log",
-    "${fwk_utils_path}/include",
     "${utils_path}/include",
     "//third_party/json/include",
     "${fwk_interfaces_path}/include",
@@ -44,7 +42,7 @@ ohos_shared_library("libdinput_collector") {
   deps = [
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_static",
+    "//third_party/openssl:libcrypto_shared",
   ]
 
   external_deps = [

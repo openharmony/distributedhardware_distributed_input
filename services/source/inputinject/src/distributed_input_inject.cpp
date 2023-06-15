@@ -17,7 +17,6 @@
 
 #include <sstream>
 
-#include "dh_utils_tool.h"
 #include "nlohmann/json.hpp"
 
 #include "dinput_errcode.h"
