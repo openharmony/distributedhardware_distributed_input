@@ -37,7 +37,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-namesapce {
+namespace {
     constexpr int32_t HEX_TO_UINT8 = 2;
     constexpr size_t INT32_SHORT_ID_LENGTH = 20;
     constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
