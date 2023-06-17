@@ -17,6 +17,7 @@ import(
 
 ohos_shared_library("libdinput_utils") {
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${fwk_common_path}/utils/include",
     "${fwk_common_path}/log/include",
     "//third_party/json/include",
