@@ -17,6 +17,7 @@ import(
 
 ohos_shared_library("libdinput_inject") {
   include_dirs = [
+    "${av_transport_path}/common/include",
     "include",
     "${common_path}/include",
     "${frameworks_path}/include",

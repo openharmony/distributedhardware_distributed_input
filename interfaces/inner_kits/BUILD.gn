@@ -17,6 +17,7 @@ import(
 
 config("input_sdk_public_config") {
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",

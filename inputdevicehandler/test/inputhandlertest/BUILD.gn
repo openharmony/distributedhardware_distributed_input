@@ -28,6 +28,7 @@ ohos_unittest("distributed_input_handler_test") {
   module_out_path = module_out_path
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
