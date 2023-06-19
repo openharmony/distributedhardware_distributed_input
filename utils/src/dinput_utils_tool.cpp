@@ -37,6 +37,15 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    constexpr int32_t HEX_TO_UINT8 = 2;
+    constexpr size_t INT32_SHORT_ID_LENGTH = 20;
+    constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
+    constexpr size_t INT32_MIN_ID_LENGTH = 3;
+    constexpr int32_t WIDTH = 4;
+    constexpr unsigned char MASK = 0x0F;
+    constexpr int32_t DOUBLE_TIMES = 2;
+}
 DevInfo GetLocalDeviceInfo()
 {
     DevInfo devInfo{"", "", 0};
@@ -217,9 +226,6 @@ std::string GetNodeDesc(std::string parameters)
 
 std::string GetAnonyString(const std::string &value)
 {
-    constexpr size_t INT32_SHORT_ID_LENGTH = 20;
-    constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
-    constexpr size_t INT32_MIN_ID_LENGTH = 3;
     std::string res;
     std::string tmpStr("******");
     size_t strLen = value.length();
@@ -263,16 +269,13 @@ std::string GetAnonyInt32(const int32_t value)
 
 std::string Sha256(const std::string& in)
 {
-    unsigned char out[SHA256_DIGEST_LENGTH * 2 + 1] = {0};
+    unsigned char out[SHA256_DIGEST_LENGTH * HEX_TO_UINT8 + 1] = {0};
     SHA256_CTX ctx;
     SHA256_Init(&ctx);
     SHA256_Update(&ctx, in.data(), in.size());
     SHA256_Final(&out[SHA256_DIGEST_LENGTH], &ctx);
     // here we translate sha256 hash to hexadecimal. each 8-bit char will be presented by two characters([0-9a-f])
-    constexpr int32_t WIDTH = 4;
-    constexpr unsigned char MASK = 0x0F;
     const char* hexCode = "0123456789abcdef";
-    constexpr int32_t DOUBLE_TIMES = 2;
     for (int32_t i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
         unsigned char value = out[SHA256_DIGEST_LENGTH + i];
         // uint8_t is 2 digits in hexadecimal.
