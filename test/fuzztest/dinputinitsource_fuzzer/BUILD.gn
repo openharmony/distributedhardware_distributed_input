@@ -24,6 +24,7 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
       "${distributedinput_path}/test/fuzztest/dinputinitsource_fuzzer"
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "include",
     "${distributedinput_path}/interfaces/inner_kits/include",
     "${distributedinput_path}/interfaces/ipc/include",
