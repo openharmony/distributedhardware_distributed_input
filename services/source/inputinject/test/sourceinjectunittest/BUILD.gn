@@ -28,6 +28,7 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
   module_out_path = module_out_path
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${innerkits_path}/include",
     "${ipc_path}/include",
     "${services_source_path}/inputinject/include",

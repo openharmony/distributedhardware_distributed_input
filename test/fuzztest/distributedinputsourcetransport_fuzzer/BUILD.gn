@@ -24,6 +24,7 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
   fuzz_config_file = "${distributedinput_path}/test/fuzztest/distributedinputsourcetransport_fuzzer"
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${services_source_path}/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",

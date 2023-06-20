@@ -38,4 +38,6 @@ fwk_common_path = "${distributedhardwarefwk_path}/common"
 
 fwk_interfaces_path = "${distributedhardwarefwk_path}/interfaces/inner_kits"
 
+av_transport_path = "${distributedhardwarefwk_path}/av_transport"
+
 distributedinput_ldflags = [ "-lpthread" ]
