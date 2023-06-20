@@ -412,6 +412,14 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
         return;
     }
     nlohmann::json recMsg = nlohmann::json::parse(message, nullptr, false);
+    if (recMsg.is_discarded()) {
+        DHLOGE("recMsg parse failed!");
+        return;
+    }
+    if (!IsUInt32(recMsg, DINPUT_SOFTBUS_KEY_CMD_TYPE)) {
+        DHLOGE("softbus cmd key is invalid");
+        return;
+    }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
     DHLOGI("HandleSession cmdType %u.", cmdType);
     if (cmdType < TRANS_MSG_SRC_SINK_SPLIT) {

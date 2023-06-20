@@ -463,6 +463,14 @@ void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::str
     }
 
     nlohmann::json recMsg = nlohmann::json::parse(message, nullptr, false);
+    if (recMsg.is_discarded()) {
+        DHLOGE("recMsg parse failed!");
+        return;
+    }
+    if (!IsUInt32(recMsg, DINPUT_SOFTBUS_KEY_CMD_TYPE)) {
+        DHLOGE("softbus cmd key is invalid");
+        return;
+    }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
     auto iter = memberFuncMap_.find(cmdType);
     if (iter == memberFuncMap_.end()) {

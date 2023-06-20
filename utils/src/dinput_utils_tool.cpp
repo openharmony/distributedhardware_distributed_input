@@ -45,6 +45,7 @@ namespace {
     constexpr int32_t WIDTH = 4;
     constexpr unsigned char MASK = 0x0F;
     constexpr int32_t DOUBLE_TIMES = 2;
+    constexpr int32_t INT32_STRING_LENGTH = 40;
 }
 DevInfo GetLocalDeviceInfo()
 {
@@ -248,7 +249,6 @@ std::string GetAnonyString(const std::string &value)
 
 std::string GetAnonyInt32(const int32_t value)
 {
-    constexpr int32_t INT32_STRING_LENGTH = 40;
     char tempBuffer[INT32_STRING_LENGTH] = "";
     int32_t secRet = sprintf_s(tempBuffer, INT32_STRING_LENGTH, "%d", value);
     if (secRet <= 0) {
