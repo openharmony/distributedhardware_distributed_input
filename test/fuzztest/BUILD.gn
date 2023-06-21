@@ -18,6 +18,8 @@ group("fuzztest") {
     "dinputconfigdh_fuzzer:fuzztest",
     "dinputinitsink_fuzzer:fuzztest",
     "dinputinitsource_fuzzer:fuzztest",
+    "dinputonsessionclosed_fuzzer:fuzztest",
+    "dinputonsessionopend_fuzzer:fuzztest",
     "dinputreleasesink_fuzzer:fuzztest",
     "dinputreleasesource_fuzzer:fuzztest",
     "dinputsubscribelocaldh_fuzzer:fuzztest",
