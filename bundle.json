@@ -1,36 +1,36 @@
 {
-    "name":"@ohos/distributed_input",
-    "description":"distributed hardware input",
-    "version":"3.2",
-    "author":{},
-    "repository":"https://gitee.com/openharmony/distributedhardware_distributed_input",
-    "license":"Apache License 2.0",
-    "publishAs":"code-segment",
-    "segment":{
-        "destPath":"foundation/distributedhardware/distributed_input"
+    "name": "@ohos/distributed_input",
+    "description": "distributed hardware input",
+    "version": "3.2",
+    "author": {},
+    "repository": "https://gitee.com/openharmony/distributedhardware_distributed_input",
+    "license": "Apache License 2.0",
+    "publishAs": "code-segment",
+    "segment": {
+        "destPath": "foundation/distributedhardware/distributed_input"
     },
-    "dirs":{},
-    "scripts":{},
-    "component":{
-        "name":"distributed_input",
-        "subsystem":"distributedhardware",
-        "syscap":[
+    "dirs": {},
+    "scripts": {},
+    "component": {
+        "name": "distributed_input",
+        "subsystem": "distributedhardware",
+        "syscap": [
             "SystemCapability.DistributedHardware.DistributedInput"
         ],
-        "features":[],
-        "adapted_system_type":[
+        "features": [],
+        "adapted_system_type": [
             "standard"
         ],
-        "rom":"16384KB",
-        "ram":"15360KB",
+        "rom": "16384KB",
+        "ram": "15360KB",
         "hisysevent_config": [
             "//foundation/distributedhardware/distributed_input/hisysevent.yaml"
         ],
-        "deps":{
-            "components":[
+        "deps": {
+            "components": [
                 "appexecfwk_standard",
                 "eventhandler",
-                "hiviewdfx_hilog_native",
+                "hilog",
                 "ipc",
                 "safwk",
                 "samgr",
@@ -43,7 +43,7 @@
                 "graphic_standard",
                 "window_manager"
             ],
-            "third_party":[
+            "third_party": [
                 "jsoncpp",
                 "googletest",
                 "libcrypto_shared",
@@ -51,8 +51,8 @@
                 "openssl"
             ]
         },
-        "build":{
-            "sub_component":[
+        "build": {
+            "sub_component": [
                 "//foundation/distributedhardware/distributed_input/interfaces/inner_kits:libdinput_sdk",
                 "//foundation/distributedhardware/distributed_input/sa_profile:distributed_input_source_sa_profile",
                 "//foundation/distributedhardware/distributed_input/sa_profile:distributed_input_sink_sa_profile",
@@ -70,19 +70,17 @@
                 "//foundation/distributedhardware/distributed_input/dfx_utils:libdinput_dfx_utils",
                 "//foundation/distributedhardware/distributed_input/utils:libdinput_utils"
             ],
-            "inner_kits":[
-                {
-                    "type": "so",
-                    "name": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits:libdinput_sdk",
-                    "header": {
-                        "header_base": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits/include",
-                        "header_files": [
-                            "distributed_input_kit.h"
-                        ]
-                    }
+            "inner_kits": [{
+                "type": "so",
+                "name": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits:libdinput_sdk",
+                "header": {
+                    "header_base": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits/include",
+                    "header_files": [
+                        "distributed_input_kit.h"
+                    ]
                 }
-            ],
-            "test":[
+            }],
+            "test": [
                 "//foundation/distributedhardware/distributed_input/interfaces/inner_kits/test:test",
                 "//foundation/distributedhardware/distributed_input/sourcehandler/test:test",
                 "//foundation/distributedhardware/distributed_input/sinkhandler/test:test",

@@ -49,8 +49,8 @@ ohos_shared_library("libdinput_utils") {
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
+    "hilog:libhilog",
     "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
