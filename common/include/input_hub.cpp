@@ -211,8 +211,10 @@ size_t InputHub::CollectEvent(RawEvent* buffer, size_t& capacity, Device* device
     std::vector<bool> needFilted(capacity, false);
     bool isTouchEvent = false;
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
-        isTouchEvent = true;
-        HandleTouchScreenEvent(readBuffer, count, needFilted);
+        if (device->identifier.relTypes.size() != 0) {
+            isTouchEvent = true;
+            HandleTouchScreenEvent(readBuffer, count, needFilted);
+        }
     }
 
     RawEvent* event = buffer;
