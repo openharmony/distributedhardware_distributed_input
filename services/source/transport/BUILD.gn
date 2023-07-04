@@ -53,7 +53,7 @@ ohos_shared_library("libdinput_source_trans") {
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
-    "hitrace_native:hitrace_meter",
+    "hitrace:hitrace_meter",
     "samgr:samgr_proxy",
   ]
 

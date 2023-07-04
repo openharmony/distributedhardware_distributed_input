@@ -78,7 +78,7 @@ ohos_unittest("distributed_input_source_handler_test") {
   external_deps = [
     "c_utils:utils",
     "eventhandler:libeventhandler",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]

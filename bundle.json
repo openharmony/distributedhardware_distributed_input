@@ -38,8 +38,8 @@
                 "c_utils",
                 "distributed_hardware_fwk",
                 "config_policy",
-                "hisysevent_native",
-                "hitrace_native",
+                "hisysevent",
+                "hitrace",
                 "graphic_standard",
                 "window_manager"
             ],
