@@ -15,6 +15,7 @@
 
 #include "input_hub.h"
 
+#include <algorithm>
 #include <cinttypes>
 #include <cstring>
 #include <dirent.h>
@@ -27,7 +28,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <utility>
-
 
 #include "constants_dinput.h"
 #include "dinput_context.h"
@@ -205,13 +205,24 @@ size_t InputHub::GetEvents(RawEvent* buffer, size_t bufferSize)
     return event - buffer;
 }
 
+bool InputHub::IsTouchPad(const InputDevice& inputDevice)
+{
+    std::string dhName = inputDevice.name;
+    DHLOGI("device name is %s.", dhName.c_str());
+    transform(dhName.begin(), dhName.end(), dhName.begin(), ::tolower);
+    if (dhName.find(DH_TOUCH_PAD) == std::string::npos) {
+        return false;
+    }
+    return true;
+}
+
 size_t InputHub::CollectEvent(RawEvent* buffer, size_t& capacity, Device* device, struct input_event readBuffer[],
     const size_t count)
 {
     std::vector<bool> needFilted(capacity, false);
     bool isTouchEvent = false;
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
-        if (device->identifier.relTypes.size() != 0) {
+        if (!IsTouchPad(device->identifier)) {
             isTouchEvent = true;
             HandleTouchScreenEvent(readBuffer, count, needFilted);
         }

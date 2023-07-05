@@ -126,6 +126,7 @@ private:
 
     bool ContainsNonZeroByte(const uint8_t* array, uint32_t startIndex, uint32_t endIndex);
     int64_t ProcessEventTimestamp(const input_event& event);
+    bool IsTouchPad(const InputDevice& inputDevice);
 
     /*
      * this macro is used to tell if "bit" is set in "array"
