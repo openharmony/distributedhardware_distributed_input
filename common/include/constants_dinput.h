@@ -182,6 +182,8 @@ namespace DistributedInput {
 
     const std::string PROPERTIES = "properties";
 
+    const std::string DH_TOUCH_PAD = "touchpad";
+
     const std::string DINPUT_LOG_TITLE_TAG = "DINPUT";
 
     constexpr const char* LATENCY_COUNT_THREAD_NAME = "latencyCount";
