@@ -28,7 +28,6 @@
         ],
         "deps": {
             "components": [
-                "appexecfwk_standard",
                 "eventhandler",
                 "hilog",
                 "ipc",
@@ -46,7 +45,6 @@
             "third_party": [
                 "jsoncpp",
                 "googletest",
-                "libcrypto_shared",
                 "libevdev",
                 "openssl"
             ]
