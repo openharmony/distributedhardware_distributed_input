@@ -797,7 +797,9 @@ DistributedInputSinkManager::ProjectWindowListener::ProjectWindowListener(Distri
     if (screen_ == nullptr) {
         std::vector<sptr<Rosen::Screen>> screens;
         Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
-        screen_ = screens[SCREEN_ID_DEFAULT];
+        if (screens.size() > 0) {
+            screen_ = screens[SCREEN_ID_DEFAULT];
+        }
     }
 }
 
