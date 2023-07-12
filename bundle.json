@@ -39,7 +39,7 @@
                 "config_policy",
                 "hisysevent",
                 "hitrace",
-                "graphic_standard",
+                "graphic_2d",
                 "window_manager"
             ],
             "third_party": [

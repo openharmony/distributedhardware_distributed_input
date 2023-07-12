@@ -120,7 +120,7 @@ ohos_unittest("distributed_input_client_test") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
-    "graphic_standard:surface",
+    "graphic_2d:surface",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
