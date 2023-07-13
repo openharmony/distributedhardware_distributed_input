@@ -179,7 +179,7 @@ namespace DistributedInput {
     constexpr int32_t ERR_DH_INPUT_HIDUMP_DPRINTF_FAIL = -68002;
 
     // null pointer is not verified
-    constexpr int32_t ERR_DH_INPUT_NULLPTR_NOT_VERIFY = -69000;
+    constexpr int32_t ERR_DH_INPUT_POINTER_NULL = -69000;
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

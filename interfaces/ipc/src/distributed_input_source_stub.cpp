@@ -57,7 +57,7 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
     sptr<IRegisterDInputCallback> callback = iface_cast<IRegisterDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleRegisterDistributedHardware failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterDistributedHardware(devId, dhId, params, callback);
     if (!reply.WriteInt32(ret)) {
@@ -74,7 +74,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
     sptr<IUnregisterDInputCallback> callback = iface_cast<IUnregisterDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleUnregisterDistributedHardware failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = UnregisterDistributedHardware(devId, dhId, callback);
     if (!reply.WriteInt32(ret)) {
@@ -90,7 +90,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
     sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandlePrepareRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = PrepareRemoteInput(deviceId, callback);
     if (!reply.WriteInt32(ret)) {
@@ -106,7 +106,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
     sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleUnprepareRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = UnprepareRemoteInput(deviceId, callback);
     if (!reply.WriteInt32(ret)) {
@@ -123,7 +123,7 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
     sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStartRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StartRemoteInput(deviceId, inputTypes, callback);
     if (!reply.WriteInt32(ret)) {
@@ -140,7 +140,7 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
     sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStopRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StopRemoteInput(deviceId, inputTypes, callback);
     if (!reply.WriteInt32(ret)) {
@@ -158,7 +158,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
     sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStartRelayTypeRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StartRemoteInput(srcId, sinkId, inputTypes, callback);
     if (!reply.WriteInt32(ret)) {
@@ -176,7 +176,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
     sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStopRelayTypeRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StopRemoteInput(srcId, sinkId, inputTypes, callback);
     if (!reply.WriteInt32(ret)) {
@@ -193,7 +193,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
     sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandlePrepareRelayRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = PrepareRemoteInput(srcId, sinkId, callback);
     if (!reply.WriteInt32(ret)) {
@@ -210,7 +210,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
     sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleUnprepareRelayRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = UnprepareRemoteInput(srcId, sinkId, callback);
     if (!reply.WriteInt32(ret)) {
@@ -243,7 +243,7 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
     sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStartDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StartRemoteInput(sinkId, tempVector, callback);
     if (!reply.WriteInt32(ret)) {
@@ -276,7 +276,7 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
     sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStopDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StopRemoteInput(sinkId, tempVector, callback);
     if (!reply.WriteInt32(ret)) {
@@ -310,7 +310,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
     sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStartRelayDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StartRemoteInput(srcId, sinkId, tempVector, callback);
     if (!reply.WriteInt32(ret)) {
@@ -344,7 +344,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel
     sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleStopRelayDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = StopRemoteInput(srcId, sinkId, tempVector, callback);
     if (!reply.WriteInt32(ret)) {
@@ -373,7 +373,7 @@ int32_t DistributedInputSourceStub::HandleRegisterAddWhiteListCallback(MessagePa
     sptr<IAddWhiteListInfosCallback> callback = iface_cast<IAddWhiteListInfosCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleRegisterAddWhiteListCallback failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterAddWhiteListCallback(callback);
     if (!reply.WriteInt32(ret)) {
@@ -388,7 +388,7 @@ int32_t DistributedInputSourceStub::HandleRegisterDelWhiteListCallback(MessagePa
     sptr<IDelWhiteListInfosCallback> callback = iface_cast<IDelWhiteListInfosCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleRegisterDelWhiteListCallback failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterDelWhiteListCallback(callback);
     if (!reply.WriteInt32(ret)) {
@@ -403,7 +403,7 @@ int32_t DistributedInputSourceStub::HandleRegisterInputNodeListener(MessageParce
     sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleRegisterInputNodeListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterInputNodeListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -419,7 +419,7 @@ int32_t DistributedInputSourceStub::HandleUnRegisterInputNodeListener(MessagePar
     sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleUnRegisterInputNodeListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterInputNodeListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -435,7 +435,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSimulationEventListener(Messag
     sptr<ISimulationEventListener> callback = iface_cast<ISimulationEventListener>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleRegisterSimulationEventListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = RegisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -451,7 +451,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(Mess
     sptr<ISimulationEventListener> callback = iface_cast<ISimulationEventListener>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGE("HandleUnregisterSimulationEventListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+        return ERR_DH_INPUT_POINTER_NULL;
     }
     int32_t ret = UnregisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {
