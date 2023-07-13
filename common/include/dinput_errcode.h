@@ -177,6 +177,9 @@ namespace DistributedInput {
     constexpr int32_t ERR_DH_INPUT_HIDUMP_INVALID_ARGS = -68000;
     constexpr int32_t ERR_DH_INPUT_HIDUMP_DUMP_PROCESS_FAIL = -68001;
     constexpr int32_t ERR_DH_INPUT_HIDUMP_DPRINTF_FAIL = -68002;
+
+    // null pointer is not verified
+    constexpr int32_t ERR_DH_INPUT_NULLPTR_NOT_VERIFY = -69000;
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

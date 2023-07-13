@@ -51,6 +51,10 @@ int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParc
 
 int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleRegisterDistributedHardware failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string params = data.ReadString();
@@ -65,6 +69,10 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
 
 int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleUnregisterDistributedHardware failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     sptr<IUnregisterDInputCallback> callback = iface_cast<IUnregisterDInputCallback>(data.ReadRemoteObject());
@@ -78,6 +86,10 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
 
 int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandlePrepareRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string deviceId = data.ReadString();
     sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
     int32_t ret = PrepareRemoteInput(deviceId, callback);
@@ -90,6 +102,10 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
 
 int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleUnprepareRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string deviceId = data.ReadString();
     sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
     int32_t ret = UnprepareRemoteInput(deviceId, callback);
@@ -102,6 +118,10 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
 
 int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStartRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string deviceId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
     sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
@@ -115,6 +135,10 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
 
 int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStopRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string deviceId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
     sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
@@ -128,6 +152,10 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
 
 int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStartRelayTypeRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
@@ -142,6 +170,10 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
 
 int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStopRelayTypeRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
@@ -156,6 +188,10 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
 
 int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandlePrepareRelayRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
     sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
@@ -169,6 +205,10 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
 
 int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleUnprepareRelayRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
     sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
@@ -182,6 +222,10 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
 
 int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStartDhidRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string sinkId = data.ReadString();
 
     std::vector<std::string> tempVector;
@@ -211,6 +255,10 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
 
 int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStopDhidRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string sinkId = data.ReadString();
 
     std::vector<std::string> tempVector;
@@ -240,6 +288,10 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
 
 int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStartRelayDhidRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
 
@@ -270,6 +322,10 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
 
 int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleStopRelayDhidRemoteInput failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
 
@@ -314,6 +370,10 @@ int32_t DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput(MessageParcel 
 
 int32_t DistributedInputSourceStub::HandleRegisterAddWhiteListCallback(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleRegisterAddWhiteListCallback failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<IAddWhiteListInfosCallback> callback = iface_cast<IAddWhiteListInfosCallback>(data.ReadRemoteObject());
     int32_t ret = RegisterAddWhiteListCallback(callback);
     if (!reply.WriteInt32(ret)) {
@@ -325,6 +385,10 @@ int32_t DistributedInputSourceStub::HandleRegisterAddWhiteListCallback(MessagePa
 
 int32_t DistributedInputSourceStub::HandleRegisterDelWhiteListCallback(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleRegisterDelWhiteListCallback failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<IDelWhiteListInfosCallback> callback = iface_cast<IDelWhiteListInfosCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
         DHLOGI("HandleRegisterDelWhiteListCallback callback is null");
@@ -340,6 +404,10 @@ int32_t DistributedInputSourceStub::HandleRegisterDelWhiteListCallback(MessagePa
 
 int32_t DistributedInputSourceStub::HandleRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleRegisterInputNodeListener failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
     int32_t ret = RegisterInputNodeListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -352,6 +420,10 @@ int32_t DistributedInputSourceStub::HandleRegisterInputNodeListener(MessageParce
 
 int32_t DistributedInputSourceStub::HandleUnRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleUnRegisterInputNodeListener failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
     int32_t ret = RegisterInputNodeListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -364,6 +436,10 @@ int32_t DistributedInputSourceStub::HandleUnRegisterInputNodeListener(MessagePar
 
 int32_t DistributedInputSourceStub::HandleRegisterSimulationEventListener(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleRegisterSimulationEventListener failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<ISimulationEventListener> callback = iface_cast<ISimulationEventListener>(data.ReadRemoteObject());
     int32_t ret = RegisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {
@@ -376,6 +452,10 @@ int32_t DistributedInputSourceStub::HandleRegisterSimulationEventListener(Messag
 
 int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("HandleUnregisterSimulationEventListener failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<ISimulationEventListener> callback = iface_cast<ISimulationEventListener>(data.ReadRemoteObject());
     int32_t ret = UnregisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {

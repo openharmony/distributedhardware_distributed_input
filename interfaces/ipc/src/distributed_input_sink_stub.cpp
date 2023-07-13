@@ -140,7 +140,7 @@ int32_t DistributedInputSinkStub::RegisterSharingDhIdListenerInner(MessageParcel
 {
     if (data.ReadRemoteObject() == nullptr) {
         DHLOGE("RegisterSharingDhIdListenerInner failed, data.ReadRemoteObject is nullptr.");
-        return ERR_DH_INPUT_SINK_STUB_REGISTER_SHARING_DHID_LISTENER_FAIL;
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
     }
     sptr<ISharingDhIdListener> listener = iface_cast<ISharingDhIdListener>(data.ReadRemoteObject());
     int32_t ret = RegisterSharingDhIdListener(listener);
@@ -155,6 +155,10 @@ int32_t DistributedInputSinkStub::RegisterSharingDhIdListenerInner(MessageParcel
 int32_t DistributedInputSinkStub::RegisterGetSinkScreenInfosInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    if (data.ReadRemoteObject() == nullptr) {
+        DHLOGE("RegisterGetSinkScreenInfosInner failed, data.ReadRemoteObject is nullptr.");
+        return ERR_DH_INPUT_NULLPTR_NOT_VERIFY;
+    }
     sptr<IGetSinkScreenInfosCallback> callback =
         iface_cast<IGetSinkScreenInfosCallback>(data.ReadRemoteObject());
     int32_t ret = RegisterGetSinkScreenInfosCallback(callback);
