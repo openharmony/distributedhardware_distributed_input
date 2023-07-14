@@ -48,7 +48,7 @@ VirtualDevice::~VirtualDevice()
 
 bool VirtualDevice::DoIoctl(int32_t fd, int32_t request, const uint32_t value)
 {
-    int32_t rc = ioctl(fd, request, value);
+    int rc = ioctl(fd, request, value);
     if (rc < 0) {
         DHLOGE("ioctl failed");
         return false;
@@ -90,6 +90,10 @@ void VirtualDevice::SetABSInfo(struct uinput_user_dev& inputUserDev, const Input
         DHLOGI("SetABSInfo nodeName: %s, absCode: %d, absMin: %d, absMax: %d, absFuzz: %d, absFlat: %d",
             inputDevice.name.c_str(), absCode, absInfo[ABS_MIN_POS], absInfo[ABS_MAX_POS], absInfo[ABS_FUZZ_POS],
             absInfo[ABS_FLAT_POS]);
+        if (absInfo[ABS_MAX_POS] < absInfo[ABS_MIN_POS]) {
+            DHLOGE("NodeName: %s, absCode: %d, attributes is invalid.", inputDevice.name.c_str(), absCode);
+            continue;
+        }
         inputUserDev.absmin[absCode] = absInfo[ABS_MIN_POS];
         inputUserDev.absmax[absCode] = absInfo[ABS_MAX_POS];
         inputUserDev.absfuzz[absCode] = absInfo[ABS_FUZZ_POS];
@@ -146,12 +150,9 @@ bool VirtualDevice::SetUp(const InputDevice& inputDevice, const std::string& dev
         DHLOGE("Unable to set input device info");
         return false;
     }
-
-    if (ioctl(fd_, UI_DEV_CREATE) < 0) {
-        DHLOGE(
-            "fd = %d, ioctl(fd_, UI_DEV_CREATE) = %d",
-            fd_, ioctl(fd_, UI_DEV_CREATE));
-        DHLOGE("Unable to create input device");
+    int ret = ioctl(fd_, UI_DEV_CREATE);
+    if (ret < 0) {
+        DHLOGE("Unable to create input device, fd: %d, ret= %d", fd_, ret);
         return false;
     }
     DHLOGI("create fd %d", fd_);
