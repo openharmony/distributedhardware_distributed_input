@@ -19,6 +19,7 @@
 #include "i_distributed_source_input.h"
 
 #include <iostream>
+#include <atomic>
 
 #include "iremote_stub.h"
 
@@ -57,6 +58,8 @@ private:
     int32_t HandleRegisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     int32_t HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
+private:
+    std::atomic<bool> sourceInitFlag_ {false};
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

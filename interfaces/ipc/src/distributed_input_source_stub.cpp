@@ -31,11 +31,16 @@ DistributedInputSourceStub::~DistributedInputSourceStub()
 
 int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel &reply)
 {
+    if (sourceInitFlag_.load()) {
+        DHLOGE("DistributedInputSourceStub already init.");
+        return DH_SUCCESS;
+    }
     int32_t ret = Init();
     if (!reply.WriteInt32(ret)) {
         DHLOGE("DistributedInputSourceStub Init write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
+    sourceInitFlag_.store(true);
     return DH_SUCCESS;
 }
 
