@@ -18,8 +18,9 @@
 
 #include "i_distributed_source_input.h"
 
-#include <iostream>
 #include <atomic>
+#include <iostream>
+#include <mutex>
 
 #include "iremote_stub.h"
 
@@ -59,7 +60,8 @@ private:
     int32_t HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
 private:
-    std::atomic<bool> sourceInitFlag_ {false};
+    std::atomic<bool> sourceManagerInitFlag_ {false};
+    std::mutex sourceManagerReleaseMutex_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
