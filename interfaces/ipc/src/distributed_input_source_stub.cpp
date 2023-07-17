@@ -31,6 +31,7 @@ DistributedInputSourceStub::~DistributedInputSourceStub()
 
 int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel &reply)
 {
+    std::unique_lock<std::mutex> lock(operatorMutex_);
     if (sourceManagerInitFlag_.load()) {
         DHLOGE("DistributedInputSourceStub already init.");
         return DH_SUCCESS;
@@ -46,12 +47,17 @@ int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel 
 
 int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParcel &reply)
 {
-    std::unique_lock<std::mutex> lock(sourceManagerReleaseMutex_);
+    std::unique_lock<std::mutex> lock(operatorMutex_);
+    if (!sourceManagerInitFlag_.load()) {
+        DHLOGE("DistributedInputSourceStub already Release.");
+        return DH_SUCCESS;
+    }
     int32_t ret = Release();
     if (!reply.WriteInt32(ret)) {
         DHLOGE("DistributedInputSourceStub release write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
+    sourceManagerInitFlag_.store(false);
     return DH_SUCCESS;
 }
 

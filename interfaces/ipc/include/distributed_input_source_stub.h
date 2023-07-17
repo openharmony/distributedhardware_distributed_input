@@ -61,7 +61,7 @@ private:
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
 private:
     std::atomic<bool> sourceManagerInitFlag_ {false};
-    std::mutex sourceManagerReleaseMutex_;
+    std::mutex operatorMutex_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
