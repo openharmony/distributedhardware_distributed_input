@@ -2648,8 +2648,8 @@ void DistributedInputSourceManager::StartDScreenListener::OnMessage(const DHTopi
 
     sptr<IRemoteObject> dScreenSrcSA =
         DInputContext::GetInstance().GetRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
-    sptr<DScreenSourceSvrRecipient> dScreenSrcDeathRecipient = new(std::nothrow) DScreenSourceSvrRecipient(srcDevId,
-        sinkDevId, srcScreenInfo.sourceWinId);
+    sptr<DScreenSourceSvrRecipient> dScreenSrcDeathRecipient(new(std::nothrow) DScreenSourceSvrRecipient(srcDevId,
+        sinkDevId, srcScreenInfo.sourceWinId));
     dScreenSrcSA->AddDeathRecipient(dScreenSrcDeathRecipient);
     DInputContext::GetInstance().AddRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, dScreenSrcSA);
 }

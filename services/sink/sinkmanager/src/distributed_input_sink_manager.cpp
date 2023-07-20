@@ -833,8 +833,8 @@ void DistributedInputSinkManager::ProjectWindowListener::OnMessage(const DHTopic
     }
     sptr<IRemoteObject> dScreenSinkSA = DInputContext::GetInstance().GetRemoteObject(
         DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
-    sptr<DScreenSinkSvrRecipient> dScreenSinkDeathRecipient = new(std::nothrow) DScreenSinkSvrRecipient(srcDeviceId,
-        srcWinId);
+    sptr<DScreenSinkSvrRecipient> dScreenSinkDeathRecipient(new(std::nothrow) DScreenSinkSvrRecipient(srcDeviceId,
+        srcWinId));
     dScreenSinkSA->AddDeathRecipient(dScreenSinkDeathRecipient);
     DInputContext::GetInstance().AddRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, dScreenSinkSA);
 }

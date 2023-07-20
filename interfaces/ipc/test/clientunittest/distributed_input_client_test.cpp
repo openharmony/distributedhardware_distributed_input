@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -194,7 +194,7 @@ HWTEST_F(DistributedInputClientTest, UnregisterDistributedHardware02, testing::e
 HWTEST_F(DistributedInputClientTest, PrepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "PrepareRemoteInput01";
-    sptr<TestPrepareDInputCallback> callback = new TestPrepareDInputCallback();
+    sptr<TestPrepareDInputCallback> callback(new TestPrepareDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().PrepareRemoteInput(deviceId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
 }
@@ -213,7 +213,7 @@ HWTEST_F(DistributedInputClientTest, PrepareRemoteInput03, testing::ext::TestSiz
 {
     std::string srcId = "PrepareRemoteInput_test";
     std::string sinkId = "PrepareRemoteInput_test";
-    sptr<IPrepareDInputCallback> callback = new TestPrepareDInputCallback();
+    sptr<IPrepareDInputCallback> callback(new TestPrepareDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().PrepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
 }
@@ -230,7 +230,7 @@ HWTEST_F(DistributedInputClientTest, PrepareRemoteInput04, testing::ext::TestSiz
 HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput01, testing::ext::TestSize.Level0)
 {
     string deviceId = "UnprepareRemoteInput01";
-    sptr<TestUnprepareDInputCallback> callback = new TestUnprepareDInputCallback();
+    sptr<TestUnprepareDInputCallback> callback(new TestUnprepareDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().UnprepareRemoteInput(deviceId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
@@ -247,7 +247,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput03, testing::ext::TestS
 {
     std::string srcId = "PrepareRemoteInput_src";
     std::string sinkId = "PrepareRemoteInput_sink";
-    sptr<TestUnprepareDInputCallback> callback = new TestUnprepareDInputCallback();
+    sptr<TestUnprepareDInputCallback> callback(new TestUnprepareDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().UnprepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
@@ -264,7 +264,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput04, testing::ext::TestS
 HWTEST_F(DistributedInputClientTest, StartRemoteInput01, testing::ext::TestSize.Level0)
 {
     string deviceId = "StartRemoteInput01";
-    sptr<TestStartDInputCallback> callback = new TestStartDInputCallback();
+    sptr<TestStartDInputCallback> callback(new TestStartDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StartRemoteInput(
         deviceId, static_cast<uint32_t>(DInputDeviceType::ALL), callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
@@ -283,7 +283,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput03, testing::ext::TestSize.
 {
     std::string sinkId = "StartRemoteInput_sink";
     std::vector<std::string> dhIds = {"dhIds_test"};
-    sptr<TestStartStopDInputCallback> callback = new TestStartStopDInputCallback();
+    sptr<TestStartStopDInputCallback> callback(new TestStartStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StartRemoteInput(sinkId, dhIds, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
@@ -301,7 +301,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput05, testing::ext::TestSize.
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
-    sptr<TestStartDInputCallback> callback = new TestStartDInputCallback();
+    sptr<TestStartDInputCallback> callback(new TestStartDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StartRemoteInput(
         srcId, sinkId, static_cast<uint32_t>(DInputDeviceType::ALL), callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
@@ -322,7 +322,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput07, testing::ext::TestSize.
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
     std::vector<std::string> dhIds = {"dhIds_test"};
-    sptr<TestStartStopDInputCallback> callback = new TestStartStopDInputCallback();
+    sptr<TestStartStopDInputCallback> callback(new TestStartStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StartRemoteInput(srcId, sinkId, dhIds, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
@@ -340,7 +340,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput08, testing::ext::TestSize.
 HWTEST_F(DistributedInputClientTest, StopRemoteInput01, testing::ext::TestSize.Level0)
 {
     string deviceId = "StopRemoteInput01";
-    sptr<TestStopDInputCallback> callback = new TestStopDInputCallback();
+    sptr<TestStopDInputCallback> callback(new TestStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StopRemoteInput(
         deviceId, static_cast<uint32_t>(DInputDeviceType::ALL), callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
@@ -359,7 +359,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput03, testing::ext::TestSize.L
 {
     std::string sinkId = "StartRemoteInput_test";
     std::vector<std::string> dhIds = {"dhIds_test"};
-    sptr<TestStartStopDInputCallback> callback = new TestStartStopDInputCallback();
+    sptr<TestStartStopDInputCallback> callback(new TestStartStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StopRemoteInput(sinkId, dhIds, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
@@ -377,7 +377,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput05, testing::ext::TestSize.L
 {
     string srcId = "StopRemoteInput03-src";
     string sinkId = "StopRemoteInput03-sink";
-    sptr<TestStopDInputCallback> callback = new TestStopDInputCallback();
+    sptr<TestStopDInputCallback> callback(new TestStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StopRemoteInput(
         srcId, sinkId, static_cast<uint32_t>(DInputDeviceType::ALL), callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
@@ -398,7 +398,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput07, testing::ext::TestSize.L
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
     std::vector<std::string> dhIds = {"dhIds_test"};
-    sptr<TestStartStopDInputCallback> callback = new TestStartStopDInputCallback();
+    sptr<TestStartStopDInputCallback> callback(new TestStartStopDInputCallback());
     int32_t ret = DistributedInputClient::GetInstance().StopRemoteInput(srcId, sinkId, dhIds, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }

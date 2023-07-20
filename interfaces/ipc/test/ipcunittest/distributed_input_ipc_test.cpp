@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -222,7 +222,7 @@ HWTEST_F(DistributedInputIpcTest, RegisterInputNodeListener01, testing::ext::Tes
 
 HWTEST_F(DistributedInputIpcTest, RegisterInputNodeListener02, testing::ext::TestSize.Level1)
 {
-    sptr<TestInputNodeListener> listener = new TestInputNodeListener();
+    sptr<TestInputNodeListener> listener(new TestInputNodeListener());
     int32_t ret = DistributedInputClient::GetInstance().RegisterInputNodeListener(listener);
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
@@ -236,7 +236,7 @@ HWTEST_F(DistributedInputIpcTest, UnregisterInputNodeListener01, testing::ext::T
 
 HWTEST_F(DistributedInputIpcTest, UnregisterInputNodeListener02, testing::ext::TestSize.Level1)
 {
-    sptr<TestInputNodeListener> listener = new TestInputNodeListener();
+    sptr<TestInputNodeListener> listener(new TestInputNodeListener());
     int32_t ret = DistributedInputClient::GetInstance().UnregisterInputNodeListener(listener);
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
@@ -250,7 +250,7 @@ HWTEST_F(DistributedInputIpcTest, RegisterSimulationEventListener01, testing::ex
 
 HWTEST_F(DistributedInputIpcTest, RegisterSimulationEventListener02, testing::ext::TestSize.Level1)
 {
-    sptr<TestSimulationEventListenerStub> listener = new TestSimulationEventListenerStub();
+    sptr<TestSimulationEventListenerStub> listener(new TestSimulationEventListenerStub());
     int32_t ret = DistributedInputClient::GetInstance().RegisterSimulationEventListener(listener);
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
@@ -264,7 +264,7 @@ HWTEST_F(DistributedInputIpcTest, UnregisterSimulationEventListener01, testing::
 
 HWTEST_F(DistributedInputIpcTest, UnregisterSimulationEventListener02, testing::ext::TestSize.Level1)
 {
-    sptr<TestSimulationEventListenerStub> listener = new TestSimulationEventListenerStub();
+    sptr<TestSimulationEventListenerStub> listener(new TestSimulationEventListenerStub());
     int32_t ret = DistributedInputClient::GetInstance().UnregisterSimulationEventListener(listener);
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }

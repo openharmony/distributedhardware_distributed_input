@@ -179,7 +179,7 @@ int32_t AddWhiteListInfosCallbackTest::TestDistributedInputSinkStub::RegisterSha
 
 HWTEST_F(AddWhiteListInfosCallbackTest, AddWhiteListInfosCallback01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestAddWhiteListInfosCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestAddWhiteListInfosCallbackStub());
     AddWhiteListInfosCallbackProxy callBackProxy(callBackStubPtr);
     std::string deviceId = "deviceId0";
     std::string json = "json0";
@@ -190,7 +190,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, AddWhiteListInfosCallback01, testing::ex
 
 HWTEST_F(AddWhiteListInfosCallbackTest, GetSinkScreenInfosCallback01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestGetSinkScreenInfosCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestGetSinkScreenInfosCallbackStub());
     GetSinkScreenInfosCallbackProxy callBackProxy(callBackStubPtr);
     std::string json = "json0";
     callBackProxy.OnResult(json);
@@ -199,7 +199,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, GetSinkScreenInfosCallback01, testing::e
 
 HWTEST_F(AddWhiteListInfosCallbackTest, InputNodeListenerStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> nodeListener = new TestInputNodeListenerStub();
+    sptr<IRemoteObject> nodeListener(new TestInputNodeListenerStub());
     InputNodeListenerProxy nodeListenerProxy(nodeListener);
     std::string srcDevId = "srcDevId_test";
     std::string sinkDevId = "sinkDevId_test";
@@ -214,7 +214,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, InputNodeListenerStub01, testing::ext::T
 
 HWTEST_F(AddWhiteListInfosCallbackTest, InputNodeListenerStub02, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> nodeListener = new TestInputNodeListenerStub();
+    sptr<IRemoteObject> nodeListener(new TestInputNodeListenerStub());
     InputNodeListenerProxy nodeListenerProxy(nodeListener);
     std::string srcDevId = "srcDevId_test";
     std::string sinkDevId = "sinkDevId_test";
@@ -227,7 +227,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, InputNodeListenerStub02, testing::ext::T
 
 HWTEST_F(AddWhiteListInfosCallbackTest, PrepareDInputCallback01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestPrepareDInputCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestPrepareDInputCallbackStub());
     PrepareDInputCallbackProxy callBackProxy(callBackStubPtr);
     std::string devId = "devId_test";
     int32_t status = 0;
@@ -237,7 +237,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, PrepareDInputCallback01, testing::ext::T
 
 HWTEST_F(AddWhiteListInfosCallbackTest, RegisterDInputCallback01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestRegisterDInputCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestRegisterDInputCallbackStub());
     RegisterDInputCallbackProxy callBackProxy(callBackStubPtr);
     std::string devId = "devId_test";
     std::string dhId = "dhId_test";
@@ -249,7 +249,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, RegisterDInputCallback01, testing::ext::
 
 HWTEST_F(AddWhiteListInfosCallbackTest, SharingDhIdListenerStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> sharingStubPtr = new TestSharingDhIdListenerStub();
+    sptr<IRemoteObject> sharingStubPtr(new TestSharingDhIdListenerStub());
     SharingDhIdListenerProxy sharingProxy(sharingStubPtr);
     std::string dhId = "dhId_test";
     int32_t ret = sharingProxy.OnSharing(dhId);
@@ -258,7 +258,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, SharingDhIdListenerStub01, testing::ext:
 
 HWTEST_F(AddWhiteListInfosCallbackTest, SharingDhIdListenerStub02, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> sharingStubPtr = new TestSharingDhIdListenerStub();
+    sptr<IRemoteObject> sharingStubPtr(new TestSharingDhIdListenerStub());
     SharingDhIdListenerProxy sharingProxy(sharingStubPtr);
     std::string dhId = "dhId_test";
     int32_t ret = sharingProxy.OnNoSharing(dhId);
@@ -267,7 +267,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, SharingDhIdListenerStub02, testing::ext:
 
 HWTEST_F(AddWhiteListInfosCallbackTest, SimulationEventListenerStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> simulationStubPtr = new TestSimulationEventListenerStub();
+    sptr<IRemoteObject> simulationStubPtr(new TestSimulationEventListenerStub());
     SimulationEventListenerProxy sharingProxy(simulationStubPtr);
     uint32_t type = 1;
     uint32_t code = 1;
@@ -278,7 +278,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, SimulationEventListenerStub01, testing::
 
 HWTEST_F(AddWhiteListInfosCallbackTest, StartDInputCallbackStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestStartDInputCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestStartDInputCallbackStub());
     StartDInputCallbackProxy callBackProxy(callBackStubPtr);
     std::string devId = "devId_test";
     uint32_t inputTypes = static_cast<uint32_t>(DInputDeviceType::ALL);
@@ -289,7 +289,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, StartDInputCallbackStub01, testing::ext:
 
 HWTEST_F(AddWhiteListInfosCallbackTest, StartStopDInputsCallbackStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestStartStopDInputsCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestStartStopDInputsCallbackStub());
     StartStopDInputsCallbackProxy callBackProxy(callBackStubPtr);
     std::string devId = "devId_test";
     int32_t status = 1;
@@ -300,7 +300,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, StartStopDInputsCallbackStub01, testing:
 
 HWTEST_F(AddWhiteListInfosCallbackTest, StartStopResultCallbackStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestStartStopResultCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestStartStopResultCallbackStub());
     StartStopResultCallbackProxy callBackProxy(callBackStubPtr);
     std::string srcId = "srcId_test";
     std::string sinkId = "sinkId_test";
@@ -313,7 +313,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, StartStopResultCallbackStub01, testing::
 
 HWTEST_F(AddWhiteListInfosCallbackTest, StartStopResultCallbackStub02, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestStartStopResultCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestStartStopResultCallbackStub());
     StartStopResultCallbackProxy callBackProxy(callBackStubPtr);
     std::string srcId = "srcId_test";
     std::string sinkId = "sinkId_test";
@@ -326,7 +326,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, StartStopResultCallbackStub02, testing::
 
 HWTEST_F(AddWhiteListInfosCallbackTest, StopDInputCallbackStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> callBackStubPtr = new TestStopDInputCallbackStub();
+    sptr<IRemoteObject> callBackStubPtr(new TestStopDInputCallbackStub());
     StopDInputCallbackProxy callBackProxy(callBackStubPtr);
     std::string devId = "devId_test";
     uint32_t inputTypes = static_cast<uint32_t>(DInputDeviceType::ALL);
@@ -337,7 +337,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, StopDInputCallbackStub01, testing::ext::
 
 HWTEST_F(AddWhiteListInfosCallbackTest, DistributedInputSinkStub01, testing::ext::TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDistributedInputSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDistributedInputSinkStub());
     DistributedInputSinkProxy sinkProxy(sinkStubPtr);
     int32_t ret = sinkProxy.Init();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -349,7 +349,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, DistributedInputSinkStub01, testing::ext
     ret = sinkProxy.RegisterGetSinkScreenInfosCallback(callback);
     EXPECT_EQ(ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL, ret);
 
-    sptr<IGetSinkScreenInfosCallback> sinkScreenCb = new TestGetSinkScreenInfosCallbackStub();
+    sptr<IGetSinkScreenInfosCallback> sinkScreenCb(new TestGetSinkScreenInfosCallbackStub());
     ret = sinkProxy.RegisterGetSinkScreenInfosCallback(sinkScreenCb);
     EXPECT_EQ(DH_SUCCESS, ret);
 
@@ -357,7 +357,7 @@ HWTEST_F(AddWhiteListInfosCallbackTest, DistributedInputSinkStub01, testing::ext
     ret = sinkProxy.NotifyStopDScreen(srcScreenInfoKey);
     EXPECT_EQ(DH_SUCCESS, ret);
 
-    sptr<ISharingDhIdListener> sharingDhIdListene = new TestSharingDhIdListenerStub();
+    sptr<ISharingDhIdListener> sharingDhIdListene(new TestSharingDhIdListenerStub());
     ret = sinkProxy.RegisterSharingDhIdListener(sharingDhIdListene);
     EXPECT_EQ(DH_SUCCESS, ret);
 }

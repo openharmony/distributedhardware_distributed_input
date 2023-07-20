@@ -174,7 +174,7 @@ HWTEST_F(DistributedInputSinkManagerTest, GetSinkScreenInfosCbackSize01, testing
 
 HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_01, testing::ext::TestSize.Level1)
 {
-    sptr<TestGetSinkScreenInfosCb> callback = new TestGetSinkScreenInfosCb();
+    sptr<TestGetSinkScreenInfosCb> callback(new TestGetSinkScreenInfosCb());
     int32_t ret = sinkManager_->RegisterGetSinkScreenInfosCallback(callback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }

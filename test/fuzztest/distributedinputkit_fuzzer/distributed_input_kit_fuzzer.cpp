@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -108,8 +108,8 @@ void PrepareInputFuzzTest(const uint8_t* data, size_t size)
 
     std::string networkId(reinterpret_cast<const char*>(data), size);
 
-    OHOS::sptr<TestPrepareDInputCallback> prepareCb = new(std::nothrow) TestPrepareDInputCallback();
-    OHOS::sptr<TestUnprepareDInputCallback> unprepareCb = new(std::nothrow) TestUnprepareDInputCallback();
+    OHOS::sptr<TestPrepareDInputCallback> prepareCb(new(std::nothrow) TestPrepareDInputCallback());
+    OHOS::sptr<TestUnprepareDInputCallback> unprepareCb(new(std::nothrow) TestUnprepareDInputCallback());
     DistributedInput::DistributedInputKit::PrepareRemoteInput(networkId, prepareCb);
     DistributedInput::DistributedInputKit::UnprepareRemoteInput(networkId, unprepareCb);
 }
@@ -124,11 +124,11 @@ void StartRemoteInputFuzzTest(const uint8_t* data, size_t size)
     std::string sinkId = "456";
     uint32_t inputTypes = *(reinterpret_cast<const uint32_t*>(data));
     std::vector<std::string> dhIds= {};
-    OHOS::sptr<TestStartDInputCallback> startCb = new (std::nothrow) TestStartDInputCallback();
-    OHOS::sptr<TestStopDInputCallback> stopCb = new (std::nothrow) TestStopDInputCallback();
+    OHOS::sptr<TestStartDInputCallback> startCb(new (std::nothrow) TestStartDInputCallback());
+    OHOS::sptr<TestStopDInputCallback> stopCb(new (std::nothrow) TestStopDInputCallback());
     DistributedInput::DistributedInputKit::StartRemoteInput(sinkId, inputTypes, startCb);
     DistributedInput::DistributedInputKit::StartRemoteInput(srcId, sinkId, inputTypes, startCb);
-    OHOS::sptr<TestIStartStopDInputsCallback> callback = new (std::nothrow) TestIStartStopDInputsCallback();
+    OHOS::sptr<TestIStartStopDInputsCallback> callback(new (std::nothrow) TestIStartStopDInputsCallback());
     DistributedInput::DistributedInputKit::StartRemoteInput(sinkId, dhIds, callback);
     DistributedInput::DistributedInputKit::StartRemoteInput(srcId, sinkId, dhIds, callback);
 }
@@ -160,11 +160,11 @@ void StopRemoteInputFuzzTest(const uint8_t* data, size_t  size)
     std::string sinkId = "456";
     uint32_t inputTypes = *(reinterpret_cast<const uint32_t*>(data));
     std::vector<std::string> dhIds = {};
-    OHOS::sptr<TestStartDInputCallback> startCb = new (std::nothrow) TestStartDInputCallback();
-    OHOS::sptr<TestStopDInputCallback> stopCb = new (std::nothrow) TestStopDInputCallback();
+    OHOS::sptr<TestStartDInputCallback> startCb(new (std::nothrow) TestStartDInputCallback());
+    OHOS::sptr<TestStopDInputCallback> stopCb(new (std::nothrow) TestStopDInputCallback());
     DistributedInput::DistributedInputKit::StopRemoteInput(sinkId, inputTypes, stopCb);
     DistributedInput::DistributedInputKit::StopRemoteInput(srcId, sinkId, inputTypes, stopCb);
-    OHOS::sptr<TestIStartStopDInputsCallback> callback = new (std::nothrow) TestIStartStopDInputsCallback();
+    OHOS::sptr<TestIStartStopDInputsCallback> callback(new (std::nothrow) TestIStartStopDInputsCallback());
     DistributedInput::DistributedInputKit::StopRemoteInput(sinkId, dhIds, callback);
     DistributedInput::DistributedInputKit::StopRemoteInput(srcId, sinkId, dhIds, callback);
 }

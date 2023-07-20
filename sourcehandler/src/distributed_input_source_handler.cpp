@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,7 +40,7 @@ int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
             DHLOGE("Failed to get system ability mgr.");
             return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
         }
-        sptr<LoadDInputSourceCallback> loadCallback = new LoadDInputSourceCallback(params);
+        sptr<LoadDInputSourceCallback> loadCallback(new LoadDInputSourceCallback(params));
         HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
             "dinput init source sa start.");
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, loadCallback);
