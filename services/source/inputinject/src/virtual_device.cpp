@@ -185,9 +185,24 @@ void VirtualDevice::SetNetWorkId(const std::string netWorkId)
     netWorkId_ = netWorkId;
 }
 
+void SetPath(const std::string path)
+{
+    path_ = path;
+}
+
 std::string VirtualDevice::GetNetWorkId()
 {
     return netWorkId_;
+}
+
+std::string GetPath()
+{
+    return path_;
+}
+
+uint16_t GetClasses()
+{
+    return classes_;
 }
 
 void VirtualDevice::RecordEventLog(const input_event& event)

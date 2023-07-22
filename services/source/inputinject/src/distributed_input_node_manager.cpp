@@ -21,6 +21,8 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "softbus_bus_center.h"
 
@@ -33,6 +35,11 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+
+const uint32_t SLEEP_TIME_US = 100 * 1000;
+const uint32_t ERROR_MSG_MAX_LEN = 256;
+constexpr int32_t MAX_RETRY_COUNT = 10;
+
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
@@ -130,6 +137,167 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json& inputD
     }
 }
 
+static std::string ConvertErrNo()
+{
+    char errMsg[ERROR_MSG_MAX_LEN] = {0};
+    strerror_r(errno, errMsg, ERROR_MSG_MAX_LEN);
+    std::string errNoMsg(errMsg);
+    return errNoMsg;
+}
+
+void Closed(int fd)
+{
+    if (fd < 0) {
+        DHLOGE("No fd need to beclosed.");
+        return;
+    }
+    close(fd);
+    fd = -1;
+}
+
+void DistributedInputNodeManager::ScanSinkInputDevices(const std::string& dirName)
+{
+    DIR *dir;
+    struct dirent *de;
+    dir = opendir(dirName.c_str());
+    if (dir == nullptr) {
+        DHLOGE("error opendir /dev/input :%{public}s\n", ConvertErrNo().c_str());
+        return;
+    }
+    size_t dirNameFirstPos = 0;
+    size_t dirNameSecondPos = 1;
+    size_t dirNameThirdPos = 2;
+    while ((de = readdir(dir))) {
+        if (de->d_name[dirNameFirstPos] == '.' && (de->d_name[dirNameSecondPos] == '\0' ||
+            (de->d_name[dirNameSecondPos] == '.' && de->d_name[dirNameThirdPos] == '\0'))) {
+            continue;
+        }
+        std::string tmpDevName = dirName + "/" + std::string(de->d_name);
+        OpenInputDeviceLocked(tmpDevName);
+    }
+    closedir(dir);
+}
+
+bool DistributedInputNodeManager::IsVirtualDev(int fd)
+{
+    char buffer[256] = {0};
+    std::string deviceName;
+    if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
+        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
+        return false;
+    }
+    buffer[sizeof(buffer) - 1] = '\0';
+    deviceName = buffer;
+
+    DHLOGD("IsVirtualDev deviceName: %s", buffer);
+    if (identifier.name.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
+        DHLOGD("This is not a virtual device, fd %d, deviceName: %s", fd, deviceName.c_str());
+        return false;
+    }
+    return true;
+}
+
+bool DistributedInputNodeManager::GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath)
+{
+    char buffer[256] = {0};
+    if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
+        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
+        return false;
+    }
+    buffer[sizeof(buffer) - 1] = '\0';
+    physicalPath = buffer;
+
+    DHLOGD("GetDevDhIdFd physicalPath: %s", physicalPath.c_str());
+    dhId = physicalPath.substr(physicalPath.find("Input_"));
+    if (dhId.size() == 0) {
+        DHLOGE("Get dev dhid failed.");
+        return false;
+    }
+    DHLOGD("Device dhId %s", GetAnonyString(dhId).c_str());
+    return true;
+}
+
+void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std::string& devicePath)
+{
+    auto iter = virtualDeviceMap_.begin();
+    while (iter != virtualDeviceMap_.end()) {
+        DHLOGD("Virtual device map dhid %s.", iter->first.c_str());
+        if (dhId.compare(iter->first) == 0) {
+            DHLOGI("Found the virtual device, set path :%s", devicePath.c_str());
+            iter->second->SetPath(devicePath)
+            break;
+        }
+        iter++;
+    }
+}
+
+void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath)
+{
+    DHLOGI("Opening input device path: %s", devicePath.c_str());
+    std::string dhId;
+    std::string physicalPath;
+    struct stat s;
+    int fd = -1;
+    chmod(devicePath.c_str(), S_IREAD);
+    char canonicalDevicePath[PATH_MAX + 1] = {0x00};
+
+    if (devicePath.length() == 0 || devicePath.length() > PATH_MAX ||
+        realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
+        DHLOGE("path check fail, error path: %s", devicePath.c_str());
+        return;
+    }
+    if ((stat(canonicalDevicePath, &s) == 0) && (s.st_mode & S_IFDIR)) {
+        DHLOGI("path: %s is a dir.", devicePath.c_str());
+        return;
+    }
+    fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+    int32_t count = 0;
+    while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
+        ++count;
+        usleep(SLEEP_TIME_US);
+        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+        DHLOGE("could not open %s, %s; retry %d\n", devicePath.c_str(), ConvertErrNo().c_str(), count);
+    }
+    if (count >= MAX_RETRY_COUNT) {
+        DHLOGE("could not open %s, %s\n", devicePath.c_str(), ConvertErrNo().c_str());
+        CloseFd(fd);
+        return;
+    }
+    if (fd =-1) {
+        DHLOGE("The fd open failed, devicePath %s\n", devicePath.c_str());
+        return;
+    }
+    if (IsVirtualDev(fd) == false) {
+        DHLOGE("The dev not virtual, devicePath %s\n", devicePath.c_str());
+        return;
+    }
+    if (GetDevDhIdFd(fd, dhId, physicalPath) == false) {
+        DHLOGE("Get dev dhid failed, devicePath %s\n", devicePath.c_str());
+        return;
+    }
+    SetPathForDevMap(dhId, devicePath);
+}
+
+void GetVirtualKeyboardPathByDhId(std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
+    std::vector<std::string> &shareDhIds);
+{
+    for (auto dhId_ : dhIds) {
+        auto iter = virtualDeviceMap_.begin();
+        while (iter != virtualDeviceMap_.end()) {
+            if (iter->second == nullptr) {
+                DHLOGE("device is nullptr");
+                continue;
+            }
+            if ((iter->first.compare(dhId_) == 0) && ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+                DHLOGI("Found vir keyboard path %s, dhid %s", itersecond->GetPath().c_str());
+                shareDhidsPath.push_back(diter->second->GetPath());
+                shareDhIds.push_back(dhId_);
+            }
+            iter++;
+        }
+    }
+}
+
 int32_t DistributedInputNodeManager::CreateHandle(const InputDevice& inputDevice, const std::string& devId,
     const std::string& dhId)
 {
@@ -144,6 +312,7 @@ int32_t DistributedInputNodeManager::CreateHandle(const InputDevice& inputDevice
         return ERR_DH_INPUT_SERVER_SOURCE_CREATE_HANDLE_FAIL;
     }
     AddDeviceLocked(inputDevice.descriptor, std::move(virtualDevice));
+    ScanSinkInputDevices(DEVICE_PATH);
     return DH_SUCCESS;
 }
 

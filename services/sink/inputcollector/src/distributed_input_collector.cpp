@@ -214,6 +214,16 @@ void DistributedInputCollector::GetMouseNodePath(
     inputHub_->GetShareMousePathByDhId(dhIds, mouseNodePath, dhid);
 }
 
+void DistributedInputCollector::GetKeyboardNodePath(
+    std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+{
+    if (inputHub_ == nullptr) {
+        DHLOGI("inputHub is nullptr!");
+        return;
+    }
+    inputHub_->GetShareKeyboardPathByDhId(dhIds, shareDhidsPaths, shareDhIds);
+}
+
 bool DistributedInputCollector::IsAllDevicesStoped()
 {
     if (inputHub_ == nullptr) {

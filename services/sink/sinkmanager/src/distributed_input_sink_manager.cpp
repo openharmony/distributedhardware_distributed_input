@@ -276,6 +276,8 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInputDhid(con
         AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, vecStr);
         sinkManagerObj_->StoreStartDhids(sessionId, affDhIds.sharingDhIds);
         DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
+        StateMachine::GetInstance().AddDhids(vecStr);
+        StateMachine::GetInstance().SwitchState(vecStr, DhidState::THROUGH_OUT);
     }
 }
 
@@ -291,6 +293,9 @@ void DistributedInputSinkManager::DInputSinkListener::OnStopRemoteInputDhid(cons
     AffectDhIds stopIndeedOnes;
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
+
+    StateMachine::GetInstance().AddDhids(stopOnCmdDhIds);
+    StateMachine::GetInstance().SwitchState(stopOnCmdDhIds, DhidState::THROUGH_IN);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", sessionId);
@@ -345,6 +350,8 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartDhidRemoteInpu
         AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, vecStr);
         sinkManagerObj_->StoreStartDhids(toSinkSessionId, affDhIds.sharingDhIds);
         DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
+        StateMachine::GetInstance().AddDhids(vecStr);
+        StateMachine::GetInstance().SwitchState(vecStr, DhidState::THROUGH_OUT);
     }
 }
 
@@ -360,6 +367,9 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStopDhidRemoteInput
     AffectDhIds stopIndeedOnes;
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
+
+    StateMachine::GetInstance().AddDhids(stopOnCmdDhIds);
+    StateMachine::GetInstance().SwitchState(stopOnCmdDhIds, DhidState::THROUGH_IN);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", toSinkSessionId);
@@ -692,6 +702,12 @@ int32_t DistributedInputSinkManager::Init()
     // transport init session
     int32_t ret = DistributedInputSinkTransport::GetInstance().Init();
     if (ret != DH_SUCCESS) {
+        return ERR_DH_INPUT_SERVER_SINK_MANAGER_INIT_FAIL;
+    }
+
+    ret = StateMachine::GetInstance().Init();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("StateMachine init fail!");
         return ERR_DH_INPUT_SERVER_SINK_MANAGER_INIT_FAIL;
     }
 

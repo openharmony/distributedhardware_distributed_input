@@ -37,6 +37,7 @@ ohos_shared_library("libdinput_source") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [
@@ -91,6 +92,7 @@ ohos_shared_library("libdinput_source") {
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/transport:libdinput_source_trans",
     "${utils_path}:libdinput_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "//third_party/libevdev:libevdev",
   ]
 

@@ -37,6 +37,7 @@
 #include "dinput_sink_trans_callback.h"
 #include "distributed_input_sink_stub.h"
 #include "distributed_input_sink_event_handler.h"
+#include "dinput_state.h"
 
 namespace OHOS {
 namespace DistributedHardware {

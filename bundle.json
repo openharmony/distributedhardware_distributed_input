@@ -62,6 +62,7 @@
                 "//foundation/distributedhardware/distributed_input/services/sink/transport:libdinput_sink_trans",
                 "//foundation/distributedhardware/distributed_input/services/sink/inputcollector:libdinput_collector",
                 "//foundation/distributedhardware/distributed_input/services/transportbase:libdinput_trans_base",
+                "//foundation/distributedhardware/distributed_input/services/state:libdinput_state",
                 "//foundation/distributedhardware/distributed_input/sourcehandler:libdinput_source_handler",
                 "//foundation/distributedhardware/distributed_input/sinkhandler:libdinput_sink_handler",
                 "//foundation/distributedhardware/distributed_input/inputdevicehandler:libdinput_handler",

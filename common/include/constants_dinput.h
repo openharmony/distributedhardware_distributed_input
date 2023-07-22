@@ -38,6 +38,7 @@ namespace DistributedInput {
 
     const char INPUT_STRING_SPLIT_POINT = '.';
     const uint32_t KEY_DOWN_STATE = 1;
+    const uint32_t KEY_UP_STATE = 0;
     const uint32_t READ_SLEEP_TIME_MS = 50;
     const uint32_t READ_RETRY_MAX = 5;
     const uint32_t DH_ID_LENGTH_MAX = 256;
@@ -193,6 +194,8 @@ namespace DistributedInput {
     constexpr const char* COLLECT_EVENT_THREAD_NAME = "collectEvents";
 
     constexpr const char* CHECK_KEY_STATUS_THREAD_NAME = "checkKeyStatus";
+
+    constexpr const char* KEYBOARD_UP_INJECT_THREAD_NAME = "KeyboardUpInject";
 
     constexpr int32_t LOG_MAX_LEN = 4096;
 

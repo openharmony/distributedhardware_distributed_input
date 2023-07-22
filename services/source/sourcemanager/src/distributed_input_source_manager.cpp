@@ -34,6 +34,7 @@
 #include "dinput_errcode.h"
 #include "dinput_hitrace.h"
 #include "dinput_log.h"
+#include "dinput_state.h"
 #include "dinput_utils_tool.h"
 #include "distributed_input_client.h"
 #include "distributed_input_inject.h"
@@ -281,6 +282,11 @@ void DistributedInputSourceManager::DInputSourceListener::OnResponseStartRemoteI
     if (result) {
         sourceManagerObj_->SetDeviceMapValue(deviceId, DINPUT_SOURCE_SWITCH_ON);
     }
+
+    std::vector<std::string> vecStr;
+    sourceManagerObj_->StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
+    StateMachine::GetInstance().AddDhid(vecStr);
+    StateMachine::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
 
     std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();
     nlohmann::json tmpJson;
@@ -970,6 +976,12 @@ int32_t DistributedInputSourceManager::Init()
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_START_DSCREEN, startDScreenListener_);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_STOP_DSCREEN, stopDScreenListener_);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_DEV_OFFLINE, deviceOfflineListener_);
+
+    ret = StateMachine::GetInstance().Init();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("StateMachine init fail!");
+        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INIT_FAIL;
+    }
 
     return DH_SUCCESS;
 }

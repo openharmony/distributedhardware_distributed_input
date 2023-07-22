@@ -43,6 +43,8 @@ public:
     AffectDhIds SetSharingTypes(bool enabled, const uint32_t &inputType);
     AffectDhIds SetSharingDhIds(bool enabled, std::vector<std::string> dhIds);
     void GetMouseNodePath(std::vector<std::string> dhIds, std::string &mouseNodePath, std::string &dhid);
+    void GetKeyboardNodePath(
+        std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
     // false for sharing device exist, true for all devices stop sharing
     bool IsAllDevicesStoped();
     int32_t RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener);

@@ -56,12 +56,22 @@ public:
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
     void ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent);
 
+    void GetVirtualKeyboardPathByDhId(std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
+        std::vector<std::string> &shareDhIds);
 private:
     void AddDeviceLocked(const std::string& dhId, std::unique_ptr<VirtualDevice> device);
     int32_t CreateHandle(const InputDevice& inputDevice, const std::string& devId, const std::string& dhId);
     void ParseInputDeviceJson(const std::string& str, InputDevice& pBuf);
     void VerifyInputDevice(const nlohmann::json& inputDeviceJson, InputDevice& pBuf);
     void InjectEvent();
+
+    void ScanSinkInputDevices(const std::string& dirName);
+    void OpenInputDevice(const std::string& devicePath);
+    int OpenInputDeviceFdByPath(std::string& canonicalDevicePath);
+    bool IsVirtualDev(int fd);
+    bool GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath);
+    void SetPathForDevMap(std::string& dhId, const std::string& devicePath);
+
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;

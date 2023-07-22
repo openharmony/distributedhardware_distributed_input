@@ -1140,6 +1140,28 @@ void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::stri
     }
 }
 
+void InputHub::GetShareKeyboardPathByDhId(std::vector<std::string> dhIds,
+    std::vector<std::string> &shareDhidsPath, std::vector<std::string> &shareDhIds)
+{
+    DHLOGI("GetShareKeyboardPathByDhId: devices_.size:%d,", devices_.size());
+    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    for (auto dhId_ : dhIds) {
+        for (const auto &[id, device] : devices_) {
+            if (device == nullptr) {
+                DHLOGE("device is nullptr");
+                continue;
+            }
+            DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
+                   device->isShare, device->classes);
+            if ((device->identifier.descriptor == dhId_) &&
+                ((device->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+                shareDhIds.push_back(dhId_);
+                shareDhidsPath.push_back(device->path);
+            }
+        }
+    }
+}
+
 void InputHub::GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &datas)
 {
     uint32_t dhType = 0;

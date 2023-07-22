@@ -37,6 +37,7 @@
 #include "distributed_input_source_event_handler.h"
 #include "distributed_input_source_sa_cli_mgr.h"
 #include "distributed_input_source_stub.h"
+#include "dinput_state.h"
 
 namespace OHOS {
 namespace DistributedHardware {
