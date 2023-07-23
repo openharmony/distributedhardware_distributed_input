@@ -56,7 +56,7 @@ public:
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
     void ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent);
 
-    void GetVirtualKeyboardPathByDhId(std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
+    void GetVirtualKeyboardPathByDhId(const std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
         std::vector<std::string> &shareDhIds);
 private:
     void AddDeviceLocked(const std::string& dhId, std::unique_ptr<VirtualDevice> device);

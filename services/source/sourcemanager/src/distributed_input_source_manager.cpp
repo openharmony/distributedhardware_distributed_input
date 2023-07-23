@@ -285,7 +285,7 @@ void DistributedInputSourceManager::DInputSourceListener::OnResponseStartRemoteI
 
     std::vector<std::string> vecStr;
     sourceManagerObj_->StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    StateMachine::GetInstance().AddDhid(vecStr);
+    StateMachine::GetInstance().AddDhids(vecStr);
     StateMachine::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
 
     std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();

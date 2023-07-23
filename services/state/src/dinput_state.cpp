@@ -20,6 +20,7 @@
 #include "dinput_utils_tool.h"
 #include "constants_dinput.h"
 #include "distributed_input_collector.h"
+#include "distributed_input_inject.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -43,7 +44,7 @@ int32_t StateMachine::Release()
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::AddDhids(std::vector<std::string> &dhids)
+int32_t StateMachine::AddDhids(const std::vector<std::string> &dhids)
 {
     DHLOGI("AddDhid dhids size = %zu", dhids.size());
     for (auto &dhid : dhids) {
@@ -57,7 +58,7 @@ int32_t StateMachine::AddDhids(std::vector<std::string> &dhids)
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::DeleteDhids(std::vector<std::string> &dhids)
+int32_t StateMachine::DeleteDhids(const std::vector<std::string> &dhids)
 {
     DHLOGI("DeleteDhid dhids size = %zu", dhids.size());
     for (auto &dhid : dhids) {
@@ -71,7 +72,7 @@ int32_t StateMachine::DeleteDhids(std::vector<std::string> &dhids)
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::SwitchState(std::vector<std::string> &dhids, DhidState state)
+int32_t StateMachine::SwitchState(const std::vector<std::string> &dhids, DhidState state)
 {
     for (auto &dhid : dhids) {
         DHLOGD("SwitchState dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
@@ -98,7 +99,7 @@ DhidState StateMachine::GetStateByDhid(std::string &dhid)
     return dhidStateMap_[dhid];
 }
 
-bool StateMachine::IsExistDhid(std::string &dhid)
+bool StateMachine::IsExistDhid(const std::string &dhid)
 {
     if (dhidStateMap_.find(dhid) == dhidStateMap_.end()) {
         return false;
@@ -125,7 +126,7 @@ void StateMachine::CreateKeyUpInjectThread(const std::vector<std::string> &dhids
 
 void StateMachine::KeyUpInject(std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
 {
-    ssize len = shareDhidsPaths.size();
+    ssize_t len = shareDhidsPaths.size();
     for (int32_t i = 0; i < len; ++i) {
         CheckKeyState(shareDhIds[i], shareDhidsPaths[i]);
     }
@@ -194,7 +195,7 @@ void StateMachine::UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, 
         }
         RecordEventLog(event);
 
-        struct input_event event = {
+        event = {
             .type = EV_SYN,
             .code = 0,
             .value = KEY_UP_STATE

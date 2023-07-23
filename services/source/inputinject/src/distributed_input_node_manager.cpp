@@ -145,7 +145,7 @@ static std::string ConvertErrNo()
     return errNoMsg;
 }
 
-void Closed(int fd)
+void CloseFd(int fd)
 {
     if (fd < 0) {
         DHLOGE("No fd need to beclosed.");
@@ -173,7 +173,7 @@ void DistributedInputNodeManager::ScanSinkInputDevices(const std::string& dirNam
             continue;
         }
         std::string tmpDevName = dirName + "/" + std::string(de->d_name);
-        OpenInputDeviceLocked(tmpDevName);
+        OpenInputDevice(tmpDevName);
     }
     closedir(dir);
 }
@@ -190,7 +190,7 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
     deviceName = buffer;
 
     DHLOGD("IsVirtualDev deviceName: %s", buffer);
-    if (identifier.name.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
+    if (deviceName.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
         DHLOGD("This is not a virtual device, fd %d, deviceName: %s", fd, deviceName.c_str());
         return false;
     }
@@ -224,7 +224,7 @@ void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std:
         DHLOGD("Virtual device map dhid %s.", iter->first.c_str());
         if (dhId.compare(iter->first) == 0) {
             DHLOGI("Found the virtual device, set path :%s", devicePath.c_str());
-            iter->second->SetPath(devicePath)
+            iter->second->SetPath(devicePath);
             break;
         }
         iter++;
@@ -263,7 +263,7 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath)
         CloseFd(fd);
         return;
     }
-    if (fd =-1) {
+    if (fd == -1) {
         DHLOGE("The fd open failed, devicePath %s\n", devicePath.c_str());
         return;
     }
@@ -278,8 +278,8 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath)
     SetPathForDevMap(dhId, devicePath);
 }
 
-void GetVirtualKeyboardPathByDhId(std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
-    std::vector<std::string> &shareDhIds);
+void DistributedInputNodeManager::GetVirtualKeyboardPathByDhId(const std::vector<std::string> &dhIds,
+    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
 {
     for (auto dhId_ : dhIds) {
         auto iter = virtualDeviceMap_.begin();
@@ -289,8 +289,8 @@ void GetVirtualKeyboardPathByDhId(std::vector<std::string> &dhIds, std::vector<s
                 continue;
             }
             if ((iter->first.compare(dhId_) == 0) && ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
-                DHLOGI("Found vir keyboard path %s, dhid %s", itersecond->GetPath().c_str());
-                shareDhidsPath.push_back(diter->second->GetPath());
+                DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str());
+                shareDhidsPaths.push_back(iter->second->GetPath());
                 shareDhIds.push_back(dhId_);
             }
             iter++;
