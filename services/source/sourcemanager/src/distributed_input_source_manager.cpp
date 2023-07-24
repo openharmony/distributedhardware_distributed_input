@@ -285,8 +285,8 @@ void DistributedInputSourceManager::DInputSourceListener::OnResponseStartRemoteI
 
     std::vector<std::string> vecStr;
     sourceManagerObj_->StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    StateMachine::GetInstance().AddDhids(vecStr);
-    StateMachine::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
+    DInputState::GetInstance().AddDhids(vecStr);
+    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
 
     std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();
     nlohmann::json tmpJson;
@@ -977,9 +977,9 @@ int32_t DistributedInputSourceManager::Init()
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_STOP_DSCREEN, stopDScreenListener_);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_DEV_OFFLINE, deviceOfflineListener_);
 
-    ret = StateMachine::GetInstance().Init();
+    ret = DInputState::GetInstance().Init();
     if (ret != DH_SUCCESS) {
-        DHLOGE("StateMachine init fail!");
+        DHLOGE("DInputState init fail!");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INIT_FAIL;
     }
 

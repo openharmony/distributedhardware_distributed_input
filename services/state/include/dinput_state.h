@@ -16,32 +16,30 @@
 #ifndef DISTRIBUTED_INPUT_STATE_BASE_H
 #define DISTRIBUTED_INPUT_STATE_BASE_H
 
-#include <map>
-#include <vector>
-#include <string>
-#include <pthread.h>
-#include <thread>
-#include <linux/input.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <linux/input.h>
+#include <map>
+#include <mutex>
+#include <pthread.h>
+#include <string>
+#include <thread>
 #include <unistd.h>
-
+#include <vector>
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-
-enum class DhidState
-{
+enum class DhidState {
     INIT = 0,
     THROUGH_IN,
     THROUGH_OUT,
 };
-
-class StateMachine{
+class DInputState {
 public:
-    static StateMachine &GetInstance() {
-        static StateMachine instance;
+    static DInputState &GetInstance()
+    {
+        static DInputState instance;
         return instance;
     };
 
@@ -53,7 +51,7 @@ public:
     DhidState GetStateByDhid(std::string &dhid);
 
 private:
-    ~StateMachine();
+    ~DInputState();
 
     void CreateKeyUpInjectThread(const std::vector<std::string> &dhids);
     void CheckKeyState(std::string &dhid, std::string &keyboardNodePath);
@@ -63,9 +61,9 @@ private:
     void RecordEventLog(const input_event& event);
 
 private:
+    std::mutex operationMutex_;
     std::map<std::string, DhidState> dhidStateMap_;
 };
-
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

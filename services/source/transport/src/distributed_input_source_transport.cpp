@@ -316,8 +316,8 @@ int32_t DistributedInputSourceTransport::StartRemoteInputDhids(int32_t srcTsrcSe
 
     std::vector<std::string> vecStr;
     StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    StateMachine::GetInstance().AddDhids(vecStr);
-    StateMachine::GetInstance().SwitchState(vecStr,DhidState::THROUGH_IN);
+    DInputState::GetInstance().AddDhids(vecStr);
+    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_START_DHID_FOR_REL;
@@ -782,8 +782,8 @@ int32_t DistributedInputSourceTransport::StopRemoteInput(const std::string &devi
     }
     DHLOGI("StopRemoteInput sessionId:%d.", sessionId);
 
-    StateMachine::GetInstance().AddDhids(dhids);
-    StateMachine::GetInstance().SwitchState(dhids,DhidState::THROUGH_OUT);
+    DInputState::GetInstance().AddDhids(dhids);
+    DInputState::GetInstance().SwitchState(dhids, DhidState::THROUGH_OUT);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID;

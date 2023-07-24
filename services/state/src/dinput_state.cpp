@@ -26,27 +26,29 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 
-StateMachine::~StateMachine()
+DInputState::~DInputState()
 {
     Release();
 }
 
-int32_t StateMachine::Init()
+int32_t DInputState::Init()
 {
-    DHLOGI("StateMachine Init.");
+    DHLOGI("DInputState Init.");
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::Release()
+int32_t DInputState::Release()
 {
-    DHLOGI("StateMachine Release.");
+    DHLOGI("DInputState Release.");
+    std::unique_lock<std::mutex> mapLock(operationMutex_);
     dhidStateMap_.clear();
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::AddDhids(const std::vector<std::string> &dhids)
+int32_t DInputState::AddDhids(const std::vector<std::string> &dhids)
 {
     DHLOGI("AddDhid dhids size = %zu", dhids.size());
+    std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("add dhid : %s", GetAnonyString(dhid).c_str());
         if (IsExistDhid(dhid)) {
@@ -58,9 +60,10 @@ int32_t StateMachine::AddDhids(const std::vector<std::string> &dhids)
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::DeleteDhids(const std::vector<std::string> &dhids)
+int32_t DInputState::DeleteDhids(const std::vector<std::string> &dhids)
 {
     DHLOGI("DeleteDhid dhids size = %zu", dhids.size());
+    std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("delete dhid : %s", GetAnonyString(dhid).c_str());
         if (!IsExistDhid(dhid)) {
@@ -72,8 +75,9 @@ int32_t StateMachine::DeleteDhids(const std::vector<std::string> &dhids)
     return DH_SUCCESS;
 }
 
-int32_t StateMachine::SwitchState(const std::vector<std::string> &dhids, DhidState state)
+int32_t DInputState::SwitchState(const std::vector<std::string> &dhids, DhidState state)
 {
+    std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("SwitchState dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
         if (!IsExistDhid(dhid)) {
@@ -90,7 +94,7 @@ int32_t StateMachine::SwitchState(const std::vector<std::string> &dhids, DhidSta
     return DH_SUCCESS;
 }
 
-DhidState StateMachine::GetStateByDhid(std::string &dhid)
+DhidState DInputState::GetStateByDhid(std::string &dhid)
 {
     if (!IsExistDhid(dhid)) {
         DHLOGE("dhid : %s not exist.", GetAnonyString(dhid).c_str());
@@ -99,7 +103,7 @@ DhidState StateMachine::GetStateByDhid(std::string &dhid)
     return dhidStateMap_[dhid];
 }
 
-bool StateMachine::IsExistDhid(const std::string &dhid)
+bool DInputState::IsExistDhid(const std::string &dhid)
 {
     if (dhidStateMap_.find(dhid) == dhidStateMap_.end()) {
         return false;
@@ -107,16 +111,16 @@ bool StateMachine::IsExistDhid(const std::string &dhid)
     return true;
 }
 
-void StateMachine::CreateKeyUpInjectThread(const std::vector<std::string> &dhids)
+void DInputState::CreateKeyUpInjectThread(const std::vector<std::string> &dhids)
 {
+    DHLOGI("CreateKeyUpInjectThread enter, dhids.size = %d.", dhids.size());
     std::vector<std::string> keyboardNodePaths;
     std::vector<std::string> shareDhIds;
     DistributedInputCollector::GetInstance().GetKeyboardNodePath(dhids, keyboardNodePaths, shareDhIds);
-    
     DistributedInputInject::GetInstance().GetVirtualKeyboardPathByDhId(dhids, keyboardNodePaths, shareDhIds);
 
     std::thread keyUpInjectThread =
-        std::thread(&StateMachine::KeyUpInject, this, std::ref(keyboardNodePaths), std::ref(shareDhIds));
+        std::thread(&DInputState::KeyUpInject, this, keyboardNodePaths, shareDhIds);
     int32_t ret = pthread_setname_np(keyUpInjectThread.native_handle(), KEYBOARD_UP_INJECT_THREAD_NAME);
     if (ret != 0) {
         DHLOGE("CreateKeyUpInjectThread setname failed.");
@@ -124,8 +128,10 @@ void StateMachine::CreateKeyUpInjectThread(const std::vector<std::string> &dhids
     keyUpInjectThread.detach();
 }
 
-void StateMachine::KeyUpInject(std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+void DInputState::KeyUpInject(std::vector<std::string> shareDhidsPaths, std::vector<std::string> shareDhIds)
 {
+    DHLOGI("KeyUpInject enter, shareDhidsPaths.size = %d, shareDhIds.size =%d.",
+        shareDhidsPaths.size(), shareDhIds.size());
     ssize_t len = shareDhidsPaths.size();
     for (int32_t i = 0; i < len; ++i) {
         CheckKeyState(shareDhIds[i], shareDhidsPaths[i]);
@@ -137,8 +143,9 @@ int BitIsSet(const unsigned long *array, int bit)
     return !!(array[bit / LONG_BITS] & (1LL << (bit % LONG_BITS)));
 }
 
-void StateMachine::CheckKeyState(std::string &dhid, std::string &keyboardNodePath)
+void DInputState::CheckKeyState(std::string &dhid, std::string &keyboardNodePath)
 {
+    DHLOGI("CheckKeyState enter,  dhid :%s, keyboardNodePath :%s.", GetAnonyString(dhid).c_str(), keyboardNodePath.c_str());
     char canonicalPath[PATH_MAX + 1] = {0x00};
     if (keyboardNodePath.length() == 0 || keyboardNodePath.length() > PATH_MAX ||
         realpath(keyboardNodePath.c_str(), canonicalPath) == nullptr) {
@@ -159,7 +166,6 @@ void StateMachine::CheckKeyState(std::string &dhid, std::string &keyboardNodePat
         if (count > READ_RETRY_MAX) {
             break;
         }
-        // Query all key state
         int rc = ioctl(fd, EVIOCGKEY(sizeof(keystate)), keystate);
         if (rc < 0) {
             DHLOGE("read all key state failed, rc=%d ", rc);
@@ -169,6 +175,7 @@ void StateMachine::CheckKeyState(std::string &dhid, std::string &keyboardNodePat
         }
         for (int32_t yalv = 0; yalv < KEY_MAX; yalv++) {
             if (BitIsSet(keystate, yalv)) {
+                DHLOGD("yalv = %d, not up.", yalv);
                 keyboardPressedKeys.push_back(yalv);
             }
         }
@@ -181,7 +188,7 @@ void StateMachine::CheckKeyState(std::string &dhid, std::string &keyboardNodePat
     }
 }
 
-void StateMachine::UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, std::string &dhid)
+void DInputState::UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, std::string &dhid)
 {
     for (auto &code: keyboardPressedKeys) {
         struct input_event event = {
@@ -208,27 +215,23 @@ void StateMachine::UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, 
     }
 }
 
-void StateMachine::RecordEventLog(const input_event& event)
+void DInputState::RecordEventLog(const input_event& event)
 {
     std::string eventType = "";
     switch (event.type) {
         case EV_KEY:
             eventType = "EV_KEY";
             break;
-        case EV_REL:
-            eventType = "EV_REL";
-            break;
-        case EV_ABS:
-            eventType = "EV_ABS";
+        case EV_SYN:
+            eventType = "EV_SYN";
             break;
         default:
             eventType = "other type";
             break;
     }
-    DHLOGD("4.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d, Sec: %ld, Sec1: %ld",
-        eventType.c_str(), event.code, event.value, event.input_event_sec, event.input_event_usec);
+    DHLOGD("5.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d",
+        eventType.c_str(), event.code, event.value);
 }
-
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOSs

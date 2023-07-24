@@ -72,7 +72,6 @@ private:
     bool GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath);
     void SetPathForDevMap(std::string& dhId, const std::string& devicePath);
 
-
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
     std::mutex virtualDeviceMapMutex_;

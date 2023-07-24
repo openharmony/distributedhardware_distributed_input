@@ -35,11 +35,9 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-
 const uint32_t SLEEP_TIME_US = 100 * 1000;
 const uint32_t ERROR_MSG_MAX_LEN = 256;
 constexpr int32_t MAX_RETRY_COUNT = 10;
-
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
@@ -200,7 +198,7 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
 bool DistributedInputNodeManager::GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath)
 {
     char buffer[256] = {0};
-    if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
+    if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
         return false;
     }
@@ -288,8 +286,10 @@ void DistributedInputNodeManager::GetVirtualKeyboardPathByDhId(const std::vector
                 DHLOGE("device is nullptr");
                 continue;
             }
-            if ((iter->first.compare(dhId_) == 0) && ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
-                DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str());
+            if ((iter->first.compare(dhId_) == 0) && 
+                ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+                DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str(),
+                    GetAnonyString(dhId_).c_str());
                 shareDhidsPaths.push_back(iter->second->GetPath());
                 shareDhIds.push_back(dhId_);
             }

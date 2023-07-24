@@ -257,10 +257,10 @@ int32_t DistributedInputInject::GetVirtualTouchScreenFd()
 }
 
 void DistributedInputInject::GetVirtualKeyboardPathByDhId(const std::vector<std::string> &dhIds,
-	std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
 {
     if (inputNodeManager_ == nullptr) {
-        DHLOGI("inputNodeManager_ is nullptr!");
+        DHLOGE("inputNodeManager is nullptr");
         return;
     }
     inputNodeManager_->GetVirtualKeyboardPathByDhId(dhIds, shareDhidsPaths, shareDhIds);
