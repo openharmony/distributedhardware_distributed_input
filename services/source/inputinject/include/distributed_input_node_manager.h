@@ -38,7 +38,7 @@ public:
     DistributedInputNodeManager();
     ~DistributedInputNodeManager();
 
-    int32_t openDevicesNode(const std::string& devId, const std::string& dhId,
+    int32_t OpenDevicesNode(const std::string& devId, const std::string& dhId,
     const std::string& parameters);
 
     int32_t getDevice(const std::string& dhId, VirtualDevice*& device);
@@ -69,7 +69,7 @@ private:
     void OpenInputDevice(const std::string& devicePath);
     int OpenInputDeviceFdByPath(std::string& canonicalDevicePath);
     bool IsVirtualDev(int fd);
-    bool GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath);
+    bool GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath);
     void SetPathForDevMap(std::string& dhId, const std::string& devicePath);
 
     /* the key is dhId, and the value is virtualDevice */

@@ -58,7 +58,7 @@ DistributedInputNodeManager::~DistributedInputNodeManager()
     DHLOGI("destructor end");
 }
 
-int32_t DistributedInputNodeManager::openDevicesNode(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string& devId, const std::string& dhId,
     const std::string& parameters)
 {
     if (devId.size() > DEV_ID_LENGTH_MAX || devId.empty() || dhId.size() > DH_ID_LENGTH_MAX || dhId.empty() ||
@@ -181,7 +181,7 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
     char buffer[256] = {0};
     std::string deviceName;
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
+        DHLOGE("Could not get device name for %s.", ConvertErrNo().c_str());
         return false;
     }
     buffer[sizeof(buffer) - 1] = '\0';
@@ -189,13 +189,13 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
 
     DHLOGD("IsVirtualDev deviceName: %s", buffer);
     if (deviceName.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
-        DHLOGD("This is not a virtual device, fd %d, deviceName: %s", fd, deviceName.c_str());
+        DHLOGD("This is not a virtual device, fd %d, deviceName: %s.", fd, deviceName.c_str());
         return false;
     }
     return true;
 }
 
-bool DistributedInputNodeManager::GetDevDhIdFd(int fd, std::string& dhId, std::string& physicalPath)
+bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath)
 {
     char buffer[256] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
@@ -269,7 +269,7 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath)
         DHLOGE("The dev not virtual, devicePath %s\n", devicePath.c_str());
         return;
     }
-    if (GetDevDhIdFd(fd, dhId, physicalPath) == false) {
+    if (GetDevDhIdByFd(fd, dhId, physicalPath) == false) {
         DHLOGE("Get dev dhid failed, devicePath %s\n", devicePath.c_str());
         return;
     }
@@ -286,7 +286,7 @@ void DistributedInputNodeManager::GetVirtualKeyboardPathByDhId(const std::vector
                 DHLOGE("device is nullptr");
                 continue;
             }
-            if ((iter->first.compare(dhId_) == 0) && 
+            if ((iter->first.compare(dhId_) == 0) &&
                 ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
                 DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str(),
                     GetAnonyString(dhId_).c_str());

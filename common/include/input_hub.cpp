@@ -1140,8 +1140,8 @@ void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::stri
     }
 }
 
-void InputHub::GetShareKeyboardPathByDhId(std::vector<std::string> dhIds,
-    std::vector<std::string> &shareDhidsPath, std::vector<std::string> &shareDhIds)
+void InputHub::GetShareKeyboardPathByDhId(std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPath,
+    std::vector<std::string> &shareDhIds)
 {
     DHLOGI("GetShareKeyboardPathByDhId: devices_.size:%d,", devices_.size());
     std::unique_lock<std::mutex> deviceLock(devicesMutex_);

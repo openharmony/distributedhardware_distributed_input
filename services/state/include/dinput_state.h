@@ -16,16 +16,9 @@
 #ifndef DISTRIBUTED_INPUT_STATE_BASE_H
 #define DISTRIBUTED_INPUT_STATE_BASE_H
 
-#include <dirent.h>
-#include <fcntl.h>
-#include <linux/input.h>
 #include <map>
 #include <mutex>
-#include <pthread.h>
 #include <string>
-#include <thread>
-#include <unistd.h>
-#include <vector>
 
 namespace OHOS {
 namespace DistributedHardware {

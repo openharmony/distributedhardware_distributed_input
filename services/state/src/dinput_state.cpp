@@ -15,6 +15,14 @@
 
 #include "dinput_state.h"
 
+#include <dirent.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <thread>
+#include <unistd.h>
+#include <vector>
+#include <linux/input.h>
+
 #include "dinput_errcode.h"
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
