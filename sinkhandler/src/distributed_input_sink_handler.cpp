@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,7 +41,7 @@ int32_t DistributedInputSinkHandler::InitSink(const std::string &params)
             DHLOGE("Failed to get system ability mgr.");
             return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
         }
-        sptr<LoadDInputSinkCallback> loadCallback = new LoadDInputSinkCallback(params);
+        sptr<LoadDInputSinkCallback> loadCallback(new LoadDInputSinkCallback(params));
         HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
             "dinput sink LoadSystemAbility call");
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, loadCallback);

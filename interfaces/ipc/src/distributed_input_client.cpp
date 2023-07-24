@@ -178,7 +178,7 @@ void DistributedInputClient::CheckSharingDhIdsCallback()
         return;
     }
     if (!isSharingDhIdsReg) {
-        sptr<ISharingDhIdListener> listener = new (std::nothrow) SharingDhIdListenerCb();
+        sptr<ISharingDhIdListener> listener(new (std::nothrow) SharingDhIdListenerCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSinkProxy_->RegisterSharingDhIdListener(listener);
         if (ret == DH_SUCCESS) {
@@ -198,7 +198,7 @@ void DistributedInputClient::CheckWhiteListCallback()
         return;
     }
     if (!isAddWhiteListCbReg) {
-        sptr<AddWhiteListInfosCb> addCallback = new (std::nothrow) AddWhiteListInfosCb();
+        sptr<AddWhiteListInfosCb> addCallback(new (std::nothrow) AddWhiteListInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSourceProxy_->RegisterAddWhiteListCallback(addCallback);
         if (ret == DH_SUCCESS) {
@@ -210,7 +210,7 @@ void DistributedInputClient::CheckWhiteListCallback()
         }
     }
     if (!isDelWhiteListCbReg) {
-        sptr<DelWhiteListInfosCb> delCallback = new (std::nothrow) DelWhiteListInfosCb();
+        sptr<DelWhiteListInfosCb> delCallback(new (std::nothrow) DelWhiteListInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSourceProxy_->RegisterDelWhiteListCallback(delCallback);
         if (ret == DH_SUCCESS) {
@@ -255,7 +255,7 @@ void DistributedInputClient::CheckSinkScreenInfoCallback()
         return;
     }
     if (!isGetSinkScreenInfosCbReg) {
-        sptr<GetSinkScreenInfosCb> callback = new (std::nothrow) GetSinkScreenInfosCb();
+        sptr<GetSinkScreenInfosCb> callback(new (std::nothrow) GetSinkScreenInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSinkProxy_->RegisterGetSinkScreenInfosCallback(callback);
         if (ret == DH_SUCCESS) {
