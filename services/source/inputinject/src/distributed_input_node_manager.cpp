@@ -199,7 +199,7 @@ bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std:
 {
     char buffer[256] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
+        DHLOGE("Could not get device physicalPath for %s", ConvertErrNo().c_str());
         return false;
     }
     buffer[sizeof(buffer) - 1] = '\0';

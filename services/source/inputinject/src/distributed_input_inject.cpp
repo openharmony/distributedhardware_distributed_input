@@ -56,7 +56,7 @@ int32_t DistributedInputInject::RegisterDistributedHardware(const std::string& d
         DHLOGE("the DistributedInputNodeManager is null\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    if (inputNodeManager_->openDevicesNode(devId, dhId, parameters) < 0) {
+    if (inputNodeManager_->OpenDevicesNode(devId, dhId, parameters) < 0) {
         DHLOGE("create virtual device error\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_REGISTER_FAIL;
     }

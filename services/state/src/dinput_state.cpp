@@ -21,7 +21,6 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include <linux/input.h>
 
 #include "dinput_errcode.h"
 #include "dinput_log.h"
@@ -153,7 +152,8 @@ int BitIsSet(const unsigned long *array, int bit)
 
 void DInputState::CheckKeyState(std::string &dhid, std::string &keyboardNodePath)
 {
-    DHLOGI("CheckKeyState enter,  dhid :%s, keyboardNodePath :%s.", GetAnonyString(dhid).c_str(), keyboardNodePath.c_str());
+    DHLOGI("CheckKeyState enter,  dhid :%s, keyboardNodePath :%s.", GetAnonyString(dhid).c_str(),
+        keyboardNodePath.c_str());
     char canonicalPath[PATH_MAX + 1] = {0x00};
     if (keyboardNodePath.length() == 0 || keyboardNodePath.length() > PATH_MAX ||
         realpath(keyboardNodePath.c_str(), canonicalPath) == nullptr) {

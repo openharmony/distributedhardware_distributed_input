@@ -19,6 +19,7 @@
 #include <map>
 #include <mutex>
 #include <string>
+#include <linux/input.h>
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -49,7 +50,7 @@ private:
     void CreateKeyUpInjectThread(const std::vector<std::string> &dhids);
     void CheckKeyState(std::string &dhid, std::string &keyboardNodePath);
     void UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, std::string &dhid);
-    void KeyUpInject(std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
+    void KeyUpInject(std::vector<std::string> shareDhidsPaths, std::vector<std::string> shareDhIds);
     bool IsExistDhid(const std::string &dhid);
     void RecordEventLog(const input_event& event);
 
