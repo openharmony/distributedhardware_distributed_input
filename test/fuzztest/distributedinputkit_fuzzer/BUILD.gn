@@ -43,6 +43,7 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   cflags = [

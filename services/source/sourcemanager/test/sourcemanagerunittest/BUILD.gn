@@ -51,6 +51,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${common_path}/test/mock",
     "${distributedinput_path}/services/transportbase/include",
     "${distributedinput_path}/utils/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [
@@ -109,6 +110,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/transport:libdinput_source_trans",
     "//third_party/libevdev:libevdev",

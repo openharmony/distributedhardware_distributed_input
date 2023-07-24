@@ -35,6 +35,7 @@ ohos_fuzztest("DistributedInputClientFuzzTest") {
     "${distributedinput_path}/sourcehandler/include",
     "${distributedinput_path}/sinkhandler/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
     "${service_common}/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",

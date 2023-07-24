@@ -50,6 +50,7 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "${services_sink_path}/inputcollector/include",
     "${services_source_path}/inputinject/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [
@@ -79,6 +80,7 @@ ohos_unittest("distributed_input_sinktrans_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${services_sink_path}/inputcollector:libdinput_collector",
     "${services_sink_path}/sinkmanager:libdinput_sink",
     "${utils_path}:libdinput_utils",

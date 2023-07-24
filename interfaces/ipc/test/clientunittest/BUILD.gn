@@ -49,6 +49,7 @@ ohos_unittest("distributed_input_client_test") {
     "${services_sink_path}/inputcollector/include",
     "${services_sink_path}/sinkmanager/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [

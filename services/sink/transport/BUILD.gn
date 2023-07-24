@@ -30,6 +30,7 @@ ohos_shared_library("libdinput_sink_trans") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${distributedinput_path}/services/transportbase/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [
@@ -45,6 +46,7 @@ ohos_shared_library("libdinput_sink_trans") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
