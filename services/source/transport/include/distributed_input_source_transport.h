@@ -138,8 +138,6 @@ private:
     std::string JointDhIds(const std::vector<std::string> &dhids);
     void RegRespFunMap();
 
-    void StringSplitToVector(const std::string &str, const char split, std::vector<std::string> &vecStr);
-
 private:
     std::mutex operationMutex_;
     std::set<int32_t> sessionIdSet_;

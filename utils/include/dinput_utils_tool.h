@@ -50,8 +50,13 @@ std::string GetNodeDesc(std::string parameters);
 std::string GetAnonyString(const std::string &value);
 std::string GetAnonyInt32(const int32_t value);
 std::string Sha256(const std::string& string);
+void CloseFd(int& fd);
+int BitIsSet(const unsigned long *array, int bit);
+void StringSplitToVector(const std::string& str, const char split, std::vector<std::string>& vecStr);
+int OpenInputDeviceFdByPath(std::string devicePath);
+std::string ConvertErrNo();
+void ScanInputDevicesPath(std::string dirName, std::vector<std::string>& vecInputDevPath);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS
-
 #endif // OHOS_DISTRIBUTED_INPUT_UTILS_TOOL_H

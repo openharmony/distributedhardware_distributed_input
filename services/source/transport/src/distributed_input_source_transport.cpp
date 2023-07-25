@@ -286,24 +286,6 @@ int32_t DistributedInputSourceTransport::UnprepareRemoteInput(int32_t srcTsrcSeI
     return DH_SUCCESS;
 }
 
-void DistributedInputSourceTransport::StringSplitToVector(const std::string &str, const char split,
-    std::vector<std::string> &vecStr)
-{
-    if (str.empty()) {
-        DHLOGE("StringSplitToVector param str is error.");
-        return;
-    }
-    std::string strTmp = str + split;
-    size_t pos = strTmp.find(split);
-    while (pos != strTmp.npos) {
-        std::string matchTmp = strTmp.substr(0, pos);
-        vecStr.push_back(matchTmp);
-
-        strTmp = strTmp.substr(pos + 1, strTmp.size());
-        pos = strTmp.find(split);
-    }
-}
-
 int32_t DistributedInputSourceTransport::StartRemoteInputDhids(int32_t srcTsrcSeId, const std::string &deviceId,
     const std::string &dhids)
 {
@@ -317,7 +299,7 @@ int32_t DistributedInputSourceTransport::StartRemoteInputDhids(int32_t srcTsrcSe
     std::vector<std::string> vecStr;
     StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
     DInputState::GetInstance().AddDhids(vecStr);
-    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
+    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN, -1);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_START_DHID_FOR_REL;
@@ -783,7 +765,7 @@ int32_t DistributedInputSourceTransport::StopRemoteInput(const std::string &devi
     DHLOGI("StopRemoteInput sessionId:%d.", sessionId);
 
     DInputState::GetInstance().AddDhids(dhids);
-    DInputState::GetInstance().SwitchState(dhids, DhidState::THROUGH_OUT);
+    DInputState::GetInstance().SwitchState(dhids, DhidState::THROUGH_OUT, -1);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID;

@@ -79,14 +79,6 @@ public:
 
     private:
         DistributedInputSinkManager *sinkManagerObj_;
-        static inline int BitIsSet(const unsigned long *array, int bit)
-        {
-            return !!(array[bit / LONG_BITS] & (1LL << (bit % LONG_BITS)));
-        }
-        void SleepTimeMs();
-        void StringSplit(const std::string &str, const char split, std::vector<std::string> &vecStr);
-        void CreateCheckThread(const int32_t &sessionId, const std::string &strDhids);
-        void CheckKeyState(const int32_t &sessionId, const std::string &strDhids);
     };
 
     class ProjectWindowListener : public PublisherListenerStub {

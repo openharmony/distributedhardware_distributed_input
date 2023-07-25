@@ -24,11 +24,16 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+/*
+ * This enumeration class represents the two states of the peropheral:
+ * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
+ * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
+*/
 enum class DhidState {
-    INIT = 0,
-    THROUGH_IN,
+    THROUGH_IN = 0,
     THROUGH_OUT,
 };
+
 class DInputState {
 public:
     static DInputState &GetInstance()
@@ -41,18 +46,21 @@ public:
     int32_t Release();
     int32_t AddDhids(const std::vector<std::string> &dhids);
     int32_t DeleteDhids(const std::vector<std::string> &dhids);
-    int32_t SwitchState(const std::vector<std::string> &dhids, DhidState state);
+    int32_t SwitchState(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId);
     DhidState GetStateByDhid(std::string &dhid);
 
 private:
     ~DInputState();
 
-    void CreateKeyUpInjectThread(const std::vector<std::string> &dhids);
-    void CheckKeyState(std::string &dhid, std::string &keyboardNodePath);
-    void UpInject(int fd, std::vector<uint32_t> &keyboardPressedKeys, std::string &dhid);
-    void KeyUpInject(std::vector<std::string> shareDhidsPaths, std::vector<std::string> shareDhIds);
-    bool IsExistDhid(const std::string &dhid);
-    void RecordEventLog(const input_event& event);
+    void CreateSpecialEventInjectThread(const int32_t &sessionId, const std::vector<std::string> &dhids);
+    void CheckKeyboardState(std::string &dhid, std::string &keyboardNodePath,
+        std::vector<uint32_t> &keyboardPressedKeys, int &fd);
+    void SpecEveInject(const int32_t &sessionId, std::vector<std::string> dhids);
+    bool IsDhidExist(const std::string &dhid);
+    void RecordEventLog(const input_event &event);
+    void WriteEventToDev(int &fd, const input_event &event);
+    void CheckMouseKeyState(const int32_t &sessionId, const std::string &mouseNodePath,
+        const std::string &mouseNodeDhId);
 
 private:
     std::mutex operationMutex_;

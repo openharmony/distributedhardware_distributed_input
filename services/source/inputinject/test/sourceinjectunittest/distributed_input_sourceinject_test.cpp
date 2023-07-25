@@ -413,11 +413,11 @@ HWTEST_F(DistributedInputSourceInjectTest, GetVirtualTouchScreenFd_003, testing:
     EXPECT_NE(-1, ret);
 }
 
-HWTEST_F(DistributedInputSourceInjectTest, getDevice_001, testing::ext::TestSize.Level1)
+HWTEST_F(DistributedInputSourceInjectTest, GetDevice_001, testing::ext::TestSize.Level1)
 {
     std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
     VirtualDevice* device = nullptr;
-    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->getDevice(dhId, device);
+    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->GetDevice(dhId, device);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_GET_DEVICE_FAIL, ret);
 }
 

@@ -18,11 +18,7 @@
 #include <cinttypes>
 #include <cstring>
 
-#include <fcntl.h>
 #include <pthread.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #include "softbus_bus_center.h"
 
@@ -35,9 +31,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-const uint32_t SLEEP_TIME_US = 100 * 1000;
-const uint32_t ERROR_MSG_MAX_LEN = 256;
-constexpr int32_t MAX_RETRY_COUNT = 10;
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
@@ -135,45 +128,14 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json& inputD
     }
 }
 
-static std::string ConvertErrNo()
-{
-    char errMsg[ERROR_MSG_MAX_LEN] = {0};
-    strerror_r(errno, errMsg, ERROR_MSG_MAX_LEN);
-    std::string errNoMsg(errMsg);
-    return errNoMsg;
-}
-
-void CloseFd(int fd)
-{
-    if (fd < 0) {
-        DHLOGE("No fd need to beclosed.");
-        return;
-    }
-    close(fd);
-    fd = -1;
-}
-
 void DistributedInputNodeManager::ScanSinkInputDevices(const std::string& dirName)
 {
-    DIR *dir;
-    struct dirent *de;
-    dir = opendir(dirName.c_str());
-    if (dir == nullptr) {
-        DHLOGE("error opendir /dev/input :%{public}s\n", ConvertErrNo().c_str());
-        return;
+    DHLOGI("ScanSinkInputDevices enter, dirName %s.", dirName.c_str());
+    std::vector<std::string> vecInputDevPath;
+    ScanInputDevicesPath(dirName, vecInputDevPath);
+    for (auto &tempPath: vecInputDevPath) {
+        OpenInputDevice(tempPath);
     }
-    size_t dirNameFirstPos = 0;
-    size_t dirNameSecondPos = 1;
-    size_t dirNameThirdPos = 2;
-    while ((de = readdir(dir))) {
-        if (de->d_name[dirNameFirstPos] == '.' && (de->d_name[dirNameSecondPos] == '\0' ||
-            (de->d_name[dirNameSecondPos] == '.' && de->d_name[dirNameThirdPos] == '\0'))) {
-            continue;
-        }
-        std::string tmpDevName = dirName + "/" + std::string(de->d_name);
-        OpenInputDevice(tmpDevName);
-    }
-    closedir(dir);
 }
 
 bool DistributedInputNodeManager::IsVirtualDev(int fd)
@@ -199,19 +161,19 @@ bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std:
 {
     char buffer[256] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device physicalPath for %s", ConvertErrNo().c_str());
+        DHLOGE("Could not get device physicalPath for %s.", ConvertErrNo().c_str());
         return false;
     }
     buffer[sizeof(buffer) - 1] = '\0';
     physicalPath = buffer;
 
-    DHLOGD("GetDevDhIdFd physicalPath: %s", physicalPath.c_str());
-    dhId = physicalPath.substr(physicalPath.find("Input_"));
+    DHLOGD("GetDevDhIdByFd physicalPath %s.", physicalPath.c_str());
+    dhId = physicalPath.substr(physicalPath.find(DH_ID_PREFIX));
     if (dhId.size() == 0) {
         DHLOGE("Get dev dhid failed.");
         return false;
     }
-    DHLOGD("Device dhId %s", GetAnonyString(dhId).c_str());
+    DHLOGD("Device dhId %s.", GetAnonyString(dhId).c_str());
     return true;
 }
 
@@ -234,49 +196,23 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath)
     DHLOGI("Opening input device path: %s", devicePath.c_str());
     std::string dhId;
     std::string physicalPath;
-    struct stat s;
-    int fd = -1;
-    chmod(devicePath.c_str(), S_IREAD);
-    char canonicalDevicePath[PATH_MAX + 1] = {0x00};
-
-    if (devicePath.length() == 0 || devicePath.length() > PATH_MAX ||
-        realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
-        DHLOGE("path check fail, error path: %s", devicePath.c_str());
-        return;
-    }
-    if ((stat(canonicalDevicePath, &s) == 0) && (s.st_mode & S_IFDIR)) {
-        DHLOGI("path: %s is a dir.", devicePath.c_str());
-        return;
-    }
-    fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-    int32_t count = 0;
-    while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
-        ++count;
-        usleep(SLEEP_TIME_US);
-        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-        DHLOGE("could not open %s, %s; retry %d\n", devicePath.c_str(), ConvertErrNo().c_str(), count);
-    }
-    if (count >= MAX_RETRY_COUNT) {
-        DHLOGE("could not open %s, %s\n", devicePath.c_str(), ConvertErrNo().c_str());
-        CloseFd(fd);
-        return;
-    }
+    int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == -1) {
-        DHLOGE("The fd open failed, devicePath %s\n", devicePath.c_str());
+        DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
         return;
     }
     if (IsVirtualDev(fd) == false) {
-        DHLOGE("The dev not virtual, devicePath %s\n", devicePath.c_str());
+        DHLOGE("The dev not virtual, devicePath %s.", devicePath.c_str());
         return;
     }
     if (GetDevDhIdByFd(fd, dhId, physicalPath) == false) {
-        DHLOGE("Get dev dhid failed, devicePath %s\n", devicePath.c_str());
+        DHLOGE("Get dev dhid failed, devicePath %s.", devicePath.c_str());
         return;
     }
     SetPathForDevMap(dhId, devicePath);
 }
 
-void DistributedInputNodeManager::GetVirtualKeyboardPathByDhId(const std::vector<std::string> &dhIds,
+void DistributedInputNodeManager::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
     std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
 {
     for (auto dhId_ : dhIds) {
@@ -370,7 +306,7 @@ int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &dhId)
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
 
-int32_t DistributedInputNodeManager::getDevice(const std::string& dhId, VirtualDevice*& device)
+int32_t DistributedInputNodeManager::GetDevice(const std::string& dhId, VirtualDevice*& device)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.find(dhId);
@@ -455,7 +391,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
     DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
         GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
     VirtualDevice* device = nullptr;
-    if (getDevice(dhId, device) < 0) {
+    if (GetDevice(dhId, device) < 0) {
         DHLOGE("could not find the device");
         return;
     }

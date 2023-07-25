@@ -186,18 +186,6 @@ HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_02,
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, StringSplit_01, testing::ext::TestSize.Level1)
-{
-    char splitPoint = '.';
-    std::string str = "";
-    std::vector<std::string> vecStr;
-    sinkManager_->statuslistener_->StringSplit(str, splitPoint, vecStr);
-
-    str = "123,123,123,123";
-    sinkManager_->statuslistener_->StringSplit(str, splitPoint, vecStr);
-    EXPECT_NE(0, vecStr.size());
-}
-
 HWTEST_F(DistributedInputSinkManagerTest, OnMessage_01, testing::ext::TestSize.Level1)
 {
     int32_t ret = sinkManager_->Init();

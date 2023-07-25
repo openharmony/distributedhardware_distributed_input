@@ -195,8 +195,6 @@ namespace DistributedInput {
 
     constexpr const char* CHECK_KEY_STATUS_THREAD_NAME = "checkKeyStatus";
 
-    constexpr const char* KEYBOARD_UP_INJECT_THREAD_NAME = "KeyboardUpInject";
-
     constexpr int32_t LOG_MAX_LEN = 4096;
 
     constexpr uint32_t SCREEN_ID_DEFAULT = 0;

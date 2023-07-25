@@ -284,9 +284,9 @@ void DistributedInputSourceManager::DInputSourceListener::OnResponseStartRemoteI
     }
 
     std::vector<std::string> vecStr;
-    sourceManagerObj_->StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
+    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
     DInputState::GetInstance().AddDhids(vecStr);
-    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN);
+    DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN, -1);
 
     std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();
     nlohmann::json tmpJson;
@@ -2457,24 +2457,6 @@ void DistributedInputSourceManager::RunKeyStateCallback(const std::string &sinkI
     mEventBuffer.descriptor = dhId;
     DistributedInputInject::GetInstance().RegisterDistributedEvent(&mEventBuffer, DINPUT_SOURCE_WRITE_EVENT_SIZE);
     return;
-}
-
-void DistributedInputSourceManager::StringSplitToVector(const std::string &str, const char split,
-    std::vector<std::string> &vecStr)
-{
-    if (str.empty()) {
-        DHLOGE("StringSplitToVector param str is error.");
-        return;
-    }
-    std::string strTmp = str + split;
-    size_t pos = strTmp.find(split);
-    while (pos != strTmp.npos) {
-        std::string matchTmp = strTmp.substr(0, pos);
-        vecStr.push_back(matchTmp);
-
-        strTmp = strTmp.substr(pos + 1, strTmp.size());
-        pos = strTmp.find(split);
-    }
 }
 
 DInputServerType DistributedInputSourceManager::GetStartTransFlag()

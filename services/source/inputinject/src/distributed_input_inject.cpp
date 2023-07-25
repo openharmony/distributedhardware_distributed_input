@@ -256,14 +256,14 @@ int32_t DistributedInputInject::GetVirtualTouchScreenFd()
     return inputNodeManager_->GetVirtualTouchScreenFd();
 }
 
-void DistributedInputInject::GetVirtualKeyboardPathByDhId(const std::vector<std::string> &dhIds,
+void DistributedInputInject::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
     std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
 {
     if (inputNodeManager_ == nullptr) {
         DHLOGE("inputNodeManager is nullptr");
         return;
     }
-    inputNodeManager_->GetVirtualKeyboardPathByDhId(dhIds, shareDhidsPaths, shareDhIds);
+    inputNodeManager_->GetVirtualKeyboardPathsByDhIds(dhIds, shareDhidsPaths, shareDhIds);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
