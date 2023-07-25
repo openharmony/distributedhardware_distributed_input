@@ -33,7 +33,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-
 DInputState::~DInputState()
 {
     Release();
@@ -161,7 +160,7 @@ void DInputState::WriteEventToDev(int &fd, const input_event &event)
 void DInputState::SpecEveInject(const int32_t &sessionId, std::vector<std::string> dhids)
 {
     DHLOGI("SpecEveInject enter");
-    //mouse event send to remote device
+    // mouse event send to remote device
     if (sessionId != -1) {
         std::string mouseNodePath;
         std::string mouseNodeDhId;
@@ -169,7 +168,7 @@ void DInputState::SpecEveInject(const int32_t &sessionId, std::vector<std::strin
         CheckMouseKeyState(sessionId, mouseNodePath, mouseNodeDhId);
     }
 
-    //keyboard up event inject local device
+    // keyboard up event inject local device
     std::vector<std::string> keyboardNodePaths;
     std::vector<std::string> keyboardNodeDhIds;
     DistributedInputCollector::GetInstance().GetShareKeyboardPathsByDhIds(dhids, keyboardNodePaths, keyboardNodeDhIds);

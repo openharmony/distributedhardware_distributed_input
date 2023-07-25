@@ -56,8 +56,8 @@ public:
         const std::string &sinkNodeDesc);
     void SyncNodeOfflineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId);
 
-    void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds, std::vector<std::string> &shareDhidsPaths,
-        std::vector<std::string> &shareDhIds);
+    void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+        std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
 
 private:
     DistributedInputInject();
