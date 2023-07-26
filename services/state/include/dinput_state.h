@@ -44,9 +44,8 @@ public:
 
     int32_t Init();
     int32_t Release();
-    int32_t AddDhids(const std::vector<std::string> &dhids);
-    int32_t DeleteDhids(const std::vector<std::string> &dhids);
-    int32_t SwitchState(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId);
+    int32_t RecordDhids(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId);
+    int32_t RemoveDhids(const std::vector<std::string> &dhids);
     DhidState GetStateByDhid(std::string &dhid);
 
 private:
@@ -55,7 +54,7 @@ private:
     void CreateSpecialEventInjectThread(const int32_t &sessionId, const std::vector<std::string> &dhids);
     void CheckKeyboardState(std::string &dhid, std::string &keyboardNodePath,
         std::vector<uint32_t> &keyboardPressedKeys, int &fd);
-    void SpecEveInject(const int32_t &sessionId, std::vector<std::string> dhids);
+    void SpecEventInject(const int32_t &sessionId, std::vector<std::string> dhids);
     bool IsDhidExist(const std::string &dhid);
     void RecordEventLog(const input_event &event);
     void WriteEventToDev(int &fd, const input_event &event);

@@ -52,24 +52,28 @@ int32_t DInputState::Release()
     return DH_SUCCESS;
 }
 
-int32_t DInputState::AddDhids(const std::vector<std::string> &dhids)
+int32_t DInputState::RecordDhids(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId)
 {
-    DHLOGI("AddDhid dhids size = %zu", dhids.size());
+    DHLOGI("RecordDhids dhids size = %zu", dhids.size());
     std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
-        DHLOGD("add dhid : %s", GetAnonyString(dhid).c_str());
+        DHLOGD("add dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
         if (IsDhidExist(dhid)) {
             DHLOGI("dhid : %s already exist.", GetAnonyString(dhid).c_str());
         } else {
-            dhidStateMap_[dhid] = DhidState::THROUGH_IN;
+            dhidStateMap_[dhid] = state;
         }
+    }
+
+    if (state == DhidState::THROUGH_OUT) {
+        CreateSpecialEventInjectThread(sessionId, dhids);
     }
     return DH_SUCCESS;
 }
 
-int32_t DInputState::DeleteDhids(const std::vector<std::string> &dhids)
+int32_t DInputState::RemoveDhids(const std::vector<std::string> &dhids)
 {
-    DHLOGI("DeleteDhid dhids size = %zu", dhids.size());
+    DHLOGI("RemoveDhids dhids size = %zu", dhids.size());
     std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("delete dhid : %s", GetAnonyString(dhid).c_str());
@@ -79,25 +83,6 @@ int32_t DInputState::DeleteDhids(const std::vector<std::string> &dhids)
             dhidStateMap_.erase(dhid);
         }
     }
-    return DH_SUCCESS;
-}
-
-int32_t DInputState::SwitchState(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId)
-{
-    std::unique_lock<std::mutex> mapLock(operationMutex_);
-    for (auto &dhid : dhids) {
-        DHLOGD("SwitchState dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
-        if (!IsDhidExist(dhid)) {
-            DHLOGE("dhid : %s not exist.", GetAnonyString(dhid).c_str());
-        } else {
-            dhidStateMap_[dhid] = state;
-        }
-    }
-
-    if (state == DhidState::THROUGH_OUT) {
-        CreateSpecialEventInjectThread(sessionId, dhids);
-    }
-
     return DH_SUCCESS;
 }
 
@@ -121,13 +106,13 @@ bool DInputState::IsDhidExist(const std::string &dhid)
 void DInputState::CreateSpecialEventInjectThread(const int32_t &sessionId, const std::vector<std::string> &dhids)
 {
     DHLOGI("CreateSpecialEventInjectThread enter, dhids.size = %d, sessionId = %d.", dhids.size(), sessionId);
-    std::thread specEveInjectThread =
-        std::thread(&DInputState::SpecEveInject, this, sessionId, dhids);
-    int32_t ret = pthread_setname_np(specEveInjectThread.native_handle(), CHECK_KEY_STATUS_THREAD_NAME);
+    std::thread specEventInjectThread =
+        std::thread(&DInputState::SpecEventInject, this, sessionId, dhids);
+    int32_t ret = pthread_setname_np(specEventInjectThread.native_handle(), CHECK_KEY_STATUS_THREAD_NAME);
     if (ret != 0) {
-        DHLOGE("specEveInjectThread setname failed.");
+        DHLOGE("specEventInjectThread setname failed.");
     }
-    specEveInjectThread.detach();
+    specEventInjectThread.detach();
 }
 
 void DInputState::RecordEventLog(const input_event &event)
@@ -157,7 +142,7 @@ void DInputState::WriteEventToDev(int &fd, const input_event &event)
     RecordEventLog(event);
 }
 
-void DInputState::SpecEveInject(const int32_t &sessionId, std::vector<std::string> dhids)
+void DInputState::SpecEventInject(const int32_t &sessionId, std::vector<std::string> dhids)
 {
     DHLOGI("SpecEveInject enter");
     // mouse event send to remote device
@@ -174,7 +159,7 @@ void DInputState::SpecEveInject(const int32_t &sessionId, std::vector<std::strin
     DistributedInputCollector::GetInstance().GetShareKeyboardPathsByDhIds(dhids, keyboardNodePaths, keyboardNodeDhIds);
     DistributedInputInject::GetInstance().GetVirtualKeyboardPathsByDhIds(dhids, keyboardNodePaths, keyboardNodeDhIds);
     ssize_t len = keyboardNodePaths.size();
-    for (int32_t i = 0; i < len; ++i) {
+    for (ssize_t i = 0; i < len; ++i) {
         std::vector<uint32_t> keyboardPressedKeys;
         int fd = -1;
         CheckKeyboardState(keyboardNodeDhIds[i], keyboardNodePaths[i], keyboardPressedKeys, fd);
