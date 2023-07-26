@@ -213,7 +213,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInput(
             std::vector<std::string> vecStr;
             StringSplitToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, vecStr);
             DInputState::GetInstance().AddDhids(vecStr);
-            DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN, sessionId);
+            DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_OUT, sessionId);
         }
     }
 }
@@ -439,7 +439,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartTypeRemoteInpu
         std::vector<std::string> vecStr;
         StringSplitToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, vecStr);
         DInputState::GetInstance().AddDhids(vecStr);
-        DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_IN, toSinkSessionId);
+        DInputState::GetInstance().SwitchState(vecStr, DhidState::THROUGH_OUT, toSinkSessionId);
     }
 }
 

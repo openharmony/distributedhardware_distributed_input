@@ -65,7 +65,7 @@ int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string& devId, c
         DHLOGE("Can not create virtual node!");
         return ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL;
     }
-
+    ScanSinkInputDevices(DEVICE_PATH);
     return DH_SUCCESS;
 }
 
@@ -248,7 +248,6 @@ int32_t DistributedInputNodeManager::CreateHandle(const InputDevice& inputDevice
         return ERR_DH_INPUT_SERVER_SOURCE_CREATE_HANDLE_FAIL;
     }
     AddDeviceLocked(inputDevice.descriptor, std::move(virtualDevice));
-    ScanSinkInputDevices(DEVICE_PATH);
     return DH_SUCCESS;
 }
 
