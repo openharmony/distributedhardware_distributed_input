@@ -55,7 +55,6 @@ private:
     void CheckKeyboardState(std::string &dhid, std::string &keyboardNodePath,
         std::vector<uint32_t> &keyboardPressedKeys, int &fd);
     void SpecEventInject(const int32_t &sessionId, std::vector<std::string> dhids);
-    bool IsDhidExist(const std::string &dhid);
     void RecordEventLog(const input_event &event);
     void WriteEventToDev(int &fd, const input_event &event);
     void CheckMouseKeyState(const int32_t &sessionId, const std::string &mouseNodePath,

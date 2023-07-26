@@ -58,11 +58,7 @@ int32_t DInputState::RecordDhids(const std::vector<std::string> &dhids, DhidStat
     std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("add dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
-        if (IsDhidExist(dhid)) {
-            DHLOGI("dhid : %s already exist.", GetAnonyString(dhid).c_str());
-        } else {
-            dhidStateMap_[dhid] = state;
-        }
+        dhidStateMap_[dhid] = state;
     }
 
     if (state == DhidState::THROUGH_OUT) {
@@ -77,30 +73,19 @@ int32_t DInputState::RemoveDhids(const std::vector<std::string> &dhids)
     std::unique_lock<std::mutex> mapLock(operationMutex_);
     for (auto &dhid : dhids) {
         DHLOGD("delete dhid : %s", GetAnonyString(dhid).c_str());
-        if (!IsDhidExist(dhid)) {
-            DHLOGE("dhid : %s not exist.", GetAnonyString(dhid).c_str());
-        } else {
-            dhidStateMap_.erase(dhid);
-        }
+        dhidStateMap_.erase(dhid);
     }
     return DH_SUCCESS;
 }
 
 DhidState DInputState::GetStateByDhid(std::string &dhid)
 {
-    if (!IsDhidExist(dhid)) {
+    std::unique_lock<std::mutex> mapLock(operationMutex_);
+    if (dhidStateMap_.find(dhid) == dhidStateMap_.end()) {
         DHLOGE("dhid : %s not exist.", GetAnonyString(dhid).c_str());
         return DhidState::THROUGH_IN;
     }
     return dhidStateMap_[dhid];
-}
-
-bool DInputState::IsDhidExist(const std::string &dhid)
-{
-    if (dhidStateMap_.find(dhid) == dhidStateMap_.end()) {
-        return false;
-    }
-    return true;
 }
 
 void DInputState::CreateSpecialEventInjectThread(const int32_t &sessionId, const std::vector<std::string> &dhids)
