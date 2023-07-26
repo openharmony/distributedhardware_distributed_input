@@ -328,7 +328,8 @@ int OpenInputDeviceFdByPath(std::string devicePath)
 {
     chmod(devicePath.c_str(), S_IWRITE | S_IREAD);
     char canonicalDevicePath[PATH_MAX + 1] = {0x00};
-    if (devicePath.length() == 0 || devicePath.length() > PATH_MAX ||
+    canonicalDevicePath[PATH_MAX] = '\0';
+    if (devicePath.length() == 0 || devicePath.length() >= PATH_MAX ||
         realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
         DHLOGE("path check fail, error path: %s", devicePath.c_str());
         return -1;

@@ -169,7 +169,8 @@ void DInputState::CheckKeyboardState(std::string &dhid, std::string &keyboardNod
     DHLOGI("CheckKeyboardState enter,  dhid %s, keyboardNodePath %s.", GetAnonyString(dhid).c_str(),
         keyboardNodePath.c_str());
     char canonicalPath[PATH_MAX + 1] = {0x00};
-    if (keyboardNodePath.length() == 0 || keyboardNodePath.length() > PATH_MAX ||
+    canonicalDevicePath[PATH_MAX] = '\0';
+    if (keyboardNodePath.length() == 0 || keyboardNodePath.length() >= PATH_MAX ||
         realpath(keyboardNodePath.c_str(), canonicalPath) == nullptr) {
         DHLOGE("keyboard Nodepath check fail, error path: %s", keyboardNodePath.c_str());
         return;
@@ -209,7 +210,8 @@ void DInputState::CheckMouseKeyState(const int32_t &sessionId, const std::string
     DHLOGI("CheckMouseKeyState enter, mouseNodePath %s, mouseNodeDhId %s, sessionId %d.", mouseNodePath.c_str(),
         GetAnonyString(mouseNodeDhId).c_str(), sessionId);
     char canonicalPath[PATH_MAX + 1] = {0x00};
-    if (mouseNodePath.length() == 0 || mouseNodePath.length() > PATH_MAX ||
+    canonicalDevicePath[PATH_MAX] = '\0';
+    if (mouseNodePath.length() == 0 || mouseNodePath.length() >= PATH_MAX ||
         realpath(mouseNodePath.c_str(), canonicalPath) == nullptr) {
         DHLOGE("mouse Nodepath check fail, error path: %s", mouseNodePath.c_str());
         return;
