@@ -1132,6 +1132,9 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     }
 
     cli->SyncNodeInfoRemoteInput(GetLocalNetworkId(), dhId, GetNodeDesc(parameters));
+
+    // 6. Notify node mgr to scan vir dev node info
+    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(dhId);
     return DH_SUCCESS;
 }
 

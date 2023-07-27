@@ -59,6 +59,8 @@ public:
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
 
+    void NotifyNodeMgrScanVirNode(const std::string &dhId);
+
 private:
     DistributedInputInject();
     ~DistributedInputInject();

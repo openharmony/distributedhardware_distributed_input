@@ -209,7 +209,7 @@ void DInputState::CheckMouseKeyState(const int32_t &sessionId, const std::string
     DHLOGI("CheckMouseKeyState enter, mouseNodePath %s, mouseNodeDhId %s, sessionId %d.", mouseNodePath.c_str(),
         GetAnonyString(mouseNodeDhId).c_str(), sessionId);
     char canonicalPath[PATH_MAX] = {0x00};
-    if (mouseNodePath.length() == 0 || mouseNodePath.length() > PATH_MAX ||
+    if (mouseNodePath.length() == 0 || mouseNodePath.length() >= PATH_MAX ||
         realpath(mouseNodePath.c_str(), canonicalPath) == nullptr) {
         DHLOGE("mouse Nodepath check fail, error path: %s", mouseNodePath.c_str());
         return;
