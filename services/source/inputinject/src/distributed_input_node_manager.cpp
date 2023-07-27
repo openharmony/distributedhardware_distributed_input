@@ -169,7 +169,7 @@ DistributedInputNodeManager::DInputNodeManagerEventHandler::~DInputNodeManagerEv
 }
 
 void DistributedInputNodeManager::DInputNodeManagerEventHandler::ScanAllNode(
-        const AppExecFwk::InnerEvent::Pointer &event)
+    const AppExecFwk::InnerEvent::Pointer &event)
 {
     DHLOGI("ScanAllNode enter.");
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
@@ -237,7 +237,7 @@ void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std:
     while (iter != virtualDeviceMap_.end()) {
         DHLOGD("Virtual device map dhid %s.", iter->first.c_str());
         if (dhId.compare(iter->first) == 0) {
-            DHLOGI("Found the virtual device, set path :%s", devicePath.c_str());
+            DHLOGD("Found the virtual device, set path :%s", devicePath.c_str());
             iter->second->SetPath(devicePath);
             break;
         }
@@ -263,7 +263,7 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath,
         DHLOGE("This is not same dev, curDhId %s.", devicePath.c_str());
         return;
     }
-    DHLOGI("curDhId %s.", GetAnonyString(curDhId).c_str());
+    DHLOGD("curDhId %s.", GetAnonyString(curDhId).c_str());
     SetPathForDevMap(curDhId, devicePath);
 }
 
