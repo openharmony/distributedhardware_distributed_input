@@ -30,6 +30,7 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
     "${distributedinput_path}/interfaces/ipc/include",
     "${distributedinput_path}/services/source/sourcemanager/include",
     "${distributedinput_path}/services/sink/sinkmanager/include",
+    "${distributedinput_path}/services/state/include",
     "${distributedinput_path}/frameworks/include",
     "${distributedinput_path}/sourcehandler/include",
     "${distributedinput_path}/inputdevicehandler/include",

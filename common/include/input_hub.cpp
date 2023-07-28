@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <cinttypes>
 #include <cstring>
-#include <dirent.h>
 #include <fcntl.h>
 #include <filesystem>
 #include <regex>
@@ -40,8 +39,6 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
 const uint32_t SLEEP_TIME_US = 100 * 1000;
-const uint32_t ERROR_MSG_MAX_LEN = 256;
-constexpr int32_t MAX_RETRY_COUNT = 10;
 }
 
 InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevices_(true), nextDeviceId_(1),
@@ -54,14 +51,6 @@ InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevice
 InputHub::~InputHub()
 {
     Release();
-}
-
-static std::string ConvertErrNo()
-{
-    char errMsg[ERROR_MSG_MAX_LEN] = {0};
-    strerror_r(errno, errMsg, ERROR_MSG_MAX_LEN);
-    std::string errNoMsg(errMsg);
-    return errNoMsg;
 }
 
 int32_t InputHub::Initialize()
@@ -430,41 +419,14 @@ std::vector<InputDevice> InputHub::GetAllInputDevices()
     return vecDevice;
 }
 
-void InputHub::ScanInputDevices(const std::string& dirname)
+void InputHub::ScanInputDevices(const std::string& dirName)
 {
-    DIR *dir;
-    struct dirent *de;
-    dir = opendir(dirname.c_str());
-    if (dir == nullptr) {
-        DHLOGE("error opendir /dev/input :%{public}s\n", ConvertErrNo().c_str());
-        return;
+    DHLOGI("ScanInputDevices enter, dirName %s.", dirName.c_str());
+    std::vector<std::string> vecInputDevPath;
+    ScanInputDevicesPath(dirName, vecInputDevPath);
+    for (auto &tempPath: vecInputDevPath) {
+        OpenInputDeviceLocked(tempPath);
     }
-    size_t dirNameFirstPos = 0;
-    size_t dirNameSecondPos = 1;
-    size_t dirNameThirdPos = 2;
-    while ((de = readdir(dir))) {
-        /*
-         * The maximum value of d_name defined in the linux kernel is 260. Therefore,
-         * The d_name length does not need to be verified.
-         */
-        if (de->d_name[dirNameFirstPos] == '.' && (de->d_name[dirNameSecondPos] == '\0' ||
-            (de->d_name[dirNameSecondPos] == '.' && de->d_name[dirNameThirdPos] == '\0'))) {
-            continue;
-        }
-        std::string devName = dirname + "/" + std::string(de->d_name);
-        OpenInputDeviceLocked(devName);
-    }
-    closedir(dir);
-}
-
-void InputHub::CloseFd(int& fd)
-{
-    if (fd < 0) {
-        DHLOGE("No fd need to be closed.");
-        return;
-    }
-    close(fd);
-    fd = -1;
 }
 
 bool InputHub::IsDeviceRegistered(const std::string& devicePath)
@@ -486,30 +448,9 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string& devicePath)
 
     std::unique_lock<std::mutex> my_lock(operationMutex_);
     DHLOGI("Opening device: %s", devicePath.c_str());
-    chmod(devicePath.c_str(), S_IWRITE | S_IREAD);
-    char canonicalDevicePath[PATH_MAX + 1] = {0x00};
-    if (devicePath.length() == 0 || devicePath.length() > PATH_MAX ||
-        realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
-        DHLOGE("path check fail, error path: %s", devicePath.c_str());
-        return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
-    }
-    struct stat s;
-    if ((stat(canonicalDevicePath, &s) == 0) && (s.st_mode & S_IFDIR)) {
-        DHLOGI("path: %s is a dir.", devicePath.c_str());
-        return DH_SUCCESS;
-    }
-
-    int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-    int32_t count = 0;
-    while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
-        ++count;
-        usleep(SLEEP_TIME_US);
-        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-        DHLOGE("could not open %s, %s; retry %d\n", devicePath.c_str(), ConvertErrNo().c_str(), count);
-    }
-    if (count >= MAX_RETRY_COUNT) {
-        DHLOGE("could not open %s, %s\n", devicePath.c_str(), ConvertErrNo().c_str());
-        CloseFd(fd);
+    int fd = OpenInputDeviceFdByPath(devicePath);
+    if (fd == -1) {
+        DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
 
@@ -1135,6 +1076,28 @@ void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::stri
                 dhId = dhId_;
                 path = device->path;
                 return; // return First shared mouse
+            }
+        }
+    }
+}
+
+void InputHub::GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths,
+    std::vector<std::string> &shareDhIds)
+{
+    DHLOGI("GetShareKeyboardPathsByDhIds: devices_.size:%d,", devices_.size());
+    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    for (auto dhId_ : dhIds) {
+        for (const auto &[id, device] : devices_) {
+            if (device == nullptr) {
+                DHLOGE("device is nullptr");
+                continue;
+            }
+            DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
+                   device->isShare, device->classes);
+            if ((device->identifier.descriptor == dhId_) &&
+                ((device->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+                shareDhIds.push_back(dhId_);
+                shareDhidsPaths.push_back(device->path);
             }
         }
     }

@@ -17,8 +17,12 @@
 
 #include <cstdarg>
 #include <cstdio>
+#include <dirent.h>
+#include <fcntl.h>
 #include <sys/time.h>
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <openssl/sha.h>
 
 #include "nlohmann/json.hpp"
@@ -46,6 +50,9 @@ namespace {
     constexpr unsigned char MASK = 0x0F;
     constexpr int32_t DOUBLE_TIMES = 2;
     constexpr int32_t INT32_STRING_LENGTH = 40;
+    constexpr int32_t MAX_RETRY_COUNT = 10;
+    constexpr uint32_t SLEEP_TIME_US = 100 * 1000;
+    constexpr uint32_t ERROR_MSG_MAX_LEN = 256;
 }
 DevInfo GetLocalDeviceInfo()
 {
@@ -284,6 +291,98 @@ std::string Sha256(const std::string& in)
     }
     out[SHA256_DIGEST_LENGTH * DOUBLE_TIMES] = 0;
     return reinterpret_cast<char*>(out);
+}
+
+void CloseFd(int& fd)
+{
+    if (fd < 0) {
+        DHLOGE("No fd need to beclosed.");
+        return;
+    }
+    close(fd);
+    fd = -1;
+}
+
+int BitIsSet(const unsigned long *array, int bit)
+{
+    return !!(array[bit / LONG_BITS] & (1LL << (bit % LONG_BITS)));
+}
+
+void StringSplitToVector(const std::string& str, const char split, std::vector<std::string>& vecStr)
+{
+    if (str.empty()) {
+        DHLOGE("StringSplitToVector param str is error.");
+        return;
+    }
+    std::string strTmp = str + split;
+    size_t pos = strTmp.find(split);
+    while (pos != strTmp.npos) {
+        std::string matchTmp = strTmp.substr(0, pos);
+        vecStr.push_back(matchTmp);
+        strTmp = strTmp.substr(pos + 1, strTmp.size());
+        pos = strTmp.find(split);
+    }
+}
+
+int OpenInputDeviceFdByPath(std::string devicePath)
+{
+    chmod(devicePath.c_str(), S_IWRITE | S_IREAD);
+    char canonicalDevicePath[PATH_MAX] = {0x00};
+    if (devicePath.length() == 0 || devicePath.length() >= PATH_MAX ||
+        realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
+        DHLOGE("path check fail, error path: %s", devicePath.c_str());
+        return -1;
+    }
+    struct stat s;
+    if ((stat(canonicalDevicePath, &s) == 0) && (s.st_mode & S_IFDIR)) {
+        DHLOGI("path: %s is a dir.", devicePath.c_str());
+        return -1;
+    }
+    int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+    int32_t count = 0;
+    while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
+        ++count;
+        usleep(SLEEP_TIME_US);
+        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+        DHLOGE("could not open %s, %s; retry %d\n", devicePath.c_str(), ConvertErrNo().c_str(), count);
+    }
+    if (count >= MAX_RETRY_COUNT) {
+        DHLOGE("could not open %s, %s\n", devicePath.c_str(), ConvertErrNo().c_str());
+        CloseFd(fd);
+        return -1;
+    }
+    return fd;
+}
+
+std::string ConvertErrNo()
+{
+    char errMsg[ERROR_MSG_MAX_LEN] = {0};
+    strerror_r(errno, errMsg, ERROR_MSG_MAX_LEN);
+    std::string errNoMsg(errMsg);
+    return errNoMsg;
+}
+
+void ScanInputDevicesPath(std::string dirName, std::vector<std::string>& vecInputDevPath)
+{
+    DIR *dir;
+    struct dirent *de;
+    dir = opendir(dirName.c_str());
+    if (dir == nullptr) {
+        DHLOGE("error opendir /dev/input :%{public}s\n", ConvertErrNo().c_str());
+        return;
+    }
+    size_t dirNameFirstPos = 0;
+    size_t dirNameSecondPos = 1;
+    size_t dirNameThirdPos = 2;
+    while ((de = readdir(dir))) {
+        if (de->d_name[dirNameFirstPos] == '.' && (de->d_name[dirNameSecondPos] == '\0' ||
+            (de->d_name[dirNameSecondPos] == '.' && de->d_name[dirNameThirdPos] == '\0'))) {
+            continue;
+        }
+        std::string tmpDevName = dirName + "/" + std::string(de->d_name);
+        vecInputDevPath.push_back(tmpDevName);
+    }
+    closedir(dir);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

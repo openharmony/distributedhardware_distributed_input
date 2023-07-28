@@ -33,6 +33,7 @@ ohos_shared_library("libdinput_source_handler") {
     "${fwk_interfaces_path}/include/ipc",
     "${utils_path}/include",
     "${services_source_path}/inputinject/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [

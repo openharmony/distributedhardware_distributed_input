@@ -1588,14 +1588,6 @@ HWTEST_F(DistributedInputSourceManagerTest, RunRelayStopTypeCallback_01, testing
     EXPECT_EQ(1, sourceManager_->relayStpTypeCallbacks_.size());
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, StringSplitToVector_01, testing::ext::TestSize.Level1)
-{
-    std::string str = "";
-    std::vector<std::string> vecStr;
-    sourceManager_->StringSplitToVector(str, ',', vecStr);
-    EXPECT_EQ(true, str.empty());
-}
-
 HWTEST_F(DistributedInputSourceManagerTest, RemoveInputDeviceId_01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "umkyu1b165e1be98151891erbe8r91ev";

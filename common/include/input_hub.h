@@ -53,8 +53,10 @@ public:
     void GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &datas);
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
     void GetShareMousePathByDhId(std::vector<std::string> dhIds, std::string &path, std::string &dhId);
+    void GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths,
+        std::vector<std::string> &shareDhIds);
     bool IsAllDevicesStoped();
-    void ScanInputDevices(const std::string& dirname);
+    void ScanInputDevices(const std::string& dirName);
 
 private:
     struct Device  {
@@ -121,7 +123,6 @@ private:
     Device* GetDeviceByPathLocked(const std::string& devicePath);
     Device* GetDeviceByFdLocked(int fd);
     Device* GetSupportDeviceByFd(int fd);
-    void CloseFd(int& fd);
     bool IsDeviceRegistered(const std::string& devicePath);
 
     bool ContainsNonZeroByte(const uint8_t* array, uint32_t startIndex, uint32_t endIndex);

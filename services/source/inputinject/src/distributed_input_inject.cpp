@@ -56,7 +56,7 @@ int32_t DistributedInputInject::RegisterDistributedHardware(const std::string& d
         DHLOGE("the DistributedInputNodeManager is null\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    if (inputNodeManager_->openDevicesNode(devId, dhId, parameters) < 0) {
+    if (inputNodeManager_->OpenDevicesNode(devId, dhId, parameters) < 0) {
         DHLOGE("create virtual device error\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_REGISTER_FAIL;
     }
@@ -254,6 +254,27 @@ int32_t DistributedInputInject::GetVirtualTouchScreenFd()
         return UN_INIT_FD_VALUE;
     }
     return inputNodeManager_->GetVirtualTouchScreenFd();
+}
+
+void DistributedInputInject::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+{
+    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
+    if (inputNodeManager_ == nullptr) {
+        DHLOGE("inputNodeManager is nullptr");
+        return;
+    }
+    inputNodeManager_->GetVirtualKeyboardPathsByDhIds(dhIds, shareDhidsPaths, shareDhIds);
+}
+
+void DistributedInputInject::NotifyNodeMgrScanVirNode(const std::string &dhId)
+{
+    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
+    if (inputNodeManager_ == nullptr) {
+        DHLOGE("inputNodeManager is nullptr");
+        return;
+    }
+    inputNodeManager_->NotifyNodeMgrScanVirNode(dhId);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

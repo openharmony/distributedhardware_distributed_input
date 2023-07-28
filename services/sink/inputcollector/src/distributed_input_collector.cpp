@@ -175,7 +175,7 @@ void DistributedInputCollector::ReportDhIdSharingState(const AffectDhIds &dhIds)
 {
     std::lock_guard<std::mutex> lock(sharingDhIdListenerMtx_);
     if (sharingDhIdListeners_.size() == 0) {
-        DHLOGI("sharingDhIdListeners_ is null, can not report sharing dhid");
+        DHLOGE("sharingDhIdListeners is null, can not report sharing dhid");
         return;
     }
 
@@ -208,16 +208,26 @@ void DistributedInputCollector::GetMouseNodePath(
     std::vector<std::string> dhIds, std::string &mouseNodePath, std::string &dhid)
 {
     if (inputHub_ == nullptr) {
-        DHLOGI("inputHub is nullptr!");
+        DHLOGE("inputHub is nullptr!");
         return;
     }
     inputHub_->GetShareMousePathByDhId(dhIds, mouseNodePath, dhid);
 }
 
+void DistributedInputCollector::GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds,
+    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+{
+    if (inputHub_ == nullptr) {
+        DHLOGE("inputHub is nullptr!");
+        return;
+    }
+    inputHub_->GetShareKeyboardPathsByDhIds(dhIds, shareDhidsPaths, shareDhIds);
+}
+
 bool DistributedInputCollector::IsAllDevicesStoped()
 {
     if (inputHub_ == nullptr) {
-        DHLOGI("inputHub is nullptr!");
+        DHLOGE("inputHub is nullptr!");
         return false;
     }
     return inputHub_->IsAllDevicesStoped();
@@ -235,7 +245,7 @@ void DistributedInputCollector::GetDeviceInfoByType(const uint32_t inputTypes, s
     std::string>& deviceInfo)
 {
     if (inputHub_ == nullptr) {
-        DHLOGI("inputHub is nullptr!");
+        DHLOGE("inputHub is nullptr!");
         return;
     }
     inputHub_->GetDevicesInfoByType(inputTypes, deviceInfo);

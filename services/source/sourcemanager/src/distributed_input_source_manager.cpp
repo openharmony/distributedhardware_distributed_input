@@ -34,6 +34,7 @@
 #include "dinput_errcode.h"
 #include "dinput_hitrace.h"
 #include "dinput_log.h"
+#include "dinput_state.h"
 #include "dinput_utils_tool.h"
 #include "distributed_input_client.h"
 #include "distributed_input_inject.h"
@@ -281,6 +282,10 @@ void DistributedInputSourceManager::DInputSourceListener::OnResponseStartRemoteI
     if (result) {
         sourceManagerObj_->SetDeviceMapValue(deviceId, DINPUT_SOURCE_SWITCH_ON);
     }
+
+    std::vector<std::string> vecStr;
+    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
+    DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_IN, -1);
 
     std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();
     nlohmann::json tmpJson;
@@ -971,6 +976,12 @@ int32_t DistributedInputSourceManager::Init()
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_STOP_DSCREEN, stopDScreenListener_);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_DEV_OFFLINE, deviceOfflineListener_);
 
+    ret = DInputState::GetInstance().Init();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("DInputState init fail!");
+        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INIT_FAIL;
+    }
+
     return DH_SUCCESS;
 }
 
@@ -1121,6 +1132,9 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     }
 
     cli->SyncNodeInfoRemoteInput(GetLocalNetworkId(), dhId, GetNodeDesc(parameters));
+
+    // 6. Notify node mgr to scan vir dev node info
+    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(dhId);
     return DH_SUCCESS;
 }
 
@@ -2445,24 +2459,6 @@ void DistributedInputSourceManager::RunKeyStateCallback(const std::string &sinkI
     mEventBuffer.descriptor = dhId;
     DistributedInputInject::GetInstance().RegisterDistributedEvent(&mEventBuffer, DINPUT_SOURCE_WRITE_EVENT_SIZE);
     return;
-}
-
-void DistributedInputSourceManager::StringSplitToVector(const std::string &str, const char split,
-    std::vector<std::string> &vecStr)
-{
-    if (str.empty()) {
-        DHLOGE("StringSplitToVector param str is error.");
-        return;
-    }
-    std::string strTmp = str + split;
-    size_t pos = strTmp.find(split);
-    while (pos != strTmp.npos) {
-        std::string matchTmp = strTmp.substr(0, pos);
-        vecStr.push_back(matchTmp);
-
-        strTmp = strTmp.substr(pos + 1, strTmp.size());
-        pos = strTmp.find(split);
-    }
 }
 
 DInputServerType DistributedInputSourceManager::GetStartTransFlag()

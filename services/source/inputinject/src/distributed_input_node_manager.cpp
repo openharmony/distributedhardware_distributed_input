@@ -18,9 +18,7 @@
 #include <cinttypes>
 #include <cstring>
 
-#include <fcntl.h>
 #include <pthread.h>
-#include <unistd.h>
 
 #include "softbus_bus_center.h"
 
@@ -36,11 +34,14 @@ namespace DistributedInput {
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
+    DHLOGI("DistributedInputNodeManager ctor");
+    std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
+    callBackHandler_ = std::make_shared<DistributedInputNodeManager::DInputNodeManagerEventHandler>(runner, this);
 }
 
 DistributedInputNodeManager::~DistributedInputNodeManager()
 {
-    DHLOGI("destructor start");
+    DHLOGI("DistributedInputNodeManager dtor");
     isInjectThreadCreated_.store(false);
     isInjectThreadRunning_.store(false);
     if (eventInjectThread_.joinable()) {
@@ -53,7 +54,7 @@ DistributedInputNodeManager::~DistributedInputNodeManager()
     DHLOGI("destructor end");
 }
 
-int32_t DistributedInputNodeManager::openDevicesNode(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string& devId, const std::string& dhId,
     const std::string& parameters)
 {
     if (devId.size() > DEV_ID_LENGTH_MAX || devId.empty() || dhId.size() > DH_ID_LENGTH_MAX || dhId.empty() ||
@@ -67,7 +68,6 @@ int32_t DistributedInputNodeManager::openDevicesNode(const std::string& devId, c
         DHLOGE("Can not create virtual node!");
         return ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL;
     }
-
     return DH_SUCCESS;
 }
 
@@ -127,6 +127,166 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json& inputD
     }
     if (IsArray(inputDeviceJson, PROPERTIES)) {
         pBuf.properties = inputDeviceJson[PROPERTIES].get<std::vector<uint32_t>>();
+    }
+}
+
+void DistributedInputNodeManager::ScanSinkInputDevices(const std::string& dhId)
+{
+    DHLOGI("ScanSinkInputDevices enter, dhId %s.", dhId.c_str());
+    std::vector<std::string> vecInputDevPath;
+    ScanInputDevicesPath(DEVICE_PATH, vecInputDevPath);
+    for (auto &tempPath: vecInputDevPath) {
+        OpenInputDevice(tempPath, dhId);
+    }
+}
+
+void DistributedInputNodeManager::DInputNodeManagerEventHandler::ProcessEvent(
+    const AppExecFwk::InnerEvent::Pointer &event)
+{
+    DHLOGI("ProcessEvent enter.");
+    auto iter = eventFuncMap_.find(event->GetInnerEventId());
+    if (iter == eventFuncMap_.end()) {
+        DHLOGE("Event Id %d is undefined.", event->GetInnerEventId());
+        return;
+    }
+    nodeMgrFunc &func = iter->second;
+    (this->*func)(event);
+}
+
+DistributedInputNodeManager::DInputNodeManagerEventHandler::DInputNodeManagerEventHandler(
+    const std::shared_ptr<AppExecFwk::EventRunner> &runner, DistributedInputNodeManager *manager)
+    : AppExecFwk::EventHandler(runner)
+{
+    eventFuncMap_[DINPUT_NODE_MANAGER_SCAN_ALL_NODE] = &DInputNodeManagerEventHandler::ScanAllNode;
+
+    nodeManagerObj_ = manager;
+}
+
+DistributedInputNodeManager::DInputNodeManagerEventHandler::~DInputNodeManagerEventHandler()
+{
+    eventFuncMap_.clear();
+    nodeManagerObj_ = nullptr;
+}
+
+void DistributedInputNodeManager::DInputNodeManagerEventHandler::ScanAllNode(
+    const AppExecFwk::InnerEvent::Pointer &event)
+{
+    DHLOGI("ScanAllNode enter.");
+    std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    auto it = dataMsg->begin();
+    nlohmann::json innerMsg = *(it);
+    std::string devicedhId = innerMsg[INPUT_NODE_DHID];
+    nodeManagerObj_->ScanSinkInputDevices(devicedhId);
+}
+
+void DistributedInputNodeManager::NotifyNodeMgrScanVirNode(const std::string &dhId)
+{
+    DHLOGI("NotifyNodeMgrScanVirNode enter.");
+    std::shared_ptr<nlohmann::json> jsonArrayMsg = std::make_shared<nlohmann::json>();
+    nlohmann::json tmpJson;
+    tmpJson[INPUT_NODE_DHID] = dhId;
+    jsonArrayMsg->push_back(tmpJson);
+    AppExecFwk::InnerEvent::Pointer msgEvent = AppExecFwk::InnerEvent::Get(
+        DINPUT_NODE_MANAGER_SCAN_ALL_NODE, jsonArrayMsg, 0);
+    callBackHandler_->SendEvent(msgEvent, 0, AppExecFwk::EventQueue::Priority::IMMEDIATE);
+}
+
+bool DistributedInputNodeManager::IsVirtualDev(int fd)
+{
+    char buffer[256] = {0};
+    std::string deviceName;
+    if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
+        DHLOGE("Could not get device name for %s.", ConvertErrNo().c_str());
+        return false;
+    }
+    buffer[sizeof(buffer) - 1] = '\0';
+    deviceName = buffer;
+
+    DHLOGD("IsVirtualDev deviceName: %s", buffer);
+    if (deviceName.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
+        DHLOGD("This is not a virtual device, fd %d, deviceName: %s.", fd, deviceName.c_str());
+        return false;
+    }
+    return true;
+}
+
+bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath)
+{
+    char buffer[256] = {0};
+    if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
+        DHLOGE("Could not get device physicalPath for %s.", ConvertErrNo().c_str());
+        return false;
+    }
+    buffer[sizeof(buffer) - 1] = '\0';
+    physicalPath = buffer;
+
+    DHLOGD("GetDevDhIdByFd physicalPath %s.", physicalPath.c_str());
+    dhId = physicalPath.substr(physicalPath.find(DH_ID_PREFIX));
+    if (dhId.size() == 0) {
+        DHLOGE("Get dev dhid failed.");
+        return false;
+    }
+    DHLOGD("Device dhId %s.", GetAnonyString(dhId).c_str());
+    return true;
+}
+
+void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std::string& devicePath)
+{
+    std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
+    auto iter = virtualDeviceMap_.begin();
+    while (iter != virtualDeviceMap_.end()) {
+        DHLOGD("Virtual device map dhid %s.", iter->first.c_str());
+        if (dhId.compare(iter->first) == 0) {
+            DHLOGD("Found the virtual device, set path :%s", devicePath.c_str());
+            iter->second->SetPath(devicePath);
+            break;
+        }
+        iter++;
+    }
+}
+
+void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath, const std::string& dhId)
+{
+    DHLOGI("Opening input device path: %s", devicePath.c_str());
+    std::string curDhId;
+    std::string physicalPath;
+    int fd = OpenInputDeviceFdByPath(devicePath);
+    if (fd == -1) {
+        DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
+        return;
+    }
+    if (!IsVirtualDev(fd)) {
+        DHLOGE("The dev not virtual, devicePath %s.", devicePath.c_str());
+        return;
+    }
+    if (!GetDevDhIdByFd(fd, curDhId, physicalPath) || dhId != curDhId) {
+        DHLOGE("This is not same dev, curDhId %s.", devicePath.c_str());
+        return;
+    }
+    DHLOGD("curDhId %s.", GetAnonyString(curDhId).c_str());
+    SetPathForDevMap(curDhId, devicePath);
+}
+
+void DistributedInputNodeManager::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+{
+    std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
+    for (auto dhId_ : dhIds) {
+        auto iter = virtualDeviceMap_.begin();
+        while (iter != virtualDeviceMap_.end()) {
+            if (iter->second == nullptr) {
+                DHLOGE("device is nullptr");
+                continue;
+            }
+            if ((iter->first.compare(dhId_) == 0) &&
+                ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+                DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str(),
+                    GetAnonyString(dhId_).c_str());
+                shareDhidsPaths.push_back(iter->second->GetPath());
+                shareDhIds.push_back(dhId_);
+            }
+            iter++;
+        }
     }
 }
 
@@ -201,7 +361,7 @@ int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &dhId)
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
 
-int32_t DistributedInputNodeManager::getDevice(const std::string& dhId, VirtualDevice*& device)
+int32_t DistributedInputNodeManager::GetDevice(const std::string& dhId, VirtualDevice*& device)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.find(dhId);
@@ -286,7 +446,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
     DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
         GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
     VirtualDevice* device = nullptr;
-    if (getDevice(dhId, device) < 0) {
+    if (GetDevice(dhId, device) < 0) {
         DHLOGE("could not find the device");
         return;
     }

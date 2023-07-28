@@ -35,6 +35,7 @@ ohos_shared_library("libdinput_sink") {
     "${utils_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [
@@ -52,6 +53,7 @@ ohos_shared_library("libdinput_sink") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${innerkits_path}:libdinput_sdk",
     "${services_sink_path}/inputcollector:libdinput_collector",
     "${services_sink_path}/transport:libdinput_sink_trans",

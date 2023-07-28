@@ -43,6 +43,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "${frameworks_path}/include",
     "//third_party/json/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
     "${common_path}/test/mock",
   ]
 

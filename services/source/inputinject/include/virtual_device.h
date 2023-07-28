@@ -43,7 +43,10 @@ public:
     bool SetUp(const InputDevice& inputDevice, const std::string &devId, const std::string &dhId);
     bool InjectInputEvent(const input_event &event);
     void SetNetWorkId(const std::string netWorkId);
+    void SetPath(const std::string path);
     std::string GetNetWorkId();
+    std::string GetPath();
+    uint16_t GetClasses();
 
     int32_t GetDeviceFd();
     uint16_t GetDeviceType();
@@ -52,6 +55,7 @@ private:
     int32_t fd_ = -1;
     std::string deviceName_;
     std::string netWorkId_;
+    std::string path_ {""};
     const uint16_t busType_;
     const uint16_t vendorId_;
     const uint16_t productId_;

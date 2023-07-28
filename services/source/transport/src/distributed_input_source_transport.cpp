@@ -296,6 +296,10 @@ int32_t DistributedInputSourceTransport::StartRemoteInputDhids(int32_t srcTsrcSe
     }
     DHLOGI("StartRemoteInputDhids srcTsrcSeId:%d, sinkSessionId:%d.", srcTsrcSeId, sinkSessionId);
 
+    std::vector<std::string> vecStr;
+    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
+    DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_IN, -1);
+
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_START_DHID_FOR_REL;
     jsonStr[DINPUT_SOFTBUS_KEY_DEVICE_ID] = deviceId;
@@ -758,6 +762,8 @@ int32_t DistributedInputSourceTransport::StopRemoteInput(const std::string &devi
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL;
     }
     DHLOGI("StopRemoteInput sessionId:%d.", sessionId);
+
+    DInputState::GetInstance().RecordDhids(dhids, DhidState::THROUGH_OUT, -1);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID;

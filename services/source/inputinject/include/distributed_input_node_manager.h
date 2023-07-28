@@ -24,6 +24,7 @@
 #include <string>
 #include <thread>
 
+#include "event_handler.h"
 #include "nlohmann/json.hpp"
 
 #include "constants_dinput.h"
@@ -33,15 +34,16 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+const uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
+const std::string INPUT_NODE_DHID = "dhId";
 class DistributedInputNodeManager {
 public:
     DistributedInputNodeManager();
     ~DistributedInputNodeManager();
 
-    int32_t openDevicesNode(const std::string& devId, const std::string& dhId,
-    const std::string& parameters);
+    int32_t OpenDevicesNode(const std::string& devId, const std::string& dhId, const std::string& parameters);
 
-    int32_t getDevice(const std::string& dhId, VirtualDevice*& device);
+    int32_t GetDevice(const std::string& dhId, VirtualDevice*& device);
     void ReportEvent(const RawEvent rawEvent);
     int32_t CloseDeviceLocked(const std::string& dhId);
     void StartInjectThread();
@@ -56,12 +58,38 @@ public:
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
     void ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent);
 
+    void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+        std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
+    void NotifyNodeMgrScanVirNode(const std::string &dhId);
+
+    class DInputNodeManagerEventHandler : public AppExecFwk::EventHandler {
+    public:
+        DInputNodeManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
+            DistributedInputNodeManager *manager);
+        ~DInputNodeManagerEventHandler() override;
+
+        void ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event) override;
+    private:
+        void ScanAllNode(const AppExecFwk::InnerEvent::Pointer &event);
+
+        using nodeMgrFunc = void (DInputNodeManagerEventHandler::*)(
+            const AppExecFwk::InnerEvent::Pointer &event);
+        std::map<int32_t, nodeMgrFunc> eventFuncMap_;
+        DistributedInputNodeManager *nodeManagerObj_;
+    };
+
 private:
     void AddDeviceLocked(const std::string& dhId, std::unique_ptr<VirtualDevice> device);
     int32_t CreateHandle(const InputDevice& inputDevice, const std::string& devId, const std::string& dhId);
     void ParseInputDeviceJson(const std::string& str, InputDevice& pBuf);
     void VerifyInputDevice(const nlohmann::json& inputDeviceJson, InputDevice& pBuf);
     void InjectEvent();
+
+    void ScanSinkInputDevices(const std::string& dhId);
+    void OpenInputDevice(const std::string& devicePath, const std::string& dhId);
+    bool IsVirtualDev(int fd);
+    bool GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath);
+    void SetPathForDevMap(std::string& dhId, const std::string& devicePath);
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
@@ -76,6 +104,7 @@ private:
     std::unique_ptr<InputHub> inputHub_;
     int32_t virtualTouchScreenFd_;
     std::once_flag callOnceFlag_;
+    std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -29,6 +29,7 @@
 #include "nlohmann/json.hpp"
 #include "securec.h"
 
+#include "dinput_state.h"
 #include "dinput_source_trans_callback.h"
 #include "dinput_transbase_source_callback.h"
 

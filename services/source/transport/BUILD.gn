@@ -31,6 +31,7 @@ ohos_shared_library("libdinput_source_trans") {
     "${frameworks_path}/include",
     "${distributedinput_path}/inputdevicehandler/include",
     "${distributedinput_path}/services/transportbase/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   sources = [ "src/distributed_input_source_transport.cpp" ]
@@ -43,6 +44,7 @@ ohos_shared_library("libdinput_source_trans") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",

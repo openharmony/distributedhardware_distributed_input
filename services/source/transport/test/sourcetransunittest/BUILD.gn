@@ -46,6 +46,7 @@ ohos_unittest("distributed_input_sourcetrans_test") {
     "${utils_path}/include",
     "${ipc_path}/include",
     "${frameworks_path}/include",
+    "${distributedinput_path}/services/state/include",
     "${distributedinput_path}/inputdevicehandler/include",
     "${common_path}/test/mock",
   ]
@@ -75,6 +76,7 @@ ohos_unittest("distributed_input_sourcetrans_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${distributedinput_path}/services/state:libdinput_state",
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/sourcemanager:libdinput_source",
     "${utils_path}:libdinput_utils",

@@ -44,6 +44,7 @@ ohos_unittest("distributed_input_source_handler_test") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
+    "${distributedinput_path}/services/state/include",
     "${utils_path}/include",
   ]
 

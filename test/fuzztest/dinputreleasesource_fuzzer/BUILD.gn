@@ -33,6 +33,7 @@ ohos_fuzztest("DinputReleaseSourceFuzzTest") {
     "${distributedinput_path}/frameworks/include",
     "${distributedinput_path}/sourcehandler/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
     "${service_common}/include",
     "${common_path}/include",
     "${fwk_common_path}/log/include",

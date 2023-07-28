@@ -37,6 +37,7 @@
 #include "distributed_input_source_event_handler.h"
 #include "distributed_input_source_sa_cli_mgr.h"
 #include "distributed_input_source_stub.h"
+#include "dinput_state.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -490,7 +491,6 @@ private:
     int32_t RelayStopRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
         const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback);
     bool IsStringDataSame(const std::vector<std::string> &oldDhIds, std::vector<std::string> newDhIds);
-    void StringSplitToVector(const std::string &str, const char split, std::vector<std::string> &vecStr);
     void DeleteNodeInfoAndNotify(const std::string& offlineDevId);
     void SendExistVirNodeInfos(sptr<InputNodeListener> listener);
     std::set<BeRegNodeInfo> GetSyncNodeInfo(const std::string& devId);

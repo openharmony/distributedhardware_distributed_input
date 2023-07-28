@@ -39,6 +39,7 @@ ohos_fuzztest("DistributedInputSourceTransportFuzzTest") {
     "${utils_path}/include",
     "${frameworks_path}/include",
     "${distributedinput_path}/inputdevicehandler/include",
+    "${distributedinput_path}/services/state/include",
   ]
 
   cflags = [
