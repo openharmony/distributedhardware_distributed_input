@@ -33,7 +33,6 @@ public:
     static DistributedInputInject &GetInstance();
     int32_t RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
         const std::string& parameters);
-
     int32_t UnregisterDistributedHardware(const std::string& devId, const std::string& dhId);
     int32_t RegisterDistributedEvent(RawEvent* buffer, size_t bufferSize);
     int32_t StructTransJson(const InputDevice& pBuf, std::string& strDescriptor);
@@ -45,21 +44,17 @@ public:
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
     int32_t RemoveVirtualTouchScreenNode(const std::string& dhId);
     int32_t GetVirtualTouchScreenFd();
-
     int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
-
     int32_t GetDhIdsByInputType(const std::string &devId, const uint32_t &inputTypes, std::vector<std::string> &dhIds);
 
+    void NotifyNodeMgrScanVirNode(const std::string &dhId);
     void InputDeviceEventInject(const std::shared_ptr<RawEvent> &rawEvent);
+    void SyncNodeOfflineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId);
     void SyncNodeOnlineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId,
         const std::string &sinkNodeDesc);
-    void SyncNodeOfflineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId);
-
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
-
-    void NotifyNodeMgrScanVirNode(const std::string &dhId);
 
 private:
     DistributedInputInject();

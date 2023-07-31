@@ -22,10 +22,10 @@
 #include <unistd.h>
 #include <vector>
 
+#include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
-#include "constants_dinput.h"
 #include "distributed_input_collector.h"
 #include "distributed_input_inject.h"
 #include "distributed_input_sink_transport.h"
@@ -143,10 +143,10 @@ void DInputState::SpecEventInject(const int32_t &sessionId, std::vector<std::str
     std::vector<std::string> keyboardNodeDhIds;
     DistributedInputCollector::GetInstance().GetShareKeyboardPathsByDhIds(dhids, keyboardNodePaths, keyboardNodeDhIds);
     DistributedInputInject::GetInstance().GetVirtualKeyboardPathsByDhIds(dhids, keyboardNodePaths, keyboardNodeDhIds);
-    ssize_t len = keyboardNodePaths.size();
-    for (ssize_t i = 0; i < len; ++i) {
+    size_t len = keyboardNodePaths.size();
+    for (size_t i = 0; i < len; ++i) {
         std::vector<uint32_t> keyboardPressedKeys;
-        int fd = -1;
+        int fd = UN_INIT_FD_VALUE;
         CheckKeyboardState(keyboardNodeDhIds[i], keyboardNodePaths[i], keyboardPressedKeys, fd);
         for (auto &code : keyboardPressedKeys) {
             struct input_event event = {
