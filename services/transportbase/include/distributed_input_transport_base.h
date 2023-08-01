@@ -16,6 +16,7 @@
 #ifndef DISTRIBUTED_INPUT_TRANSPORT_BASE_H
 #define DISTRIBUTED_INPUT_TRANSPORT_BASE_H
 
+#include <atomic>
 #include <condition_variable>
 #include <map>
 #include <mutex>
@@ -66,12 +67,14 @@ private:
     void Release();
 
 private:
+    std::atomic<bool> isSessSerCreateFlag_ = false;
+    std::mutex sessSerOperMutex_;
     std::mutex operationMutex_;
     std::string remoteDeviceId_;
     std::map<std::string, int32_t> remoteDevSessionMap_;
     std::map<std::string, bool> channelStatusMap_;
     std::condition_variable openSessionWaitCond_;
-    std::string mySessionName_ = "";
+    std::string localSessionName_ = "";
     int32_t sessionId_ = 0;
 
     std::shared_ptr<DInputTransbaseSourceCallback> srcCallback_;

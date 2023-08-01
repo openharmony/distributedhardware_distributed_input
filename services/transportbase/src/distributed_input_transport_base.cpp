@@ -127,13 +127,18 @@ int32_t DistributedInputTransportBase::Init()
     std::string networkId = localNode->networkId;
     DHLOGI("Init device local networkId is %s", GetAnonyString(networkId).c_str());
 
-    mySessionName_ = SESSION_NAME + networkId.substr(0, INTERCEPT_STRING_LENGTH);
-
-    int32_t ret = CreateSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str(), &iSessionListener);
+    std::unique_lock<std::mutex> sessionServerLock(sessSerOperMutex_);
+    if (isSessSerCreateFlag_.load()) {
+        DHLOGI("SessionServer already create success.");
+        return DH_SUCCESS;
+    }
+    localSessionName_ = SESSION_NAME + networkId.substr(0, INTERCEPT_STRING_LENGTH);
+    int32_t ret = CreateSessionServer(DINPUT_PKG_NAME.c_str(), localSessionName_.c_str(), &iSessionListener);
     if (ret != DH_SUCCESS) {
         DHLOGE("Init CreateSessionServer failed, error code %d.", ret);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_INIT_FAIL;
     }
+    isSessSerCreateFlag_.store(true);
     return DH_SUCCESS;
 }
 
@@ -144,7 +149,16 @@ void DistributedInputTransportBase::Release()
     for (; iter != remoteDevSessionMap_.end(); ++iter) {
         CloseSession(iter->second);
     }
-    (void)RemoveSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str());
+
+    {
+        std::unique_lock<std::mutex> sessionServerLock(sessSerOperMutex_);
+        if (!isSessSerCreateFlag_.load()) {
+            DHLOGI("SessionServer already remove success.");
+        } else {
+            (void)RemoveSessionServer(DINPUT_PKG_NAME.c_str(), localSessionName_.c_str());
+            isSessSerCreateFlag_.store(false);
+        }
+    }
     remoteDevSessionMap_.clear();
     channelStatusMap_.clear();
 }
@@ -182,7 +196,7 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
     DHLOGI("OpenInputSoftbus peerSessionName:%s", peerSessionName.c_str());
 
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
-    int32_t sessionId = OpenSession(mySessionName_.c_str(), peerSessionName.c_str(), remoteDevId.c_str(),
+    int32_t sessionId = OpenSession(localSessionName_.c_str(), peerSessionName.c_str(), remoteDevId.c_str(),
         GROUP_ID.c_str(), &g_sessionAttr);
     if (sessionId < 0) {
         DHLOGE("OpenSession fail, remoteDevId: %s, sessionId: %d", GetAnonyString(remoteDevId).c_str(), sessionId);
@@ -190,7 +204,7 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL;
     }
 
-    HiDumper::GetInstance().CreateSessionInfo(remoteDevId, sessionId, mySessionName_, peerSessionName,
+    HiDumper::GetInstance().CreateSessionInfo(remoteDevId, sessionId, localSessionName_, peerSessionName,
         SessionStatus::OPENING);
 
     DHLOGI("Wait for channel session opened.");
