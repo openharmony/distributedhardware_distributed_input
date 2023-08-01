@@ -129,11 +129,18 @@ int32_t DistributedInputTransportBase::Init()
 
     mySessionName_ = SESSION_NAME + networkId.substr(0, INTERCEPT_STRING_LENGTH);
 
+    std::unique_lock<std::mutex> sessionServerLock(sessServerMutex_);
+    if (sessionServer_.load()) {
+        DHLOGI("SessionServer already create success.");
+        return DH_SUCCESS;
+    }
     int32_t ret = CreateSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str(), &iSessionListener);
     if (ret != DH_SUCCESS) {
         DHLOGE("Init CreateSessionServer failed, error code %d.", ret);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_INIT_FAIL;
     }
+    sessionServer_.store(true);
+
     return DH_SUCCESS;
 }
 
@@ -144,7 +151,17 @@ void DistributedInputTransportBase::Release()
     for (; iter != remoteDevSessionMap_.end(); ++iter) {
         CloseSession(iter->second);
     }
-    (void)RemoveSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str());
+
+    {
+        std::unique_lock<std::mutex> sessionServerLock(sessServerMutex_);
+        if (!sessionServer_.load()) {
+            DHLOGI("SessionServer already remove success.");
+        } else {
+            (void)RemoveSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str());
+            sessionServer_.store(false);
+        }
+    }
+
     remoteDevSessionMap_.clear();
     channelStatusMap_.clear();
 }

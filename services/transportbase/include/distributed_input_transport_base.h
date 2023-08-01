@@ -16,6 +16,7 @@
 #ifndef DISTRIBUTED_INPUT_TRANSPORT_BASE_H
 #define DISTRIBUTED_INPUT_TRANSPORT_BASE_H
 
+#include <atomic>
 #include <condition_variable>
 #include <map>
 #include <mutex>
@@ -66,6 +67,8 @@ private:
     void Release();
 
 private:
+    std::atomic<bool> sessionServer_ {false};
+    std::mutex sessServerMutex_;
     std::mutex operationMutex_;
     std::string remoteDeviceId_;
     std::map<std::string, int32_t> remoteDevSessionMap_;
