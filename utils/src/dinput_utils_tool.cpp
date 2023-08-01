@@ -300,7 +300,7 @@ void CloseFd(int& fd)
         return;
     }
     close(fd);
-    fd = -1;
+    fd = UN_INIT_FD_VALUE;
 }
 
 int BitIsSet(const unsigned long *array, int bit)

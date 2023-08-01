@@ -449,7 +449,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string& devicePath)
     std::unique_lock<std::mutex> my_lock(operationMutex_);
     DHLOGI("Opening device: %s", devicePath.c_str());
     int fd = OpenInputDeviceFdByPath(devicePath);
-    if (fd == -1) {
+    if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
@@ -476,7 +476,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string& devicePath)
 
 int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice& identifier)
 {
-    char buffer[256] = {0};
+    char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     // Get device name.
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE(
@@ -1279,7 +1279,7 @@ void InputHub::Device::Close()
 {
     if (fd >= 0) {
         ::close(fd);
-        fd = -1;
+        fd = UN_INIT_FD_VALUE;
     }
 }
 

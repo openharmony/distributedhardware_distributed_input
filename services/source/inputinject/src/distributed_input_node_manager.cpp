@@ -193,7 +193,7 @@ void DistributedInputNodeManager::NotifyNodeMgrScanVirNode(const std::string &dh
 
 bool DistributedInputNodeManager::IsVirtualDev(int fd)
 {
-    char buffer[256] = {0};
+    char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     std::string deviceName;
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE("Could not get device name for %s.", ConvertErrNo().c_str());
@@ -212,7 +212,7 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
 
 bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath)
 {
-    char buffer[256] = {0};
+    char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE("Could not get device physicalPath for %s.", ConvertErrNo().c_str());
         return false;
@@ -251,7 +251,7 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath,
     std::string curDhId;
     std::string physicalPath;
     int fd = OpenInputDeviceFdByPath(devicePath);
-    if (fd == -1) {
+    if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
         return;
     }
