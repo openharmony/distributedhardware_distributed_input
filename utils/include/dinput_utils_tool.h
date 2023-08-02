@@ -53,9 +53,9 @@ std::string Sha256(const std::string& string);
 void CloseFd(int& fd);
 int BitIsSet(const unsigned long *array, int bit);
 void StringSplitToVector(const std::string& str, const char split, std::vector<std::string>& vecStr);
-int OpenInputDeviceFdByPath(std::string devicePath);
+int OpenInputDeviceFdByPath(const std::string &devicePath);
 std::string ConvertErrNo();
-void ScanInputDevicesPath(std::string dirName, std::vector<std::string>& vecInputDevPath);
+void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string>& vecInputDevPath);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

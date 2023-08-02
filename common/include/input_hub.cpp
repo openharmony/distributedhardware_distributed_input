@@ -424,7 +424,7 @@ void InputHub::ScanInputDevices(const std::string& dirName)
     DHLOGI("ScanInputDevices enter, dirName %s.", dirName.c_str());
     std::vector<std::string> vecInputDevPath;
     ScanInputDevicesPath(dirName, vecInputDevPath);
-    for (auto &tempPath: vecInputDevPath) {
+    for (const auto &tempPath: vecInputDevPath) {
         OpenInputDeviceLocked(tempPath);
     }
 }
