@@ -324,7 +324,7 @@ void StringSplitToVector(const std::string& str, const char split, std::vector<s
     }
 }
 
-int OpenInputDeviceFdByPath(std::string devicePath)
+int OpenInputDeviceFdByPath(const std::string &devicePath)
 {
     chmod(devicePath.c_str(), S_IWRITE | S_IREAD);
     char canonicalDevicePath[PATH_MAX] = {0x00};
@@ -362,7 +362,7 @@ std::string ConvertErrNo()
     return errNoMsg;
 }
 
-void ScanInputDevicesPath(std::string dirName, std::vector<std::string>& vecInputDevPath)
+void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string>& vecInputDevPath)
 {
     DIR *dir;
     struct dirent *de;
