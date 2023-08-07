@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,25 +19,25 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 int32_t DistributedInputKit::PrepareRemoteInput(
-    const std::string& sinkId, sptr<IPrepareDInputCallback> callback)
+    const std::string &sinkId, sptr<IPrepareDInputCallback> callback)
 {
     return DistributedInputClient::GetInstance().PrepareRemoteInput(sinkId, callback);
 }
 
 int32_t DistributedInputKit::UnprepareRemoteInput(
-    const std::string& sinkId, sptr<IUnprepareDInputCallback> callback)
+    const std::string &sinkId, sptr<IUnprepareDInputCallback> callback)
 {
     return DistributedInputClient::GetInstance().UnprepareRemoteInput(sinkId, callback);
 }
 
 int32_t DistributedInputKit::StartRemoteInput(
-    const std::string& sinkId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &sinkId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     return DistributedInputClient::GetInstance().StartRemoteInput(sinkId, inputTypes, callback);
 }
 
 int32_t DistributedInputKit::StopRemoteInput(
-    const std::string& sinkId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+    const std::string &sinkId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     return DistributedInputClient::GetInstance().StopRemoteInput(sinkId, inputTypes, callback);
 }
@@ -54,7 +54,7 @@ int32_t DistributedInputKit::StopRemoteInput(const std::string &srcId, const std
     return DistributedInputClient::GetInstance().StopRemoteInput(srcId, sinkId, inputTypes, callback);
 }
 
-bool DistributedInputKit::IsNeedFilterOut(const std::string& sinkId, const BusinessEvent& event)
+bool DistributedInputKit::IsNeedFilterOut(const std::string &sinkId, const BusinessEvent &event)
 {
     return DistributedInputClient::GetInstance().IsNeedFilterOut(sinkId, event);
 }
@@ -64,12 +64,12 @@ bool DistributedInputKit::IsTouchEventNeedFilterOut(const TouchScreenEvent &even
     return DistributedInputClient::GetInstance().IsTouchEventNeedFilterOut(event);
 }
 
-DInputServerType DistributedInputKit::IsStartDistributedInput(const uint32_t& inputType)
+DInputServerType DistributedInputKit::IsStartDistributedInput(const uint32_t &inputType)
 {
     return DInputServerType::NULL_SERVER_TYPE;
 }
 
-bool DistributedInputKit::IsStartDistributedInput(const std::string& dhId)
+bool DistributedInputKit::IsStartDistributedInput(const std::string &dhId)
 {
     return DistributedInputClient::GetInstance().IsStartDistributedInput(dhId);
 }

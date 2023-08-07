@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,10 +23,10 @@ namespace DistributedHardware {
 namespace DistributedInput {
 class DInputSinkTransCallback {
 public:
-    virtual void OnPrepareRemoteInput(const int32_t& sessionId, const std::string &deviceId) = 0;
-    virtual void OnUnprepareRemoteInput(const int32_t& sessionId) = 0;
-    virtual void OnStartRemoteInput(const int32_t& sessionId, const uint32_t& inputTypes) = 0;
-    virtual void OnStopRemoteInput(const int32_t& sessionId, const uint32_t& inputTypes) = 0;
+    virtual void OnPrepareRemoteInput(const int32_t &sessionId, const std::string &deviceId) = 0;
+    virtual void OnUnprepareRemoteInput(const int32_t &sessionId) = 0;
+    virtual void OnStartRemoteInput(const int32_t &sessionId, const uint32_t &inputTypes) = 0;
+    virtual void OnStopRemoteInput(const int32_t &sessionId, const uint32_t &inputTypes) = 0;
     virtual void OnStartRemoteInputDhid(const int32_t &sessionId, const std::string &strDhids) = 0;
     virtual void OnStopRemoteInputDhid(const int32_t &sessionId, const std::string &strDhids) = 0;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,11 +54,11 @@ public:
         int32_t Release() ;
 
         int32_t RegisterDistributedHardware(
-            const std::string& devId, const std::string& dhId, const std::string& parameters,
+            const std::string &devId, const std::string &dhId, const std::string &parameters,
             sptr<IRegisterDInputCallback> callback);
 
         int32_t UnregisterDistributedHardware(
-            const std::string& devId, const std::string& dhId,
+            const std::string &devId, const std::string &dhId,
             sptr<IUnregisterDInputCallback> callback);
 
         int32_t PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback);
@@ -66,10 +66,10 @@ public:
         int32_t UnprepareRemoteInput(const std::string &deviceId, sptr<IUnprepareDInputCallback> callback);
 
         int32_t StartRemoteInput(
-            const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback);
+            const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback);
 
         int32_t StopRemoteInput(
-            const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback);
+            const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback);
 
         int32_t StartRemoteInput(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
             sptr<IStartDInputCallback> callback);
@@ -104,7 +104,7 @@ public:
             const std::string &nodeDesc);
         int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
         int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
-        void OnResult(const std::string& deviceId, const std::string& strJson);
+        void OnResult(const std::string &deviceId, const std::string &strJson);
         std::string deviceId_;
         std::string strJson_;
     };
@@ -114,7 +114,7 @@ public:
     public:
         TestDInputRegisterCallBack() = default;
         virtual ~TestDInputRegisterCallBack() = default;
-        void OnResult(const std::string& devId, const std::string& dhId, const int32_t& status);
+        void OnResult(const std::string &devId, const std::string &dhId, const int32_t &status);
     };
 
     class TestDInputUnregisterCallBack : public
@@ -122,7 +122,7 @@ public:
     public:
         TestDInputUnregisterCallBack() = default;
         virtual ~TestDInputUnregisterCallBack() = default;
-        void OnResult(const std::string& devId, const std::string& dhId, const int32_t& status);
+        void OnResult(const std::string &devId, const std::string &dhId, const int32_t &status);
     };
 
     class TestDInputPrepareCallBack : public
@@ -130,7 +130,7 @@ public:
     public:
         TestDInputPrepareCallBack() = default;
         virtual ~TestDInputPrepareCallBack() = default;
-        void OnResult(const std::string& deviceId, const int32_t& status);
+        void OnResult(const std::string &deviceId, const int32_t &status);
     };
 
     class TestDInputUnprepareCallBack : public
@@ -138,7 +138,7 @@ public:
     public:
         TestDInputUnprepareCallBack() = default;
         virtual ~TestDInputUnprepareCallBack() = default;
-        void OnResult(const std::string& deviceId, const int32_t& status);
+        void OnResult(const std::string &deviceId, const int32_t &status);
     };
 
     class TestDInputStartCallBack : public
@@ -146,7 +146,7 @@ public:
     public:
         TestDInputStartCallBack() = default;
         virtual ~TestDInputStartCallBack() = default;
-        void OnResult(const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status);
     };
 
     class TestDInputStopCallBack : public
@@ -154,7 +154,7 @@ public:
     public:
         TestDInputStopCallBack() = default;
         virtual ~TestDInputStopCallBack() = default;
-        void OnResult(const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status);
     };
 
     class TestVectorStartStopCallBackStub

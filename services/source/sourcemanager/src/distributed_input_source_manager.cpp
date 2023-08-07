@@ -1073,8 +1073,8 @@ bool DistributedInputSourceManager::CheckRegisterParam(const std::string &devId,
     return true;
 }
 
-int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::string& parameters, sptr<IRegisterDInputCallback> callback)
+int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::string &parameters, sptr<IRegisterDInputCallback> callback)
 {
     HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_REGISTER, devId, dhId, "dinput register call.");
     DHLOGI("RegisterDistributedHardware called, deviceId: %s, dhId: %s, parameters: %s",
@@ -1138,7 +1138,7 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     return DH_SUCCESS;
 }
 
-void DistributedInputSourceManager::handleStartServerCallback(const std::string& devId)
+void DistributedInputSourceManager::handleStartServerCallback(const std::string &devId)
 {
     bool isFindDevice = false;
     for (auto iter = inputDevice_.begin(); iter != inputDevice_.end(); ++iter) {
@@ -1257,7 +1257,7 @@ int32_t DistributedInputSourceManager::DeleteInputDeviceNodeInfo(const std::stri
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceManager::UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputSourceManager::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     sptr<IUnregisterDInputCallback> callback)
 {
     HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_UNREGISTER, devId, dhId, "dinput unregister call");
@@ -1394,7 +1394,7 @@ int32_t DistributedInputSourceManager::UnprepareRemoteInput(
 }
 
 int32_t DistributedInputSourceManager::StartRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
     HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_START_USE, deviceId, "Dinput start use call.");
@@ -1439,7 +1439,7 @@ int32_t DistributedInputSourceManager::StartRemoteInput(
 }
 
 int32_t DistributedInputSourceManager::StopRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
     HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_STOP_USE, deviceId, "Dinput stop use call");
@@ -2539,7 +2539,7 @@ void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId,
     InputTypesMap_[deviceId] = value;
 }
 
-std::set<BeRegNodeInfo> DistributedInputSourceManager::GetSyncNodeInfo(const std::string& devId)
+std::set<BeRegNodeInfo> DistributedInputSourceManager::GetSyncNodeInfo(const std::string &devId)
 {
     std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
     if (syncNodeInfoMap_.find(devId) == syncNodeInfoMap_.end()) {
@@ -2549,7 +2549,7 @@ std::set<BeRegNodeInfo> DistributedInputSourceManager::GetSyncNodeInfo(const std
     return syncNodeInfoMap_[devId];
 }
 
-void DistributedInputSourceManager::UpdateSyncNodeInfo(const std::string& userDevId, const std::string& dhId,
+void DistributedInputSourceManager::UpdateSyncNodeInfo(const std::string &userDevId, const std::string &dhId,
     const std::string &nodeDesc)
 {
     std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
@@ -2561,7 +2561,7 @@ void DistributedInputSourceManager::UpdateSyncNodeInfo(const std::string& userDe
     syncNodeInfoMap_[userDevId].insert({userDevId, dhId, nodeDesc});
 }
 
-void DistributedInputSourceManager::DeleteSyncNodeInfo(const std::string& devId)
+void DistributedInputSourceManager::DeleteSyncNodeInfo(const std::string &devId)
 {
     std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
     syncNodeInfoMap_.erase(devId);
@@ -2599,7 +2599,7 @@ DistributedInputSourceManager::StartDScreenListener::~StartDScreenListener()
     DHLOGI("StartDScreenListener dtor!");
 }
 
-void DistributedInputSourceManager::StartDScreenListener::OnMessage(const DHTopic topic, const std::string& message)
+void DistributedInputSourceManager::StartDScreenListener::OnMessage(const DHTopic topic, const std::string &message)
 {
     DHLOGI("StartDScreenListener OnMessage!");
     if (topic != DHTopic::TOPIC_START_DSCREEN) {
@@ -2650,8 +2650,8 @@ void DistributedInputSourceManager::StartDScreenListener::OnMessage(const DHTopi
     DInputContext::GetInstance().AddRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, dScreenSrcSA);
 }
 
-int32_t DistributedInputSourceManager::StartDScreenListener::ParseMessage(const std::string& message,
-    std::string& sinkDevId, SrcScreenInfo& srcScreenInfo)
+int32_t DistributedInputSourceManager::StartDScreenListener::ParseMessage(const std::string &message,
+    std::string &sinkDevId, SrcScreenInfo &srcScreenInfo)
 {
     nlohmann::json jsonObj = nlohmann::json::parse(message, nullptr, false);
     if (jsonObj.is_discarded()) {
@@ -2681,7 +2681,7 @@ int32_t DistributedInputSourceManager::StartDScreenListener::ParseMessage(const 
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceManager::StartDScreenListener::UpdateSrcScreenInfoCache(const SrcScreenInfo& tmpInfo)
+int32_t DistributedInputSourceManager::StartDScreenListener::UpdateSrcScreenInfoCache(const SrcScreenInfo &tmpInfo)
 {
     std::string srcDevId = GetLocalNetworkId();
     std::string srcScreenInfoKey = DInputContext::GetInstance().GetScreenInfoKey(srcDevId, tmpInfo.sourceWinId);
@@ -2720,7 +2720,7 @@ DistributedInputSourceManager::StopDScreenListener::~StopDScreenListener()
     DHLOGI("StopDScreenListener dtor!");
 }
 
-void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic topic, const std::string& message)
+void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic topic, const std::string &message)
 {
     DHLOGI("StopDScreenListener OnMessage!");
     if (topic != DHTopic::TOPIC_STOP_DSCREEN) {
@@ -2760,8 +2760,8 @@ void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic
     }
 }
 
-int32_t DistributedInputSourceManager::StopDScreenListener::ParseMessage(const std::string& message,
-    std::string& sinkDevId, uint64_t& sourceWinId)
+int32_t DistributedInputSourceManager::StopDScreenListener::ParseMessage(const std::string &message,
+    std::string &sinkDevId, uint64_t &sourceWinId)
 {
     nlohmann::json jsonObj = nlohmann::json::parse(message, nullptr, false);
     if (jsonObj.is_discarded()) {
@@ -2807,7 +2807,7 @@ void DistributedInputSourceManager::DeviceOfflineListener::OnMessage(const DHTop
     DeleteNodeInfoAndNotify(message);
 }
 
-void DistributedInputSourceManager::DeviceOfflineListener::DeleteNodeInfoAndNotify(const std::string& offlineDevId)
+void DistributedInputSourceManager::DeviceOfflineListener::DeleteNodeInfoAndNotify(const std::string &offlineDevId)
 {
     DHLOGI("DeviceOfflineListener DeleteNodeInfoAndNotify!");
     if (sourceManagerContext_ == nullptr) {
@@ -2826,8 +2826,8 @@ void DistributedInputSourceManager::DeviceOfflineListener::DeleteNodeInfoAndNoti
     sourceManagerContext_->DeleteSyncNodeInfo(offlineDevId);
 }
 
-DistributedInputSourceManager::DScreenSourceSvrRecipient::DScreenSourceSvrRecipient(const std::string& srcDevId,
-    const std::string& sinkDevId, const uint64_t srcWinId)
+DistributedInputSourceManager::DScreenSourceSvrRecipient::DScreenSourceSvrRecipient(const std::string &srcDevId,
+    const std::string &sinkDevId, const uint64_t srcWinId)
 {
     DHLOGI("DScreenStatusListener ctor!");
     this->srcDevId_ = srcDevId;
@@ -2872,7 +2872,7 @@ void DistributedInputSourceManager::DScreenSourceSvrRecipient::OnRemoteDied(cons
     DInputContext::GetInstance().RemoveRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
 }
 
-int32_t DistributedInputSourceManager::Dump(int32_t fd, const std::vector<std::u16string>& args)
+int32_t DistributedInputSourceManager::Dump(int32_t fd, const std::vector<std::u16string> &args)
 {
     DHLOGI("DistributedInputSourceManager Dump.");
     std::vector<std::string> argsStr(args.size());

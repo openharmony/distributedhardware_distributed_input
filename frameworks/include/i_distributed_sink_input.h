@@ -48,7 +48,7 @@ public:
      * NotifyStartDScreen and NotifyStopDScreen are RPC interface,
      * which are used for interacting by dinput source and dinput sink
      */
-    virtual int32_t NotifyStartDScreen(const SrcScreenInfo& remoteCtrlInfo) = 0;
+    virtual int32_t NotifyStartDScreen(const SrcScreenInfo &remoteCtrlInfo) = 0;
 
     virtual int32_t NotifyStopDScreen(const std::string &srcScreenInfoKey) = 0;
 

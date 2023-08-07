@@ -73,7 +73,7 @@ void DistributedInputSinkManagerTest::TearDownTestCase()
 {
 }
 
-void DistributedInputSinkManagerTest::TestGetSinkScreenInfosCb::OnResult(const std::string& strJson)
+void DistributedInputSinkManagerTest::TestGetSinkScreenInfosCb::OnResult(const std::string &strJson)
 {
     (void)strJson;
 }

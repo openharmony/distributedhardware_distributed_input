@@ -94,7 +94,7 @@ int32_t DistributedInputSourceHandler::ConfigDistributedHardware(const std::stri
 }
 
 void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilitySuccess(int32_t systemAbilityId,
-    const OHOS::sptr<IRemoteObject>& remoteObject)
+    const OHOS::sptr<IRemoteObject> &remoteObject)
 {
     currSystemAbilityId = systemAbilityId;
     currRemoteObject = remoteObject;

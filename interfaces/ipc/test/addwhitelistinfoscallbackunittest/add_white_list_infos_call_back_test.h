@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -58,7 +58,7 @@ public:
     public:
         TestAddWhiteListInfosCallbackStub() = default;
         virtual ~TestAddWhiteListInfosCallbackStub() = default;
-        void OnResult(const std::string& deviceId, const std::string& strJson);
+        void OnResult(const std::string &deviceId, const std::string &strJson);
         std::string deviceId_;
         std::string strJson_;
     };
@@ -68,7 +68,7 @@ public:
     public:
         TestGetSinkScreenInfosCallbackStub() = default;
         virtual ~TestGetSinkScreenInfosCallbackStub() = default;
-        void OnResult(const std::string& strJson);
+        void OnResult(const std::string &strJson);
         std::string strJson_;
     };
 
@@ -93,7 +93,7 @@ public:
     public:
         TestPrepareDInputCallbackStub() = default;
         virtual ~TestPrepareDInputCallbackStub() = default;
-        void OnResult(const std::string& devId, const int32_t& status);
+        void OnResult(const std::string &devId, const int32_t &status);
         std::string devId_;
         int32_t status_ = 0;
     };
@@ -103,7 +103,7 @@ public:
     public:
         TestRegisterDInputCallbackStub() = default;
         virtual ~TestRegisterDInputCallbackStub() = default;
-        void OnResult(const std::string& devId, const std::string& dhId, const int32_t& status);
+        void OnResult(const std::string &devId, const std::string &dhId, const int32_t &status);
         std::string devId_;
         std::string dhId_;
         int32_t status_ = 0;
@@ -135,7 +135,7 @@ public:
     public:
         TestStartDInputCallbackStub() = default;
         virtual ~TestStartDInputCallbackStub() = default;
-        void OnResult(const std::string& devId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &devId, const uint32_t &inputTypes, const int32_t &status);
         std::string devId_;
         uint32_t inputTypes_ = 0;
         int32_t status_ = 0;
@@ -168,7 +168,7 @@ public:
     public:
         TestStopDInputCallbackStub() = default;
         virtual ~TestStopDInputCallbackStub() = default;
-        void OnResult(const std::string& devId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &devId, const uint32_t &inputTypes, const int32_t &status);
         std::string devId_;
         uint32_t inputTypes_ = 0;
         int32_t status_ = 0;
@@ -182,7 +182,7 @@ public:
         int32_t Init();
         int32_t Release();
         int32_t RegisterGetSinkScreenInfosCallback(sptr<IGetSinkScreenInfosCallback> callback);
-        int32_t NotifyStartDScreen(const SrcScreenInfo& remoteCtrlInfo);
+        int32_t NotifyStartDScreen(const SrcScreenInfo &remoteCtrlInfo);
         int32_t NotifyStopDScreen(const std::string &srcScreenInfoKey);
         int32_t RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener);
     };

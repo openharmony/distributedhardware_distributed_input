@@ -42,7 +42,7 @@ public OHOS::DistributedHardware::DistributedInput::PrepareDInputCallbackStub {
 public:
     TestPrepareDInputCallback() = default;
     virtual ~TestPrepareDInputCallback() = default;
-    void OnResult(const std::string& deviceId, const int32_t& status)
+    void OnResult(const std::string &deviceId, const int32_t &status)
     {
         (void)deviceId;
         (void)status;
@@ -54,7 +54,7 @@ public OHOS::DistributedHardware::DistributedInput::UnprepareDInputCallbackStub 
 public:
     TestUnprepareDInputCallback() = default;
     virtual ~TestUnprepareDInputCallback() = default;
-    void OnResult(const std::string& deviceId, const int32_t& status)
+    void OnResult(const std::string &deviceId, const int32_t &status)
     {
         (void)deviceId;
         (void)status;
@@ -64,7 +64,7 @@ public:
 class TestStartDInputCallback :
 public OHOS::DistributedHardware::DistributedInput::StartDInputCallbackStub {
 public:
-    void OnResult(const std::string& devId, const uint32_t& inputTypes, const int32_t& status)
+    void OnResult(const std::string &devId, const uint32_t &inputTypes, const int32_t &status)
     {
         (void)devId;
         (void)inputTypes;
@@ -77,7 +77,7 @@ public OHOS::DistributedHardware::DistributedInput::StopDInputCallbackStub {
 public:
     TestStopDInputCallback() = default;
     virtual ~TestStopDInputCallback() = default;
-    void OnResult(const std::string& devId, const uint32_t& inputTypes, const int32_t& status)
+    void OnResult(const std::string &devId, const uint32_t &inputTypes, const int32_t &status)
     {
         (void)devId;
         (void)inputTypes;
@@ -100,7 +100,7 @@ public:
     }
 };
 
-void PrepareInputFuzzTest(const uint8_t* data, size_t size)
+void PrepareInputFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
@@ -114,7 +114,7 @@ void PrepareInputFuzzTest(const uint8_t* data, size_t size)
     DistributedInput::DistributedInputKit::UnprepareRemoteInput(networkId, unprepareCb);
 }
 
-void StartRemoteInputFuzzTest(const uint8_t* data, size_t size)
+void StartRemoteInputFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(uint32_t))) {
         return;
@@ -133,7 +133,7 @@ void StartRemoteInputFuzzTest(const uint8_t* data, size_t size)
     DistributedInput::DistributedInputKit::StartRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
-void IsNeedFilterOutFuzzTest(const uint8_t* data, size_t size)
+void IsNeedFilterOutFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
@@ -169,7 +169,7 @@ void StopRemoteInputFuzzTest(const uint8_t* data, size_t  size)
     DistributedInput::DistributedInputKit::StopRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
-void IsTouchEventNeedFilterOutFuzzTest(const uint8_t* data, size_t size)
+void IsTouchEventNeedFilterOutFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(uint32_t))) {
         return;
@@ -187,7 +187,7 @@ void IsTouchEventNeedFilterOutFuzzTest(const uint8_t* data, size_t size)
 } // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::PrepareInputFuzzTest(data, size);

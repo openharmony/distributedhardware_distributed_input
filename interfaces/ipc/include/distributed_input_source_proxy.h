@@ -34,10 +34,10 @@ public:
 
     int32_t Release() override;
 
-    int32_t RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-        const std::string& parameters, sptr<IRegisterDInputCallback> callback) override;
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &parameters, sptr<IRegisterDInputCallback> callback) override;
 
-    int32_t UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
+    int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
         sptr<IUnregisterDInputCallback> callback) override;
 
     int32_t PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback) override;
@@ -45,10 +45,10 @@ public:
     int32_t UnprepareRemoteInput(const std::string &deviceId, sptr<IUnprepareDInputCallback> callback) override;
 
     int32_t StartRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback) override;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback) override;
 
     int32_t StopRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback) override;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback) override;
 
     int32_t StartRemoteInput(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback) override;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,8 +37,8 @@ namespace DistributedInput {
 class DistributedInputKit {
 public:
 
-    static int32_t PrepareRemoteInput(const std::string& sinkId, sptr<IPrepareDInputCallback> callback);
-    static int32_t UnprepareRemoteInput(const std::string& sinkId, sptr<IUnprepareDInputCallback> callback);
+    static int32_t PrepareRemoteInput(const std::string &sinkId, sptr<IPrepareDInputCallback> callback);
+    static int32_t UnprepareRemoteInput(const std::string &sinkId, sptr<IUnprepareDInputCallback> callback);
 
     static int32_t PrepareRemoteInput(const std::string &srcId, const std::string &sinkId,
         sptr<IPrepareDInputCallback> callback);
@@ -46,9 +46,9 @@ public:
         sptr<IUnprepareDInputCallback> callback);
 
     static int32_t StartRemoteInput(
-        const std::string& sinkId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback);
+        const std::string &sinkId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback);
     static int32_t StopRemoteInput(
-        const std::string& sinkId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback);
+        const std::string &sinkId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback);
 
     static int32_t StartRemoteInput(const std::string &sinkId, const std::vector<std::string> &dhIds,
         sptr<IStartStopDInputsCallback> callback);
@@ -68,13 +68,13 @@ public:
     static bool IsNeedFilterOut(const std::string &sinkId, const BusinessEvent &event);
     static bool IsTouchEventNeedFilterOut(const TouchScreenEvent &event);
 
-    static DInputServerType IsStartDistributedInput(const uint32_t& inputType);
+    static DInputServerType IsStartDistributedInput(const uint32_t &inputType);
     /*
      * check is dhId sharing to other devices
      * true: dhId sharing to other device
      * false: dhId NOT sharing to other device
      */
-    static bool IsStartDistributedInput(const std::string& dhId);
+    static bool IsStartDistributedInput(const std::string &dhId);
 
     static int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
     static int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);

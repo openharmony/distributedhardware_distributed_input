@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,16 +41,16 @@ public:
     DistributedInputNodeManager();
     ~DistributedInputNodeManager();
 
-    int32_t OpenDevicesNode(const std::string& devId, const std::string& dhId, const std::string& parameters);
+    int32_t OpenDevicesNode(const std::string &devId, const std::string &dhId, const std::string &parameters);
 
-    int32_t GetDevice(const std::string& dhId, VirtualDevice*& device);
+    int32_t GetDevice(const std::string &dhId, VirtualDevice *&device);
     void ReportEvent(const RawEvent rawEvent);
-    int32_t CloseDeviceLocked(const std::string& dhId);
+    int32_t CloseDeviceLocked(const std::string &dhId);
     void StartInjectThread();
     void StopInjectThread();
-    int32_t CreateVirtualTouchScreenNode(const std::string& devId, const std::string& dhId, const uint64_t srcWinId,
+    int32_t CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId, const uint64_t srcWinId,
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
-    int32_t RemoveVirtualTouchScreenNode(const std::string& dhId);
+    int32_t RemoveVirtualTouchScreenNode(const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
 
     int32_t GetDeviceInfo(std::string &deviceId);
@@ -79,17 +79,17 @@ public:
     };
 
 private:
-    void AddDeviceLocked(const std::string& dhId, std::unique_ptr<VirtualDevice> device);
-    int32_t CreateHandle(const InputDevice& inputDevice, const std::string& devId, const std::string& dhId);
-    void ParseInputDeviceJson(const std::string& str, InputDevice& pBuf);
-    void VerifyInputDevice(const nlohmann::json& inputDeviceJson, InputDevice& pBuf);
+    void AddDeviceLocked(const std::string &dhId, std::unique_ptr<VirtualDevice> device);
+    int32_t CreateHandle(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId);
+    void ParseInputDeviceJson(const std::string &str, InputDevice &pBuf);
+    void VerifyInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
     void InjectEvent();
 
-    void ScanSinkInputDevices(const std::string& dhId);
-    void OpenInputDevice(const std::string& devicePath, const std::string& dhId);
+    void ScanSinkInputDevices(const std::string &dhId);
+    void OpenInputDevice(const std::string &devicePath, const std::string &dhId);
     bool IsVirtualDev(int fd);
-    bool GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath);
-    void SetPathForDevMap(std::string& dhId, const std::string& devicePath);
+    bool GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath);
+    void SetPathForDevMap(std::string &dhId, const std::string &devicePath);
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;

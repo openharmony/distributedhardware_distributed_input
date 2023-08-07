@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,7 +30,7 @@ public:
     explicit StartDInputCallbackProxy(const sptr<IRemoteObject> &object);
     ~StartDInputCallbackProxy() override;
 
-    void OnResult(const std::string& devId, const uint32_t& inputTypes, const int32_t& status) override;
+    void OnResult(const std::string &devId, const uint32_t &inputTypes, const int32_t &status) override;
 
 private:
     static inline BrokerDelegator<StartDInputCallbackProxy> delegator_;

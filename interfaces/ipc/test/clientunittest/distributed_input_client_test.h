@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -66,7 +66,7 @@ public:
     public:
         TestPrepareDInputCallback() = default;
         virtual ~TestPrepareDInputCallback() = default;
-        void OnResult(const std::string& deviceId, const int32_t& status);
+        void OnResult(const std::string &deviceId, const int32_t &status);
     };
 
     class TestUnprepareDInputCallback : public
@@ -74,7 +74,7 @@ public:
     public:
         TestUnprepareDInputCallback() = default;
         virtual ~TestUnprepareDInputCallback() = default;
-        void OnResult(const std::string& deviceId, const int32_t& status);
+        void OnResult(const std::string &deviceId, const int32_t &status);
     };
 
     class TestStartDInputCallback : public
@@ -82,7 +82,7 @@ public:
     public:
         TestStartDInputCallback() = default;
         virtual ~TestStartDInputCallback() = default;
-        void OnResult(const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status);
     };
 
     class TestStopDInputCallback : public
@@ -90,7 +90,7 @@ public:
     public:
         TestStopDInputCallback() = default;
         virtual ~TestStopDInputCallback() = default;
-        void OnResult(const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status);
+        void OnResult(const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status);
     };
 
     class TestStartStopDInputCallback : public
@@ -122,7 +122,7 @@ public:
     };
 
 private:
-    int32_t StructTransJson(const InputDevice& pBuf, std::string& strDescriptor) const;
+    int32_t StructTransJson(const InputDevice &pBuf, std::string &strDescriptor) const;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

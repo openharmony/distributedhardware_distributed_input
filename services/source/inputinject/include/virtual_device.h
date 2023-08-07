@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,13 +34,13 @@ namespace DistributedHardware {
 namespace DistributedInput {
 class VirtualDevice {
 public:
-    explicit VirtualDevice(const InputDevice& event);
+    explicit VirtualDevice(const InputDevice &event);
     virtual ~VirtualDevice();
     bool DoIoctl(int32_t fd, int32_t request, const uint32_t value);
-    bool CreateKey(const InputDevice& inputDevice);
-    void SetABSInfo(struct uinput_user_dev& inputUserDev, const InputDevice& inputDevice);
+    bool CreateKey(const InputDevice &inputDevice);
+    void SetABSInfo(struct uinput_user_dev &inputUserDev, const InputDevice &inputDevice);
     bool SetPhys(const std::string deviceName, std::string dhId);
-    bool SetUp(const InputDevice& inputDevice, const std::string &devId, const std::string &dhId);
+    bool SetUp(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId);
     bool InjectInputEvent(const input_event &event);
     void SetNetWorkId(const std::string netWorkId);
     void SetPath(const std::string path);
@@ -65,7 +65,7 @@ private:
     const std::string pid_ = std::to_string(getpid());
 
 private:
-    void RecordEventLog(const input_event& event);
+    void RecordEventLog(const input_event &event);
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

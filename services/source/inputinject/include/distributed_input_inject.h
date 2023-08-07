@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,18 +31,18 @@ namespace DistributedInput {
 class DistributedInputInject {
 public:
     static DistributedInputInject &GetInstance();
-    int32_t RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-        const std::string& parameters);
-    int32_t UnregisterDistributedHardware(const std::string& devId, const std::string& dhId);
-    int32_t RegisterDistributedEvent(RawEvent* buffer, size_t bufferSize);
-    int32_t StructTransJson(const InputDevice& pBuf, std::string& strDescriptor);
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &parameters);
+    int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId);
+    int32_t RegisterDistributedEvent(RawEvent *buffer, size_t bufferSize);
+    int32_t StructTransJson(const InputDevice &pBuf, std::string &strDescriptor);
     void StartInjectThread();
     void StopInjectThread();
     std::string GenerateVirtualTouchScreenDHId(const uint64_t sourceWinId, const uint32_t sourceWinWidth,
         const uint32_t sourceWinHeight);
-    int32_t CreateVirtualTouchScreenNode(const std::string& devId, const std::string& dhId, const uint64_t srcWinId,
+    int32_t CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId, const uint64_t srcWinId,
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
-    int32_t RemoveVirtualTouchScreenNode(const std::string& dhId);
+    int32_t RemoveVirtualTouchScreenNode(const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
     int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);

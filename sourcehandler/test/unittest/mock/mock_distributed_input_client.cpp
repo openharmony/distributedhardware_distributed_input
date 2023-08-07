@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,7 @@ DistributedInputClient &DistributedInputClient::GetInstance()
 }
 
 void DistributedInputClient::RegisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     auto iter = DistributedInputClient::GetInstance().dHardWareFwkRstInfos.begin();
     for (; iter != DistributedInputClient::GetInstance().dHardWareFwkRstInfos.end(); ++iter) {
@@ -45,7 +45,7 @@ void DistributedInputClient::RegisterDInputCb::OnResult(
 }
 
 void DistributedInputClient::UnregisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     auto iter = DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.begin();
     for (; iter != DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.end(); ++iter) {
@@ -74,7 +74,7 @@ void DistributedInputClient::AddWhiteListInfosCb::OnResult(const std::string &de
     WhiteListUtil::GetInstance().SyncWhiteList(deviceId, vecWhiteList);
 }
 
-void DistributedInputClient::DelWhiteListInfosCb::OnResult(const std::string& deviceId)
+void DistributedInputClient::DelWhiteListInfosCb::OnResult(const std::string &deviceId)
 {
     WhiteListUtil::GetInstance().ClearWhiteList(deviceId);
 }
@@ -99,43 +99,43 @@ int32_t DistributedInputClient::ReleaseSink()
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputClient::RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::string& parameters, const std::shared_ptr<RegisterCallback>& callback)
+int32_t DistributedInputClient::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::string &parameters, const std::shared_ptr<RegisterCallback> &callback)
 {
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::shared_ptr<UnregisterCallback>& callback)
+int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::shared_ptr<UnregisterCallback> &callback)
 {
     return DH_SUCCESS;
 }
 
 int32_t DistributedInputClient::PrepareRemoteInput(
-    const std::string& deviceId, sptr<IPrepareDInputCallback> callback)
+    const std::string &deviceId, sptr<IPrepareDInputCallback> callback)
 {
     return DH_SUCCESS;
 }
 
 int32_t DistributedInputClient::UnprepareRemoteInput(
-    const std::string& deviceId, sptr<IUnprepareDInputCallback> callback)
+    const std::string &deviceId, sptr<IUnprepareDInputCallback> callback)
 {
     return DH_SUCCESS;
 }
 
 int32_t DistributedInputClient::StartRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     return DH_SUCCESS;
 }
 
 int32_t DistributedInputClient::StopRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     return DH_SUCCESS;
 }
 
-bool DistributedInputClient::IsNeedFilterOut(const std::string& deviceId, const BusinessEvent& event)
+bool DistributedInputClient::IsNeedFilterOut(const std::string &deviceId, const BusinessEvent &event)
 {
     return true;
 }

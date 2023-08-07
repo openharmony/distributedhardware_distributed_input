@@ -87,7 +87,7 @@ int32_t DistributedInputSinkHandler::UnsubscribeLocalHardware(const std::string 
 }
 
 void DistributedInputSinkHandler::SALoadSinkCb::OnLoadSystemAbilitySuccess(int32_t systemAbilityId,
-    const OHOS::sptr<IRemoteObject>& remoteObject)
+    const OHOS::sptr<IRemoteObject> &remoteObject)
 {
     currSystemAbilityId = systemAbilityId;
     currRemoteObject = remoteObject;

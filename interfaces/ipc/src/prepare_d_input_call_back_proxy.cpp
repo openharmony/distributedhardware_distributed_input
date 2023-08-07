@@ -32,7 +32,7 @@ PrepareDInputCallbackProxy::~PrepareDInputCallbackProxy()
 {
 }
 
-void PrepareDInputCallbackProxy::OnResult(const std::string& deviceId, const int32_t& status)
+void PrepareDInputCallbackProxy::OnResult(const std::string &deviceId, const int32_t &status)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

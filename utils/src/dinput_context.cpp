@@ -76,7 +76,7 @@ SinkScreenInfo DInputContext::GetSinkScreenInfo(const std::string &screenInfoKey
     return sinkScreenInfoMap_[screenInfoKey];
 }
 
-const std::unordered_map<std::string, SinkScreenInfo>& DInputContext::GetAllSinkScreenInfo()
+const std::unordered_map<std::string, SinkScreenInfo> &DInputContext::GetAllSinkScreenInfo()
 {
     std::lock_guard<std::mutex> lock(sinkMapMutex_);
     return sinkScreenInfoMap_;
@@ -195,7 +195,7 @@ sptr<IRemoteObject> DInputContext::GetRemoteObject(const int32_t saId)
     return remoteObject;
 }
 
-void DInputContext::AddRemoteObject(const int32_t saId, const sptr<IRemoteObject>& remoteObject)
+void DInputContext::AddRemoteObject(const int32_t saId, const sptr<IRemoteObject> &remoteObject)
 {
     std::lock_guard<std::mutex> lock(remoteObjectsMutex_);
     remoteObjects_[saId] = remoteObject;

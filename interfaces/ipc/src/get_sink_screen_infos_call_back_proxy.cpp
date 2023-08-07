@@ -32,7 +32,7 @@ GetSinkScreenInfosCallbackProxy::~GetSinkScreenInfosCallbackProxy()
 {
 }
 
-void GetSinkScreenInfosCallbackProxy::OnResult(const std::string& strJson)
+void GetSinkScreenInfosCallbackProxy::OnResult(const std::string &strJson)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

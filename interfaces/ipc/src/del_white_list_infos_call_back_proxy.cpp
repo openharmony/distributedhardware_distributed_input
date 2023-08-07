@@ -32,7 +32,7 @@ DelWhiteListInfosCallbackProxy::~DelWhiteListInfosCallbackProxy()
 {
 }
 
-void DelWhiteListInfosCallbackProxy::OnResult(const std::string& deviceId)
+void DelWhiteListInfosCallbackProxy::OnResult(const std::string &deviceId)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

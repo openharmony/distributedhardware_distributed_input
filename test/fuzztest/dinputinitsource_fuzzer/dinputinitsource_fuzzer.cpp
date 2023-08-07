@@ -31,7 +31,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-void InitSourceFuzzTest(const uint8_t* data, size_t size)
+void InitSourceFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
@@ -43,7 +43,7 @@ void InitSourceFuzzTest(const uint8_t* data, size_t size)
 } // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::InitSourceFuzzTest(data, size);

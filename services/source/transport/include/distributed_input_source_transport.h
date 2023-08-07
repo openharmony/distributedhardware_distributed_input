@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -60,13 +60,13 @@ public:
 
     void RegisterSourceRespCallback(std::shared_ptr<DInputSourceTransCallback> callback);
 
-    int32_t PrepareRemoteInput(const std::string& deviceId);
-    int32_t UnprepareRemoteInput(const std::string& deviceId);
-    int32_t StartRemoteInput(const std::string& deviceId, const uint32_t& inputTypes);
-    int32_t StopRemoteInput(const std::string& deviceId, const uint32_t& inputTypes);
-    int32_t LatencyCount(const std::string& deviceId);
-    void StartLatencyCount(const std::string& deviceId);
-    void StartLatencyThread(const std::string& deviceId);
+    int32_t PrepareRemoteInput(const std::string &deviceId);
+    int32_t UnprepareRemoteInput(const std::string &deviceId);
+    int32_t StartRemoteInput(const std::string &deviceId, const uint32_t &inputTypes);
+    int32_t StopRemoteInput(const std::string &deviceId, const uint32_t &inputTypes);
+    int32_t LatencyCount(const std::string &deviceId);
+    void StartLatencyCount(const std::string &deviceId);
+    void StartLatencyThread(const std::string &deviceId);
     void StopLatencyThread();
 
     int32_t StartRemoteInput(const std::string &deviceId, const std::vector<std::string> &dhids);
@@ -85,13 +85,13 @@ public:
         const std::vector<std::string> &dhids);
     int32_t SendRelayStopDhidRequest(const std::string &srcId, const std::string &sinkId,
         const std::vector<std::string> &dhids);
-    int32_t SendRelayStartTypeRequest(const std::string &srcId, const std::string &sinkId, const uint32_t& inputTypes);
-    int32_t SendRelayStopTypeRequest(const std::string &srcId, const std::string &sinkId, const uint32_t& inputTypes);
+    int32_t SendRelayStartTypeRequest(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes);
+    int32_t SendRelayStopTypeRequest(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes);
     int32_t GetCurrentSessionId();
 
 private:
     int32_t SendMessage(int32_t sessionId, std::string &message);
-    void HandleData(int32_t sessionId, const std::string& message);
+    void HandleData(int32_t sessionId, const std::string &message);
     void SessionClosed();
     void NotifyResponsePrepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyResponseUnprepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
@@ -123,8 +123,8 @@ private:
 
     void ReceiveSrcTSrcRelayStartType(int32_t sessionId, const nlohmann::json &recMsg);
     void ReceiveSrcTSrcRelayStopType(int32_t sessionId, const nlohmann::json &recMsg);
-    int32_t StartRemoteInputType(int32_t sessionId, const std::string &deviceId, const uint32_t& inputTypes);
-    int32_t StopRemoteInputType(int32_t sessionId, const std::string &deviceId, const uint32_t& inputTypes);
+    int32_t StartRemoteInputType(int32_t sessionId, const std::string &deviceId, const uint32_t &inputTypes);
+    int32_t StopRemoteInputType(int32_t sessionId, const std::string &deviceId, const uint32_t &inputTypes);
     void NotifyResponseRelayStartTypeRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyResponseRelayStopTypeRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     int32_t NotifyOriginStartTypeResult(int32_t sessionId, const std::string &srcId, const std::string &sinkId,

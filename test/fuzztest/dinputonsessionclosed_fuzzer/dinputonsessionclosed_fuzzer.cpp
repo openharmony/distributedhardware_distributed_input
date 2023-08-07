@@ -27,7 +27,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-void OnSessionClosedFuzzTest(const uint8_t* data, size_t size)
+void OnSessionClosedFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
@@ -39,7 +39,7 @@ void OnSessionClosedFuzzTest(const uint8_t* data, size_t size)
 } // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::OnSessionClosedFuzzTest(data, size);

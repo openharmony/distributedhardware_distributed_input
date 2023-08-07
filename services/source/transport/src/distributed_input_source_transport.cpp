@@ -186,7 +186,7 @@ void DistributedInputSourceTransport::RegisterSourceRespCallback(std::shared_ptr
  * @param  deviceId is remote device
  * @return Returns 0 is success, other is fail.
  */
-int32_t DistributedInputSourceTransport::PrepareRemoteInput(const std::string& deviceId)
+int32_t DistributedInputSourceTransport::PrepareRemoteInput(const std::string &deviceId)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sessionId < 0) {
@@ -211,7 +211,7 @@ int32_t DistributedInputSourceTransport::PrepareRemoteInput(const std::string& d
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceTransport::UnprepareRemoteInput(const std::string& deviceId)
+int32_t DistributedInputSourceTransport::UnprepareRemoteInput(const std::string &deviceId)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sessionId < 0) {
@@ -345,7 +345,7 @@ int32_t DistributedInputSourceTransport::StopRemoteInputDhids(int32_t srcTsrcSeI
 }
 
 int32_t DistributedInputSourceTransport::StartRemoteInputType(int32_t srcTsrcSeId, const std::string &deviceId,
-    const uint32_t& inputTypes)
+    const uint32_t &inputTypes)
 {
     int32_t sinkSessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sinkSessionId < 0) {
@@ -372,7 +372,7 @@ int32_t DistributedInputSourceTransport::StartRemoteInputType(int32_t srcTsrcSeI
 }
 
 int32_t DistributedInputSourceTransport::StopRemoteInputType(int32_t srcTsrcSeId, const std::string &deviceId,
-    const uint32_t& inputTypes)
+    const uint32_t &inputTypes)
 {
     int32_t sinkSessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sinkSessionId < 0) {
@@ -576,7 +576,7 @@ int32_t DistributedInputSourceTransport::NotifyOriginStopTypeResult(int32_t srcT
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceTransport::StartRemoteInput(const std::string& deviceId, const uint32_t& inputTypes)
+int32_t DistributedInputSourceTransport::StartRemoteInput(const std::string &deviceId, const uint32_t &inputTypes)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sessionId < 0) {
@@ -603,7 +603,7 @@ int32_t DistributedInputSourceTransport::StartRemoteInput(const std::string& dev
 }
 
 int32_t DistributedInputSourceTransport::StopRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes)
+    const std::string &deviceId, const uint32_t &inputTypes)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sessionId < 0) {
@@ -629,7 +629,7 @@ int32_t DistributedInputSourceTransport::StopRemoteInput(
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceTransport::LatencyCount(const std::string& deviceId)
+int32_t DistributedInputSourceTransport::LatencyCount(const std::string &deviceId)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(deviceId);
     if (sessionId < 0) {
@@ -654,7 +654,7 @@ int32_t DistributedInputSourceTransport::LatencyCount(const std::string& deviceI
     return DH_SUCCESS;
 }
 
-void DistributedInputSourceTransport::StartLatencyCount(const std::string& deviceId)
+void DistributedInputSourceTransport::StartLatencyCount(const std::string &deviceId)
 {
     int32_t ret = pthread_setname_np(pthread_self(), LATENCY_COUNT_THREAD_NAME);
     if (ret != 0) {
@@ -680,7 +680,7 @@ void DistributedInputSourceTransport::StartLatencyCount(const std::string& devic
     DHLOGI("end");
 }
 
-void DistributedInputSourceTransport::StartLatencyThread(const std::string& deviceId)
+void DistributedInputSourceTransport::StartLatencyThread(const std::string &deviceId)
 {
     DHLOGI("start");
     isLatencyThreadRunning_.store(true);
@@ -835,7 +835,7 @@ int32_t DistributedInputSourceTransport::SendRelayStopDhidRequest(const std::str
 }
 
 int32_t DistributedInputSourceTransport::SendRelayStartTypeRequest(const std::string &srcId, const std::string &sinkId,
-    const uint32_t& inputTypes)
+    const uint32_t &inputTypes)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(srcId);
     if (sessionId < 0) {
@@ -861,7 +861,7 @@ int32_t DistributedInputSourceTransport::SendRelayStartTypeRequest(const std::st
 }
 
 int32_t DistributedInputSourceTransport::SendRelayStopTypeRequest(const std::string &srcId, const std::string &sinkId,
-    const uint32_t& inputTypes)
+    const uint32_t &inputTypes)
 {
     int32_t sessionId = DistributedInputTransportBase::GetInstance().GetSessionIdByDevId(srcId);
     if (sessionId < 0) {
@@ -1468,7 +1468,7 @@ void DistributedInputSourceTransport::DInputTransbaseSourceListener::HandleSessi
     DistributedInputSourceTransport::GetInstance().HandleData(sessionId, message);
 }
 
-void DistributedInputSourceTransport::HandleData(int32_t sessionId, const std::string& message)
+void DistributedInputSourceTransport::HandleData(int32_t sessionId, const std::string &message)
 {
     if (callback_ == nullptr) {
         DHLOGE("OnBytesReceived the callback_ is null, the message:%s abort.", SetAnonyId(message).c_str());

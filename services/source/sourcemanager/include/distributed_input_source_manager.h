@@ -129,10 +129,10 @@ public:
 
     int32_t Release() override;
 
-    int32_t RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-        const std::string& parameters, sptr<IRegisterDInputCallback> callback) override;
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &parameters, sptr<IRegisterDInputCallback> callback) override;
 
-    int32_t UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
+    int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
         sptr<IUnregisterDInputCallback> callback) override;
 
     int32_t PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback) override;
@@ -140,10 +140,10 @@ public:
     int32_t UnprepareRemoteInput(const std::string &deviceId, sptr<IUnprepareDInputCallback> callback) override;
 
     int32_t StartRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback) override;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback) override;
 
     int32_t StopRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback) override;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback) override;
 
     int32_t StartRemoteInput(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback) override;
@@ -182,7 +182,7 @@ public:
         const std::string &parameters, sptr<IRegisterDInputCallback> callback);
     bool CheckUnregisterParam(const std::string &devId, const std::string &dhId,
         sptr<IUnregisterDInputCallback> callback);
-    int32_t Dump(int32_t fd, const std::vector<std::u16string>& args) override;
+    int32_t Dump(int32_t fd, const std::vector<std::u16string> &args) override;
 
     class DInputSourceListener : public DInputSourceTransCallback {
     public:
@@ -214,7 +214,7 @@ public:
             uint32_t inputTypes) override;
         void OnReceiveRelayStopTypeResult(int32_t status, const std::string &srcId, const std::string &sinkId,
             uint32_t inputTypes) override;
-        void RecordEventLog(int64_t when, int32_t type, int32_t code, int32_t value, const std::string& path);
+        void RecordEventLog(int64_t when, int32_t type, int32_t code, int32_t value, const std::string &path);
 
     private:
         DistributedInputSourceManager *sourceManagerObj_;
@@ -257,40 +257,40 @@ public:
     public:
         StartDScreenListener();
         ~StartDScreenListener() override;
-        void OnMessage(const DHTopic topic, const std::string& message) override;
+        void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
-        int32_t ParseMessage(const std::string& message, std::string& sinkDevId, SrcScreenInfo& srcScreenInfo);
-        int32_t UpdateSrcScreenInfoCache(const SrcScreenInfo& tmpInfo);
+        int32_t ParseMessage(const std::string &message, std::string &sinkDevId, SrcScreenInfo &srcScreenInfo);
+        int32_t UpdateSrcScreenInfoCache(const SrcScreenInfo &tmpInfo);
     };
 
     class StopDScreenListener : public PublisherListenerStub {
     public:
         StopDScreenListener();
         ~StopDScreenListener() override;
-        void OnMessage(const DHTopic topic, const std::string& message) override;
+        void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
-        int32_t ParseMessage(const std::string& message, std::string& sinkDevId, uint64_t& sourceWinId);
+        int32_t ParseMessage(const std::string &message, std::string &sinkDevId, uint64_t &sourceWinId);
     };
 
     class DeviceOfflineListener : public PublisherListenerStub {
     public:
-        explicit DeviceOfflineListener(DistributedInputSourceManager* srcManagerContext);
+        explicit DeviceOfflineListener(DistributedInputSourceManager *srcManagerContext);
         ~DeviceOfflineListener() override;
 
-        void OnMessage(const DHTopic topic, const std::string& message) override;
+        void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
-        void DeleteNodeInfoAndNotify(const std::string& offlineDevId);
+        void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
 
     private:
-        DistributedInputSourceManager* sourceManagerContext_;
+        DistributedInputSourceManager *sourceManagerContext_;
     };
 
     class DScreenSourceSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
-        DScreenSourceSvrRecipient(const std::string& srcDevId, const std::string& sinkDevId, const uint64_t srcWinId);
+        DScreenSourceSvrRecipient(const std::string &srcDevId, const std::string &sinkDevId, const uint64_t srcWinId);
         ~DScreenSourceSvrRecipient() override;
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
@@ -456,7 +456,7 @@ private:
     std::shared_ptr<DInputSourceManagerEventHandler> callBackHandler_;
     std::vector<InputDeviceId> inputDevice_;
     bool InitAuto();
-    void handleStartServerCallback(const std::string& devId);
+    void handleStartServerCallback(const std::string &devId);
     std::mutex mutex_;
     std::mutex operationMutex_;
     sptr<StartDScreenListener> startDScreenListener_ = nullptr;
@@ -491,11 +491,11 @@ private:
     int32_t RelayStopRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
         const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback);
     bool IsStringDataSame(const std::vector<std::string> &oldDhIds, std::vector<std::string> newDhIds);
-    void DeleteNodeInfoAndNotify(const std::string& offlineDevId);
+    void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
     void SendExistVirNodeInfos(sptr<InputNodeListener> listener);
-    std::set<BeRegNodeInfo> GetSyncNodeInfo(const std::string& devId);
-    void UpdateSyncNodeInfo(const std::string& devId, const std::string& dhId, const std::string &nodeDesc);
-    void DeleteSyncNodeInfo(const std::string& devId);
+    std::set<BeRegNodeInfo> GetSyncNodeInfo(const std::string &devId);
+    void UpdateSyncNodeInfo(const std::string &devId, const std::string &dhId, const std::string &nodeDesc);
+    void DeleteSyncNodeInfo(const std::string &devId);
     void UnregisterDHFwkPublisher();
 };
 } // namespace DistributedInput

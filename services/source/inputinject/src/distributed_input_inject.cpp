@@ -46,8 +46,8 @@ DistributedInputInject &DistributedInputInject::GetInstance()
     return instance;
 }
 
-int32_t DistributedInputInject::RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::string& parameters)
+int32_t DistributedInputInject::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::string &parameters)
 {
     DHLOGI("RegisterDistributedHardware called, deviceId: %s,  dhId: %s,  parameters: %s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
@@ -70,7 +70,7 @@ int32_t DistributedInputInject::RegisterDistributedHardware(const std::string& d
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string& devId, const std::string& dhId)
+int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId)
 {
     DHLOGI("UnregisterDistributedHardware called, deviceId: %s,  dhId: %s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -225,7 +225,7 @@ std::string DistributedInputInject::GenerateVirtualTouchScreenDHId(const uint64_
     return DH_ID_PREFIX + Sha256(uniqueInfo);
 }
 
-int32_t DistributedInputInject::CreateVirtualTouchScreenNode(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputInject::CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId,
     const uint64_t srcWinId, const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
@@ -236,7 +236,7 @@ int32_t DistributedInputInject::CreateVirtualTouchScreenNode(const std::string& 
     return inputNodeManager_->CreateVirtualTouchScreenNode(devId, dhId, srcWinId, sourcePhyWidth, sourcePhyHeight);
 }
 
-int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string& dhId)
+int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
