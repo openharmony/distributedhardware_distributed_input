@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -58,7 +58,7 @@ public:
     int32_t RespStartRemoteInput(const int32_t sessionId, std::string &smsg);
     int32_t RespStopRemoteInput(const int32_t sessionId, std::string &smsg);
     int32_t RespLatency(const int32_t sessionId, std::string &smsg);
-    void SendKeyStateNodeMsg(const int32_t sessionId, const std::string& dhId, const uint32_t btnCode);
+    void SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId, const uint32_t btnCode);
 
     class DInputSinkEventHandler : public AppExecFwk::EventHandler {
     public:
@@ -74,7 +74,7 @@ public:
 
 private:
     int32_t SendMessage(int32_t sessionId, std::string &message);
-    void HandleData(int32_t sessionId, const std::string& message);
+    void HandleData(int32_t sessionId, const std::string &message);
     void RegRespFunMap();
     void NotifyPrepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyUnprepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);

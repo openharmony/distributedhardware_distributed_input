@@ -34,8 +34,8 @@ void UnprepareDInputCallbackTest::TearDownTestCase()
 {
 }
 
-void UnprepareDInputCallbackTest::TestUnprepareDInputCallbackStub::OnResult(const std::string& deviceId,
-    const int32_t& status)
+void UnprepareDInputCallbackTest::TestUnprepareDInputCallbackStub::OnResult(const std::string &deviceId,
+    const int32_t &status)
 {
     deviceId_ = deviceId;
     status_ = status;

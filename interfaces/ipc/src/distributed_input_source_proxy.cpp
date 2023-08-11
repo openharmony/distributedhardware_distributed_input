@@ -61,8 +61,8 @@ int32_t DistributedInputSourceProxy::Release()
     return result;
 }
 
-int32_t DistributedInputSourceProxy::RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::string& parameters, sptr<IRegisterDInputCallback> callback)
+int32_t DistributedInputSourceProxy::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::string &parameters, sptr<IRegisterDInputCallback> callback)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
@@ -94,7 +94,7 @@ int32_t DistributedInputSourceProxy::RegisterDistributedHardware(const std::stri
     return result;
 }
 
-int32_t DistributedInputSourceProxy::UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputSourceProxy::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     sptr<IUnregisterDInputCallback> callback)
 {
     MessageParcel data;
@@ -177,7 +177,7 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &dev
 }
 
 int32_t DistributedInputSourceProxy::StartRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     DHLOGI("source proxy StartRemoteInput start");
     MessageParcel data;
@@ -208,7 +208,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(
 }
 
 int32_t DistributedInputSourceProxy::StopRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
@@ -236,8 +236,8 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(
     return result;
 }
 
-int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string& srcId, const std::string& sinkId,
-    const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, const std::string &sinkId,
+    const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     DHLOGI("source proxy StartRemoteInput start");
     MessageParcel data;
@@ -272,8 +272,8 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string& srcId, 
     return result;
 }
 
-int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string& srcId, const std::string& sinkId,
-    const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, const std::string &sinkId,
+    const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {

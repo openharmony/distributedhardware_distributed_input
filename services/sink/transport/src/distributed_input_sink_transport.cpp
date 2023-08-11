@@ -197,7 +197,7 @@ int32_t DistributedInputSinkTransport::RespLatency(const int32_t sessionId, std:
     return DH_SUCCESS;
 }
 
-void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId, const std::string& dhId,
+void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId,
     const uint32_t btnCode)
 {
     if (sessionId <= 0) {
@@ -455,7 +455,7 @@ void DistributedInputSinkTransport::RegRespFunMap()
         &DistributedInputSinkTransport::NotifyRelayStopTypeRemoteInput;
 }
 
-void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::string& message)
+void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::string &message)
 {
     if (callback_ == nullptr) {
         DHLOGE("OnBytesReceived the callback_ is null, the message:%s abort.", SetAnonyId(message).c_str());

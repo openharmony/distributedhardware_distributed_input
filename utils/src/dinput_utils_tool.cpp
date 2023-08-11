@@ -137,7 +137,7 @@ std::string SetAnonyId(const std::string &message)
     return jsonObj.dump();
 }
 
-bool IsBoolean(const nlohmann::json& jsonObj, const std::string& key)
+bool IsBoolean(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_boolean();
     if (!res) {
@@ -146,7 +146,7 @@ bool IsBoolean(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsString(const nlohmann::json& jsonObj, const std::string& key)
+bool IsString(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_string();
     if (!res) {
@@ -155,7 +155,7 @@ bool IsString(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsInt32(const nlohmann::json& jsonObj, const std::string& key)
+bool IsInt32(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_integer() && INT32_MIN <= jsonObj[key] &&
         jsonObj[key] <= INT32_MAX;
@@ -165,7 +165,7 @@ bool IsInt32(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsInt64(const nlohmann::json& jsonObj, const std::string& key)
+bool IsInt64(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_integer() && INT64_MIN <= jsonObj[key] &&
         jsonObj[key] <= INT64_MAX;
@@ -175,7 +175,7 @@ bool IsInt64(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsUInt16(const nlohmann::json& jsonObj, const std::string& key)
+bool IsUInt16(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT16_MAX;
     if (!res) {
@@ -184,7 +184,7 @@ bool IsUInt16(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsUInt32(const nlohmann::json& jsonObj, const std::string& key)
+bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT32_MAX;
     if (!res) {
@@ -193,7 +193,7 @@ bool IsUInt32(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsUInt64(const nlohmann::json& jsonObj, const std::string& key)
+bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT64_MAX;
     if (!res) {
@@ -202,7 +202,7 @@ bool IsUInt64(const nlohmann::json& jsonObj, const std::string& key)
     return res;
 }
 
-bool IsArray(const nlohmann::json& jsonObj, const std::string& key)
+bool IsArray(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_array();
     if (!res) {
@@ -274,7 +274,7 @@ std::string GetAnonyInt32(const int32_t value)
     return tempString;
 }
 
-std::string Sha256(const std::string& in)
+std::string Sha256(const std::string &in)
 {
     unsigned char out[SHA256_DIGEST_LENGTH * HEX_TO_UINT8 + 1] = {0};
     SHA256_CTX ctx;
@@ -293,7 +293,7 @@ std::string Sha256(const std::string& in)
     return reinterpret_cast<char*>(out);
 }
 
-void CloseFd(int& fd)
+void CloseFd(int &fd)
 {
     if (fd < 0) {
         DHLOGE("No fd need to beclosed.");
@@ -308,7 +308,7 @@ int BitIsSet(const unsigned long *array, int bit)
     return !!(array[bit / LONG_BITS] & (1LL << (bit % LONG_BITS)));
 }
 
-void StringSplitToVector(const std::string& str, const char split, std::vector<std::string>& vecStr)
+void StringSplitToVector(const std::string &str, const char split, std::vector<std::string> &vecStr)
 {
     if (str.empty()) {
         DHLOGE("StringSplitToVector param str is error.");
@@ -362,7 +362,7 @@ std::string ConvertErrNo()
     return errNoMsg;
 }
 
-void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string>& vecInputDevPath)
+void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &vecInputDevPath)
 {
     DIR *dir;
     struct dirent *de;

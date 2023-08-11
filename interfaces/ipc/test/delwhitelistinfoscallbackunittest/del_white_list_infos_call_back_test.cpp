@@ -34,7 +34,7 @@ void DelWhiteListInfosCallbackTest::TearDownTestCase()
 {
 }
 
-void DelWhiteListInfosCallbackTest::TestDelWhiteListInfosCallbackStub::OnResult(const std::string& deviceId)
+void DelWhiteListInfosCallbackTest::TestDelWhiteListInfosCallbackStub::OnResult(const std::string &deviceId)
 {
     deviceId_ = deviceId;
 }

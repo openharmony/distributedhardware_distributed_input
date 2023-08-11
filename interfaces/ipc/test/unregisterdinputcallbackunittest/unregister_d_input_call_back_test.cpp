@@ -34,8 +34,8 @@ void UnregisterDInputCallbackTest::TearDownTestCase()
 {
 }
 
-void UnregisterDInputCallbackTest::TestUnregisterDInputCallbackStub::OnResult(const std::string& devId,
-    const std::string& dhId, const int32_t& status)
+void UnregisterDInputCallbackTest::TestUnregisterDInputCallbackStub::OnResult(const std::string &devId,
+    const std::string &dhId, const int32_t &status)
 {
     deviceId_ = devId;
     dhId_ = dhId;

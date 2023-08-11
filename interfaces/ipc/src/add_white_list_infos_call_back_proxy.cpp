@@ -32,7 +32,7 @@ AddWhiteListInfosCallbackProxy::~AddWhiteListInfosCallbackProxy()
 {
 }
 
-void AddWhiteListInfosCallbackProxy::OnResult(const std::string& deviceId, const std::string& strJson)
+void AddWhiteListInfosCallbackProxy::OnResult(const std::string &deviceId, const std::string &strJson)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

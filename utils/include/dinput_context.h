@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -57,7 +57,7 @@ public:
     int32_t RemoveSinkScreenInfo(const std::string &screenInfoKey);
     int32_t UpdateSinkScreenInfo(const std::string &screenInfoKey, const SinkScreenInfo &sinkScreenInfo);
     SinkScreenInfo GetSinkScreenInfo(const std::string &screenInfoKey);
-    const std::unordered_map<std::string, SinkScreenInfo>& GetAllSinkScreenInfo();
+    const std::unordered_map<std::string, SinkScreenInfo> &GetAllSinkScreenInfo();
 
     int32_t RemoveSrcScreenInfo(const std::string &screenInfoKey);
     int32_t UpdateSrcScreenInfo(const std::string &screenInfoKey, const SrcScreenInfo &srcScreenInfo);
@@ -67,7 +67,7 @@ public:
     LocalTouchScreenInfo GetLocalTouchScreenInfo();
     std::shared_ptr<DistributedHardwareFwkKit> GetDHFwkKit();
     sptr<IRemoteObject> GetRemoteObject(const int32_t saId);
-    void AddRemoteObject(const int32_t saId, const sptr<IRemoteObject>& remoteObject);
+    void AddRemoteObject(const int32_t saId, const sptr<IRemoteObject> &remoteObject);
     void RemoveRemoteObject(const int32_t saId);
 
 private:

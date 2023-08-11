@@ -48,11 +48,11 @@ public:
     virtual int32_t Release() = 0;
 
     virtual int32_t RegisterDistributedHardware(
-        const std::string& devId, const std::string& dhId, const std::string& parameters,
+        const std::string &devId, const std::string &dhId, const std::string &parameters,
         sptr<IRegisterDInputCallback> callback) = 0;
 
     virtual int32_t UnregisterDistributedHardware(
-        const std::string& devId, const std::string& dhId,
+        const std::string &devId, const std::string &dhId,
         sptr<IUnregisterDInputCallback> callback) = 0;
 
     virtual int32_t PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback) = 0;
@@ -60,10 +60,10 @@ public:
     virtual int32_t UnprepareRemoteInput(const std::string &deviceId, sptr<IUnprepareDInputCallback> callback) = 0;
 
     virtual int32_t StartRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback) = 0;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback) = 0;
 
     virtual int32_t StopRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback) = 0;
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback) = 0;
 
     virtual int32_t StartRemoteInput(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback) = 0;

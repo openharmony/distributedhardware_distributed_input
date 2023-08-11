@@ -96,7 +96,7 @@ void DistributedInputSinkManager::QueryLocalWhiteList(nlohmann::json &jsonStr)
 }
 
 void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
-    const int32_t& sessionId, const std::string &deviceId)
+    const int32_t &sessionId, const std::string &deviceId)
 {
     DHLOGI("OnPrepareRemoteInput called, sessionId: %d, devId: %s", sessionId, GetAnonyString(deviceId).c_str());
     nlohmann::json jsonStr;
@@ -120,7 +120,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
     DistributedInputSinkTransport::GetInstance().RespPrepareRemoteInput(sessionId, smsg);
 }
 
-void DistributedInputSinkManager::DInputSinkListener::OnUnprepareRemoteInput(const int32_t& sessionId)
+void DistributedInputSinkManager::DInputSinkListener::OnUnprepareRemoteInput(const int32_t &sessionId)
 {
     DHLOGI("OnUnprepareRemoteInput called, sessionId: %d", sessionId);
     OnStopRemoteInput(sessionId, static_cast<uint32_t>(DInputDeviceType::ALL));
@@ -178,7 +178,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayUnprepareRemoteInpu
 }
 
 void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInput(
-    const int32_t& sessionId, const uint32_t& inputTypes)
+    const int32_t &sessionId, const uint32_t &inputTypes)
 {
     DHLOGI("OnStartRemoteInput called, sessionId: %d, inputTypes: %u.", sessionId, inputTypes);
     // set new session
@@ -218,7 +218,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInput(
 }
 
 void DistributedInputSinkManager::DInputSinkListener::OnStopRemoteInput(
-    const int32_t& sessionId, const uint32_t& inputTypes)
+    const int32_t &sessionId, const uint32_t &inputTypes)
 {
     DHLOGI("OnStopRemoteInput called, sessionId: %d, inputTypes: %d, curInputTypes: %d",
         sessionId, inputTypes, sinkManagerObj_->GetInputTypes());
@@ -698,7 +698,7 @@ uint32_t DistributedInputSinkManager::GetInputTypes()
     return static_cast<uint32_t>(inputTypes_);
 }
 
-void DistributedInputSinkManager::SetInputTypes(const uint32_t& inputTypes)
+void DistributedInputSinkManager::SetInputTypes(const uint32_t &inputTypes)
 {
     inputTypes_ = static_cast<DInputDeviceType>(inputTypes);
 }
@@ -725,7 +725,7 @@ DistributedInputSinkManager::ProjectWindowListener::~ProjectWindowListener()
     screen_ = nullptr;
 }
 
-void DistributedInputSinkManager::ProjectWindowListener::OnMessage(const DHTopic topic, const std::string& message)
+void DistributedInputSinkManager::ProjectWindowListener::OnMessage(const DHTopic topic, const std::string &message)
 {
     DHLOGI("ProjectWindowListener OnMessage!");
     if (topic != DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO) {
@@ -753,8 +753,8 @@ void DistributedInputSinkManager::ProjectWindowListener::OnMessage(const DHTopic
     DInputContext::GetInstance().AddRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, dScreenSinkSA);
 }
 
-int32_t DistributedInputSinkManager::ProjectWindowListener::ParseMessage(const std::string& message,
-    std::string& srcDeviceId, uint64_t& srcWinId, SinkScreenInfo& sinkScreenInfo)
+int32_t DistributedInputSinkManager::ProjectWindowListener::ParseMessage(const std::string &message,
+    std::string &srcDeviceId, uint64_t &srcWinId, SinkScreenInfo &sinkScreenInfo)
 {
     nlohmann::json jsonObj = nlohmann::json::parse(message, nullptr, false);
     if (jsonObj.is_discarded()) {
@@ -799,8 +799,8 @@ int32_t DistributedInputSinkManager::ProjectWindowListener::ParseMessage(const s
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSinkManager::ProjectWindowListener::UpdateSinkScreenInfoCache(const std::string& srcDevId,
-    const uint64_t srcWinId, const SinkScreenInfo& sinkScreenInfoTmp)
+int32_t DistributedInputSinkManager::ProjectWindowListener::UpdateSinkScreenInfoCache(const std::string &srcDevId,
+    const uint64_t srcWinId, const SinkScreenInfo &sinkScreenInfoTmp)
 {
     std::string srcScreenInfoKey = DInputContext::GetInstance().GetScreenInfoKey(srcDevId, srcWinId);
     SinkScreenInfo sinkScreenInfo = DInputContext::GetInstance().GetSinkScreenInfo(srcScreenInfoKey);
@@ -847,7 +847,7 @@ uint32_t DistributedInputSinkManager::ProjectWindowListener::GetScreenHeight()
     return screen_->GetHeight();
 }
 
-DistributedInputSinkManager::DScreenSinkSvrRecipient::DScreenSinkSvrRecipient(const std::string& srcDevId,
+DistributedInputSinkManager::DScreenSinkSvrRecipient::DScreenSinkSvrRecipient(const std::string &srcDevId,
     const uint64_t srcWinId)
 {
     DHLOGI("DScreenStatusListener ctor!");
@@ -873,7 +873,7 @@ void DistributedInputSinkManager::DScreenSinkSvrRecipient::OnRemoteDied(const wp
     DInputContext::GetInstance().RemoveRemoteObject(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
 }
 
-int32_t DistributedInputSinkManager::NotifyStartDScreen(const SrcScreenInfo& srcScreenInfo)
+int32_t DistributedInputSinkManager::NotifyStartDScreen(const SrcScreenInfo &srcScreenInfo)
 {
     DHLOGI("NotifyStartDScreen start!");
 
@@ -917,7 +917,7 @@ void DistributedInputSinkManager::CallBackScreenInfoChange()
     }
 }
 
-void DistributedInputSinkManager::CleanExceptionalInfo(const SrcScreenInfo& srcScreenInfo)
+void DistributedInputSinkManager::CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo)
 {
     DHLOGI("CleanExceptionalInfo start!");
     std::string uuid = srcScreenInfo.uuid;
@@ -933,7 +933,7 @@ void DistributedInputSinkManager::CleanExceptionalInfo(const SrcScreenInfo& srcS
     }
 }
 
-int32_t DistributedInputSinkManager::NotifyStopDScreen(const std::string& srcScreenInfoKey)
+int32_t DistributedInputSinkManager::NotifyStopDScreen(const std::string &srcScreenInfoKey)
 {
     DHLOGI("NotifyStopDScreen start, srcScreenInfoKey: %s", GetAnonyString(srcScreenInfoKey).c_str());
     if (srcScreenInfoKey.empty()) {
@@ -950,7 +950,7 @@ int32_t DistributedInputSinkManager::RegisterSharingDhIdListener(sptr<ISharingDh
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSinkManager::Dump(int32_t fd, const std::vector<std::u16string>& args)
+int32_t DistributedInputSinkManager::Dump(int32_t fd, const std::vector<std::u16string> &args)
 {
     DHLOGI("DistributedInputSinkManager Dump.");
     std::vector<std::string> argsStr(args.size());

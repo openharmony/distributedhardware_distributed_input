@@ -93,7 +93,7 @@ int32_t InputHub::Release()
     return DH_SUCCESS;
 }
 
-size_t InputHub::StartCollectInputEvents(RawEvent* buffer, size_t bufferSize)
+size_t InputHub::StartCollectInputEvents(RawEvent *buffer, size_t bufferSize)
 {
     size_t count = 0;
     isStartCollectEvent_ = true;
@@ -151,7 +151,7 @@ void InputHub::StopCollectInputEvents()
     isStartCollectEvent_ = false;
 }
 
-size_t InputHub::GetEvents(RawEvent* buffer, size_t bufferSize)
+size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
 {
     RawEvent* event = buffer;
     size_t capacity = bufferSize;
@@ -194,7 +194,7 @@ size_t InputHub::GetEvents(RawEvent* buffer, size_t bufferSize)
     return event - buffer;
 }
 
-bool InputHub::IsTouchPad(const InputDevice& inputDevice)
+bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 {
     std::string dhName = inputDevice.name;
     DHLOGI("device name is %s.", dhName.c_str());
@@ -205,7 +205,7 @@ bool InputHub::IsTouchPad(const InputDevice& inputDevice)
     return true;
 }
 
-size_t InputHub::CollectEvent(RawEvent* buffer, size_t& capacity, Device* device, struct input_event readBuffer[],
+size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
     const size_t count)
 {
     std::vector<bool> needFilted(capacity, false);
@@ -236,7 +236,7 @@ size_t InputHub::CollectEvent(RawEvent* buffer, size_t& capacity, Device* device
     return event - buffer;
 }
 
-size_t InputHub::ReadInputEvent(int32_t readSize, Device& device)
+size_t InputHub::ReadInputEvent(int32_t readSize, Device &device)
 {
     size_t count = 0;
     if (readSize == 0 || (readSize < 0 && errno == ENODEV)) {
@@ -259,7 +259,7 @@ size_t InputHub::ReadInputEvent(int32_t readSize, Device& device)
     return count;
 }
 
-size_t InputHub::DeviceIsExists(InputDeviceEvent* buffer, size_t bufferSize)
+size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
 {
     InputDeviceEvent* event = buffer;
     size_t capacity = bufferSize;
@@ -310,7 +310,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent* buffer, size_t bufferSize)
     return event - buffer;
 }
 
-size_t InputHub::StartCollectInputHandler(InputDeviceEvent* buffer, size_t bufferSize)
+size_t InputHub::StartCollectInputHandler(InputDeviceEvent *buffer, size_t bufferSize)
 {
     size_t count = 0;
     isStartCollectHandler_ = true;
@@ -419,7 +419,7 @@ std::vector<InputDevice> InputHub::GetAllInputDevices()
     return vecDevice;
 }
 
-void InputHub::ScanInputDevices(const std::string& dirName)
+void InputHub::ScanInputDevices(const std::string &dirName)
 {
     DHLOGI("ScanInputDevices enter, dirName %s.", dirName.c_str());
     std::vector<std::string> vecInputDevPath;
@@ -429,7 +429,7 @@ void InputHub::ScanInputDevices(const std::string& dirName)
     }
 }
 
-bool InputHub::IsDeviceRegistered(const std::string& devicePath)
+bool InputHub::IsDeviceRegistered(const std::string &devicePath)
 {
     std::unique_lock<std::mutex> deviceLock(devicesMutex_);
     for (const auto& [deviceId, device] : devices_) {
@@ -440,7 +440,7 @@ bool InputHub::IsDeviceRegistered(const std::string& devicePath)
     return false;
 }
 
-int32_t InputHub::OpenInputDeviceLocked(const std::string& devicePath)
+int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
 {
     if (IsDeviceRegistered(devicePath)) {
         return DH_SUCCESS;
@@ -474,7 +474,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string& devicePath)
     return DH_SUCCESS;
 }
 
-int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice& identifier)
+int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice &identifier)
 {
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     // Get device name.
@@ -525,7 +525,7 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice& identifier)
     return DH_SUCCESS;
 }
 
-void InputHub::QueryEventInfo(int fd, InputDevice& identifier)
+void InputHub::QueryEventInfo(int fd, InputDevice &identifier)
 {
     DHLOGI("QueryEventInfo: devName: %s, dhId: %s!", identifier.name.c_str(),
         GetAnonyString(identifier.descriptor).c_str());
@@ -554,7 +554,7 @@ struct libevdev* InputHub::GetLibEvDev(int fd)
     return dev;
 }
 
-void InputHub::GetEventTypes(struct libevdev* dev, InputDevice& identifier)
+void InputHub::GetEventTypes(struct libevdev *dev, InputDevice &identifier)
 {
     for (uint32_t eventType = 0; eventType < EV_CNT; eventType++) {
         if (!libevdev_has_event_type(dev, eventType)) {
@@ -566,7 +566,7 @@ void InputHub::GetEventTypes(struct libevdev* dev, InputDevice& identifier)
     }
 }
 
-int32_t InputHub::GetEventKeys(struct libevdev* dev, InputDevice& identifier)
+int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_KEY)) {
         DHLOGE("The device doesn't has EV_KEY type!");
@@ -583,7 +583,7 @@ int32_t InputHub::GetEventKeys(struct libevdev* dev, InputDevice& identifier)
     return DH_SUCCESS;
 }
 
-int32_t InputHub::GetABSInfo(struct libevdev* dev, InputDevice& identifier)
+int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_ABS)) {
         DHLOGE("The device doesn't has EV_ABS type!");
@@ -615,7 +615,7 @@ int32_t InputHub::GetABSInfo(struct libevdev* dev, InputDevice& identifier)
     return DH_SUCCESS;
 }
 
-int32_t InputHub::GetRELTypes(struct libevdev* dev, InputDevice& identifier)
+int32_t InputHub::GetRELTypes(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_REL)) {
         DHLOGE("The device doesn't has EV_REL type!");
@@ -632,7 +632,7 @@ int32_t InputHub::GetRELTypes(struct libevdev* dev, InputDevice& identifier)
     return DH_SUCCESS;
 }
 
-void InputHub::GetProperties(struct libevdev* dev, InputDevice& identifier)
+void InputHub::GetProperties(struct libevdev *dev, InputDevice &identifier)
 {
     for (uint32_t prop = 0; prop < INPUT_PROP_CNT; prop++) {
         if (libevdev_has_property(dev, prop)) {
@@ -755,7 +755,7 @@ int32_t InputHub::QueryLocalTouchScreenInfo(int fd)
     return DH_SUCCESS;
 }
 
-std::string InputHub::StringPrintf(const char* format, ...) const
+std::string InputHub::StringPrintf(const char *format, ...) const
 {
     static const int kSpaceLength = 1024;
     char space[kSpaceLength];
@@ -774,7 +774,7 @@ std::string InputHub::StringPrintf(const char* format, ...) const
     return result;
 }
 
-void InputHub::GenerateDescriptor(InputDevice& identifier) const
+void InputHub::GenerateDescriptor(InputDevice &identifier) const
 {
     std::string rawDescriptor;
     rawDescriptor += StringPrintf(":%04x:%04x:", identifier.vendor,
@@ -799,7 +799,7 @@ void InputHub::GenerateDescriptor(InputDevice& identifier) const
         GetAnonyString(identifier.descriptor).c_str());
 }
 
-int32_t InputHub::RegisterDeviceForEpollLocked(const Device& device)
+int32_t InputHub::RegisterDeviceForEpollLocked(const Device &device)
 {
     int32_t result = RegisterFdForEpoll(device.fd);
     if (result != DH_SUCCESS) {
@@ -827,7 +827,7 @@ void InputHub::AddDeviceLocked(std::unique_ptr<Device> device)
     openingDevices_.push_back(std::move(device));
 }
 
-void InputHub::CloseDeviceLocked(Device& device)
+void InputHub::CloseDeviceLocked(Device &device)
 {
     DHLOGI("Removed device: path=%s name=%s id=%s fd=%d classes=0x%x",
         device.path.c_str(), device.identifier.name.c_str(), GetAnonyInt32(device.id).c_str(),
@@ -842,7 +842,7 @@ void InputHub::CloseDeviceLocked(Device& device)
     }
 }
 
-void InputHub::CloseDeviceForAllLocked(Device& device)
+void InputHub::CloseDeviceForAllLocked(Device &device)
 {
     DHLOGI("Removed device: path=%s name=%s id=%s fd=%d classes=0x%x",
         device.path.c_str(), device.identifier.name.c_str(), GetAnonyInt32(device.id).c_str(),
@@ -854,7 +854,7 @@ void InputHub::CloseDeviceForAllLocked(Device& device)
     devices_.erase(device.id);
 }
 
-int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device& device) const
+int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device &device) const
 {
     if (device.HasValidFd()) {
         int32_t result = UnregisterFdFromEpoll(device.fd);
@@ -906,7 +906,7 @@ int32_t InputHub::ReadNotifyLocked()
     return DH_SUCCESS;
 }
 
-void InputHub::JudgeDeviceOpenOrClose(const inotify_event& event)
+void InputHub::JudgeDeviceOpenOrClose(const inotify_event &event)
 {
     if (event.len) {
         if (event.wd == inputWd_) {
@@ -923,7 +923,7 @@ void InputHub::JudgeDeviceOpenOrClose(const inotify_event& event)
     }
 }
 
-void InputHub::CloseDeviceByPathLocked(const std::string& devicePath)
+void InputHub::CloseDeviceByPathLocked(const std::string &devicePath)
 {
     Device* device = GetDeviceByPathLocked(devicePath);
     if (device) {
@@ -942,7 +942,7 @@ void InputHub::CloseAllDevicesLocked()
     }
 }
 
-InputHub::Device* InputHub::GetDeviceByPathLocked(const std::string& devicePath)
+InputHub::Device* InputHub::GetDeviceByPathLocked(const std::string &devicePath)
 {
     std::unique_lock<std::mutex> deviceLock(devicesMutex_);
     for (const auto& [id, device] : devices_) {
@@ -978,7 +978,7 @@ InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
     return nullptr;
 }
 
-bool InputHub::ContainsNonZeroByte(const uint8_t* array, uint32_t startIndex, uint32_t endIndex)
+bool InputHub::ContainsNonZeroByte(const uint8_t *array, uint32_t startIndex, uint32_t endIndex)
 {
     const uint8_t* end = array + endIndex;
     array += startIndex;
@@ -990,13 +990,13 @@ bool InputHub::ContainsNonZeroByte(const uint8_t* array, uint32_t startIndex, ui
     return false;
 }
 
-int64_t InputHub::ProcessEventTimestamp(const input_event& event)
+int64_t InputHub::ProcessEventTimestamp(const input_event &event)
 {
     const int64_t inputEventTime = event.input_event_sec * 1000000000LL + event.input_event_usec * 1000LL;
     return inputEventTime;
 }
 
-bool InputHub::TestBit(uint32_t bit, const uint8_t* array)
+bool InputHub::TestBit(uint32_t bit, const uint8_t *array)
 {
     constexpr int units = 8;
     return (array)[(bit) / units] & (1 << ((bit) % units));
@@ -1151,7 +1151,7 @@ bool InputHub::IsAllDevicesStoped()
     return true;
 }
 
-void InputHub::RecordDeviceLog(const int32_t deviceId, const std::string& devicePath, const InputDevice& identifier)
+void InputHub::RecordDeviceLog(const int32_t deviceId, const std::string &devicePath, const InputDevice &identifier)
 {
     DHLOGI("add device %d: %s\n", deviceId, devicePath.c_str());
     DHLOGI("  bus:        %04x\n"
@@ -1165,7 +1165,7 @@ void InputHub::RecordDeviceLog(const int32_t deviceId, const std::string& device
     DHLOGI("  descriptor: \"%s\"\n", GetAnonyString(identifier.descriptor).c_str());
 }
 
-void InputHub::RecordEventLog(const RawEvent* event)
+void InputHub::RecordEventLog(const RawEvent *event)
 {
     std::string eventType = "";
     switch (event->type) {
@@ -1191,7 +1191,7 @@ void InputHub::RecordEventLog(const RawEvent* event)
 }
 
 void InputHub::HandleTouchScreenEvent(struct input_event readBuffer[], const size_t count,
-    std::vector<bool>& needFilted)
+    std::vector<bool> &needFilted)
 {
     std::vector<std::pair<size_t, size_t>> absIndexs;
     int32_t firstIndex = -1;
@@ -1245,7 +1245,7 @@ void InputHub::HandleTouchScreenEvent(struct input_event readBuffer[], const siz
     }
 }
 
-bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsInfo& absInfo)
+bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsInfo &absInfo)
 {
     auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
 
@@ -1262,8 +1262,8 @@ bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsI
     return false;
 }
 
-InputHub::Device::Device(int fd, int32_t id, const std::string& path,
-    const InputDevice& identifier) : next(nullptr), fd(fd), id(id), path(path), identifier(identifier),
+InputHub::Device::Device(int fd, int32_t id, const std::string &path,
+    const InputDevice &identifier) : next(nullptr), fd(fd), id(id), path(path), identifier(identifier),
     classes(0), enabled(false), isShare(false), isVirtual(fd < 0) {
     memset_s(keyBitmask, sizeof(keyBitmask), 0, sizeof(keyBitmask));
     memset_s(absBitmask, sizeof(absBitmask), 0, sizeof(absBitmask));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,17 +34,17 @@ namespace DistributedInput {
 class DistributedInputSinkHandler : public IDistributedHardwareSink {
 DECLARE_SINGLE_INSTANCE_BASE(DistributedInputSinkHandler);
 public:
-    int32_t InitSink(const std::string& params) override;
+    int32_t InitSink(const std::string &params) override;
     int32_t ReleaseSink() override;
-    int32_t SubscribeLocalHardware(const std::string& dhId, const std::string& params) override;
-    int32_t UnsubscribeLocalHardware(const std::string& dhId) override;
+    int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &params) override;
+    int32_t UnsubscribeLocalHardware(const std::string &dhId) override;
     void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
 
 public:
     class SALoadSinkCb : public OHOS::SystemAbilityLoadCallbackStub {
     public:
         void OnLoadSystemAbilitySuccess(int32_t systemAbilityId,
-            const OHOS::sptr<IRemoteObject>& remoteObject) override;
+            const OHOS::sptr<IRemoteObject> &remoteObject) override;
 
         void OnLoadSystemAbilityFail(int32_t systemAbilityId) override;
 

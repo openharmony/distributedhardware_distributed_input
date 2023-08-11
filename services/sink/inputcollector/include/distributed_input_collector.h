@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,7 +49,7 @@ public:
     bool IsAllDevicesStoped();
     int32_t RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener);
     void ReportDhIdSharingState(const AffectDhIds &dhIds);
-    void GetDeviceInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string>& deviceInfo);
+    void GetDeviceInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &deviceInfo);
 
 private:
     DistributedInputCollector();

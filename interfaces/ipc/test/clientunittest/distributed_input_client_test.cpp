@@ -44,7 +44,7 @@ void DistributedInputClientTest::TearDownTestCase()
 {
 }
 
-int32_t DistributedInputClientTest::StructTransJson(const InputDevice& pBuf, std::string& strDescriptor) const
+int32_t DistributedInputClientTest::StructTransJson(const InputDevice &pBuf, std::string &strDescriptor) const
 {
     nlohmann::json tmpJson;
     tmpJson["name"] = pBuf.name;
@@ -82,7 +82,7 @@ int32_t DistributedInputClientTest::TestUnregisterDInputCallback::OnUnregisterRe
 }
 
 void DistributedInputClientTest::TestPrepareDInputCallback::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -90,7 +90,7 @@ void DistributedInputClientTest::TestPrepareDInputCallback::OnResult(
 }
 
 void DistributedInputClientTest::TestUnprepareDInputCallback::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -98,7 +98,7 @@ void DistributedInputClientTest::TestUnprepareDInputCallback::OnResult(
 }
 
 void DistributedInputClientTest::TestStartDInputCallback::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -107,7 +107,7 @@ void DistributedInputClientTest::TestStartDInputCallback::OnResult(
 }
 
 void DistributedInputClientTest::TestStopDInputCallback::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;

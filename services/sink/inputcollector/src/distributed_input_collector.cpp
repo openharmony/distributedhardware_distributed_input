@@ -242,7 +242,7 @@ int32_t DistributedInputCollector::RegisterSharingDhIdListener(sptr<ISharingDhId
 }
 
 void DistributedInputCollector::GetDeviceInfoByType(const uint32_t inputTypes, std::map<int32_t,
-    std::string>& deviceInfo)
+    std::string> &deviceInfo)
 {
     if (inputHub_ == nullptr) {
         DHLOGE("inputHub is nullptr!");

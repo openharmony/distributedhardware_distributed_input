@@ -72,7 +72,7 @@ void DistributedInputSourceManagerTest::RegisterSourceRespCallback(std::shared_p
 }
 
 void DistributedInputSourceManagerTest::TestRegisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     (void)devId;
     (void)dhId;
@@ -81,7 +81,7 @@ void DistributedInputSourceManagerTest::TestRegisterDInputCb::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestUnregisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     (void)devId;
     (void)dhId;
@@ -90,7 +90,7 @@ void DistributedInputSourceManagerTest::TestUnregisterDInputCb::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestPrepareDInputCallback::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -98,7 +98,7 @@ void DistributedInputSourceManagerTest::TestPrepareDInputCallback::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestUnprepareDInputCallback::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -106,7 +106,7 @@ void DistributedInputSourceManagerTest::TestUnprepareDInputCallback::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestStartDInputCallback::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -115,7 +115,7 @@ void DistributedInputSourceManagerTest::TestStartDInputCallback::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestStopDInputCallback::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -140,7 +140,7 @@ void DistributedInputSourceManagerTest::TestAddWhiteListInfosCb::OnResult(
 }
 
 void DistributedInputSourceManagerTest::TestDelWhiteListInfosCb::OnResult(
-    const std::string& deviceId)
+    const std::string &deviceId)
 {
     (void)deviceId;
     return;
@@ -200,7 +200,7 @@ void DistributedInputSourceManagerTest::TestStartStopDInputsCb::OnResultDhids(co
     return;
 }
 
-int32_t DistributedInputSourceManagerTest::StructTransJson(const InputDevice& pBuf, std::string& strDescriptor) const
+int32_t DistributedInputSourceManagerTest::StructTransJson(const InputDevice &pBuf, std::string &strDescriptor) const
 {
     nlohmann::json tmpJson;
     tmpJson["name"] = pBuf.name;

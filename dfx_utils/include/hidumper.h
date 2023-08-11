@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,20 +54,20 @@ class HiDumper {
 DECLARE_SINGLE_INSTANCE_BASE(HiDumper);
 
 public:
-    bool HiDump(const std::vector<std::string>& args, std::string& result);
-    void SaveNodeInfo(const std::string& deviceId, const std::string& nodeName, const std::string& dhId);
-    void DeleteNodeInfo(const std::string& deviceId, const std::string& dhId);
-    void CreateSessionInfo(const std::string& remoteDevId, const int32_t& sessionId, const std::string& mySessionName,
-        const std::string& peerSessionName, const SessionStatus& sessionStatus);
-    void SetSessionStatus(const std::string& remoteDevId, const SessionStatus& sessionStatus);
-    void DeleteSessionInfo(const std::string& remoteDevId);
+    bool HiDump(const std::vector<std::string> &args, std::string &result);
+    void SaveNodeInfo(const std::string &deviceId, const std::string &nodeName, const std::string &dhId);
+    void DeleteNodeInfo(const std::string &deviceId, const std::string &dhId);
+    void CreateSessionInfo(const std::string &remoteDevId, const int32_t &sessionId, const std::string &mySessionName,
+        const std::string &peerSessionName, const SessionStatus &sessionStatus);
+    void SetSessionStatus(const std::string &remoteDevId, const SessionStatus &sessionStatus);
+    void DeleteSessionInfo(const std::string &remoteDevId);
 private:
     explicit HiDumper() = default;
     ~HiDumper() = default;
-    int32_t ProcessDump(const std::string& args, std::string& result);
-    int32_t GetAllNodeInfos(std::string& result);
-    int32_t GetSessionInfo(std::string& result);
-    int32_t ShowHelp(std::string& result);
+    int32_t ProcessDump(const std::string &args, std::string &result);
+    int32_t GetAllNodeInfos(std::string &result);
+    int32_t GetSessionInfo(std::string &result);
+    int32_t ShowHelp(std::string &result);
 private:
     std::vector<NodeInfo> nodeInfos_;
     std::mutex nodeMutex_;

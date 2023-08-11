@@ -43,7 +43,7 @@ namespace {
     };
 }
 
-bool HiDumper::HiDump(const std::vector<std::string>& args, std::string& result)
+bool HiDumper::HiDump(const std::vector<std::string> &args, std::string &result)
 {
     if (args.empty()) {
         DHLOGE("args is empty");
@@ -61,7 +61,7 @@ bool HiDumper::HiDump(const std::vector<std::string>& args, std::string& result)
     return true;
 }
 
-int32_t HiDumper::ProcessDump(const std::string& args, std::string& result)
+int32_t HiDumper::ProcessDump(const std::string &args, std::string &result)
 {
     DHLOGI("ProcessDump Dump.");
     int32_t ret = ERR_DH_INPUT_HIDUMP_INVALID_ARGS;
@@ -98,7 +98,7 @@ int32_t HiDumper::ProcessDump(const std::string& args, std::string& result)
     return ret;
 }
 
-int32_t HiDumper::GetAllNodeInfos(std::string& result)
+int32_t HiDumper::GetAllNodeInfos(std::string &result)
 {
     DHLOGI("GetAllNodeInfos Dump.");
     std::lock_guard<std::mutex> node_lock(nodeMutex_);
@@ -115,7 +115,7 @@ int32_t HiDumper::GetAllNodeInfos(std::string& result)
     return DH_SUCCESS;
 }
 
-void HiDumper::DeleteNodeInfo(const std::string& deviceId, const std::string& dhId)
+void HiDumper::DeleteNodeInfo(const std::string &deviceId, const std::string &dhId)
 {
     DHLOGI("DeleteNodeInfo Dump.");
     std::lock_guard<std::mutex> node_lock(nodeMutex_);
@@ -128,7 +128,7 @@ void HiDumper::DeleteNodeInfo(const std::string& deviceId, const std::string& dh
     }
 }
 
-int32_t HiDumper::GetSessionInfo(std::string& result)
+int32_t HiDumper::GetSessionInfo(std::string &result)
 {
     DHLOGI("GetSessionInfo Dump.");
     std::lock_guard<std::mutex> lock(sessionMutex_);
@@ -157,7 +157,7 @@ int32_t HiDumper::GetSessionInfo(std::string& result)
     return DH_SUCCESS;
 }
 
-void HiDumper::DeleteSessionInfo(const std::string& remoteDevId)
+void HiDumper::DeleteSessionInfo(const std::string &remoteDevId)
 {
     DHLOGI("DeleteSessionInfo Dump.");
     std::lock_guard<std::mutex> session_lock(sessionMutex_);
@@ -182,7 +182,7 @@ int32_t HiDumper::ShowHelp(std::string &result)
     return DH_SUCCESS;
 }
 
-void HiDumper::SaveNodeInfo(const std::string& deviceId, const std::string& nodeName, const std::string& dhId)
+void HiDumper::SaveNodeInfo(const std::string &deviceId, const std::string &nodeName, const std::string &dhId)
 {
     std::lock_guard<std::mutex> node_lock(nodeMutex_);
     NodeInfo nodeInfo = {
@@ -193,8 +193,8 @@ void HiDumper::SaveNodeInfo(const std::string& deviceId, const std::string& node
     nodeInfos_.push_back(nodeInfo);
 }
 
-void HiDumper::CreateSessionInfo(const std::string& remoteDevId, const int32_t& sessionId,
-    const std::string& mySessionName, const std::string& peerSessionName, const SessionStatus& sessionStatus)
+void HiDumper::CreateSessionInfo(const std::string &remoteDevId, const int32_t &sessionId,
+    const std::string &mySessionName, const std::string &peerSessionName, const SessionStatus &sessionStatus)
 {
     std::lock_guard<std::mutex> session_lock(sessionMutex_);
     auto iter = sessionInfos_.find(remoteDevId);
@@ -209,7 +209,7 @@ void HiDumper::CreateSessionInfo(const std::string& remoteDevId, const int32_t& 
     }
 }
 
-void HiDumper::SetSessionStatus(const std::string& remoteDevId, const SessionStatus& sessionStatus)
+void HiDumper::SetSessionStatus(const std::string &remoteDevId, const SessionStatus &sessionStatus)
 {
     std::lock_guard<std::mutex> session_lock(sessionMutex_);
     auto iter = sessionInfos_.find(remoteDevId);

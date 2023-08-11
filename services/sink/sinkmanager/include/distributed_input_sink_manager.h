@@ -57,10 +57,10 @@ public:
     public:
         explicit DInputSinkListener(DistributedInputSinkManager *manager);
         ~DInputSinkListener() override;
-        void OnPrepareRemoteInput(const int32_t& sessionId, const std::string &deviceId) override;
-        void OnUnprepareRemoteInput(const int32_t& sessionId) override;
-        void OnStartRemoteInput(const int32_t& sessionId, const uint32_t& inputTypes) override;
-        void OnStopRemoteInput(const int32_t& sessionId, const uint32_t& inputTypes) override;
+        void OnPrepareRemoteInput(const int32_t &sessionId, const std::string &deviceId) override;
+        void OnUnprepareRemoteInput(const int32_t &sessionId) override;
+        void OnStartRemoteInput(const int32_t &sessionId, const uint32_t &inputTypes) override;
+        void OnStopRemoteInput(const int32_t &sessionId, const uint32_t &inputTypes) override;
         void OnStartRemoteInputDhid(const int32_t &sessionId, const std::string &strDhids) override;
         void OnStopRemoteInputDhid(const int32_t &sessionId, const std::string &strDhids) override;
 
@@ -85,13 +85,13 @@ public:
     public:
         explicit ProjectWindowListener(DistributedInputSinkManager *manager);
         ~ProjectWindowListener() override;
-        void OnMessage(const DHTopic topic, const std::string& message) override;
+        void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
-        int32_t ParseMessage(const std::string& message, std::string& srcDeviceId, uint64_t& srcWinId,
-            SinkScreenInfo& sinkScreenInfo);
-        int32_t UpdateSinkScreenInfoCache(const std::string& srcDevId, const uint64_t srcWinId,
-            const SinkScreenInfo& sinkScreenInfoTmp);
+        int32_t ParseMessage(const std::string &message, std::string &srcDeviceId, uint64_t &srcWinId,
+            SinkScreenInfo &sinkScreenInfo);
+        int32_t UpdateSinkScreenInfoCache(const std::string &srcDevId, const uint64_t srcWinId,
+            const SinkScreenInfo &sinkScreenInfoTmp);
         uint32_t GetScreenWidth();
         uint32_t GetScreenHeight();
 
@@ -103,7 +103,7 @@ public:
 
     class DScreenSinkSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
-        DScreenSinkSvrRecipient(const std::string& srcDevId, const uint64_t srcWinId);
+        DScreenSinkSvrRecipient(const std::string &srcDevId, const uint64_t srcWinId);
         ~DScreenSinkSvrRecipient() override;
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
@@ -131,7 +131,7 @@ public:
 
     uint32_t GetInputTypes();
 
-    void SetInputTypes(const uint32_t& inputTypes);
+    void SetInputTypes(const uint32_t &inputTypes);
 
     /*
      * GetEventHandler, get the ui_service manager service's handler.
@@ -140,18 +140,18 @@ public:
      */
     std::shared_ptr<DistributedInputSinkEventHandler> GetEventHandler();
 
-    int32_t NotifyStartDScreen(const SrcScreenInfo& srcScreenInfo) override;
+    int32_t NotifyStartDScreen(const SrcScreenInfo &srcScreenInfo) override;
 
-    int32_t NotifyStopDScreen(const std::string& srcScreenInfoKey) override;
+    int32_t NotifyStopDScreen(const std::string &srcScreenInfoKey) override;
 
     int32_t RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener) override;
 
-    int32_t Dump(int32_t fd, const std::vector<std::u16string>& args) override;
+    int32_t Dump(int32_t fd, const std::vector<std::u16string> &args) override;
 
     void QueryLocalWhiteList(nlohmann::json &jsonStr);
 
 private:
-    void CleanExceptionalInfo(const SrcScreenInfo& srcScreenInfo);
+    void CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo);
     void CallBackScreenInfoChange();
 
 private:

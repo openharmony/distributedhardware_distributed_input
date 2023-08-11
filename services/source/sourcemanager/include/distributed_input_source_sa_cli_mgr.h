@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,14 +40,14 @@ public:
 private:
     class RemoteCliDeathRecipient : public IRemoteObject::DeathRecipient {
     public:
-        void OnRemoteDied(const wptr<IRemoteObject>& remote) override;
+        void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
     };
     sptr<RemoteCliDeathRecipient> remoteCliDeathRcv;
     sptr<IDistributedSourceInput> GetRemoteCliFromCache(const std::string &devId);
     void AddRemoteCli(const std::string &devId, sptr<IRemoteObject> object);
     void DeleteRemoteCli(const std::string &devId);
     void DeleteRemoteCli(const sptr<IRemoteObject> remote);
-    void ProcRemoteCliDied(const sptr<IRemoteObject>& remote);
+    void ProcRemoteCliDied(const sptr<IRemoteObject> &remote);
 
 private:
     std::mutex remoteCliLock;

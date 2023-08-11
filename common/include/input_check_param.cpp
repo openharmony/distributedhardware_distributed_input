@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,7 +39,7 @@ bool DInputCheckParam::CheckParam(const std::string &deviceId, sptr<IRemoteBroke
     return true;
 }
 
-bool DInputCheckParam::CheckParam(const std::string& deviceId, const uint32_t& inputTypes,
+bool DInputCheckParam::CheckParam(const std::string &deviceId, const uint32_t &inputTypes,
     sptr<IRemoteBroker> callback)
 {
     if (deviceId.empty() || deviceId.size() > DEV_ID_LENGTH_MAX) {

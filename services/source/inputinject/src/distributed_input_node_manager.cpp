@@ -54,8 +54,8 @@ DistributedInputNodeManager::~DistributedInputNodeManager()
     DHLOGI("destructor end");
 }
 
-int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string& devId, const std::string& dhId,
-    const std::string& parameters)
+int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string &devId, const std::string &dhId,
+    const std::string &parameters)
 {
     if (devId.size() > DEV_ID_LENGTH_MAX || devId.empty() || dhId.size() > DH_ID_LENGTH_MAX || dhId.empty() ||
         parameters.size() > STRING_MAX_SIZE || parameters.empty()) {
@@ -71,7 +71,7 @@ int32_t DistributedInputNodeManager::OpenDevicesNode(const std::string& devId, c
     return DH_SUCCESS;
 }
 
-void DistributedInputNodeManager::ParseInputDeviceJson(const std::string& str, InputDevice& pBuf)
+void DistributedInputNodeManager::ParseInputDeviceJson(const std::string &str, InputDevice &pBuf)
 {
     nlohmann::json inputDeviceJson = nlohmann::json::parse(str, nullptr, false);
     if (inputDeviceJson.is_discarded()) {
@@ -81,7 +81,7 @@ void DistributedInputNodeManager::ParseInputDeviceJson(const std::string& str, I
     VerifyInputDevice(inputDeviceJson, pBuf);
 }
 
-void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json& inputDeviceJson, InputDevice& pBuf)
+void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf)
 {
     if (IsString(inputDeviceJson, DEVICE_NAME)) {
         pBuf.name = inputDeviceJson[DEVICE_NAME].get<std::string>();
@@ -130,7 +130,7 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json& inputD
     }
 }
 
-void DistributedInputNodeManager::ScanSinkInputDevices(const std::string& dhId)
+void DistributedInputNodeManager::ScanSinkInputDevices(const std::string &dhId)
 {
     DHLOGI("ScanSinkInputDevices enter, dhId %s.", dhId.c_str());
     std::vector<std::string> vecInputDevPath;
@@ -210,7 +210,7 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
     return true;
 }
 
-bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std::string& physicalPath)
+bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath)
 {
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
@@ -230,7 +230,7 @@ bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string& dhId, std:
     return true;
 }
 
-void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std::string& devicePath)
+void DistributedInputNodeManager::SetPathForDevMap(std::string &dhId, const std::string &devicePath)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.begin();
@@ -245,7 +245,7 @@ void DistributedInputNodeManager::SetPathForDevMap(std::string& dhId, const std:
     }
 }
 
-void DistributedInputNodeManager::OpenInputDevice(const std::string& devicePath, const std::string& dhId)
+void DistributedInputNodeManager::OpenInputDevice(const std::string &devicePath, const std::string &dhId)
 {
     DHLOGI("Opening input device path: %s", devicePath.c_str());
     std::string curDhId;
@@ -290,8 +290,8 @@ void DistributedInputNodeManager::GetVirtualKeyboardPathsByDhIds(const std::vect
     }
 }
 
-int32_t DistributedInputNodeManager::CreateHandle(const InputDevice& inputDevice, const std::string& devId,
-    const std::string& dhId)
+int32_t DistributedInputNodeManager::CreateHandle(const InputDevice &inputDevice, const std::string &devId,
+    const std::string &dhId)
 {
     std::unique_lock<std::mutex> my_lock(operationMutex_);
     std::call_once(callOnceFlag_, [this]() { inputHub_->ScanInputDevices(DEVICE_PATH); });
@@ -307,7 +307,7 @@ int32_t DistributedInputNodeManager::CreateHandle(const InputDevice& inputDevice
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputNodeManager::CreateVirtualTouchScreenNode(const std::string& devId, const std::string& dhId,
+int32_t DistributedInputNodeManager::CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId,
     const uint64_t srcWinId, const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight)
 {
     std::unique_lock<std::mutex> my_lock(operationMutex_);
@@ -327,7 +327,7 @@ int32_t DistributedInputNodeManager::CreateVirtualTouchScreenNode(const std::str
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputNodeManager::RemoveVirtualTouchScreenNode(const std::string& dhId)
+int32_t DistributedInputNodeManager::RemoveVirtualTouchScreenNode(const std::string &dhId)
 {
     return CloseDeviceLocked(dhId);
 }
@@ -337,7 +337,7 @@ int32_t DistributedInputNodeManager::GetVirtualTouchScreenFd()
     return virtualTouchScreenFd_;
 }
 
-void DistributedInputNodeManager::AddDeviceLocked(const std::string& dhId, std::unique_ptr<VirtualDevice> device)
+void DistributedInputNodeManager::AddDeviceLocked(const std::string &dhId, std::unique_ptr<VirtualDevice> device)
 {
     DHLOGI("dhId=%s", GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
@@ -361,7 +361,7 @@ int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &dhId)
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
 
-int32_t DistributedInputNodeManager::GetDevice(const std::string& dhId, VirtualDevice*& device)
+int32_t DistributedInputNodeManager::GetDevice(const std::string &dhId, VirtualDevice *&device)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.find(dhId);

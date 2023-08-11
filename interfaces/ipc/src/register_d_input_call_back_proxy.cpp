@@ -32,7 +32,7 @@ RegisterDInputCallbackProxy::~RegisterDInputCallbackProxy()
 {
 }
 
-void RegisterDInputCallbackProxy::OnResult(const std::string& devId, const std::string& dhId, const int32_t& status)
+void RegisterDInputCallbackProxy::OnResult(const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

@@ -47,7 +47,7 @@ DInputSourceSACliMgr::~DInputSourceSACliMgr()
     DHLOGI("Dtor DInputSourceSACliMgr");
 }
 
-void DInputSourceSACliMgr::RemoteCliDeathRecipient::OnRemoteDied(const wptr<IRemoteObject>& remote)
+void DInputSourceSACliMgr::RemoteCliDeathRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
     DHLOGI("RemoteCliDeathRecipient::OnRemoteDied received died notify!");
     sptr<IRemoteObject> diedRemote = remote.promote();
@@ -151,7 +151,7 @@ void DInputSourceSACliMgr::DeleteRemoteCli(const sptr<IRemoteObject> remote)
     remoteCliMap.erase(iter);
 }
 
-void DInputSourceSACliMgr::ProcRemoteCliDied(const sptr<IRemoteObject>& remote)
+void DInputSourceSACliMgr::ProcRemoteCliDied(const sptr<IRemoteObject> &remote)
 {
     auto remoteCliDiedProc = [this, remote]() {
         DeleteRemoteCli(remote);

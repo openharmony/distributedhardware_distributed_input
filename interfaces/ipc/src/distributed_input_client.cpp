@@ -50,7 +50,7 @@ DistributedInputClient &DistributedInputClient::GetInstance()
 }
 
 void DistributedInputClient::RegisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
     for (std::vector<DHardWareFwkRegistInfo>::iterator iter =
@@ -66,7 +66,7 @@ void DistributedInputClient::RegisterDInputCb::OnResult(
 }
 
 void DistributedInputClient::UnregisterDInputCb::OnResult(
-    const std::string& devId, const std::string& dhId, const int32_t& status)
+    const std::string &devId, const std::string &dhId, const int32_t &status)
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
     for (std::vector<DHardWareFwkUnRegistInfo>::iterator iter =
@@ -88,7 +88,7 @@ void DistributedInputClient::AddWhiteListInfosCb::OnResult(const std::string &de
     }
 }
 
-void DistributedInputClient::DelWhiteListInfosCb::OnResult(const std::string& deviceId)
+void DistributedInputClient::DelWhiteListInfosCb::OnResult(const std::string &deviceId)
 {
     DistributedInputClient::GetInstance().DelWhiteListInfos(deviceId);
 }
@@ -321,8 +321,8 @@ int32_t DistributedInputClient::ReleaseSink()
     return DInputSAManager::GetInstance().dInputSinkProxy_->Release();
 }
 
-int32_t DistributedInputClient::RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::string& parameters, const std::shared_ptr<RegisterCallback>& callback)
+int32_t DistributedInputClient::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::string &parameters, const std::shared_ptr<RegisterCallback> &callback)
 {
     DHLOGI("DinputRegister called, deviceId: %s,  dhId: %s,  parameters: %s.",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
@@ -348,8 +348,8 @@ int32_t DistributedInputClient::RegisterDistributedHardware(const std::string& d
         new(std::nothrow) RegisterDInputCb());
 }
 
-int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
-    const std::shared_ptr<UnregisterCallback>& callback)
+int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
+    const std::shared_ptr<UnregisterCallback> &callback)
 {
     DHLOGI("DinputUnregister called, deviceId: %s,  dhId: %s.",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -375,7 +375,7 @@ int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string&
         new(std::nothrow) UnregisterDInputCb());
 }
 
-int32_t DistributedInputClient::PrepareRemoteInput(const std::string& deviceId, sptr<IPrepareDInputCallback> callback)
+int32_t DistributedInputClient::PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback)
 {
     DHLOGI("DinputPrepare called, deviceId: %s.", GetAnonyString(deviceId).c_str());
     if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
@@ -388,7 +388,7 @@ int32_t DistributedInputClient::PrepareRemoteInput(const std::string& deviceId, 
     return DInputSAManager::GetInstance().dInputSourceProxy_->PrepareRemoteInput(deviceId, callback);
 }
 
-int32_t DistributedInputClient::UnprepareRemoteInput(const std::string& deviceId,
+int32_t DistributedInputClient::UnprepareRemoteInput(const std::string &deviceId,
     sptr<IUnprepareDInputCallback> callback)
 {
     DHLOGI("DinputUnprepare called, deviceId: %s.", GetAnonyString(deviceId).c_str());
@@ -403,7 +403,7 @@ int32_t DistributedInputClient::UnprepareRemoteInput(const std::string& deviceId
 }
 
 int32_t DistributedInputClient::StartRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     DHLOGI("DinputStart called, deviceId: %s, inputTypes: %d.", GetAnonyString(deviceId).c_str(), inputTypes);
     if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
@@ -416,7 +416,7 @@ int32_t DistributedInputClient::StartRemoteInput(
     return DInputSAManager::GetInstance().dInputSourceProxy_->StartRemoteInput(deviceId, inputTypes, callback);
 }
 
-int32_t DistributedInputClient::StopRemoteInput(const std::string& deviceId, const uint32_t& inputTypes,
+int32_t DistributedInputClient::StopRemoteInput(const std::string &deviceId, const uint32_t &inputTypes,
     sptr<IStopDInputCallback> callback)
 {
     DHLOGI("DinputStop called, deviceId: %s, inputTypes: %d.", GetAnonyString(deviceId).c_str(), inputTypes);
@@ -547,7 +547,7 @@ int32_t DistributedInputClient::StopRemoteInput(const std::string &srcId, const 
     return DInputSAManager::GetInstance().dInputSourceProxy_->StopRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
-bool DistributedInputClient::IsNeedFilterOut(const std::string& deviceId, const BusinessEvent& event)
+bool DistributedInputClient::IsNeedFilterOut(const std::string &deviceId, const BusinessEvent &event)
 {
     DHLOGI("IsNeedFilterOut called, deviceId: %s", GetAnonyString(deviceId).c_str());
     if (deviceId.empty() || (deviceId.size() > DEV_ID_LENGTH_MAX)) {
@@ -570,7 +570,7 @@ bool DistributedInputClient::IsTouchEventNeedFilterOut(const TouchScreenEvent &e
     return false;
 }
 
-bool DistributedInputClient::IsStartDistributedInput(const std::string& dhId)
+bool DistributedInputClient::IsStartDistributedInput(const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(sharingDhIdsMtx_);
     if (dhId.empty() || (dhId.size() > DH_ID_LENGTH_MAX)) {
@@ -739,7 +739,7 @@ void DistributedInputClient::UpdateSinkScreenInfos(const std::string &strJson)
     }
 }
 
-int32_t DistributedInputClient::NotifyStartDScreen(const std::string &sinkDevId, const std::string& srcDevId,
+int32_t DistributedInputClient::NotifyStartDScreen(const std::string &sinkDevId, const std::string &srcDevId,
     const uint64_t srcWinId)
 {
     sptr<IDistributedSinkInput> remoteDInput = GetRemoteDInput(sinkDevId);
@@ -762,7 +762,7 @@ int32_t DistributedInputClient::NotifyStartDScreen(const std::string &sinkDevId,
     return ret;
 }
 
-int32_t DistributedInputClient::NotifyStopDScreen(const std::string &networkId, const std::string& srcScreenInfoKey)
+int32_t DistributedInputClient::NotifyStopDScreen(const std::string &networkId, const std::string &srcScreenInfoKey)
 {
     sptr<IDistributedSinkInput> remoteDInput = GetRemoteDInput(networkId);
     if (remoteDInput == nullptr || !remoteDInput->AsObject()) {

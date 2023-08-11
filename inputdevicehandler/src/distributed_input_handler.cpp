@@ -53,7 +53,7 @@ DistributedInputHandler::~DistributedInputHandler()
     StopInputMonitorDeviceThread();
 }
 
-void DistributedInputHandler::StructTransJson(const InputDevice& pBuf, std::string& strDescriptor)
+void DistributedInputHandler::StructTransJson(const InputDevice &pBuf, std::string &strDescriptor)
 {
     DHLOGI("[%s] %d, %d, %d, %d, %s.\n", (pBuf.name).c_str(), pBuf.bus, pBuf.vendor, pBuf.product, pBuf.version,
         GetAnonyString(pBuf.descriptor).c_str());
@@ -142,7 +142,7 @@ void DistributedInputHandler::UnRegisterPluginListener()
     this->m_listener = nullptr;
 }
 
-int32_t DistributedInputHandler::GetDeviceInfo(std::string& deviceId)
+int32_t DistributedInputHandler::GetDeviceInfo(std::string &deviceId)
 {
     std::unique_lock<std::mutex> my_lock(operationMutex_);
     auto localNode = std::make_unique<NodeBasicInfo>();

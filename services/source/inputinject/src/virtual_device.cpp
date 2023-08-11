@@ -31,7 +31,7 @@ namespace {
     constexpr uint32_t ABS_FUZZ_POS = 3;
     constexpr uint32_t ABS_FLAT_POS = 4;
 }
-VirtualDevice::VirtualDevice(const InputDevice& event) : deviceName_(event.name), busType_(event.bus),
+VirtualDevice::VirtualDevice(const InputDevice &event) : deviceName_(event.name), busType_(event.bus),
     vendorId_(event.vendor), productId_(event.product), version_(event.version), classes_(event.classes)
 {
     DHLOGI("VirtualDevice ctor!");
@@ -56,7 +56,7 @@ bool VirtualDevice::DoIoctl(int32_t fd, int32_t request, const uint32_t value)
     return true;
 }
 
-bool VirtualDevice::CreateKey(const InputDevice& inputDevice)
+bool VirtualDevice::CreateKey(const InputDevice &inputDevice)
 {
     auto fun = [this](int32_t uiSet, const std::vector<uint32_t>& list) -> bool {
         for (uint32_t evt_type : list) {
@@ -81,7 +81,7 @@ bool VirtualDevice::CreateKey(const InputDevice& inputDevice)
     return true;
 }
 
-void VirtualDevice::SetABSInfo(struct uinput_user_dev& inputUserDev, const InputDevice& inputDevice)
+void VirtualDevice::SetABSInfo(struct uinput_user_dev &inputUserDev, const InputDevice &inputDevice)
 {
     DHLOGI("SetABSInfo!");
     for (const auto item : inputDevice.absInfos) {
@@ -113,7 +113,7 @@ bool VirtualDevice::SetPhys(const std::string deviceName, std::string dhId)
     return true;
 }
 
-bool VirtualDevice::SetUp(const InputDevice& inputDevice, const std::string& devId, const std::string& dhId)
+bool VirtualDevice::SetUp(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId)
 {
     fd_ = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
     if (fd_ < 0) {
@@ -165,7 +165,7 @@ bool VirtualDevice::SetUp(const InputDevice& inputDevice, const std::string& dev
     return true;
 }
 
-bool VirtualDevice::InjectInputEvent(const input_event& event)
+bool VirtualDevice::InjectInputEvent(const input_event &event)
 {
     DHLOGI("InjectInputEvent %d", fd_);
 
@@ -205,7 +205,7 @@ uint16_t VirtualDevice::GetClasses()
     return classes_;
 }
 
-void VirtualDevice::RecordEventLog(const input_event& event)
+void VirtualDevice::RecordEventLog(const input_event &event)
 {
     std::string eventType = "";
     switch (event.type) {

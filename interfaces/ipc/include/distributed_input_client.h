@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -56,21 +56,21 @@ public:
 
     int32_t ReleaseSink();
 
-    int32_t RegisterDistributedHardware(const std::string& devId, const std::string& dhId,
-        const std::string& parameters, const std::shared_ptr<RegisterCallback>& callback);
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &parameters, const std::shared_ptr<RegisterCallback> &callback);
 
-    int32_t UnregisterDistributedHardware(const std::string& devId, const std::string& dhId,
-        const std::shared_ptr<UnregisterCallback>& callback);
+    int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::shared_ptr<UnregisterCallback> &callback);
 
-    int32_t PrepareRemoteInput(const std::string& deviceId, sptr<IPrepareDInputCallback> callback);
+    int32_t PrepareRemoteInput(const std::string &deviceId, sptr<IPrepareDInputCallback> callback);
 
-    int32_t UnprepareRemoteInput(const std::string& deviceId, sptr<IUnprepareDInputCallback> callback);
+    int32_t UnprepareRemoteInput(const std::string &deviceId, sptr<IUnprepareDInputCallback> callback);
 
     int32_t StartRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback);
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback);
 
     int32_t StopRemoteInput(
-        const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback);
+        const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback);
 
     int32_t StartRemoteInput(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback);
@@ -96,10 +96,10 @@ public:
     bool IsNeedFilterOut(const std::string &deviceId, const BusinessEvent &event);
     bool IsTouchEventNeedFilterOut(const TouchScreenEvent &event);
 
-    bool IsStartDistributedInput(const std::string& dhId);
+    bool IsStartDistributedInput(const std::string &dhId);
 
-    int32_t NotifyStartDScreen(const std::string &networkId, const std::string& srcDevId, const uint64_t srcWinId);
-    int32_t NotifyStopDScreen(const std::string &networkId, const std::string& srcScreenInfoKey);
+    int32_t NotifyStartDScreen(const std::string &networkId, const std::string &srcDevId, const uint64_t srcWinId);
+    int32_t NotifyStopDScreen(const std::string &networkId, const std::string &srcScreenInfoKey);
 
     int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
@@ -121,14 +121,14 @@ public:
     public:
         RegisterDInputCb() = default;
         ~RegisterDInputCb() override = default;
-        void OnResult(const std::string& devId, const std::string& dhId, const int32_t& status) override;
+        void OnResult(const std::string &devId, const std::string &dhId, const int32_t &status) override;
     };
 
     class UnregisterDInputCb : public OHOS::DistributedHardware::DistributedInput::UnregisterDInputCallbackStub {
     public:
         UnregisterDInputCb() = default;
         ~UnregisterDInputCb() override = default;
-        void OnResult(const std::string& devId, const std::string& dhId, const int32_t& status) override;
+        void OnResult(const std::string &devId, const std::string &dhId, const int32_t &status) override;
     };
 
     class AddWhiteListInfosCb : public OHOS::DistributedHardware::DistributedInput::AddWhiteListInfosCallbackStub {

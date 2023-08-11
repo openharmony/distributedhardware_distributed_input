@@ -49,7 +49,7 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::Release()
 }
 
 int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterDistributedHardware(
-    const std::string& devId, const std::string& dhId, const std::string& parameters,
+    const std::string &devId, const std::string &dhId, const std::string &parameters,
     sptr<IRegisterDInputCallback> callback)
 {
     (void)devId;
@@ -60,7 +60,7 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterDistribu
 }
 
 int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterDistributedHardware(
-    const std::string& devId, const std::string& dhId,
+    const std::string &devId, const std::string &dhId,
     sptr<IUnregisterDInputCallback> callback)
 {
     (void)devId;
@@ -86,7 +86,7 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnprepareRemoteI
 }
 
 int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::StartRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStartDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -95,7 +95,7 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::StartRemoteInput
 }
 
 int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::StopRemoteInput(
-    const std::string& deviceId, const uint32_t& inputTypes, sptr<IStopDInputCallback> callback)
+    const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -239,15 +239,15 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterSimula
     return DH_SUCCESS;
 }
 
-void DInputSourceCallBackTest::TestDInputSourceCallBackStub::OnResult(const std::string& deviceId,
-    const std::string& strJson)
+void DInputSourceCallBackTest::TestDInputSourceCallBackStub::OnResult(const std::string &deviceId,
+    const std::string &strJson)
 {
     deviceId_ = deviceId;
     strJson_ = strJson;
 }
 
-void DInputSourceCallBackTest::TestDInputRegisterCallBack::OnResult(const std::string& devId,
-    const std::string& dhId, const int32_t& status)
+void DInputSourceCallBackTest::TestDInputRegisterCallBack::OnResult(const std::string &devId,
+    const std::string &dhId, const int32_t &status)
 {
     (void)devId;
     (void)dhId;
@@ -255,8 +255,8 @@ void DInputSourceCallBackTest::TestDInputRegisterCallBack::OnResult(const std::s
     return;
 }
 
-void DInputSourceCallBackTest::TestDInputUnregisterCallBack::OnResult(const std::string& devId,
-    const std::string& dhId, const int32_t& status)
+void DInputSourceCallBackTest::TestDInputUnregisterCallBack::OnResult(const std::string &devId,
+    const std::string &dhId, const int32_t &status)
 {
     (void)devId;
     (void)dhId;
@@ -265,7 +265,7 @@ void DInputSourceCallBackTest::TestDInputUnregisterCallBack::OnResult(const std:
 }
 
 void DInputSourceCallBackTest::TestDInputPrepareCallBack::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -273,7 +273,7 @@ void DInputSourceCallBackTest::TestDInputPrepareCallBack::OnResult(
 }
 
 void DInputSourceCallBackTest::TestDInputUnprepareCallBack::OnResult(
-    const std::string& deviceId, const int32_t& status)
+    const std::string &deviceId, const int32_t &status)
 {
     (void)deviceId;
     (void)status;
@@ -281,7 +281,7 @@ void DInputSourceCallBackTest::TestDInputUnprepareCallBack::OnResult(
 }
 
 void DInputSourceCallBackTest::TestDInputStartCallBack::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -290,7 +290,7 @@ void DInputSourceCallBackTest::TestDInputStartCallBack::OnResult(
 }
 
 void DInputSourceCallBackTest::TestDInputStopCallBack::OnResult(
-    const std::string& deviceId, const uint32_t& inputTypes, const int32_t& status)
+    const std::string &deviceId, const uint32_t &inputTypes, const int32_t &status)
 {
     (void)deviceId;
     (void)inputTypes;
@@ -315,7 +315,7 @@ void DInputSourceCallBackTest::TestAddWhiteListInfosCallBack::OnResult(
 }
 
 void DInputSourceCallBackTest::TestDelWhiteListInfosCallBack::OnResult(
-    const std::string& deviceId)
+    const std::string &deviceId)
 {
     (void)deviceId;
     return;

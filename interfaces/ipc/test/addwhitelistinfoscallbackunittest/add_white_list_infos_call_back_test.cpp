@@ -36,14 +36,14 @@ void AddWhiteListInfosCallbackTest::TearDownTestCase()
 {
 }
 
-void AddWhiteListInfosCallbackTest::TestAddWhiteListInfosCallbackStub::OnResult(const std::string& deviceId,
-    const std::string& strJson)
+void AddWhiteListInfosCallbackTest::TestAddWhiteListInfosCallbackStub::OnResult(const std::string &deviceId,
+    const std::string &strJson)
 {
     deviceId_ = deviceId;
     strJson_ = strJson;
 }
 
-void AddWhiteListInfosCallbackTest::TestGetSinkScreenInfosCallbackStub::OnResult(const std::string& strJson)
+void AddWhiteListInfosCallbackTest::TestGetSinkScreenInfosCallbackStub::OnResult(const std::string &strJson)
 {
     strJson_ = strJson;
 }
@@ -65,15 +65,15 @@ void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOffLine(con
     sinkNodeId_ = sinkNodeId;
 }
 
-void AddWhiteListInfosCallbackTest::TestPrepareDInputCallbackStub::OnResult(const std::string& devId,
-    const int32_t& status)
+void AddWhiteListInfosCallbackTest::TestPrepareDInputCallbackStub::OnResult(const std::string &devId,
+    const int32_t &status)
 {
     devId_ = devId;
     status_ = status;
 }
 
-void AddWhiteListInfosCallbackTest::TestRegisterDInputCallbackStub::OnResult(const std::string& devId,
-    const std::string& dhId, const int32_t& status)
+void AddWhiteListInfosCallbackTest::TestRegisterDInputCallbackStub::OnResult(const std::string &devId,
+    const std::string &dhId, const int32_t &status)
 {
     devId_ = devId;
     dhId_ = dhId;
@@ -100,8 +100,8 @@ int32_t AddWhiteListInfosCallbackTest::TestSimulationEventListenerStub::OnSimula
     value_ = value;
     return DH_SUCCESS;
 }
-void AddWhiteListInfosCallbackTest::TestStartDInputCallbackStub::OnResult(const std::string& devId,
-    const uint32_t& inputTypes, const int32_t& status)
+void AddWhiteListInfosCallbackTest::TestStartDInputCallbackStub::OnResult(const std::string &devId,
+    const uint32_t &inputTypes, const int32_t &status)
 {
     devId_ = devId;
     inputTypes_ = inputTypes;
@@ -131,8 +131,8 @@ void AddWhiteListInfosCallbackTest::TestStartStopResultCallbackStub::OnStop(cons
     dhIds.swap(dhIds);
 }
 
-void AddWhiteListInfosCallbackTest::TestStopDInputCallbackStub::OnResult(const std::string& devId,
-    const uint32_t& inputTypes, const int32_t& status)
+void AddWhiteListInfosCallbackTest::TestStopDInputCallbackStub::OnResult(const std::string &devId,
+    const uint32_t &inputTypes, const int32_t &status)
 {
     devId_ = devId;
     inputTypes_ = inputTypes;
@@ -157,7 +157,7 @@ int32_t AddWhiteListInfosCallbackTest::TestDistributedInputSinkStub::RegisterGet
 }
 
 int32_t AddWhiteListInfosCallbackTest::TestDistributedInputSinkStub::NotifyStartDScreen(
-    const SrcScreenInfo& remoteCtrlInfo)
+    const SrcScreenInfo &remoteCtrlInfo)
 {
     (void)remoteCtrlInfo;
     return DH_SUCCESS;
