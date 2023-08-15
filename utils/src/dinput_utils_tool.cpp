@@ -50,8 +50,6 @@ namespace {
     constexpr unsigned char MASK = 0x0F;
     constexpr int32_t DOUBLE_TIMES = 2;
     constexpr int32_t INT32_STRING_LENGTH = 40;
-    constexpr int32_t MAX_RETRY_COUNT = 10;
-    constexpr uint32_t SLEEP_TIME_US = 100 * 1000;
     constexpr uint32_t ERROR_MSG_MAX_LEN = 256;
 }
 DevInfo GetLocalDeviceInfo()
@@ -339,14 +337,7 @@ int OpenInputDeviceFdByPath(const std::string &devicePath)
         return -1;
     }
     int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-    int32_t count = 0;
-    while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
-        ++count;
-        usleep(SLEEP_TIME_US);
-        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-        DHLOGE("could not open %s, %s; retry %d\n", devicePath.c_str(), ConvertErrNo().c_str(), count);
-    }
-    if (count >= MAX_RETRY_COUNT) {
+    if (fd < 0) {
         DHLOGE("could not open %s, %s\n", devicePath.c_str(), ConvertErrNo().c_str());
         CloseFd(fd);
         return -1;
