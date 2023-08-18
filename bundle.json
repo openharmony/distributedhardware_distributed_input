@@ -44,7 +44,6 @@
             ],
             "third_party": [
                 "jsoncpp",
-                "googletest",
                 "libevdev",
                 "openssl"
             ]
