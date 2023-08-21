@@ -66,7 +66,6 @@ private:
     using DistributedInputSourceFunc = int32_t (DistributedInputSourceStub::*)(MessageParcel &data,
         MessageParcel &reply);
     std::map<int32_t, DistributedInputSourceFunc> memberFuncMap_;
-    
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
