@@ -32,6 +32,7 @@ public:
     DistributedInputSourceStub();
     ~DistributedInputSourceStub() override;
 
+    void RegRespFunMap();
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
 
 private:
@@ -62,6 +63,9 @@ private:
 private:
     std::atomic<bool> sourceManagerInitFlag_ {false};
     std::mutex operatorMutex_;
+    using DistributedInputSourceFunc = int32_t (DistributedInputSourceStub::*)(MessageParcel &data,
+        MessageParcel &reply);
+    std::map<uint32_t, DistributedInputSourceFunc> memberFuncMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
