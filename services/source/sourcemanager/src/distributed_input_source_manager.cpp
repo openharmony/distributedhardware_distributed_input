@@ -40,6 +40,7 @@
 #include "distributed_input_inject.h"
 #include "distributed_input_source_proxy.h"
 #include "distributed_input_source_transport.h"
+#include "distributed_input_transport_base.h"
 #include "hisysevent_util.h"
 #include "hidumper.h"
 #include "input_check_param.h"
@@ -534,6 +535,28 @@ void DistributedInputSourceManager::DInputSourceListener::OnReceiveRelayStopType
     sourceManagerObj_->GetCallbackEventHandler()->SendEvent(msgEvent, 0, AppExecFwk::EventQueue::Priority::IMMEDIATE);
 }
 
+DistributedInputSourceManager::DInputSrcMgrListener::DInputSrcMgrListener(DistributedInputSourceManager *manager)
+{
+    sourceManagerObj_ = manager;
+    DHLOGI("DInputSrcMgrListener init.");
+}
+
+DistributedInputSourceManager::DInputSrcMgrListener::~DInputSrcMgrListener()
+{
+    sourceManagerObj_ = nullptr;
+    DHLOGI("DInputSrcMgrListener destory.");
+}
+
+void DistributedInputSourceManager::DInputSrcMgrListener::ResetSrcMgrResStatus()
+{
+    DHLOGI("DInputSrcMgrListener ResetSrcMgrResStatus.");
+    if (sourceManagerObj_ == nullptr) {
+        DHLOGE("ResetSrcMgrResStatus sourceManagerObj is null.");
+        return;
+    }
+    sourceManagerObj_->ClearResourcesStatus();
+}
+
 void DistributedInputSourceManager::OnStart()
 {
     if (serviceRunningState_ == ServiceSourceRunningState::STATE_RUNNING) {
@@ -961,6 +984,9 @@ int32_t DistributedInputSourceManager::Init()
 
     statuslistener_ = std::make_shared<DInputSourceListener>(this);
     DistributedInputSourceTransport::GetInstance().RegisterSourceRespCallback(statuslistener_);
+
+    srcMgrListener_ = std::make_shared<DInputSrcMgrListener>(this);
+    DistributedInputTransportBase::GetInstance().RegisterSourceManagerCallback(srcMgrListener_);
 
     serviceRunningState_ = ServiceSourceRunningState::STATE_RUNNING;
 
@@ -2525,6 +2551,13 @@ uint32_t DistributedInputSourceManager::GetAllInputTypesMap()
         rInputTypes |= iter->second;
     }
     return rInputTypes;
+}
+
+void DistributedInputSourceManager::ClearResourcesStatus()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    relayPreCallbacks_.clear();
+    relayUnpreCallbacks_.clear();
 }
 
 void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId, uint32_t value)

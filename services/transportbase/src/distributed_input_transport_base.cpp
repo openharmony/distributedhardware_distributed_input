@@ -277,6 +277,13 @@ void DistributedInputTransportBase::RegisterSinkHandleSessionCallback(
     sinkCallback_ = callback;
 }
 
+void DistributedInputTransportBase::RegisterSourceManagerCallback(
+    std::shared_ptr<DInputSourceManagerCallback> callback)
+{
+    DHLOGI("RegisterSourceManagerCallback");
+    srcMgrCallback_ = callback;
+}
+
 int32_t DistributedInputTransportBase::CountSession(const std::string &remoteDevId)
 {
     return remoteDevSessionMap_.count(remoteDevId);
@@ -372,6 +379,12 @@ void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)
             return;
         }
         srcCallback_->NotifySessionClosed();
+
+        if (srcMgrCallback_ == nullptr) {
+            DHLOGE("srcMgrCallback is nullptr.");
+            return;
+        }
+        srcMgrCallback_->ResetSrcMgrResStatus();
     }
 }
 
