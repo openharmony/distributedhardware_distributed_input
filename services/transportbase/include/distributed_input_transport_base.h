@@ -30,6 +30,7 @@
 #include "nlohmann/json.hpp"
 #include "securec.h"
 
+#include "dinput_source_manager_callback.h"
 #include "dinput_transbase_source_callback.h"
 #include "dinput_transbase_sink_callback.h"
 
@@ -48,6 +49,7 @@ public:
 
     void RegisterSrcHandleSessionCallback(std::shared_ptr<DInputTransbaseSourceCallback> callback);
     void RegisterSinkHandleSessionCallback(std::shared_ptr<DInputTransbaseSinkCallback> callback);
+    void RegisterSourceManagerCallback(std::shared_ptr<DistributedInputSrcMgrCallback> callback);
 
     int32_t OnSessionOpened(int32_t sessionId, int32_t result);
     void OnSessionClosed(int32_t sessionId);
@@ -79,6 +81,7 @@ private:
 
     std::shared_ptr<DInputTransbaseSourceCallback> srcCallback_;
     std::shared_ptr<DInputTransbaseSinkCallback> sinkCallback_;
+    std::shared_ptr<DistributedInputSrcMgrCallback> srcMgrCallback_;
 };
 
 } // namespace DistributedInput

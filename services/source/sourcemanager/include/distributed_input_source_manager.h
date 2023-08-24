@@ -32,6 +32,7 @@
 
 #include "constants_dinput.h"
 #include "dinput_context.h"
+#include "dinput_source_manager_callback.h"
 #include "dinput_source_trans_callback.h"
 #include "distributed_input_node_manager.h"
 #include "distributed_input_source_event_handler.h"
@@ -220,6 +221,15 @@ public:
         DistributedInputSourceManager *sourceManagerObj_;
     };
 
+    class DInputSrcMgrListener : public DistributedInputSrcMgrCallback {
+    public:
+        explicit DInputSrcMgrListener(DistributedInputSourceManager *manager);
+        virtual ~DInputSrcMgrListener();
+        void ResetSrcMgrResStatus() override;
+    private:
+        DistributedInputSourceManager *sourceManagerObj_;
+    };
+
     class DInputSourceManagerEventHandler : public AppExecFwk::EventHandler {
     public:
         DInputSourceManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
@@ -333,6 +343,7 @@ public:
     void SetInputTypesMap(const std::string deviceId, uint32_t value);
     uint32_t GetInputTypesMap(const std::string deviceId);
     uint32_t GetAllInputTypesMap();
+    void ClearResourcesStatus();
 
 private:
     struct DInputClientRegistInfo {
@@ -427,6 +438,7 @@ private:
     ServiceSourceRunningState serviceRunningState_ = ServiceSourceRunningState::STATE_NOT_START;
     DInputServerType isStartTrans_ = DInputServerType::NULL_SERVER_TYPE;
     std::shared_ptr<DistributedInputSourceManager::DInputSourceListener> statuslistener_;
+    std::shared_ptr<DistributedInputSourceManager::DInputSrcMgrListener> srcMgrListener_;
 
     std::vector<DInputClientRegistInfo> regCallbacks_;
     std::vector<DInputClientUnregistInfo> unregCallbacks_;
