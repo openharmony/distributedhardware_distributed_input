@@ -278,7 +278,7 @@ void DistributedInputTransportBase::RegisterSinkHandleSessionCallback(
 }
 
 void DistributedInputTransportBase::RegisterSourceManagerCallback(
-    std::shared_ptr<DistributedInputSrcMgrCallback> callback)
+    std::shared_ptr<DInputSourceManagerCallback> callback)
 {
     DHLOGI("RegisterSourceManagerCallback");
     srcMgrCallback_ = callback;

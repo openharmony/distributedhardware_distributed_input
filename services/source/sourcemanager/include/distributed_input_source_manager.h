@@ -221,7 +221,7 @@ public:
         DistributedInputSourceManager *sourceManagerObj_;
     };
 
-    class DInputSrcMgrListener : public DistributedInputSrcMgrCallback {
+    class DInputSrcMgrListener : public DInputSourceManagerCallback {
     public:
         explicit DInputSrcMgrListener(DistributedInputSourceManager *manager);
         virtual ~DInputSrcMgrListener();

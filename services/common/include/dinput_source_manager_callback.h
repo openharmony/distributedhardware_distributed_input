@@ -21,7 +21,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-class DistributedInputSrcMgrCallback {
+class DInputSourceManagerCallback {
 public:
     virtual void ResetSrcMgrResStatus() = 0;
 };

@@ -49,7 +49,7 @@ public:
 
     void RegisterSrcHandleSessionCallback(std::shared_ptr<DInputTransbaseSourceCallback> callback);
     void RegisterSinkHandleSessionCallback(std::shared_ptr<DInputTransbaseSinkCallback> callback);
-    void RegisterSourceManagerCallback(std::shared_ptr<DistributedInputSrcMgrCallback> callback);
+    void RegisterSourceManagerCallback(std::shared_ptr<DInputSourceManagerCallback> callback);
 
     int32_t OnSessionOpened(int32_t sessionId, int32_t result);
     void OnSessionClosed(int32_t sessionId);
@@ -81,7 +81,7 @@ private:
 
     std::shared_ptr<DInputTransbaseSourceCallback> srcCallback_;
     std::shared_ptr<DInputTransbaseSinkCallback> sinkCallback_;
-    std::shared_ptr<DistributedInputSrcMgrCallback> srcMgrCallback_;
+    std::shared_ptr<DInputSourceManagerCallback> srcMgrCallback_;
 };
 
 } // namespace DistributedInput
