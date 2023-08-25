@@ -129,6 +129,15 @@ int32_t DistributedInputKit::UnregisterSimulationEventListener(sptr<ISimulationE
 {
     return DistributedInputClient::GetInstance().UnregisterSimulationEventListener(listener);
 }
+
+int32_t DistributedInputKit::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    return DistributedInputClient::GetInstance().RegisterSessionStateCb(callback);
+}
+int32_t DistributedInputKit::UnregisterSessionStateCb()
+{
+    return DistributedInputClient::GetInstance().UnregisterSessionStateCb();
+}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

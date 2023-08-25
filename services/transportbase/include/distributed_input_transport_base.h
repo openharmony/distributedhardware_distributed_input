@@ -33,6 +33,7 @@
 #include "dinput_source_manager_callback.h"
 #include "dinput_transbase_source_callback.h"
 #include "dinput_transbase_sink_callback.h"
+#include "i_session_state_callback.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -50,7 +51,8 @@ public:
     void RegisterSrcHandleSessionCallback(std::shared_ptr<DInputTransbaseSourceCallback> callback);
     void RegisterSinkHandleSessionCallback(std::shared_ptr<DInputTransbaseSinkCallback> callback);
     void RegisterSourceManagerCallback(std::shared_ptr<DInputSourceManagerCallback> callback);
-
+    void RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
+    void UnregisterSessionStateCb();
     int32_t OnSessionOpened(int32_t sessionId, int32_t result);
     void OnSessionClosed(int32_t sessionId);
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen);
@@ -67,6 +69,7 @@ private:
     bool CheckRecivedData(const std::string &message);
     void HandleSession(int32_t sessionId, const std::string &message);
     void Release();
+    void RunSessionStateCallback(const std::string &remoteDevId, const uint32_t sessionState);
 
 private:
     std::atomic<bool> isSessSerCreateFlag_ = false;
@@ -82,6 +85,7 @@ private:
     std::shared_ptr<DInputTransbaseSourceCallback> srcCallback_;
     std::shared_ptr<DInputTransbaseSinkCallback> sinkCallback_;
     std::shared_ptr<DInputSourceManagerCallback> srcMgrCallback_;
+    sptr<ISessionStateCallback> SessionStateCallback_;
 };
 
 } // namespace DistributedInput

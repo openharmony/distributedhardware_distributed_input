@@ -59,6 +59,8 @@ private:
     int32_t HandleSyncNodeInfoRemoteInput(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     int32_t HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
+    int32_t HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply);
+    int32_t HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply);
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
 private:
     std::atomic<bool> sourceManagerInitFlag_ {false};

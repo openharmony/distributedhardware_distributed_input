@@ -35,6 +35,7 @@
 #include "i_unregister_d_input_call_back.h"
 #include "i_input_node_listener.h"
 #include "i_simulation_event_listener.h"
+#include "i_session_state_callback.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -98,6 +99,8 @@ public:
         const std::string &nodeDesc) = 0;
     virtual int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
     virtual int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
+    virtual int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) = 0;
+    virtual int32_t UnregisterSessionStateCb() = 0;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

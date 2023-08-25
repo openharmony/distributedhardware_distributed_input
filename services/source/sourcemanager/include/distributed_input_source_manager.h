@@ -179,6 +179,10 @@ public:
         const std::string &nodeDesc) override;
     int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
+
+    int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) override;
+    int32_t UnregisterSessionStateCb() override;
+
     bool CheckRegisterParam(const std::string &devId, const std::string &dhId,
         const std::string &parameters, sptr<IRegisterDInputCallback> callback);
     bool CheckUnregisterParam(const std::string &devId, const std::string &dhId,
