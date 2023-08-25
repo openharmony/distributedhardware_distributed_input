@@ -1071,8 +1071,9 @@ void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::stri
             }
             DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
                    device->isShare, device->classes);
-            if ((device->identifier.descriptor == dhId_) &&
-                ((device->classes & INPUT_DEVICE_CLASS_CURSOR) != 0)) {
+            if ((device->identifier.descriptor == dhId_) && ((device->classes & INPUT_DEVICE_CLASS_CURSOR) != 0 ||
+                (device->classes & INPUT_DEVICE_CLASS_TOUCH) != 0 ||
+                ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0 && IsTouchPad(device->identifier)))) {
                 dhId = dhId_;
                 path = device->path;
                 return; // return First shared mouse
