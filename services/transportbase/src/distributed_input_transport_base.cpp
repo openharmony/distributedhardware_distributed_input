@@ -51,6 +51,8 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 const int32_t DINPUT_LINK_TYPE_MAX = 4;
+const int32_t SESSION_STATUS_OPENED = 0;
+const int32_t SESSION_STATUS_CLOSED = 1;
 static SessionAttribute g_sessionAttr = {
     .dataType = SessionType::TYPE_BYTES,
     .linkTypeNum = DINPUT_LINK_TYPE_MAX,
@@ -284,6 +286,29 @@ void DistributedInputTransportBase::RegisterSourceManagerCallback(
     srcMgrCallback_ = callback;
 }
 
+void DistributedInputTransportBase::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    DHLOGI("RegisterSessionStateCb");
+    SessionStateCallback_ = callback;
+}
+
+void DistributedInputTransportBase::UnregisterSessionStateCb()
+{
+    DHLOGI("UnregisterSessionStateCb");
+    SessionStateCallback_ = nullptr;
+}
+
+void DistributedInputTransportBase::RunSessionStateCallback(const std::string &remoteDevId,
+    const uint32_t sessionState)
+{
+    DHLOGI("RunSessionStateCallback start.");
+    if (SessionStateCallback_ != nullptr) {
+        SessionStateCallback_->OnResult(remoteDevId, sessionState);
+        return;
+    }
+    DHLOGI("RunSessionStateCallback SessionStateCallback_ is null.");
+}
+
 int32_t DistributedInputTransportBase::CountSession(const std::string &remoteDevId)
 {
     return remoteDevSessionMap_.count(remoteDevId);
@@ -346,7 +371,7 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_
         channelStatusMap_[peerDevId] = true;
         openSessionWaitCond_.notify_all();
     }
-
+    RunSessionStateCallback(peerDevId, SESSION_STATUS_OPENED);
     return DH_SUCCESS;
 }
 
@@ -354,6 +379,7 @@ void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)
 {
     std::string deviceId = GetDevIdBySessionId(sessionId);
     DHLOGI("OnSessionClosed, sessionId: %d, deviceId:%s", sessionId, GetAnonyString(deviceId).c_str());
+    RunSessionStateCallback(deviceId, SESSION_STATUS_CLOSED);
 
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr) {

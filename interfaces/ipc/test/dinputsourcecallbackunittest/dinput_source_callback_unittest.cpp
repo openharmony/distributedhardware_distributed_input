@@ -239,6 +239,19 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterSimula
     return DH_SUCCESS;
 }
 
+int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterSessionStateCb(
+    sptr<ISessionStateCallback> callback)
+{
+    (void)callback;
+    return DH_SUCCESS;
+}
+
+int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterSessionStateCb()
+{
+    return DH_SUCCESS;
+}
+
+        int32_t UnregisterSessionStateCb();
 void DInputSourceCallBackTest::TestDInputSourceCallBackStub::OnResult(const std::string &deviceId,
     const std::string &strJson)
 {

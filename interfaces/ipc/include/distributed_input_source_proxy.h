@@ -84,6 +84,9 @@ public:
     int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
 
+    int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) override;
+    int32_t UnregisterSessionStateCb() override;
+
 private:
     bool SendRequest(const uint32_t code, MessageParcel &data, MessageParcel &reply);
 

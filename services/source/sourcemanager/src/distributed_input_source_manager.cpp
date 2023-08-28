@@ -2064,6 +2064,21 @@ int32_t DistributedInputSourceManager::UnregisterSimulationEventListener(sptr<IS
     return DH_SUCCESS;
 }
 
+int32_t DistributedInputSourceManager::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    if (callback == nullptr) {
+        DHLOGE("RegisterSessionStateCb callback is null.");
+        return ERR_DH_INPUT_CLIENT_UNREGISTER_SESSION_STATE_FAIL;
+    }
+    DistributedInputTransportBase::GetInstance().RegisterSessionStateCb(callback);
+    return DH_SUCCESS;
+}
+int32_t DistributedInputSourceManager::UnregisterSessionStateCb()
+{
+    DistributedInputTransportBase::GetInstance().UnregisterSessionStateCb();
+    return DH_SUCCESS;
+}
+
 int32_t DistributedInputSourceManager::SyncNodeInfoRemoteInput(const std::string &userDevId, const std::string &dhId,
     const std::string &nodeDesc)
 {

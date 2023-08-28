@@ -702,6 +702,47 @@ int32_t DistributedInputSourceProxy::UnregisterSimulationEventListener(sptr<ISim
     return result;
 }
 
+int32_t DistributedInputSourceProxy::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        DHLOGE("RegisterSessionStateCb write token valid failed");
+        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    }
+
+    if (!data.WriteRemoteObject(callback->AsObject())) {
+        DHLOGE("RegisterSessionStateCb write callback failed");
+        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+    }
+
+    MessageParcel reply;
+    int32_t result = ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SESSION_STATE_CB),
+        data, reply);
+    if (ret) {
+        result = reply.ReadInt32();
+    }
+    return result;
+}
+
+int32_t DistributedInputSourceProxy::UnregisterSessionStateCb()
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        DHLOGE("UnregisterSessionStateCb write token valid failed");
+        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    }
+
+    MessageParcel reply;
+    int32_t result = ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
+    bool ret = SendRequest(static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SESSION_STATE_CB),
+        data, reply);
+    if (ret) {
+        result = reply.ReadInt32();
+    }
+    return result;
+}
+
 bool DistributedInputSourceProxy::SendRequest(const uint32_t code, MessageParcel &data, MessageParcel &reply)
 {
     sptr<IRemoteObject> remote = Remote();

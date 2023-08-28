@@ -107,6 +107,9 @@ public:
     int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
 
+    int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
+    int32_t UnregisterSessionStateCb();
+
     void CheckSourceRegisterCallback();
     void CheckWhiteListCallback();
     void CheckNodeMonitorCallback();

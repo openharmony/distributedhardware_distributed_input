@@ -30,6 +30,7 @@
 #include "i_start_stop_result_call_back.h"
 #include "i_unregister_d_input_call_back.h"
 #include "i_unprepare_d_input_call_back.h"
+#include "i_session_state_callback.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -80,6 +81,9 @@ public:
     static int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
     static int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
     static int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
+
+    static int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
+    static int32_t UnregisterSessionStateCb();
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

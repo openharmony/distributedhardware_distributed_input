@@ -77,6 +77,10 @@ void DistributedInputSourceStub::RegRespFunMap()
         &DistributedInputSourceStub::HandleUnregisterSimulationEventListener;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::SYNC_NODE_INFO_REMOTE_INPUT)] =
         &DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SESSION_STATE_CB)] =
+        &DistributedInputSourceStub::HandleRegisterSessionStateCb;
+    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SESSION_STATE_CB)] =
+        &DistributedInputSourceStub::HandleUnregisterSessionStateCb;
 }
 int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel &reply)
 {
@@ -518,6 +522,33 @@ int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(Mess
     if (!reply.WriteInt32(ret)) {
         DHLOGE("HandleUnregisterSimulationEventListener write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_SOURCE_STUB_UNREGISTER_SIMULATION_EVENT_LISTENER_FAIL;
+    }
+
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
+{
+    sptr<ISessionStateCallback> callback = iface_cast<ISessionStateCallback>(data.ReadRemoteObject());
+    if (callback == nullptr) {
+        DHLOGE("HandleRegisterSessionStateCb failed, callback is nullptr.");
+        return ERR_DH_INPUT_POINTER_NULL;
+    }
+    int32_t ret = RegisterSessionStateCb(callback);
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("HandleRegisterSessionStateCb write ret failed, ret = %d", ret);
+        return ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
+    }
+
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
+{
+    int32_t ret = UnregisterSessionStateCb();
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("HandleUnregisterSessionStateCb write ret failed, ret = %d", ret);
+        return ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
     }
 
     return DH_SUCCESS;

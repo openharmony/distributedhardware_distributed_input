@@ -796,6 +796,28 @@ sptr<IDistributedSinkInput> DistributedInputClient::GetRemoteDInput(const std::s
     }
     return iface_cast<IDistributedSinkInput>(object);
 }
+
+int32_t DistributedInputClient::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
+        DHLOGE("DinputStart client fail.");
+        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
+    }
+    if (callback == nullptr) {
+        DHLOGE("RegisterSessionStateCb callback is null.");
+        return ERR_DH_INPUT_CLIENT_REGISTER_SESSION_STATE_FAIL;
+    }
+    return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
+}
+
+int32_t DistributedInputClient::UnregisterSessionStateCb()
+{
+    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
+        DHLOGE("DinputStart client fail.");
+        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
+    }
+    return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSessionStateCb();
+}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

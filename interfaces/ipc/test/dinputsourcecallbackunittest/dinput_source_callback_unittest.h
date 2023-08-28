@@ -33,6 +33,7 @@
 #include "start_stop_d_inputs_call_back_stub.h"
 #include "start_stop_result_call_back_stub.h"
 #include "simulation_event_listener_stub.h"
+#include "register_session_state_callback_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -104,6 +105,8 @@ public:
             const std::string &nodeDesc);
         int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
         int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
+        int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
+        int32_t UnregisterSessionStateCb();
         void OnResult(const std::string &deviceId, const std::string &strJson);
         std::string deviceId_;
         std::string strJson_;
