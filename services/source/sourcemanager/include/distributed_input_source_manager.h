@@ -39,10 +39,14 @@
 #include "distributed_input_source_sa_cli_mgr.h"
 #include "distributed_input_source_stub.h"
 #include "dinput_state.h"
+#include "dinput_source_listener.h"
+#include "dinput_source_manager_event_handler.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+class DInputSourceListener;
+class DInputSourceManagerEventHandler;
 using EventRunner = OHOS::AppExecFwk::EventRunner;
 using EventHandler = OHOS::AppExecFwk::EventHandler;
 enum class ServiceSourceRunningState { STATE_NOT_START, STATE_RUNNING };
@@ -189,42 +193,6 @@ public:
         sptr<IUnregisterDInputCallback> callback);
     int32_t Dump(int32_t fd, const std::vector<std::u16string> &args) override;
 
-    class DInputSourceListener : public DInputSourceTransCallback {
-    public:
-        explicit DInputSourceListener(DistributedInputSourceManager *manager);
-        virtual ~DInputSourceListener();
-        void OnResponseRegisterDistributedHardware(const std::string deviceId, const std::string dhId,
-            bool result) override;
-        void OnResponsePrepareRemoteInput(const std::string deviceId, bool result, const std::string &object) override;
-        void OnResponseUnprepareRemoteInput(const std::string deviceId, bool result) override;
-        void OnResponseStartRemoteInput(const std::string deviceId, const uint32_t inputTypes, bool result) override;
-        void OnResponseStopRemoteInput(const std::string deviceId, const uint32_t inputTypes, bool result) override;
-        void OnResponseStartRemoteInputDhid(const std::string deviceId, const std::string &dhids, bool result) override;
-        void OnResponseStopRemoteInputDhid(const std::string deviceId, const std::string &dhids, bool result) override;
-        void OnResponseKeyState(const std::string deviceId, const std::string &dhid, const uint32_t type,
-            const uint32_t code, const uint32_t value) override;
-        void OnReceivedEventRemoteInput(const std::string deviceId, const std::string &event) override;
-        void OnResponseRelayPrepareRemoteInput(int32_t sessionId, const std::string &deviceId, bool result,
-            const std::string &object) override;
-        void OnResponseRelayUnprepareRemoteInput(int32_t sessionId, const std::string &deviceId, bool result) override;
-
-        void OnReceiveRelayPrepareResult(int32_t status, const std::string &srcId, const std::string &sinkId) override;
-        void OnReceiveRelayUnprepareResult(int32_t status, const std::string &srcId,
-            const std::string &sinkId) override;
-        void OnReceiveRelayStartDhidResult(int32_t status, const std::string &srcId, const std::string &sinkId,
-            const std::string &dhids) override;
-        void OnReceiveRelayStopDhidResult(int32_t status, const std::string &srcId, const std::string &sinkId,
-            const std::string &dhids) override;
-        void OnReceiveRelayStartTypeResult(int32_t status, const std::string &srcId, const std::string &sinkId,
-            uint32_t inputTypes) override;
-        void OnReceiveRelayStopTypeResult(int32_t status, const std::string &srcId, const std::string &sinkId,
-            uint32_t inputTypes) override;
-        void RecordEventLog(int64_t when, int32_t type, int32_t code, int32_t value, const std::string &path);
-
-    private:
-        DistributedInputSourceManager *sourceManagerObj_;
-    };
-
     class DInputSrcMgrListener : public DInputSourceManagerCallback {
     public:
         explicit DInputSrcMgrListener(DistributedInputSourceManager *manager);
@@ -234,43 +202,10 @@ public:
         DistributedInputSourceManager *sourceManagerObj_;
     };
 
-    class DInputSourceManagerEventHandler : public AppExecFwk::EventHandler {
-    public:
-        DInputSourceManagerEventHandler(const std::shared_ptr<AppExecFwk::EventRunner> &runner,
-            DistributedInputSourceManager *manager);
-        ~DInputSourceManagerEventHandler() override;
-
-        void ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event) override;
-    private:
-        void NotifyRegisterCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyUnregisterCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyPrepareCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyUnprepareCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyStartCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyStopCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyStartDhidCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyStopDhidCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyKeyStateCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyStartServerCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayPrepareCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayUnprepareCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayStartDhidCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayStopDhidCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayStartTypeCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayStopTypeCallback(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayPrepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event);
-        void NotifyRelayUnprepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event);
-
-        using SourceEventFunc = void (DInputSourceManagerEventHandler::*)(
-            const AppExecFwk::InnerEvent::Pointer &event);
-        std::map<int32_t, SourceEventFunc> eventFuncMap_;
-        DistributedInputSourceManager *sourceManagerObj_;
-    };
-
     class StartDScreenListener : public PublisherListenerStub {
     public:
-        StartDScreenListener();
-        ~StartDScreenListener() override;
+        StartDScreenListener() = default;
+        ~StartDScreenListener() = default;
         void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
@@ -280,8 +215,8 @@ public:
 
     class StopDScreenListener : public PublisherListenerStub {
     public:
-        StopDScreenListener();
-        ~StopDScreenListener() override;
+        StopDScreenListener() = default;
+        ~StopDScreenListener() = default;
         void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
@@ -291,7 +226,7 @@ public:
     class DeviceOfflineListener : public PublisherListenerStub {
     public:
         explicit DeviceOfflineListener(DistributedInputSourceManager *srcManagerContext);
-        ~DeviceOfflineListener() override;
+        ~DeviceOfflineListener() = default;
 
         void OnMessage(const DHTopic topic, const std::string &message) override;
 
@@ -305,7 +240,7 @@ public:
     class DScreenSourceSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
         DScreenSourceSvrRecipient(const std::string &srcDevId, const std::string &sinkDevId, const uint64_t srcWinId);
-        ~DScreenSourceSvrRecipient() override;
+        ~DScreenSourceSvrRecipient() = default;
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
     private:
@@ -348,6 +283,18 @@ public:
     uint32_t GetInputTypesMap(const std::string deviceId);
     uint32_t GetAllInputTypesMap();
     void ClearResourcesStatus();
+
+public:
+    void RunRelayPrepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t status);
+    void RunRelayUnprepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t status);
+    void RunRelayStartDhidCallback(const std::string &srcId, const std::string &sinkId, const int32_t status,
+        const std::string &dhids);
+    void RunRelayStopDhidCallback(const std::string &srcId, const std::string &sinkId, const int32_t status,
+        const std::string &dhids);
+    void RunRelayStartTypeCallback(const std::string &srcId, const std::string &sinkId, const int32_t status,
+        uint32_t inputTypes);
+    void RunRelayStopTypeCallback(const std::string &srcId, const std::string &sinkId, const int32_t status,
+        uint32_t inputTypes);
 
 private:
     struct DInputClientRegistInfo {
@@ -441,7 +388,7 @@ private:
 
     ServiceSourceRunningState serviceRunningState_ = ServiceSourceRunningState::STATE_NOT_START;
     DInputServerType isStartTrans_ = DInputServerType::NULL_SERVER_TYPE;
-    std::shared_ptr<DistributedInputSourceManager::DInputSourceListener> statuslistener_;
+    std::shared_ptr<DInputSourceListener> statuslistener_;
     std::shared_ptr<DistributedInputSourceManager::DInputSrcMgrListener> srcMgrListener_;
 
     std::vector<DInputClientRegistInfo> regCallbacks_;
@@ -482,17 +429,6 @@ private:
     std::mutex valMutex_;
     std::mutex syncNodeInfoMutex_;
     std::map<std::string, std::set<BeRegNodeInfo>> syncNodeInfoMap_;
-
-    void RunRelayPrepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status);
-    void RunRelayUnprepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status);
-    void RunRelayStartDhidCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status,
-        const std::string &dhids);
-    void RunRelayStopDhidCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status,
-        const std::string &dhids);
-    void RunRelayStartTypeCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status,
-        uint32_t inputTypes);
-    void RunRelayStopTypeCallback(const std::string &srcId, const std::string &sinkId, const int32_t &status,
-        uint32_t inputTypes);
 
     int32_t RelayStartRemoteInputByType(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback);

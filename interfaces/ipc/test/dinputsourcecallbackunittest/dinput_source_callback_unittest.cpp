@@ -251,7 +251,6 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterSessio
     return DH_SUCCESS;
 }
 
-        int32_t UnregisterSessionStateCb();
 void DInputSourceCallBackTest::TestDInputSourceCallBackStub::OnResult(const std::string &deviceId,
     const std::string &strJson)
 {

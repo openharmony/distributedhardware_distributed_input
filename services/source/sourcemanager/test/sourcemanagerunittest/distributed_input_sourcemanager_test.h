@@ -39,6 +39,7 @@
 #include "simulation_event_listener_stub.h"
 
 #include "dinput_source_trans_callback.h"
+#include "dinput_source_listener.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -156,7 +157,7 @@ public:
 private:
     int32_t StructTransJson(const InputDevice &pBuf, std::string &strDescriptor) const;
     DistributedInputSourceManager* sourceManager_;
-    std::shared_ptr<DistributedInputSourceManager::DInputSourceListener> statuslistener_;
+    std::shared_ptr<DInputSourceListener> statuslistener_;
     std::shared_ptr<DInputSourceTransCallback> callback_;
 };
 } // namespace DistributedInput
