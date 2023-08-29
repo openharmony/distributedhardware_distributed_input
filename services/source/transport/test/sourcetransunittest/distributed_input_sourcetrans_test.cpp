@@ -524,8 +524,8 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput03, te
     std::string remoteId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[remoteId] = sessionId;
     DistributedInputSourceManager srcMgr(4810, false);
-    std::shared_ptr<DistributedInputSourceManager::DInputSourceListener> srcListener =
-        std::make_shared<DistributedInputSourceManager::DInputSourceListener>(&srcMgr);
+    std::shared_ptr<DInputSourceListener> srcListener =
+        std::make_shared<DInputSourceListener>(&srcMgr);
     DistributedInputSourceTransport::GetInstance().callback_ = srcListener;
     DistributedInputSourceTransport::GetInstance().NotifyResponsePrepareRemoteInput(sessionId, recMsg);
     std::string message(MSG_MAX_SIZE + 1, 'a');

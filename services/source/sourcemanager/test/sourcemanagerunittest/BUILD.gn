@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_input/distributedinput.gni")
+import("../../../../../distributedinput.gni")
 
 module_out_path = "distributed_input/source_manager"
 
@@ -86,6 +85,8 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${services_source_path}/inputinject/src/distributed_input_inject.cpp",
     "${services_source_path}/inputinject/src/distributed_input_node_manager.cpp",
     "${services_source_path}/inputinject/src/virtual_device.cpp",
+    "${services_source_path}/sourcemanager/src/dinput_source_listener.cpp",
+    "${services_source_path}/sourcemanager/src/dinput_source_manager_event_handler.cpp",
     "${services_source_path}/sourcemanager/src/distributed_input_source_event_handler.cpp",
     "${services_source_path}/sourcemanager/src/distributed_input_source_manager.cpp",
     "${services_source_path}/sourcemanager/src/distributed_input_source_sa_cli_mgr.cpp",

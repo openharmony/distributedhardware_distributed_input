@@ -569,7 +569,7 @@ int32_t DistributedInputSourceStub::OnRemoteRequest(
     } else {
         auto iter = memberFuncMap_.find(code);
         if (iter != memberFuncMap_.end()) {
-            DistributedInputSourceFunc &func = iter->second;
+            const DistributedInputSourceFunc &func = iter->second;
             return (this->*func)(data, reply);
         }
     }

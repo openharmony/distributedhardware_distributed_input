@@ -77,6 +77,8 @@ ohos_shared_library("libdinput_source") {
     "${ipc_path}/src/unprepare_d_input_call_back_stub.cpp",
     "${ipc_path}/src/unregister_d_input_call_back_proxy.cpp",
     "${ipc_path}/src/unregister_d_input_call_back_stub.cpp",
+    "src/dinput_source_listener.cpp",
+    "src/dinput_source_manager_event_handler.cpp",
     "src/distributed_input_source_event_handler.cpp",
     "src/distributed_input_source_manager.cpp",
     "src/distributed_input_source_sa_cli_mgr.cpp",

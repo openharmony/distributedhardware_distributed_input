@@ -49,7 +49,7 @@ namespace {
 void DistributedInputSourceManagerTest::SetUp()
 {
     sourceManager_ = new DistributedInputSourceManager(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, true);
-    statuslistener_ = std::make_shared<DistributedInputSourceManager::DInputSourceListener>(sourceManager_);
+    statuslistener_ = std::make_shared<DInputSourceListener>(sourceManager_);
     DistributedInputSourceManagerTest::RegisterSourceRespCallback(statuslistener_);
 }
 
