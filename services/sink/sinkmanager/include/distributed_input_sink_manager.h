@@ -34,6 +34,7 @@
 #include "system_ability_status_change_stub.h"
 
 #include "constants_dinput.h"
+#include "dinput_sink_manager_callback.h"
 #include "dinput_sink_trans_callback.h"
 #include "distributed_input_sink_stub.h"
 #include "distributed_input_sink_event_handler.h"
@@ -52,6 +53,15 @@ class DistributedInputSinkManager : public SystemAbility, public DistributedInpu
 public:
     DistributedInputSinkManager(int32_t saId, bool runOnCreate);
     ~DistributedInputSinkManager() override;
+
+    class DInputSinkMgrListener : public DInputSinkManagerCallback {
+    public:
+        explicit DInputSinkMgrListener(DistributedInputSinkManager *manager);
+        virtual ~DInputSinkMgrListener();
+        void ResetSinkMgrResStatus() override;
+    private:
+        DistributedInputSinkManager *sinkManagerObj_;
+    };
 
     class DInputSinkListener : public DInputSinkTransCallback {
     public:
@@ -150,6 +160,8 @@ public:
 
     void QueryLocalWhiteList(nlohmann::json &jsonStr);
 
+    void ClearResourcesStatus();
+
 private:
     void CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo);
     void CallBackScreenInfoChange();
@@ -158,6 +170,7 @@ private:
     ServiceSinkRunningState serviceRunningState_ = ServiceSinkRunningState::STATE_NOT_START;
     DInputServerType isStartTrans_ = DInputServerType::NULL_SERVER_TYPE;
     std::shared_ptr<DistributedInputSinkManager::DInputSinkListener> statuslistener_;
+    std::shared_ptr<DistributedInputSinkManager::DInputSinkMgrListener> sinkMgrListener_;
     std::set<sptr<IGetSinkScreenInfosCallback>> getSinkScreenInfosCallbacks_;
 
     std::shared_ptr<AppExecFwk::EventRunner> runner_;

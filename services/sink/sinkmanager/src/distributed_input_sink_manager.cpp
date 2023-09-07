@@ -32,6 +32,7 @@
 #include "distributed_input_collector.h"
 #include "distributed_input_sink_switch.h"
 #include "distributed_input_sink_transport.h"
+#include "distributed_input_transport_base.h"
 
 #include "dinput_context.h"
 #include "dinput_errcode.h"
@@ -57,6 +58,28 @@ DistributedInputSinkManager::~DistributedInputSinkManager()
 {
     DHLOGI("DistributedInputSinkManager dtor!");
     projectWindowListener_ = nullptr;
+}
+
+DistributedInputSinkManager::DInputSinkMgrListener::DInputSinkMgrListener(DistributedInputSinkManager *manager)
+{
+    sinkManagerObj_ = manager;
+    DHLOGI("DInputSinkMgrListener init.");
+}
+
+DistributedInputSinkManager::DInputSinkMgrListener::~DInputSinkMgrListener()
+{
+    sinkManagerObj_ = nullptr;
+    DHLOGI("DInputSinkMgrListener destory.");
+}
+
+void DistributedInputSinkManager::DInputSinkMgrListener::ResetSinkMgrResStatus()
+{
+    DHLOGI("DInputSinkMgrListener ResetSinkMgrResStatus.");
+    if (sinkManagerObj_ == nullptr) {
+        DHLOGE("ResetSinkMgrResStatus sinkManagerObj is null.");
+        return;
+    }
+    sinkManagerObj_->ClearResourcesStatus();
 }
 
 DistributedInputSinkManager::DInputSinkListener::DInputSinkListener(DistributedInputSinkManager *manager)
@@ -93,6 +116,13 @@ void DistributedInputSinkManager::QueryLocalWhiteList(nlohmann::json &jsonStr)
     nlohmann::json filterMsg(vecFilter);
     std::string object = filterMsg.dump();
     jsonStr[DINPUT_SOFTBUS_KEY_WHITE_LIST] = object;
+}
+
+void DistributedInputSinkManager::ClearResourcesStatus()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    sharingDhIdsMap_.clear();
+    sharingDhIds_.clear();
 }
 
 void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
@@ -611,6 +641,9 @@ int32_t DistributedInputSinkManager::Init()
 
     statuslistener_ = std::make_shared<DInputSinkListener>(this);
     DistributedInputSinkTransport::GetInstance().RegistSinkRespCallback(statuslistener_);
+
+    sinkMgrListener_ = std::make_shared<DInputSinkMgrListener>(this);
+    DistributedInputTransportBase::GetInstance().RegisterSinkManagerCallback(sinkMgrListener_);
 
     serviceRunningState_ = ServiceSinkRunningState::STATE_RUNNING;
 
