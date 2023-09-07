@@ -30,6 +30,7 @@
 #include "nlohmann/json.hpp"
 #include "securec.h"
 
+#include "dinput_sink_manager_callback.h"
 #include "dinput_source_manager_callback.h"
 #include "dinput_transbase_source_callback.h"
 #include "dinput_transbase_sink_callback.h"
@@ -51,6 +52,7 @@ public:
     void RegisterSrcHandleSessionCallback(std::shared_ptr<DInputTransbaseSourceCallback> callback);
     void RegisterSinkHandleSessionCallback(std::shared_ptr<DInputTransbaseSinkCallback> callback);
     void RegisterSourceManagerCallback(std::shared_ptr<DInputSourceManagerCallback> callback);
+    void RegisterSinkManagerCallback(std::shared_ptr<DInputSinkManagerCallback> callback);
     void RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
     void UnregisterSessionStateCb();
     int32_t OnSessionOpened(int32_t sessionId, int32_t result);
@@ -85,6 +87,7 @@ private:
     std::shared_ptr<DInputTransbaseSourceCallback> srcCallback_;
     std::shared_ptr<DInputTransbaseSinkCallback> sinkCallback_;
     std::shared_ptr<DInputSourceManagerCallback> srcMgrCallback_;
+    std::shared_ptr<DInputSinkManagerCallback> sinkMgrCallback_;
     sptr<ISessionStateCallback> SessionStateCallback_;
 };
 
