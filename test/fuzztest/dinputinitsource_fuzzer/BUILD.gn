@@ -18,7 +18,7 @@ import("../../../distributedinput.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DinputInitSourceFuzzTest") {
-  module_out_path = "distributed_input/system"
+  module_out_path = fuzz_test_path
 
   fuzz_config_file =
       "${distributedinput_path}/test/fuzztest/dinputinitsource_fuzzer"
