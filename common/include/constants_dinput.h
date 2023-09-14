@@ -80,7 +80,7 @@ namespace DistributedInput {
 
     constexpr int32_t SESSION_WAIT_TIMEOUT_SECOND = 5;
 
-    constexpr int32_t EPOLL_WAITTIME = -1;
+    constexpr int32_t EPOLL_WAITTIME = 100;
 
     /* The input device is a keyboard or has buttons. */
     constexpr uint32_t INPUT_DEVICE_CLASS_KEYBOARD      = 0x00000001;
