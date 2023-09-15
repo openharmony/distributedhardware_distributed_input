@@ -63,13 +63,7 @@ static SessionAttribute g_sessionAttr = {
         LINK_TYPE_BR
     }
 };
-
-DistributedInputTransportBase &DistributedInputTransportBase::GetInstance()
-{
-    static DistributedInputTransportBase instance;
-    return instance;
-}
-
+IMPLEMENT_SINGLE_INSTANCE(DistributedInputTransportBase);
 DistributedInputTransportBase::~DistributedInputTransportBase()
 {
     DHLOGI("Release Transport Session");

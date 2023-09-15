@@ -29,6 +29,7 @@
 #include "event_handler.h"
 #include "nlohmann/json.hpp"
 #include "securec.h"
+#include "single_instance.h"
 
 #include "dinput_sink_manager_callback.h"
 #include "dinput_source_manager_callback.h"
@@ -40,12 +41,9 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DistributedInputTransportBase {
+    DECLARE_SINGLE_INSTANCE_BASE(DistributedInputTransportBase);
 public:
-    static DistributedInputTransportBase &GetInstance();
-    ~DistributedInputTransportBase();
-
     int32_t Init();
-
     int32_t StartSession(const std::string &remoteDevId);
     void StopSession(const std::string &remoteDevId);
 
@@ -67,6 +65,8 @@ public:
     int32_t SendMsg(int32_t sessionId, std::string &message);
 
 private:
+    DistributedInputTransportBase() = default;
+    ~DistributedInputTransportBase();
     int32_t CheckDeviceSessionState(const std::string &remoteDevId);
     bool CheckRecivedData(const std::string &message);
     void HandleSession(int32_t sessionId, const std::string &message);

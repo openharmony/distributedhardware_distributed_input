@@ -103,7 +103,7 @@ size_t InputHub::StartCollectInputEvents(RawEvent *buffer, size_t bufferSize)
             ScanInputDevices(DEVICE_PATH);
         }
         {
-            std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+            std::lock_guard<std::mutex> deviceLock(devicesMutex_);
             while (!openingDevices_.empty()) {
                 std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
                 openingDevices_.pop_back();
@@ -156,7 +156,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
     RawEvent* event = buffer;
     size_t capacity = bufferSize;
     while (pendingEventIndex_ < pendingEventCount_) {
-        std::unique_lock<std::mutex> my_lock(operationMutex_);
+        std::lock_guard<std::mutex> my_lock(operationMutex_);
         const struct epoll_event& eventItem = mPendingEventItems[pendingEventIndex_++];
         if (eventItem.data.fd == iNotifyFd_) {
             if (eventItem.events & EPOLLIN) {
@@ -265,7 +265,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
     size_t capacity = bufferSize;
     // Report any devices that had last been added/removed.
     {
-        std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+        std::lock_guard<std::mutex> deviceLock(devicesMutex_);
         for (auto it = closingDevices_.begin(); it != closingDevices_.end();) {
             std::unique_ptr<Device> device = std::move(*it);
             DHLOGI("Reporting device closed: id=%s, name=%s\n",
@@ -287,7 +287,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
     }
 
     {
-        std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+        std::lock_guard<std::mutex> deviceLock(devicesMutex_);
         while (!openingDevices_.empty()) {
             std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
             openingDevices_.pop_back();
@@ -350,7 +350,7 @@ void InputHub::StopCollectInputHandler()
 void InputHub::GetDeviceHandler()
 {
     while (pendingEventIndex_ < pendingEventCount_) {
-        std::unique_lock<std::mutex> my_lock(operationMutex_);
+        std::lock_guard<std::mutex> my_lock(operationMutex_);
         const struct epoll_event& eventItem = mPendingEventItems[pendingEventIndex_++];
         if (eventItem.data.fd == iNotifyFd_) {
             if (eventItem.events & EPOLLIN) {
@@ -411,9 +411,9 @@ int32_t InputHub::RefreshEpollItem(bool isSleep)
 
 std::vector<InputDevice> InputHub::GetAllInputDevices()
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     std::vector<InputDevice> vecDevice;
-    for (const auto& [id, device] : devices_) {
+    for (const auto &[id, device] : devices_) {
         vecDevice.push_back(device->identifier);
     }
     return vecDevice;
@@ -422,17 +422,17 @@ std::vector<InputDevice> InputHub::GetAllInputDevices()
 void InputHub::ScanInputDevices(const std::string &dirName)
 {
     DHLOGI("ScanInputDevices enter, dirName %s.", dirName.c_str());
-    std::vector<std::string> vecInputDevPath;
-    ScanInputDevicesPath(dirName, vecInputDevPath);
-    for (const auto &tempPath: vecInputDevPath) {
+    std::vector<std::string> inputDevPaths;
+    ScanInputDevicesPath(dirName, inputDevPaths);
+    for (const auto &tempPath: inputDevPaths) {
         OpenInputDeviceLocked(tempPath);
     }
 }
 
 bool InputHub::IsDeviceRegistered(const std::string &devicePath)
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (const auto& [deviceId, device] : devices_) {
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &[deviceId, device] : devices_) {
         if (device->path == devicePath) {
             return true; // device was already registered
         }
@@ -446,7 +446,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
         return DH_SUCCESS;
     }
 
-    std::unique_lock<std::mutex> my_lock(operationMutex_);
+    std::lock_guard<std::mutex> my_lock(operationMutex_);
     DHLOGI("Opening device: %s", devicePath.c_str());
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
@@ -823,7 +823,7 @@ int32_t InputHub::RegisterFdForEpoll(int fd)
 
 void InputHub::AddDeviceLocked(std::unique_ptr<Device> device)
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     openingDevices_.push_back(std::move(device));
 }
 
@@ -836,7 +836,7 @@ void InputHub::CloseDeviceLocked(Device &device)
     UnregisterDeviceFromEpollLocked(device);
     device.Close();
     {
-        std::unique_lock<std::mutex> devicesLock(devicesMutex_);
+        std::lock_guard<std::mutex> devicesLock(devicesMutex_);
         closingDevices_.push_back(std::move(devices_[device.id]));
         devices_.erase(device.id);
     }
@@ -936,7 +936,7 @@ void InputHub::CloseDeviceByPathLocked(const std::string &devicePath)
 void InputHub::CloseAllDevicesLocked()
 {
     DHLOGI("Close All Devices");
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     while (!devices_.empty()) {
         CloseDeviceForAllLocked(*(devices_.begin()->second));
     }
@@ -944,8 +944,8 @@ void InputHub::CloseAllDevicesLocked()
 
 InputHub::Device* InputHub::GetDeviceByPathLocked(const std::string &devicePath)
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (const auto& [id, device] : devices_) {
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &[id, device] : devices_) {
         if (device->path == devicePath) {
             return device.get();
         }
@@ -955,8 +955,8 @@ InputHub::Device* InputHub::GetDeviceByPathLocked(const std::string &devicePath)
 
 InputHub::Device* InputHub::GetDeviceByFdLocked(int fd)
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (const auto& [id, device] : devices_) {
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &[id, device] : devices_) {
         if (device->fd == fd) {
             return device.get();
         }
@@ -967,8 +967,8 @@ InputHub::Device* InputHub::GetDeviceByFdLocked(int fd)
 InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
 {
     DHLOGI("GetSupportDeviceByFd fd: %d", fd);
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (const auto& [id, device] : devices_) {
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &[id, device] : devices_) {
         if (device != nullptr && device->fd == fd) {
             DHLOGI("GetSupportDeviceByFd device: %d, fd: %d, path: %s, dhId: %s, classes=0x%x", id, device->fd,
                 device->path.c_str(), GetAnonyString(device->identifier.descriptor).c_str(), device->classes);
@@ -1023,7 +1023,7 @@ AffectDhIds InputHub::SetSupportInputType(bool enabled, const uint32_t &inputTyp
     AffectDhIds affDhIds;
     inputTypes_ = inputTypes;
     DHLOGI("SetSupportInputType: inputTypes=0x%x,", inputTypes_.load());
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device->classes & inputTypes_) {
             device->isShare = enabled;
@@ -1038,7 +1038,7 @@ AffectDhIds InputHub::SetSupportInputType(bool enabled, const uint32_t &inputTyp
 AffectDhIds InputHub::SetSharingDevices(bool enabled, std::vector<std::string> dhIds)
 {
     AffectDhIds affDhIds;
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     DHLOGI("SetSharingDevices start");
     for (auto dhId : dhIds) {
         DHLOGI("SetSharingDevices dhId: %s, size: %d, enabled: %d", GetAnonyString(dhId).c_str(), devices_.size(),
@@ -1059,11 +1059,12 @@ AffectDhIds InputHub::SetSharingDevices(bool enabled, std::vector<std::string> d
     return affDhIds;
 }
 
-void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::string &path, std::string &dhId)
+void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,
+    std::string &sharedMouseDhId)
 {
-    DHLOGI("GetShareMousePathByDhId: devices_.size:%d,", devices_.size());
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (auto dhId_ : dhIds) {
+    DHLOGI("GetSharedMousePathByDhId: devices_.size:%d,", devices_.size());
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
             if (device == nullptr) {
                 DHLOGE("device is nullptr");
@@ -1071,23 +1072,23 @@ void InputHub::GetShareMousePathByDhId(std::vector<std::string> dhIds, std::stri
             }
             DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
                    device->isShare, device->classes);
-            if ((device->identifier.descriptor == dhId_) && ((device->classes & INPUT_DEVICE_CLASS_CURSOR) != 0 ||
+            if ((device->identifier.descriptor == dhId) && ((device->classes & INPUT_DEVICE_CLASS_CURSOR) != 0 ||
                 (device->classes & INPUT_DEVICE_CLASS_TOUCH) != 0 ||
                 ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0 && IsTouchPad(device->identifier)))) {
-                dhId = dhId_;
-                path = device->path;
+                sharedMouseDhId = dhId;
+                sharedMousePath = device->path;
                 return; // return First shared mouse
             }
         }
     }
 }
 
-void InputHub::GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths,
-    std::vector<std::string> &shareDhIds)
+void InputHub::GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+    std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds)
 {
-    DHLOGI("GetShareKeyboardPathsByDhIds: devices_.size:%d,", devices_.size());
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
-    for (auto dhId_ : dhIds) {
+    DHLOGI("GetSharedKeyboardPathsByDhIds: devices_.size:%d,", devices_.size());
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
             if (device == nullptr) {
                 DHLOGE("device is nullptr");
@@ -1095,10 +1096,10 @@ void InputHub::GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds, std:
             }
             DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
                    device->isShare, device->classes);
-            if ((device->identifier.descriptor == dhId_) &&
+            if ((device->identifier.descriptor == dhId) &&
                 ((device->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
-                shareDhIds.push_back(dhId_);
-                shareDhidsPaths.push_back(device->path);
+                sharedKeyboardDhIds.push_back(dhId);
+                sharedKeyboardPaths.push_back(device->path);
             }
         }
     }
@@ -1120,7 +1121,7 @@ void InputHub::GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t,
         dhType |= INPUT_DEVICE_CLASS_TOUCH | INPUT_DEVICE_CLASS_TOUCH_MT;
     }
 
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device->classes & dhType) {
             datas.insert(std::pair<int32_t, std::string>(device->fd, device->identifier.descriptor));
@@ -1131,7 +1132,7 @@ void InputHub::GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t,
 void InputHub::GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas)
 {
     for (auto dhId : dhidsVec) {
-        std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+        std::lock_guard<std::mutex> deviceLock(devicesMutex_);
         for (const auto &[id, device] : devices_) {
             if (device->identifier.descriptor == dhId) {
                 datas.insert(std::pair<int32_t, std::string>(device->fd, dhId));
@@ -1142,7 +1143,7 @@ void InputHub::GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<
 
 bool InputHub::IsAllDevicesStoped()
 {
-    std::unique_lock<std::mutex> deviceLock(devicesMutex_);
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[dhId, isShared] : sharedDHIds_) {
         DHLOGI("the dhId: %s, isShared: %d", GetAnonyString(dhId).c_str(), isShared);
         if (isShared) {
@@ -1250,7 +1251,7 @@ bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsI
 {
     auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
 
-    for (const auto& [id, sinkInfo] : sinkInfos) {
+    for (const auto &[id, sinkInfo] : sinkInfos) {
         auto info = sinkInfo.transformInfo;
         if ((absInfo.absX >= info.sinkWinPhyX) && (absInfo.absX <= (info.sinkWinPhyX + info.sinkProjPhyWidth))
             && (absInfo.absY >= info.sinkWinPhyY) && (absInfo.absY <= (info.sinkWinPhyY + info.sinkProjPhyHeight))) {

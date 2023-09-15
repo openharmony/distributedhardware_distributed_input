@@ -39,11 +39,11 @@ public:
     bool DoIoctl(int32_t fd, int32_t request, const uint32_t value);
     bool CreateKey(const InputDevice &inputDevice);
     void SetABSInfo(struct uinput_user_dev &inputUserDev, const InputDevice &inputDevice);
-    bool SetPhys(const std::string deviceName, std::string dhId);
+    bool SetPhys(const std::string &deviceName, const std::string &dhId);
     bool SetUp(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId);
     bool InjectInputEvent(const input_event &event);
-    void SetNetWorkId(const std::string netWorkId);
-    void SetPath(const std::string path);
+    void SetNetWorkId(const std::string &netWorkId);
+    void SetPath(const std::string &path);
     std::string GetNetWorkId();
     std::string GetPath();
     uint16_t GetClasses();
@@ -55,7 +55,7 @@ private:
     int32_t fd_ = -1;
     std::string deviceName_;
     std::string netWorkId_;
-    std::string path_ {""};
+    std::string path_;
     const uint16_t busType_;
     const uint16_t vendorId_;
     const uint16_t productId_;
