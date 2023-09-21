@@ -55,6 +55,8 @@ public:
         const std::string &sinkNodeDesc);
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
+    void UpdateSpecEventFirstStatus(bool status);
+    void UpdateSpecEventState(DhidState state);
 
 private:
     DistributedInputInject();

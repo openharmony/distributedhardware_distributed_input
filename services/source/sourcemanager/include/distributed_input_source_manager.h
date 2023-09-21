@@ -283,6 +283,7 @@ public:
     uint32_t GetInputTypesMap(const std::string deviceId);
     uint32_t GetAllInputTypesMap();
     void ClearResourcesStatus();
+    void UpdateSpecEventStatus();
 
 public:
     void RunRelayPrepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t status);

@@ -276,6 +276,26 @@ void DistributedInputInject::NotifyNodeMgrScanVirNode(const std::string &dhId)
     }
     inputNodeManager_->NotifyNodeMgrScanVirNode(dhId);
 }
+
+void DistributedInputInject::UpdateSpecEventFirstStatus(bool status)
+{
+    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
+    if (inputNodeManager_ == nullptr) {
+        DHLOGE("inputNodeManager is nullptr");
+        return;
+    }
+    inputNodeManager_->UpdateSpecEventFirstStatus(status);
+}
+
+void DistributedInputInject::UpdateSpecEventState(DhidState state)
+{
+    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
+    if (inputNodeManager_ == nullptr) {
+        DHLOGE("inputNodeManager is nullptr");
+        return;
+    }
+    inputNodeManager_->UpdateSpecEventState(state);
+}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

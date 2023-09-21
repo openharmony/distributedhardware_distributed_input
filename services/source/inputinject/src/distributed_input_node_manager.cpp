@@ -32,7 +32,8 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
-    isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
+    isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE),
+    isFirst_(false), specEventState_(DhidState::THROUGH_OUT)
 {
     DHLOGI("DistributedInputNodeManager ctor");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
@@ -177,6 +178,18 @@ void DistributedInputNodeManager::DInputNodeManagerEventHandler::ScanAllNode(
     nlohmann::json innerMsg = *(it);
     std::string devicedhId = innerMsg[INPUT_NODE_DHID];
     nodeManagerObj_->ScanSinkInputDevices(devicedhId);
+}
+
+void DistributedInputNodeManager::UpdateSpecEventFirstStatus(bool status)
+{
+    DHLOGI("UpdateSpecEventFirstStatus enter, status is %d", status);
+    isFirst_.store(status);
+}
+
+void DistributedInputNodeManager::UpdateSpecEventState(DhidState state)
+{
+    DHLOGI("UpdateSpecEventState enter.");
+    specEventState_ = state;
 }
 
 void DistributedInputNodeManager::NotifyNodeMgrScanVirNode(const std::string &dhId)
@@ -435,6 +448,18 @@ void DistributedInputNodeManager::InjectEvent()
     DHLOGI("end");
 }
 
+void InjectInputEvent(const std::string &dhId, const struct input_event &event)
+{
+    VirtualDevice* device = nullptr;
+    if (GetDevice(dhId, device) < 0) {
+        DHLOGE("could not find the device");
+        return;
+    }
+    if (device != nullptr) {
+        device->InjectInputEvent(event);
+    }
+}
+
 void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent)
 {
     std::string dhId = rawEvent->descriptor;
@@ -445,14 +470,33 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
     };
     DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
         GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
-    VirtualDevice* device = nullptr;
-    if (GetDevice(dhId, device) < 0) {
-        DHLOGE("could not find the device");
-        return;
+    if (event.type == EV_KEY) {
+        if (event.value == KEY_UP_STATE) {
+            UpdateSpecEventFirstStatus(false);
+        }
+
+        if (event.value == KEY_LONGPRESS_STATE && !isFirst_.load() && specEventState_ == DhidState::THROUGH_IN) {
+            struct input_event inputEvent = {
+                .type = event.type,
+                .code = event.code,
+                .value = KEY_DOWN_STATE
+            };
+            DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
+                GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
+            InjectInputEvent(dhId, inputEvent);
+
+            inputEvent = {
+                .type = KEY_OTHER_TYPE,
+                .code = 0,
+                .value = 0
+            };
+            DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
+                GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
+            InjectInputEvent(dhId, inputEvent);
+            UpdateSpecEventFirstStatus(true);
+        }
     }
-    if (device != nullptr) {
-        device->InjectInputEvent(event);
-    }
+    InjectInputEvent(dhId, event);
 }
 
 int32_t DistributedInputNodeManager::GetDeviceInfo(std::string &deviceId)
