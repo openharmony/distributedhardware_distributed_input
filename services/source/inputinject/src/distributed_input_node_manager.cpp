@@ -448,7 +448,7 @@ void DistributedInputNodeManager::InjectEvent()
     DHLOGI("end");
 }
 
-void InjectInputEvent(const std::string &dhId, const struct input_event &event)
+void DistributedInputNodeManager::InjectInputEvent(const std::string &dhId, const struct input_event &event)
 {
     VirtualDevice* device = nullptr;
     if (GetDevice(dhId, device) < 0) {
