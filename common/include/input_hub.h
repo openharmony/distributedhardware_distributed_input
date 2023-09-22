@@ -52,9 +52,10 @@ public:
     AffectDhIds SetSharingDevices(bool enabled, std::vector<std::string> dhIds);
     void GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &datas);
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
-    void GetShareMousePathByDhId(std::vector<std::string> dhIds, std::string &path, std::string &dhId);
-    void GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds, std::vector<std::string> &shareDhidsPaths,
-        std::vector<std::string> &shareDhIds);
+    void GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,
+        std::string &sharedMouseDhId);
+    void GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+        std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds);
     bool IsAllDevicesStoped();
     void ScanInputDevices(const std::string &dirName);
 

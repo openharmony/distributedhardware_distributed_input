@@ -34,7 +34,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-const uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
+constexpr uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
 const std::string INPUT_NODE_DHID = "dhId";
 class DistributedInputNodeManager {
 public:
@@ -59,10 +59,10 @@ public:
     void ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent);
 
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
-        std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds);
+        std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds);
     void NotifyNodeMgrScanVirNode(const std::string &dhId);
     void UpdateSpecEventFirstStatus(bool status);
-    void UpdateSpecEventState(DhidState state);
+    void UpdateSpecEventState(DhIdState state);
     void InjectInputEvent(const std::string &dhId, const struct input_event &event);
 
     class DInputNodeManagerEventHandler : public AppExecFwk::EventHandler {
@@ -92,7 +92,7 @@ private:
     void OpenInputDevice(const std::string &devicePath, const std::string &dhId);
     bool IsVirtualDev(int fd);
     bool GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath);
-    void SetPathForDevMap(std::string &dhId, const std::string &devicePath);
+    void SetPathForDevMap(const std::string &dhId, const std::string &devicePath);
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
@@ -109,7 +109,7 @@ private:
     std::once_flag callOnceFlag_;
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
     std::atomic<bool> isFirst_;
-    DhidState specEventState_;
+    DhIdState specEventState_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -560,7 +560,7 @@ bool DistributedInputClient::IsNeedFilterOut(const std::string &deviceId, const 
 bool DistributedInputClient::IsTouchEventNeedFilterOut(const TouchScreenEvent &event)
 {
     std::lock_guard<std::mutex> lock(operationMutex_);
-    for (const auto& info : screenTransInfos) {
+    for (const auto &info : screenTransInfos) {
         DHLOGI("sinkProjPhyWidth: %d sinkProjPhyHeight: %d", info.sinkProjPhyWidth, info.sinkProjPhyHeight);
         if ((event.absX >= info.sinkWinPhyX) && (event.absX <= (info.sinkWinPhyX + info.sinkProjPhyWidth))
             && (event.absY >= info.sinkWinPhyY)  && (event.absY <= (info.sinkWinPhyY + info.sinkProjPhyHeight))) {

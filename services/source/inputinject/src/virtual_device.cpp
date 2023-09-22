@@ -101,7 +101,7 @@ void VirtualDevice::SetABSInfo(struct uinput_user_dev &inputUserDev, const Input
     }
 }
 
-bool VirtualDevice::SetPhys(const std::string deviceName, std::string dhId)
+bool VirtualDevice::SetPhys(const std::string &deviceName, const std::string &dhId)
 {
     std::string phys;
     phys.append(deviceName).append(pid_).append("/").append(pid_).append("|")
@@ -179,13 +179,13 @@ bool VirtualDevice::InjectInputEvent(const input_event &event)
     return true;
 }
 
-void VirtualDevice::SetNetWorkId(const std::string netWorkId)
+void VirtualDevice::SetNetWorkId(const std::string &netWorkId)
 {
     DHLOGI("SetNetWorkId %s\n", GetAnonyString(netWorkId).c_str());
     netWorkId_ = netWorkId;
 }
 
-void VirtualDevice::SetPath(const std::string path)
+void VirtualDevice::SetPath(const std::string &path)
 {
     path_ = path;
 }

@@ -204,24 +204,24 @@ AffectDhIds DistributedInputCollector::SetSharingDhIds(bool enabled, std::vector
     return inputHub_->SetSharingDevices(enabled, dhIds);
 }
 
-void DistributedInputCollector::GetMouseNodePath(
-    std::vector<std::string> dhIds, std::string &mouseNodePath, std::string &dhid)
+void DistributedInputCollector::GetMouseNodePath(const std::vector<std::string> &dhIds,
+    std::string &mouseNodePath, std::string &dhId)
 {
     if (inputHub_ == nullptr) {
         DHLOGE("inputHub is nullptr!");
         return;
     }
-    inputHub_->GetShareMousePathByDhId(dhIds, mouseNodePath, dhid);
+    inputHub_->GetSharedMousePathByDhId(dhIds, mouseNodePath, dhId);
 }
 
-void DistributedInputCollector::GetShareKeyboardPathsByDhIds(std::vector<std::string> dhIds,
-    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+void DistributedInputCollector::GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
+    std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds)
 {
     if (inputHub_ == nullptr) {
         DHLOGE("inputHub is nullptr!");
         return;
     }
-    inputHub_->GetShareKeyboardPathsByDhIds(dhIds, shareDhidsPaths, shareDhIds);
+    inputHub_->GetSharedKeyboardPathsByDhIds(dhIds, sharedKeyboardPaths, sharedKeyboardDhIds);
 }
 
 bool DistributedInputCollector::IsAllDevicesStoped()

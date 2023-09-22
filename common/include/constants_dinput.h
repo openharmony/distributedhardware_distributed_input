@@ -328,7 +328,7 @@ namespace DistributedInput {
     * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
     * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
     */
-    enum class DhidState {
+    enum class DhIdState {
         THROUGH_IN = 0,
         THROUGH_OUT,
     };

@@ -255,9 +255,9 @@ void DInputSourceListener::OnResponseStartRemoteInputDhid(
         sourceManagerObj_->SetDeviceMapValue(deviceId, DINPUT_SOURCE_SWITCH_ON);
     }
 
-    std::vector<std::string> vecStr;
-    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_IN, -1);
+    std::vector<std::string> devDhIds;
+    SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, devDhIds);
+    DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_IN, -1);
 
     auto jsonArrayMsg = std::make_shared<nlohmann::json>();
     nlohmann::json tmpJson;

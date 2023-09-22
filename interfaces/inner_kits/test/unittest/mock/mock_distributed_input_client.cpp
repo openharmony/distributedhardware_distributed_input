@@ -196,7 +196,7 @@ bool DistributedInputClient::IsTouchEventNeedFilterOut(const TouchScreenEvent &e
 {
     auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
 
-    for (const auto& [id, sinkInfo] : sinkInfos) {
+    for (const auto &[id, sinkInfo] : sinkInfos) {
         auto info = sinkInfo.transformInfo;
         DHLOGI("event.absX:%d, info.sinkWinPhyX:%d, info.sinkProjPhyWidth:%d\n", event.absX, info.sinkWinPhyX,
             info.sinkProjPhyWidth);

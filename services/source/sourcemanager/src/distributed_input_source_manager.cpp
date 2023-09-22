@@ -1402,7 +1402,7 @@ void DistributedInputSourceManager::RunWhiteListCallback(const std::string &devI
         DHLOGE("addWhiteListCallbacks_ is empty.");
         return;
     }
-    for (const auto& it : addWhiteListCallbacks_) {
+    for (const auto &it : addWhiteListCallbacks_) {
         it->OnResult(devId, object);
     }
 }
@@ -1450,7 +1450,7 @@ void DistributedInputSourceManager::RunUnprepareCallback(const std::string &devI
                 DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_UNPREPARE_MSG delWhiteListCallback is null.");
                 return;
             }
-            for (const auto& it : delWhiteListCallbacks_) {
+            for (const auto &it : delWhiteListCallbacks_) {
                 it->OnResult(devId);
             }
             return;
@@ -1491,7 +1491,7 @@ void DistributedInputSourceManager::RunStartDhidCallback(const std::string &sink
     const int32_t &status)
 {
     std::vector<std::string> dhidsVec;
-    StringSplitToVector(dhIds, INPUT_STRING_SPLIT_POINT, dhidsVec);
+    SplitStringToVector(dhIds, INPUT_STRING_SPLIT_POINT, dhidsVec);
     DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_START_DHID_MSG dhIds:%s, vec-size:%d", GetAnonyString(dhIds).c_str(),
         dhidsVec.size());
     std::string localNetWorkId = GetLocalNetworkId();
@@ -1513,7 +1513,7 @@ void DistributedInputSourceManager::RunStopDhidCallback(const std::string &sinkI
     const int32_t &status)
 {
     std::vector<std::string> dhidsVec;
-    StringSplitToVector(dhIds, INPUT_STRING_SPLIT_POINT, dhidsVec);
+    SplitStringToVector(dhIds, INPUT_STRING_SPLIT_POINT, dhidsVec);
     std::string localNetworkId = GetLocalNetworkId();
     if (localNetworkId.empty()) {
         return;
@@ -1534,7 +1534,7 @@ void DistributedInputSourceManager::RunRelayStartDhidCallback(const std::string 
     const int32_t status, const std::string &dhids)
 {
     std::vector<std::string> dhidsVec;
-    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
+    SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
     DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI dhIds:%s, vec-size:%d",
         dhids.c_str(), dhidsVec.size());
     bool isCbRun = false;
@@ -1558,7 +1558,7 @@ void DistributedInputSourceManager::RunRelayStopDhidCallback(const std::string &
     const int32_t status, const std::string &dhids)
 {
     std::vector<std::string> dhidsVec;
-    StringSplitToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
+    SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
     bool isCbRun = false;
     for (std::vector<DInputClientStopDhidInfo>::iterator iter = relayStpDhidCallbacks_.begin();
         iter != relayStpDhidCallbacks_.end(); ++iter) {
@@ -1713,7 +1713,7 @@ void DistributedInputSourceManager::ClearResourcesStatus()
 void DistributedInputSourceManager::UpdateSpecEventStatus()
 {
     DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
-    DistributedInputInject::GetInstance().UpdateSpecEventState(DhidState::THROUGH_OUT);
+    DistributedInputInject::GetInstance().UpdateSpecEventState(DhIdState::THROUGH_OUT);
 }
 
 void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId, uint32_t value)
@@ -1958,7 +1958,7 @@ void DistributedInputSourceManager::DeviceOfflineListener::DeleteNodeInfoAndNoti
     }
     std::set<BeRegNodeInfo> nodeSet = sourceManagerContext_->GetSyncNodeInfo(offlineDevId);
     std::string localNetWorkId = GetLocalNetworkId();
-    for (const auto& node : nodeSet) {
+    for (const auto &node : nodeSet) {
         DHLOGI("DeleteNodeInfoAndNotify device: %s, dhId: %s", GetAnonyString(offlineDevId).c_str(),
             GetAnonyString(node.dhId).c_str());
         // Notify multimodal

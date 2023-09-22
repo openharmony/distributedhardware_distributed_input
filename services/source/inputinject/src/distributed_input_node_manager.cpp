@@ -33,7 +33,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE),
-    isFirst_(false), specEventState_(DhidState::THROUGH_OUT)
+    isFirst_(false), specEventState_(DhIdState::THROUGH_OUT)
 {
     DHLOGI("DistributedInputNodeManager ctor");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
@@ -186,7 +186,7 @@ void DistributedInputNodeManager::UpdateSpecEventFirstStatus(bool status)
     isFirst_.store(status);
 }
 
-void DistributedInputNodeManager::UpdateSpecEventState(DhidState state)
+void DistributedInputNodeManager::UpdateSpecEventState(DhIdState state)
 {
     DHLOGI("UpdateSpecEventState enter.");
     specEventState_ = state;
@@ -243,7 +243,7 @@ bool DistributedInputNodeManager::GetDevDhIdByFd(int fd, std::string &dhId, std:
     return true;
 }
 
-void DistributedInputNodeManager::SetPathForDevMap(std::string &dhId, const std::string &devicePath)
+void DistributedInputNodeManager::SetPathForDevMap(const std::string &dhId, const std::string &devicePath)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.begin();
@@ -281,22 +281,22 @@ void DistributedInputNodeManager::OpenInputDevice(const std::string &devicePath,
 }
 
 void DistributedInputNodeManager::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
-    std::vector<std::string> &shareDhidsPaths, std::vector<std::string> &shareDhIds)
+    std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
-    for (auto dhId_ : dhIds) {
+    for (const auto &dhId : dhIds) {
         auto iter = virtualDeviceMap_.begin();
         while (iter != virtualDeviceMap_.end()) {
             if (iter->second == nullptr) {
                 DHLOGE("device is nullptr");
                 continue;
             }
-            if ((iter->first.compare(dhId_) == 0) &&
+            if ((iter->first.compare(dhId) == 0) &&
                 ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
                 DHLOGI("Found vir keyboard path %s, dhid %s", iter->second->GetPath().c_str(),
-                    GetAnonyString(dhId_).c_str());
-                shareDhidsPaths.push_back(iter->second->GetPath());
-                shareDhIds.push_back(dhId_);
+                    GetAnonyString(dhId).c_str());
+                virKeyboardPaths.push_back(iter->second->GetPath());
+                virKeyboardDhIds.push_back(dhId);
             }
             iter++;
         }
@@ -475,7 +475,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
             UpdateSpecEventFirstStatus(false);
         }
 
-        if (event.value == KEY_LONGPRESS_STATE && !isFirst_.load() && specEventState_ == DhidState::THROUGH_IN) {
+        if (event.value == KEY_LONGPRESS_STATE && !isFirst_.load() && specEventState_ == DhIdState::THROUGH_IN) {
             struct input_event inputEvent = {
                 .type = event.type,
                 .code = event.code,

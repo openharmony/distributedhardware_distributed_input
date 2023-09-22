@@ -238,11 +238,11 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInput(
         std::map<int32_t, std::string> deviceInfos;
         DistributedInputCollector::GetInstance().GetDeviceInfoByType(static_cast<uint32_t>(DInputDeviceType::MOUSE),
             deviceInfos);
-        for (auto deviceInfo : deviceInfos) {
+        for (const auto &deviceInfo : deviceInfos) {
             DHLOGI("deviceInfo dhId, %s", GetAnonyString(deviceInfo.second).c_str());
-            std::vector<std::string> vecStr;
-            StringSplitToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, vecStr);
-            DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_OUT, sessionId);
+            std::vector<std::string> devDhIds;
+            SplitStringToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, devDhIds);
+            DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
         }
     }
 }
@@ -300,10 +300,10 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInputDhid(con
         return;
     }
 
-    std::vector<std::string> vecStr;
-    StringSplitToVector(strDhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_OUT, sessionId);
-    AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, vecStr);
+    std::vector<std::string> devDhIds;
+    SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, devDhIds);
+    DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
+    AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, devDhIds);
     sinkManagerObj_->StoreStartDhids(sessionId, affDhIds.sharingDhIds);
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
 }
@@ -314,14 +314,14 @@ void DistributedInputSinkManager::DInputSinkListener::OnStopRemoteInputDhid(cons
     DHLOGI("OnStopRemoteInputDhid called, sessionId: %d", sessionId);
     std::vector<std::string> stopIndeedDhIds;
     std::vector<std::string> stopOnCmdDhIds;
-    StringSplitToVector(strDhids, INPUT_STRING_SPLIT_POINT, stopOnCmdDhIds);
+    SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, stopOnCmdDhIds);
     sinkManagerObj_->DeleteStopDhids(sessionId, stopOnCmdDhIds, stopIndeedDhIds);
     (void)DistributedInputCollector::GetInstance().SetSharingDhIds(false, stopIndeedDhIds);
     AffectDhIds stopIndeedOnes;
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
 
-    DInputState::GetInstance().RecordDhids(stopOnCmdDhIds, DhidState::THROUGH_IN, -1);
+    DInputState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, -1);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", sessionId);
@@ -367,10 +367,10 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartDhidRemoteInpu
         return;
     }
 
-    std::vector<std::string> vecStr;
-    StringSplitToVector(strDhids, INPUT_STRING_SPLIT_POINT, vecStr);
-    DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_OUT, toSinkSessionId);
-    AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, vecStr);
+    std::vector<std::string> devDhIds;
+    SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, devDhIds);
+    DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
+    AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, devDhIds);
     sinkManagerObj_->StoreStartDhids(toSinkSessionId, affDhIds.sharingDhIds);
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
 }
@@ -381,14 +381,14 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStopDhidRemoteInput
     DHLOGI("onRelayStopDhidRemoteInput called, toSinkSessionId: %d", toSinkSessionId);
     std::vector<std::string> stopIndeedDhIds;
     std::vector<std::string> stopOnCmdDhIds;
-    StringSplitToVector(strDhids, INPUT_STRING_SPLIT_POINT, stopOnCmdDhIds);
+    SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, stopOnCmdDhIds);
     sinkManagerObj_->DeleteStopDhids(toSinkSessionId, stopOnCmdDhIds, stopIndeedDhIds);
     AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(false, stopIndeedDhIds);
     AffectDhIds stopIndeedOnes;
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
 
-    DInputState::GetInstance().RecordDhids(stopOnCmdDhIds, DhidState::THROUGH_IN, -1);
+    DInputState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, -1);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", toSinkSessionId);
@@ -461,9 +461,9 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartTypeRemoteInpu
         deviceInfos);
     for (auto deviceInfo : deviceInfos) {
         DHLOGI("deviceInfo dhId, %s", GetAnonyString(deviceInfo.second).c_str());
-        std::vector<std::string> vecStr;
-        StringSplitToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, vecStr);
-        DInputState::GetInstance().RecordDhids(vecStr, DhidState::THROUGH_OUT, toSinkSessionId);
+        std::vector<std::string> devDhIds;
+        SplitStringToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, devDhIds);
+        DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
     }
 }
 
@@ -935,7 +935,7 @@ void DistributedInputSinkManager::CallBackScreenInfoChange()
     std::vector<std::vector<uint32_t>> transInfos;
     auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
     std::vector<uint32_t> info;
-    for (const auto& [id, sinkInfo] : sinkInfos) {
+    for (const auto &[id, sinkInfo] : sinkInfos) {
         info.clear();
         info.emplace_back(sinkInfo.transformInfo.sinkWinPhyX);
         info.emplace_back(sinkInfo.transformInfo.sinkWinPhyY);
@@ -945,7 +945,7 @@ void DistributedInputSinkManager::CallBackScreenInfoChange()
     }
     nlohmann::json screenMsg(transInfos);
     std::string str = screenMsg.dump();
-    for (const auto& iter : getSinkScreenInfosCallbacks_) {
+    for (const auto &iter : getSinkScreenInfosCallbacks_) {
         iter->OnResult(str);
     }
 }
@@ -957,7 +957,7 @@ void DistributedInputSinkManager::CleanExceptionalInfo(const SrcScreenInfo &srcS
     int32_t sessionId = srcScreenInfo.sessionId;
     auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
 
-    for (const auto& [id, sinkInfo] : sinkInfos) {
+    for (const auto &[id, sinkInfo] : sinkInfos) {
         auto srcInfo = sinkInfo.srcScreenInfo;
         if ((std::strcmp(srcInfo.uuid.c_str(), uuid.c_str()) == 0) && (srcInfo.sessionId != sessionId)) {
             DInputContext::GetInstance().RemoveSinkScreenInfo(id);
