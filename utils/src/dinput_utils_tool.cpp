@@ -293,7 +293,7 @@ std::string Sha256(const std::string &in)
     return reinterpret_cast<char*>(out);
 }
 
-void CloseFd(int &fd)
+void CloseFd(int fd)
 {
     if (fd < 0) {
         DHLOGE("No fd need to beclosed.");
@@ -308,10 +308,10 @@ int BitIsSet(const unsigned long *array, int bit)
     return !!(array[bit / LONG_BITS] & (1LL << (bit % LONG_BITS)));
 }
 
-void StringSplitToVector(const std::string &str, const char split, std::vector<std::string> &vecStr)
+void SplitStringToVector(const std::string &str, const char split, std::vector<std::string> &vecStr)
 {
     if (str.empty()) {
-        DHLOGE("StringSplitToVector param str is error.");
+        DHLOGE("SplitStringToVector param str is error.");
         return;
     }
     std::string strTmp = str + split;

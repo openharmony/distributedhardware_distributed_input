@@ -21,6 +21,8 @@
 #include <string>
 #include <linux/input.h>
 
+#include "single_instance.h"
+
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
@@ -29,40 +31,36 @@ namespace DistributedInput {
  * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
  * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
 */
-enum class DhidState {
+enum class DhIdState {
     THROUGH_IN = 0,
     THROUGH_OUT,
 };
 
 class DInputState {
+    DECLARE_SINGLE_INSTANCE_BASE(DInputState);
 public:
-    static DInputState &GetInstance()
-    {
-        static DInputState instance;
-        return instance;
-    };
-
     int32_t Init();
     int32_t Release();
-    int32_t RecordDhids(const std::vector<std::string> &dhids, DhidState state, const int32_t &sessionId);
-    int32_t RemoveDhids(const std::vector<std::string> &dhids);
-    DhidState GetStateByDhid(std::string &dhid);
+    int32_t RecordDhIds(const std::vector<std::string> &dhIds, DhIdState state, const int32_t sessionId);
+    int32_t RemoveDhIds(const std::vector<std::string> &dhIds);
+    DhIdState GetStateByDhid(const std::string &dhId);
 
 private:
+    DInputState() = default;
     ~DInputState();
 
-    void CreateSpecialEventInjectThread(const int32_t &sessionId, const std::vector<std::string> &dhids);
-    void CheckKeyboardState(std::string &dhid, std::string &keyboardNodePath,
-        std::vector<uint32_t> &keyboardPressedKeys, int &fd);
-    void SpecEventInject(const int32_t &sessionId, std::vector<std::string> dhids);
+    void CreateSpecialEventInjectThread(const int32_t sessionId, const std::vector<std::string> &dhIds);
+    void CheckKeyboardState(const std::string &dhId, const std::string &keyboardNodePath,
+        std::vector<uint32_t> &pressedKeys, int &fd);
+    void SpecEventInject(const int32_t sessionId, const std::vector<std::string> &dhIds);
     void RecordEventLog(const input_event &event);
-    void WriteEventToDev(int &fd, const input_event &event);
-    void CheckMouseKeyState(const int32_t &sessionId, const std::string &mouseNodePath,
+    void WriteEventToDev(const int fd, const input_event &event);
+    void SyncMouseKeyState(const int32_t sessionId, const std::string &mouseNodePath,
         const std::string &mouseNodeDhId);
 
 private:
     std::mutex operationMutex_;
-    std::map<std::string, DhidState> dhidStateMap_;
+    std::map<std::string, DhIdState> dhIdStateMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
