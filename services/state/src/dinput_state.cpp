@@ -64,14 +64,11 @@ int32_t DInputState::RecordDhIds(const std::vector<std::string> &dhIds, DhIdStat
 
     if (state == DhIdState::THROUGH_OUT) {
         CreateSpecialEventInjectThread(sessionId, dhIds);
-        DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
-        DistributedInputInject::GetInstance().UpdateSpecEventState(state);
     }
 
-    if (state == DhIdState::THROUGH_IN) {
-        DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
-        DistributedInputInject::GetInstance().UpdateSpecEventState(state);
-    }
+    DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
+    DistributedInputInject::GetInstance().UpdateSpecEventState(state);
+
     return DH_SUCCESS;
 }
 
