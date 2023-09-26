@@ -87,7 +87,7 @@ void DistributedInputSourceStub::RegRespFunMap()
 int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::unique_lock<std::mutex> lock(operatorMutex_);
@@ -111,7 +111,7 @@ int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel 
 int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::unique_lock<std::mutex> lock(operatorMutex_);
@@ -135,7 +135,7 @@ int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParc
 int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string devId = data.ReadString();
@@ -161,7 +161,7 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
 int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string devId = data.ReadString();
@@ -186,7 +186,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
 int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string deviceId = data.ReadString();
@@ -210,7 +210,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
 int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
         if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string deviceId = data.ReadString();
@@ -234,7 +234,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
 int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string deviceId = data.ReadString();
@@ -259,7 +259,7 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
 int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string deviceId = data.ReadString();
@@ -284,7 +284,7 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
 int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -310,7 +310,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
 int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -336,7 +336,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
 int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -361,7 +361,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
 int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -386,7 +386,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
 int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string sinkId = data.ReadString();
@@ -427,7 +427,7 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
 int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string sinkId = data.ReadString();
@@ -468,7 +468,7 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
 int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -510,7 +510,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
 int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         std::string srcId = data.ReadString();
@@ -660,7 +660,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(Mess
 int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         sptr<ISessionStateCallback> callback = iface_cast<ISessionStateCallback>(data.ReadRemoteObject());
@@ -684,7 +684,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &
 int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         int32_t ret = UnregisterSessionStateCb();
