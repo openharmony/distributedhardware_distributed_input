@@ -155,7 +155,7 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
         return DH_SUCCESS;
     }
     DHLOGE("Enable Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;    
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
@@ -180,7 +180,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
         return DH_SUCCESS;
     }
     DHLOGE("Enable Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;   
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -204,7 +204,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;  
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -228,7 +228,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -253,7 +253,7 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -278,7 +278,7 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -304,7 +304,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -330,7 +330,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -355,7 +355,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -380,7 +380,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -421,7 +421,7 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -462,7 +462,7 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -504,7 +504,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;     
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -546,7 +546,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;     
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -678,7 +678,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
@@ -697,7 +697,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
         return DH_SUCCESS;
     }
     DHLOGE("Access Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::OnRemoteRequest(
