@@ -19,6 +19,8 @@
 #include "dinput_errcode.h"
 #include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
+#include "ipc_skeleton.h"
+#include "accesstoken_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -84,339 +86,467 @@ void DistributedInputSourceStub::RegRespFunMap()
 }
 int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel &reply)
 {
-    std::unique_lock<std::mutex> lock(operatorMutex_);
-    if (sourceManagerInitFlag_.load()) {
-        DHLOGE("DistributedInputSourceStub already init.");
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::unique_lock<std::mutex> lock(operatorMutex_);
+        if (sourceManagerInitFlag_.load()) {
+            DHLOGE("DistributedInputSourceStub already init.");
+            return DH_SUCCESS;
+        }
+        int32_t ret = Init();
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("DistributedInputSourceStub Init write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        sourceManagerInitFlag_.store(true);
+        DHLOGE("Enable Permission vailable");
         return DH_SUCCESS;
     }
-    int32_t ret = Init();
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSourceStub Init write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-    }
-    sourceManagerInitFlag_.store(true);
-    return DH_SUCCESS;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParcel &reply)
 {
-    std::unique_lock<std::mutex> lock(operatorMutex_);
-    if (!sourceManagerInitFlag_.load()) {
-        DHLOGE("DistributedInputSourceStub already Release.");
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::unique_lock<std::mutex> lock(operatorMutex_);
+        if (!sourceManagerInitFlag_.load()) {
+            DHLOGE("DistributedInputSourceStub already Release.");
+            return DH_SUCCESS;
+        }
+        int32_t ret = Release();
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("DistributedInputSourceStub release write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        sourceManagerInitFlag_.store(false);
+        DHLOGE("Enable Permission vailable");
         return DH_SUCCESS;
     }
-    int32_t ret = Release();
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSourceStub release write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-    }
-    sourceManagerInitFlag_.store(false);
-    return DH_SUCCESS;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
-    std::string devId = data.ReadString();
-    std::string dhId = data.ReadString();
-    std::string params = data.ReadString();
-    sptr<IRegisterDInputCallback> callback = iface_cast<IRegisterDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleRegisterDistributedHardware failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string devId = data.ReadString();
+        std::string dhId = data.ReadString();
+        std::string params = data.ReadString();
+        sptr<IRegisterDInputCallback> callback = iface_cast<IRegisterDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleRegisterDistributedHardware failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = RegisterDistributedHardware(devId, dhId, params, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleRegisterDistributedHardware write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        DHLOGE("Enable Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = RegisterDistributedHardware(devId, dhId, params, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleRegisterDistributedHardware write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;    
 }
 
 int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageParcel &data, MessageParcel &reply)
 {
-    std::string devId = data.ReadString();
-    std::string dhId = data.ReadString();
-    sptr<IUnregisterDInputCallback> callback = iface_cast<IUnregisterDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleUnregisterDistributedHardware failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string devId = data.ReadString();
+        std::string dhId = data.ReadString();
+        sptr<IUnregisterDInputCallback> callback = iface_cast<IUnregisterDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleUnregisterDistributedHardware failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = UnregisterDistributedHardware(devId, dhId, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleUnregisterDistributedHardware write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        DHLOGE("Enable Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = UnregisterDistributedHardware(devId, dhId, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnregisterDistributedHardware write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;   
 }
 
 int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string deviceId = data.ReadString();
-    sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandlePrepareRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string deviceId = data.ReadString();
+        sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandlePrepareRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = PrepareRemoteInput(deviceId, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandlePrepareRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = PrepareRemoteInput(deviceId, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandlePrepareRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;  
 }
 
 int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string deviceId = data.ReadString();
-    sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleUnprepareRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+        if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string deviceId = data.ReadString();
+        sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleUnprepareRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = UnprepareRemoteInput(deviceId, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleUnprepareRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = UnprepareRemoteInput(deviceId, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnprepareRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string deviceId = data.ReadString();
-    uint32_t inputTypes = data.ReadUint32();
-    sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStartRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string deviceId = data.ReadString();
+        uint32_t inputTypes = data.ReadUint32();
+        sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStartRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StartRemoteInput(deviceId, inputTypes, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStartRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StartRemoteInput(deviceId, inputTypes, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStartRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string deviceId = data.ReadString();
-    uint32_t inputTypes = data.ReadUint32();
-    sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStopRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string deviceId = data.ReadString();
+        uint32_t inputTypes = data.ReadUint32();
+        sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStopRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StopRemoteInput(deviceId, inputTypes, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStopRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StopRemoteInput(deviceId, inputTypes, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStopRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
-    uint32_t inputTypes = data.ReadUint32();
-    sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStartRelayTypeRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
+        uint32_t inputTypes = data.ReadUint32();
+        sptr<IStartDInputCallback> callback = iface_cast<IStartDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStartRelayTypeRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StartRemoteInput(srcId, sinkId, inputTypes, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStartRelayTypeRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StartRemoteInput(srcId, sinkId, inputTypes, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStartRelayTypeRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
-    uint32_t inputTypes = data.ReadUint32();
-    sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStopRelayTypeRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
+        uint32_t inputTypes = data.ReadUint32();
+        sptr<IStopDInputCallback> callback = iface_cast<IStopDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStopRelayTypeRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StopRemoteInput(srcId, sinkId, inputTypes, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStopRelayTypeRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StopRemoteInput(srcId, sinkId, inputTypes, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStopRelayTypeRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
-    sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandlePrepareRelayRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
+        sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandlePrepareRelayRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = PrepareRemoteInput(srcId, sinkId, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandlePrepareRelayRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = PrepareRemoteInput(srcId, sinkId, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandlePrepareRelayRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
-    sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleUnprepareRelayRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
+        sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleUnprepareRelayRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = UnprepareRemoteInput(srcId, sinkId, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleUnprepareRelayRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = UnprepareRemoteInput(srcId, sinkId, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnprepareRelayRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string sinkId = data.ReadString();
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string sinkId = data.ReadString();
 
-    std::vector<std::string> tempVector;
-    uint32_t vecSize = data.ReadUint32();
-    if (vecSize > IPC_VECTOR_MAX_SIZE) {
-        DHLOGE("HandleStartDhidRemoteInput vecSize too large");
-        return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
-    }
-
-    for (uint32_t i = 0; i < vecSize; i++) {
-        std::string dhid = data.ReadString();
-        if (dhid.empty()) {
-            DHLOGE("HandleStartDhidRemoteInput dhid is empty");
-            continue;
+        std::vector<std::string> tempVector;
+        uint32_t vecSize = data.ReadUint32();
+        if (vecSize > IPC_VECTOR_MAX_SIZE) {
+            DHLOGE("HandleStartDhidRemoteInput vecSize too large");
+            return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
         }
-        tempVector.push_back(dhid);
-    }
 
-    sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStartDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+        for (uint32_t i = 0; i < vecSize; i++) {
+            std::string dhid = data.ReadString();
+            if (dhid.empty()) {
+                DHLOGE("HandleStartDhidRemoteInput dhid is empty");
+                continue;
+            }
+            tempVector.push_back(dhid);
+        }
+
+        sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStartDhidRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StartRemoteInput(sinkId, tempVector, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStartDhidRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StartRemoteInput(sinkId, tempVector, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStartDhidRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string sinkId = data.ReadString();
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string sinkId = data.ReadString();
 
-    std::vector<std::string> tempVector;
-    uint32_t vecSize = data.ReadUint32();
-    if (vecSize > IPC_VECTOR_MAX_SIZE) {
-        DHLOGE("HandleStopDhidRemoteInput vecSize too large");
-        return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
-    }
-
-    for (uint32_t i = 0; i < vecSize; i++) {
-        std::string dhid = data.ReadString();
-        if (dhid.empty()) {
-            DHLOGE("HandleStopDhidRemoteInput dhid is empty");
-            continue;
+        std::vector<std::string> tempVector;
+        uint32_t vecSize = data.ReadUint32();
+        if (vecSize > IPC_VECTOR_MAX_SIZE) {
+            DHLOGE("HandleStopDhidRemoteInput vecSize too large");
+            return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
         }
-        tempVector.push_back(dhid);
-    }
 
-    sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStopDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+        for (uint32_t i = 0; i < vecSize; i++) {
+            std::string dhid = data.ReadString();
+            if (dhid.empty()) {
+                DHLOGE("HandleStopDhidRemoteInput dhid is empty");
+                continue;
+            }
+            tempVector.push_back(dhid);
+        }
+
+        sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStopDhidRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StopRemoteInput(sinkId, tempVector, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStopDhidRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StopRemoteInput(sinkId, tempVector, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStopDhidRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
 
-    std::vector<std::string> tempVector;
-    uint32_t vecSize = data.ReadUint32();
-    if (vecSize > IPC_VECTOR_MAX_SIZE) {
-        DHLOGE("HandleStartRelayDhidRemoteInput vecSize too large");
-        return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
-    }
-
-    for (uint32_t i = 0; i < vecSize; i++) {
-        std::string dhid = data.ReadString();
-        if (dhid.empty()) {
-            DHLOGE("HandleStartRelayDhidRemoteInput dhid is empty");
-            continue;
+        std::vector<std::string> tempVector;
+        uint32_t vecSize = data.ReadUint32();
+        if (vecSize > IPC_VECTOR_MAX_SIZE) {
+            DHLOGE("HandleStartRelayDhidRemoteInput vecSize too large");
+            return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
         }
-        tempVector.push_back(dhid);
-    }
 
-    sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStartRelayDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+        for (uint32_t i = 0; i < vecSize; i++) {
+            std::string dhid = data.ReadString();
+            if (dhid.empty()) {
+                DHLOGE("HandleStartRelayDhidRemoteInput dhid is empty");
+                continue;
+            }
+            tempVector.push_back(dhid);
+        }
+
+        sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStartRelayDhidRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StartRemoteInput(srcId, sinkId, tempVector, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStartRelayDhidRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StartRemoteInput(srcId, sinkId, tempVector, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStartRelayDhidRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;     
 }
 
 int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply)
 {
-    std::string srcId = data.ReadString();
-    std::string sinkId = data.ReadString();
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        std::string srcId = data.ReadString();
+        std::string sinkId = data.ReadString();
 
-    std::vector<std::string> tempVector;
-    uint32_t vecSize = data.ReadUint32();
-    if (vecSize > IPC_VECTOR_MAX_SIZE) {
-        DHLOGE("HandleStopRelayDhidRemoteInput vecSize too large");
-        return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
-    }
-
-    for (uint32_t i = 0; i < vecSize; i++) {
-        std::string dhid = data.ReadString();
-        if (dhid.empty()) {
-            DHLOGE("HandleStopRelayDhidRemoteInput dhid is empty");
-            continue;
+        std::vector<std::string> tempVector;
+        uint32_t vecSize = data.ReadUint32();
+        if (vecSize > IPC_VECTOR_MAX_SIZE) {
+            DHLOGE("HandleStopRelayDhidRemoteInput vecSize too large");
+            return ERR_DH_INPUT_IPC_READ_VALID_FAIL;
         }
-        tempVector.push_back(dhid);
-    }
 
-    sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleStopRelayDhidRemoteInput failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
+        for (uint32_t i = 0; i < vecSize; i++) {
+            std::string dhid = data.ReadString();
+            if (dhid.empty()) {
+                DHLOGE("HandleStopRelayDhidRemoteInput dhid is empty");
+                continue;
+            }
+            tempVector.push_back(dhid);
+        }
+
+        sptr<IStartStopDInputsCallback> callback = iface_cast<IStartStopDInputsCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleStopRelayDhidRemoteInput failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = StopRemoteInput(srcId, sinkId, tempVector, callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleStopRelayDhidRemoteInput write ret failed");
+            return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
+        }
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
     }
-    int32_t ret = StopRemoteInput(srcId, sinkId, tempVector, callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleStopRelayDhidRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;     
 }
 
 int32_t DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput(MessageParcel &data, MessageParcel &reply)
@@ -529,29 +659,45 @@ int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(Mess
 
 int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
 {
-    sptr<ISessionStateCallback> callback = iface_cast<ISessionStateCallback>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleRegisterSessionStateCb failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
-    }
-    int32_t ret = RegisterSessionStateCb(callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleRegisterSessionStateCb write ret failed, ret = %d", ret);
-        return ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
-    }
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        sptr<ISessionStateCallback> callback = iface_cast<ISessionStateCallback>(data.ReadRemoteObject());
+        if (callback == nullptr) {
+            DHLOGE("HandleRegisterSessionStateCb failed, callback is nullptr.");
+            return ERR_DH_INPUT_POINTER_NULL;
+        }
+        int32_t ret = RegisterSessionStateCb(callback);
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleRegisterSessionStateCb write ret failed, ret = %d", ret);
+            return ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
+        }
 
-    return DH_SUCCESS;
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
+    }
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply)
 {
-    int32_t ret = UnregisterSessionStateCb();
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnregisterSessionStateCb write ret failed, ret = %d", ret);
-        return ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
-    }
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        int32_t ret = UnregisterSessionStateCb();
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("HandleUnregisterSessionStateCb write ret failed, ret = %d", ret);
+            return ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
+        }
 
-    return DH_SUCCESS;
+        DHLOGE("Access Permission vailable");
+        return DH_SUCCESS;
+    }
+    DHLOGE("Access Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL; 
 }
 
 int32_t DistributedInputSourceStub::OnRemoteRequest(

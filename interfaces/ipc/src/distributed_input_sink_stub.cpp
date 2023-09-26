@@ -21,6 +21,8 @@
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
 #include "i_sharing_dhid_listener.h"
+#include "ipc_skeleton.h"
+#include "accesstoken_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -66,23 +68,39 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
 
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
-    DHLOGI("DistributedInputSinkStub InitInner start");
-    int32_t ret = Init();
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        DHLOGI("DistributedInputSinkStub InitInner start");
+        int32_t ret = Init();
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        DHLOGE("Enable Permission vailable");
+        return ret;
     }
-    return ret;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
-    int32_t ret = Release();
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
-        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
+    if (result == Security::AccessToken::PERMISSION_GRANTED) {
+        int32_t ret = Release();
+        if (!reply.WriteInt32(ret)) {
+            DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
+            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+        }
+        DHLOGE("Enable Permission vailable");
+        return ret;
     }
-    return ret;
+    DHLOGE("Enable Permission invailable");
+    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
 }
 
 int32_t DistributedInputSinkStub::NotifyStartDScreenInner(MessageParcel &data, MessageParcel &reply,
