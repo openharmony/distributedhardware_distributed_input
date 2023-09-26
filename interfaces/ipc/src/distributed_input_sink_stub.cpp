@@ -69,7 +69,7 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         DHLOGI("DistributedInputSinkStub InitInner start");
@@ -88,7 +88,7 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
 int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
     "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         int32_t ret = Release();
