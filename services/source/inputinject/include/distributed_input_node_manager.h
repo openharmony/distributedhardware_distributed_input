@@ -61,6 +61,9 @@ public:
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds);
     void NotifyNodeMgrScanVirNode(const std::string &dhId);
+    void UpdateSpecEventFirstStatus(bool status);
+    void UpdateSpecEventState(DhIdState state);
+    void InjectInputEvent(const std::string &dhId, const struct input_event &event);
 
     class DInputNodeManagerEventHandler : public AppExecFwk::EventHandler {
     public:
@@ -105,6 +108,8 @@ private:
     int32_t virtualTouchScreenFd_;
     std::once_flag callOnceFlag_;
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
+    std::atomic<bool> isFirst_;
+    DhIdState specEventState_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

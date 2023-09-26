@@ -79,6 +79,7 @@ void DistributedInputSourceManager::DInputSrcMgrListener::ResetSrcMgrResStatus()
         return;
     }
     sourceManagerObj_->ClearResourcesStatus();
+    sourceManagerObj_->UpdateSpecEventStatus();
 }
 
 void DistributedInputSourceManager::OnStart()
@@ -1707,6 +1708,12 @@ void DistributedInputSourceManager::ClearResourcesStatus()
     std::lock_guard<std::mutex> lock(mutex_);
     relayPreCallbacks_.clear();
     relayUnpreCallbacks_.clear();
+}
+
+void DistributedInputSourceManager::UpdateSpecEventStatus()
+{
+    DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
+    DistributedInputInject::GetInstance().UpdateSpecEventState(DhIdState::THROUGH_OUT);
 }
 
 void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId, uint32_t value)

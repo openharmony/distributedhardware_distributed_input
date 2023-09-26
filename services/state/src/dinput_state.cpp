@@ -65,6 +65,10 @@ int32_t DInputState::RecordDhIds(const std::vector<std::string> &dhIds, DhIdStat
     if (state == DhIdState::THROUGH_OUT) {
         CreateSpecialEventInjectThread(sessionId, dhIds);
     }
+
+    DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
+    DistributedInputInject::GetInstance().UpdateSpecEventState(state);
+
     return DH_SUCCESS;
 }
 
@@ -142,7 +146,6 @@ void DInputState::SpecEventInject(const int32_t sessionId, const std::vector<std
     // keyboard up event inject local device
     std::vector<std::string> keyboardNodePaths;
     std::vector<std::string> keyboardNodeDhIds;
-    DistributedInputCollector::GetInstance().GetSharedKeyboardPathsByDhIds(dhIds, keyboardNodePaths, keyboardNodeDhIds);
     DistributedInputInject::GetInstance().GetVirtualKeyboardPathsByDhIds(dhIds, keyboardNodePaths, keyboardNodeDhIds);
     size_t len = keyboardNodePaths.size();
     for (size_t i = 0; i < len; ++i) {

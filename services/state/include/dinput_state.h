@@ -20,22 +20,13 @@
 #include <mutex>
 #include <string>
 #include <linux/input.h>
+#include "constants_dinput.h"
 
 #include "single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-/*
- * This enumeration class represents the two states of the peropheral:
- * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
- * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
-*/
-enum class DhIdState {
-    THROUGH_IN = 0,
-    THROUGH_OUT,
-};
-
 class DInputState {
     DECLARE_SINGLE_INSTANCE_BASE(DInputState);
 public:

@@ -39,6 +39,8 @@ namespace DistributedInput {
     const char INPUT_STRING_SPLIT_POINT = '.';
     const uint32_t KEY_DOWN_STATE = 1;
     const uint32_t KEY_UP_STATE = 0;
+    const uint32_t KEY_LONGPRESS_STATE = 2;
+    const uint32_t KEY_OTHER_TYPE = 5;
     const uint32_t READ_SLEEP_TIME_MS = 50;
     const uint32_t READ_RETRY_MAX = 5;
     const uint32_t DH_ID_LENGTH_MAX = 256;
@@ -319,6 +321,16 @@ namespace DistributedInput {
         OPENING = 0x01,
         OPENED = 0x02,
         CLOSING = 0x03,
+    };
+
+    /*
+    * This enumeration class represents the two states of the peropheral:
+    * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
+    * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
+    */
+    enum class DhIdState {
+        THROUGH_IN = 0,
+        THROUGH_OUT,
     };
 } // namespace DistributedInput
 } // namespace DistributedHardware
