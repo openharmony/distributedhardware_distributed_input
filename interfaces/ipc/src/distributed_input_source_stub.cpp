@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+#include "accesstoken_kit.h"
 #include "distributed_input_source_stub.h"
 
 #include "constants_dinput.h"
@@ -20,7 +21,6 @@
 #include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 #include "ipc_skeleton.h"
-#include "accesstoken_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -120,7 +120,6 @@ int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel 
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     sourceManagerInitFlag_.store(true);
-    DHLOGE("Enable Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -141,7 +140,6 @@ int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParc
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     sourceManagerInitFlag_.store(false);
-    DHLOGE("Enable Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -164,7 +162,6 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
         DHLOGE("HandleRegisterDistributedHardware write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGE("Enable Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -186,7 +183,6 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
         DHLOGE("HandleUnregisterDistributedHardware write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGE("Enable Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -207,7 +203,6 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
         DHLOGE("HandlePrepareRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -228,7 +223,6 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
         DHLOGE("HandleUnprepareRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -250,7 +244,6 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
         DHLOGE("HandleStartRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -272,7 +265,6 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
         DHLOGE("HandleStopRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -295,7 +287,6 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
         DHLOGE("HandleStartRelayTypeRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -318,7 +309,6 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
         DHLOGE("HandleStopRelayTypeRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -340,7 +330,6 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
         DHLOGE("HandlePrepareRelayRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -362,7 +351,6 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
         DHLOGE("HandleUnprepareRelayRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -400,7 +388,6 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
         DHLOGE("HandleStartDhidRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -438,7 +425,6 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
         DHLOGE("HandleStopDhidRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -477,7 +463,6 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
         DHLOGE("HandleStartRelayDhidRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -516,7 +501,6 @@ int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel
         DHLOGE("HandleStopRelayDhidRemoteInput write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -645,7 +629,6 @@ int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &
         return ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
     }
 
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
@@ -661,7 +644,6 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
         return ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
     }
 
-    DHLOGE("Access Permission vailable");
     return DH_SUCCESS;
 }
 
