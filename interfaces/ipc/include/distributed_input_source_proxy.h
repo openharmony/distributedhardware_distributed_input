@@ -87,6 +87,9 @@ public:
     int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) override;
     int32_t UnregisterSessionStateCb() override;
 
+    bool HasEnableDHPermission();
+    bool HasAccessDHPermission();
+
 private:
     bool SendRequest(const uint32_t code, MessageParcel &data, MessageParcel &reply);
 
