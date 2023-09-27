@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-#include "accesstoken_kit.h"
 #include "distributed_input_sink_stub.h"
 
+#include "accesstoken_kit.h"
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_ipc_interface_code.h"
