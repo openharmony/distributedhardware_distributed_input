@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+#include "accesstoken_kit.h"
 #include "distributed_input_sink_stub.h"
 
 #include "constants_dinput.h"
@@ -22,7 +23,6 @@
 #include "dinput_utils_tool.h"
 #include "i_sharing_dhid_listener.h"
 #include "ipc_skeleton.h"
-#include "accesstoken_kit.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -87,7 +87,6 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
         DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGI("Enable Permission vailable");
     return ret;
 }
 
@@ -102,7 +101,6 @@ int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParce
         DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGI("Enable Permission vailable");
     return ret;
 }
 
