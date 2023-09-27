@@ -87,7 +87,7 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
         DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGE("Enable Permission vailable");
+    DHLOGI("Enable Permission vailable");
     return ret;
 }
 
@@ -102,7 +102,7 @@ int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParce
         DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGE("Enable Permission vailable");
+    DHLOGI("Enable Permission vailable");
     return ret;
 }
 
