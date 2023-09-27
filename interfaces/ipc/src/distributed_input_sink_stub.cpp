@@ -78,7 +78,7 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
     DHLOGI("DistributedInputSinkStub InitInner start");
@@ -93,7 +93,7 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
 int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
     int32_t ret = Release();
