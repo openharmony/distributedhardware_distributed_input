@@ -61,6 +61,8 @@ private:
     int32_t HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply);
     int32_t HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply);
+    bool HasEnableDHPermission();
+    bool HasAccessDHPermission();
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
 private:
     std::atomic<bool> sourceManagerInitFlag_ {false};
