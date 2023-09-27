@@ -85,7 +85,7 @@ void DistributedInputSourceStub::RegRespFunMap()
         &DistributedInputSourceStub::HandleUnregisterSessionStateCb;
 }
 
-bool DScreenSourceStub::HasEnableDHPermission()
+bool DistributedInputSourceStub::HasEnableDHPermission()
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
     const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
@@ -94,7 +94,7 @@ bool DScreenSourceStub::HasEnableDHPermission()
     return (result == Security::AccessToken::PERMISSION_GRANTED);
 }
 
-bool DScreenSourceStub::HasAccessDHPermission()
+bool DistributedInputSourceStub::HasAccessDHPermission()
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
     const std::string permissionName = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
