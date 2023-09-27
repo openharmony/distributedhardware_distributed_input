@@ -50,6 +50,15 @@ DistributedInputSinkStub::~DistributedInputSinkStub()
     memberFuncMap_.clear();
 }
 
+bool DistributedInputSinkStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result = Security::AccessToken::PERMISSION_GRANTED);
+}
+
 int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
@@ -68,39 +77,33 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
 
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        DHLOGI("DistributedInputSinkStub InitInner start");
-        int32_t ret = Init();
-        if (!reply.WriteInt32(ret)) {
-            DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
-            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-        }
-        DHLOGE("Enable Permission vailable");
-        return ret;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("Enable Permission inlvaliable");
+        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
-    DHLOGE("Enable Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+    DHLOGI("DistributedInputSinkStub InitInner start");
+    int32_t ret = Init();
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
+        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    }
+    DHLOGE("Enable Permission vailable");
+    return ret;
 }
 
 int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-    "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        int32_t ret = Release();
-        if (!reply.WriteInt32(ret)) {
-            DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
-            return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
-        }
-        DHLOGE("Enable Permission vailable");
-        return ret;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("Enable Permission inlvaliable");
+        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
-    DHLOGE("Enable Permission invailable");
-    return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+    int32_t ret = Release();
+    if (!reply.WriteInt32(ret)) {
+        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
+        return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
+    }
+    DHLOGE("Enable Permission vailable");
+    return ret;
 }
 
 int32_t DistributedInputSinkStub::NotifyStartDScreenInner(MessageParcel &data, MessageParcel &reply,
