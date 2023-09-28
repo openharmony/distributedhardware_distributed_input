@@ -15,12 +15,14 @@
 
 #include "distributed_input_sink_stub.h"
 
+#include "accesstoken_kit.h"
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_ipc_interface_code.h"
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
 #include "i_sharing_dhid_listener.h"
+#include "ipc_skeleton.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -48,6 +50,15 @@ DistributedInputSinkStub::~DistributedInputSinkStub()
     memberFuncMap_.clear();
 }
 
+bool DistributedInputSinkStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result == Security::AccessToken::PERMISSION_GRANTED);
+}
+
 int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
@@ -66,6 +77,10 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
 
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+    }
     DHLOGI("DistributedInputSinkStub InitInner start");
     int32_t ret = Init();
     if (!reply.WriteInt32(ret)) {
@@ -77,6 +92,10 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
 
 int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+    }
     int32_t ret = Release();
     if (!reply.WriteInt32(ret)) {
         DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);

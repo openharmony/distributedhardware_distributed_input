@@ -44,6 +44,8 @@ public:
 
     int32_t RegisterSharingDhIdListenerInner(MessageParcel &data, MessageParcel &reply, MessageOption &option);
 
+    bool HasEnableDHPermission();
+
 private:
     DISALLOW_COPY_AND_MOVE(DistributedInputSinkStub);
     using DistributedInputSinkFunc = int32_t (DistributedInputSinkStub::*)(MessageParcel &data, MessageParcel &reply,
