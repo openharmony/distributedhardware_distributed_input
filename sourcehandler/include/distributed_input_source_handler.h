@@ -28,6 +28,8 @@
 
 #include "distributed_input_client.h"
 #include "distributed_input_source_manager.h"
+#include "i_distributed_source_input.h"
+#include "load_d_input_source_callback.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -44,6 +46,7 @@ public:
     int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId, const std::string &key,
         const std::string &value) override;
     void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
+    void OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remote);
 
 public:
 
@@ -70,10 +73,17 @@ public:
 private:
     DistributedInputSourceHandler() = default;
     ~DistributedInputSourceHandler();
+    class DInputSourceSvrRecipient : public IRemoteObject::DeathRecipient {
+    public:
+        void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
+    };
     OHOS::sptr<OHOS::ISystemAbilityLoadCallback> sysSourceCallback = nullptr;
 
     std::mutex proxyMutex_;
     std::condition_variable proxyConVar_;
+    sptr<IDistributedSourceInput> dInputSourceProxy_ = nullptr;
+    sptr<LoadDInputSourceCallback> dInputSourceCallback_ = nullptr;
+    sptr<DInputSourceSvrRecipient> sourceSvrRecipient_ = nullptr;
 };
 
 #ifdef __cplusplus
