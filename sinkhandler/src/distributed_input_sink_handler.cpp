@@ -128,13 +128,17 @@ void DistributedInputSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> 
         DHLOGE("dInputSinkProxy_ is nullptr.");
         return;
     }
+    if (dInputSinkProxy_->AsObject() == nullptr) {
+        DHLOGE("AsObject is nullptr.");
+        return;
+    }
     sptr<IRemoteObject> remoteObject = remote.promote();
     if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
 
-    if (dInputSinkProxy_ ->AsObject() != remoteObject) {
+    if (dInputSinkProxy_->AsObject() != remoteObject) {
         DHLOGE("OnRemoteSinkSvrDied not found remote object.");
         return;
     }
