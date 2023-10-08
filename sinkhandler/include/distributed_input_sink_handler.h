@@ -27,6 +27,7 @@
 #include "system_ability_load_callback_stub.h"
 
 #include "distributed_input_client.h"
+#include "i_distributed_sink_input.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -38,6 +39,7 @@ public:
     int32_t ReleaseSink() override;
     int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &params) override;
     int32_t UnsubscribeLocalHardware(const std::string &dhId) override;
+    void OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote);
     void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
 
 public:
@@ -63,10 +65,16 @@ public:
     };
 
 private:
+    class DInputSinkSvrRecipient : public IRemoteObject::DeathRecipient {
+    public:
+        void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
+    };
     DistributedInputSinkHandler() = default;
     ~DistributedInputSinkHandler();
     OHOS::sptr<OHOS::ISystemAbilityLoadCallback> sysSinkCallback = nullptr;
 
+    sptr<IDistributedSinkInput> dInputSinkProxy_ = nullptr;
+    sptr<DInputSinkSvrRecipient> sinkSvrRecipient_ = nullptr;
     std::mutex proxyMutex_;
     std::condition_variable proxyConVar_;
 };

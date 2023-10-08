@@ -64,9 +64,19 @@ int32_t DistributedInputSinkHandler::InitSink(const std::string &params)
 
 void DistributedInputSinkHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGD("FinishStartSA");
-    std::unique_lock<std::mutex> lock(proxyMutex_);
+    DHLOGI("DInputSinkHandler FinishStartSA");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (sinkSvrRecipient_ == nullptr) {
+        DHLOGE("sinkSvrRecipient is nullptr.");
+        return;
+    }
+    remoteObject->AddDeathRecipient(sinkSvrRecipient_);
+    dInputSinkProxy_ = iface_cast<IDistributedSinkInput>(remoteObject);
     DInputSAManager::GetInstance().SetDInputSinkProxy(remoteObject);
+    if ((dInputSinkProxy_ == nullptr) || (dInputSinkProxy_->AsObject() == nullptr)) {
+        DHLOGE("Faild to get input sink proxy.");
+        return;
+    }
     DistributedInputClient::GetInstance().InitSink();
     proxyConVar_.notify_all();
 }
@@ -98,6 +108,42 @@ void DistributedInputSinkHandler::SALoadSinkCb::OnLoadSystemAbilityFail(int32_t 
 {
     currSystemAbilityId = systemAbilityId;
     DHLOGE("DistributedInputSinkHandler OnLoadSystemAbilityFail. systemAbilityId=%d", systemAbilityId);
+}
+
+void DistributedInputSinkHandler::DInputSinkSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
+{
+    if (remote == nullptr) {
+        DHLOGE("OnRemoteDied remote is nullptr.");
+        return;
+    }
+    DHLOGI("DInputSinkSvrRecipient OnRemoteDied.");
+    DistributedInputSinkHandler::GetInstance().OnRemoteSinkSvrDied(remote);
+}
+
+void DistributedInputSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
+{
+    DHLOGI("DInputSinkHandle OnRemoteSinkSvrDied.");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (dInputSinkProxy_ == nullptr) {
+        DHLOGE("dInputSinkProxy_ is nullptr.");
+        return;
+    }
+    if (dInputSinkProxy_->AsObject() == nullptr) {
+        DHLOGE("AsObject is nullptr.");
+        return;
+    }
+    sptr<IRemoteObject> remoteObject = remote.promote();
+    if (remoteObject == nullptr) {
+        DHLOGE("OnRemoteDied remote promoted failed");
+        return;
+    }
+
+    if (dInputSinkProxy_->AsObject() != remoteObject) {
+        DHLOGE("OnRemoteSinkSvrDied not found remote object.");
+        return;
+    }
+    dInputSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
+    dInputSinkProxy_ = nullptr;
 }
 
 IDistributedHardwareSink *GetSinkHardwareHandler()

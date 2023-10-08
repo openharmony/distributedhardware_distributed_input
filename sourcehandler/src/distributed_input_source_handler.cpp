@@ -63,9 +63,19 @@ int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
 
 void DistributedInputSourceHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGD("FinishStartSA");
-    std::unique_lock<std::mutex> lock(proxyMutex_);
+    DHLOGI("DInputSourceHandle FinishStartSA");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (sourceSvrRecipient_ == nullptr) {
+        DHLOGE("sourceSvrRecipient is nullptr.");
+        return;
+    }
+    remoteObject->AddDeathRecipient(sourceSvrRecipient_);
+    dInputSourceProxy_ = iface_cast<IDistributedSourceInput>(remoteObject);
     DInputSAManager::GetInstance().SetDInputSourceProxy(remoteObject);
+    if ((dInputSourceProxy_ == nullptr) || (dInputSourceProxy_->AsObject() == nullptr)) {
+        DHLOGE("Faild to get input source proxy.");
+        return;
+    }
     DistributedInputClient::GetInstance().InitSource();
     proxyConVar_.notify_all();
 }
@@ -105,6 +115,42 @@ void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilityFail(int3
 {
     currSystemAbilityId = systemAbilityId;
     DHLOGE("DistributedInputSourceHandler OnLoadSystemAbilityFail. systemAbilityId=%d", systemAbilityId);
+}
+
+void DistributedInputSourceHandler::DInputSourceSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
+{
+    if (remote == nullptr) {
+        DHLOGE("OnRemoteDied remote is nullptr.");
+        return;
+    }
+    DHLOGI("DInputSourceSvrRecipient OnRemoteDied.");
+    DistributedInputSourceHandler::GetInstance().OnRemoteSourceSvrDied(remote);
+}
+
+void DistributedInputSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remote)
+{
+    DHLOGI("OnRemoteSourceSvrDied.");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (dInputSourceProxy_ == nullptr) {
+        DHLOGE("dInputSourceProxy is nullptr.");
+        return;
+    }
+    if (dInputSourceProxy_->AsObject() == nullptr) {
+        DHLOGE("AsObject is nullptr.");
+        return;
+    }
+    sptr<IRemoteObject> remoteObject = remote.promote();
+    if (remoteObject == nullptr) {
+        DHLOGE("OnRemoteDied remote promoted failed");
+        return;
+    }
+
+    if (dInputSourceProxy_->AsObject() != remoteObject) {
+        DHLOGE("OnRemoteSourceSvrDied not found remote object.");
+        return;
+    }
+    dInputSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
+    dInputSourceProxy_ = nullptr;
 }
 
 IDistributedHardwareSource *GetSourceHardwareHandler()
