@@ -64,15 +64,15 @@ int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
 void DistributedInputSourceHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGI("DInputSourceHandle FinishStartSA");
-    std::unique_lock<std::mutex> lock(proxyMutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (sourceSvrRecipient_ == nullptr) {
         DHLOGE("sourceSvrRecipient is nullptr.");
         return;
     }
-    remoteObject -> AddDeathRecipient(sourceSvrRecipient_);
+    remoteObject->AddDeathRecipient(sourceSvrRecipient_);
     dInputSourceProxy_ = iface_cast<IDistributedSourceInput>(remoteObject);
     DInputSAManager::GetInstance().SetDInputSourceProxy(remoteObject);
-    if ((dInputSourceProxy_ == nullptr) || (dInputSourceProxy_ ->AsObject() == nullptr)) {
+    if ((dInputSourceProxy_ == nullptr) || (dInputSourceProxy_->AsObject() == nullptr)) {
         DHLOGE("Faild to get input source proxy.");
         return;
     }
@@ -120,7 +120,7 @@ void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilityFail(int3
 void DistributedInputSourceHandler::DInputSourceSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
     if (remote == nullptr) {
-        DHLOGI("OnRemoteDied remote is nullptr.");
+        DHLOGE("OnRemoteDied remote is nullptr.");
         return;
     }
     DHLOGI("DInputSourceSvrRecipient OnRemoteDied.");
@@ -141,7 +141,7 @@ void DistributedInputSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObje
         return;
     }
 
-    if (dInputSourceProxy_ ->AsObject() != remoteObject) {
+    if (dInputSourceProxy_->AsObject() != remoteObject) {
         DHLOGE("OnRemoteSourceSvrDied not found remote object.");
         return;
     }
