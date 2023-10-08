@@ -65,15 +65,15 @@ int32_t DistributedInputSinkHandler::InitSink(const std::string &params)
 void DistributedInputSinkHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGI("DInputSinkHandler FinishStartSA");
-    std::unique_lock<std::mutex> lock(proxyMutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (sinkSvrRecipient_ == nullptr) {
         DHLOGE("sinkSvrRecipient is nullptr.");
         return;
     }
-    remoteObject -> AddDeathRecipient(sinkSvrRecipient_);
+    remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dInputSinkProxy_ = iface_cast<IDistributedSinkInput>(remoteObject);
     DInputSAManager::GetInstance().SetDInputSinkProxy(remoteObject);
-    if ((dInputSinkProxy_ == nullptr) || (dInputSinkProxy_ ->AsObject() == nullptr)) {
+    if ((dInputSinkProxy_ == nullptr) || (dInputSinkProxy_->AsObject() == nullptr)) {
         DHLOGE("Faild to get input sink proxy.");
         return;
     }
@@ -113,7 +113,7 @@ void DistributedInputSinkHandler::SALoadSinkCb::OnLoadSystemAbilityFail(int32_t 
 void DistributedInputSinkHandler::DInputSinkSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
     if (remote == nullptr) {
-        DHLOGI("OnRemoteDied remote is nullptr.");
+        DHLOGE("OnRemoteDied remote is nullptr.");
         return;
     }
     DHLOGI("DInputSinkSvrRecipient OnRemoteDied.");
