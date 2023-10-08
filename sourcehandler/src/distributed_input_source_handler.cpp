@@ -135,6 +135,10 @@ void DistributedInputSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObje
         DHLOGE("dInputSourceProxy is nullptr.");
         return;
     }
+    if (dInputSourceProxy_->AsObject() == nullptr) {
+        DHLOGE("AsObject is nullptr.");
+        return;
+    }
     sptr<IRemoteObject> remoteObject = remote.promote();
     if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
