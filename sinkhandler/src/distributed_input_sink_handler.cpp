@@ -26,6 +26,15 @@ namespace DistributedHardware {
 namespace DistributedInput {
 IMPLEMENT_SINGLE_INSTANCE(DistributedInputSinkHandler);
 
+DistributedInputSinkHandler::DistributedInputSinkHandler()
+{
+    DHLOGI("DInputSinkHandler construct.");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (sinkSvrRecipient_ == nullptr) {
+        sinkSvrRecipient_ = new (std::nothrow) DInputSinkSvrRecipient();
+    }
+}
+
 DistributedInputSinkHandler::~DistributedInputSinkHandler()
 {
     DHLOGI("~DistributedInputSinkHandler");
