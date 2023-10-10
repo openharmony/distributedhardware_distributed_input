@@ -26,7 +26,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 IMPLEMENT_SINGLE_INSTANCE(DistributedInputSourceHandler);
 
-DistributedInputSourceHandler::~DistributedInputSourceHandler()
+DistributedInputSourceHandler::DistributedInputSourceHandler()
 {
     DHLOGI("DInputSourceHandler construct.");
     std::lock_guard<std::mutex> lock(proxyMutex_);
@@ -34,8 +34,8 @@ DistributedInputSourceHandler::~DistributedInputSourceHandler()
         sourceSvrRecipient_ = new (std::nothrow) DInputSourceSvrRecipient();
     }
 
-    if (sourceSvrRecipient_ == nullptr) {
-        sourceSvrRecipient_ = new (std::nothrow) LoadDInputSourceCallback();
+    if (dInputSourceCallback_ == nullptr) {
+        dInputSourceCallback_ = new (std::nothrow) LoadDInputSourceCallback();
     }
 }
 
