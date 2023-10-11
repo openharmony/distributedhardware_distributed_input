@@ -23,6 +23,9 @@ namespace DistributedHardware {
 namespace DistributedInput {
 class LoadDInputSourceCallback : public SystemAbilityLoadCallbackStub {
 public:
+    LoadDInputSourceCallback() = default;
+    ~LoadDInputSourceCallback() override = default;
+
     explicit LoadDInputSourceCallback(const std::string &params);
     void OnLoadSystemAbilitySuccess(int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject) override;
     void OnLoadSystemAbilityFail(int32_t systemAbilityId) override;

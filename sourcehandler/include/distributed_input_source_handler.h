@@ -71,8 +71,8 @@ public:
         OHOS::sptr<OHOS::IRemoteObject> currRemoteObject;
     };
 private:
-    DistributedInputSourceHandler() = default;
-    ~DistributedInputSourceHandler();
+    DistributedInputSourceHandler();
+    ~DistributedInputSourceHandler() = default;
     class DInputSourceSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;

@@ -69,7 +69,7 @@ private:
     public:
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
     };
-    DistributedInputSinkHandler() = default;
+    DistributedInputSinkHandler();
     ~DistributedInputSinkHandler();
     OHOS::sptr<OHOS::ISystemAbilityLoadCallback> sysSinkCallback = nullptr;
 
