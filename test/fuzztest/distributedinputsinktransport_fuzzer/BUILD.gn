@@ -62,6 +62,7 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
+    "hicollie:libhicollie",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
   ]

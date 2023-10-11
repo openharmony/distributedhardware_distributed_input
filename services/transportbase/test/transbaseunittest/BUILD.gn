@@ -83,6 +83,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
+    "hicollie:libhicollie",
     "hitrace:hitrace_meter",
   ]
 
