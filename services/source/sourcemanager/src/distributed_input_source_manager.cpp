@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +39,7 @@
 #include "distributed_input_source_transport.h"
 #include "distributed_input_transport_base.h"
 #include "dinput_softbus_define.h"
+#include "xcollie/watchdog.h"
 #include "hisysevent_util.h"
 #include "hidumper.h"
 #include "input_check_param.h"
@@ -118,6 +122,11 @@ bool DistributedInputSourceManager::InitAuto()
     DHLOGI("init success");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     callBackHandler_ = std::make_shared<DInputSourceManagerEventHandler>(runner, this);
+
+    if (OHOS::HiviewDFX::Watchdog::GetInstance().AddThread("dinputsourcewatchdog", callBackHandler_,
+        WATCHDOG_INTERVAL_TIME_MS)) {
+        DHLOGE("HiviewDFX::Watchdog::GetInstance().AddThread() Failed.");
+    }
     return true;
 }
 

@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +34,7 @@
 #include "hidumper.h"
 #include "session.h"
 #include "softbus_bus_center.h"
+#include "xcollie/watchdog.h"
 
 #include "distributed_input_transport_base.h"
 
@@ -41,6 +45,11 @@ DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_(
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     eventHandler_ = std::make_shared<DistributedInputSinkTransport::DInputSinkEventHandler>(runner);
+
+    if (OHOS::HiviewDFX::Watchdog::GetInstance().AddThread("dinputwatchdog", eventHandler_,
+        WATCHDOG_INTERVAL_TIME_MS)) {
+        DHLOGE("HiviewDFX::Watchdog::GetInstance().AddThread() Failed.");
+    }
     DHLOGI("DistributedInputSinkTransport ctor.");
 }
 

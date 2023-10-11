@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +86,8 @@ namespace DistributedInput {
     constexpr int32_t SESSION_WAIT_TIMEOUT_SECOND = 5;
 
     constexpr int32_t EPOLL_WAITTIME = 100;
+
+    constexpr uint64_t WATCHDOG_INTERVAL_TIME_MS = 20 * 1000;
 
     /* The input device is a keyboard or has buttons. */
     constexpr uint32_t INPUT_DEVICE_CLASS_KEYBOARD      = 0x00000001;

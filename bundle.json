@@ -39,6 +39,7 @@
                 "c_utils",
                 "distributed_hardware_fwk",
                 "config_policy",
+                "hicollie",
                 "hisysevent",
                 "hitrace",
                 "graphic_2d",
