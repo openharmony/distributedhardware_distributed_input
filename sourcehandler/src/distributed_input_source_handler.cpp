@@ -97,7 +97,7 @@ int32_t DistributedInputSourceHandler::ReleaseSource()
 int32_t DistributedInputSourceHandler::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, std::shared_ptr<RegisterCallback> callback)
 {
-    return DistributedInputClient::GetInstance().RegisterDistributedHardware(devId, dhId, param.attrs, callback);
+    return DistributedInputClient::GetInstance().RegisterDistributedHardware(devId, dhId, param.sinkAttrs, callback);
 }
 
 int32_t DistributedInputSourceHandler::UnregisterDistributedHardware(const std::string &devId,

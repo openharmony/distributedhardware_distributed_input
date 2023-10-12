@@ -63,11 +63,11 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t *data, size_t size)
 
     std::string rDevId(reinterpret_cast<const char*>(data), size);
     std::string rDhId(reinterpret_cast<const char*>(data), size);
-    std::string version(reinterpret_cast<const char*>(data), size);
-    std::string attrs(reinterpret_cast<const char*>(data), size);
+    std::string sinkVersion(reinterpret_cast<const char*>(data), size);
+    std::string sinkAttrs(reinterpret_cast<const char*>(data), size);
     EnableParam enableParam;
-    enableParam.version = version;
-    enableParam.attrs = attrs;
+    enableParam.sinkVersion = sinkVersion;
+    enableParam.sinkAttrs = sinkAttrs;
 
     std::shared_ptr<TestRegisterInputCallback> registerCb = std::make_shared<TestRegisterInputCallback>();
     std::shared_ptr<TestUnregisterInputCallback> unregisterCb = std::make_shared<TestUnregisterInputCallback>();
