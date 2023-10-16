@@ -15,13 +15,35 @@
 
 #include "add_white_list_infos_call_back_test.h"
 
+#include "accesstoken_kit.h"
 #include "dinput_errcode.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+#include "softbus_common.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 void AddWhiteListInfosCallbackTest::SetUp()
 {
+    uint64_t tokenId;
+    const char *perms[3];
+    perms[0] = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
+    perms[2] = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 3,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "dinput",
+        .aplStr = "system_core",
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
 }
 
 void AddWhiteListInfosCallbackTest::TearDown()
