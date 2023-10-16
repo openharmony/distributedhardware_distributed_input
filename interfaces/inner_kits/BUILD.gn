@@ -32,12 +32,6 @@ config("input_sdk_public_config") {
   ]
 }
 ohos_shared_library("libdinput_sdk") {
-  sanitize = {
-    boundary_sanitize = true
-    integer_overflow = true
-    ubsan = true
-  }
-  stack_protector_ret = true
   public_configs = [ ":input_sdk_public_config" ]
 
   sources = [
