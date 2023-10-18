@@ -55,6 +55,7 @@ ohos_shared_library("libdinput_sink_trans") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
+    "hicollie:libhicollie",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

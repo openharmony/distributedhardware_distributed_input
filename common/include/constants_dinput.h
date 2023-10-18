@@ -84,6 +84,8 @@ namespace DistributedInput {
 
     constexpr int32_t EPOLL_WAITTIME = 100;
 
+    constexpr uint64_t WATCHDOG_INTERVAL_TIME_MS = 20 * 1000;
+
     /* The input device is a keyboard or has buttons. */
     constexpr uint32_t INPUT_DEVICE_CLASS_KEYBOARD      = 0x00000001;
 

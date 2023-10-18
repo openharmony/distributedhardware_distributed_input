@@ -31,6 +31,7 @@
 #include "hidumper.h"
 #include "session.h"
 #include "softbus_bus_center.h"
+#include "xcollie/watchdog.h"
 
 #include "distributed_input_transport_base.h"
 
@@ -41,6 +42,11 @@ DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_(
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     eventHandler_ = std::make_shared<DistributedInputSinkTransport::DInputSinkEventHandler>(runner);
+
+    if (OHOS::HiviewDFX::Watchdog::GetInstance().AddThread("dinputwatchdog", eventHandler_,
+        WATCHDOG_INTERVAL_TIME_MS)) {
+        DHLOGE("HiviewDFX::Watchdog::GetInstance().AddThread() Failed.");
+    }
     DHLOGI("DistributedInputSinkTransport ctor.");
 }
 

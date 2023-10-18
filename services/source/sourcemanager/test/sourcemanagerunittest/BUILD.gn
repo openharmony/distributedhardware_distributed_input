@@ -126,6 +126,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
+    "hicollie:libhicollie",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
