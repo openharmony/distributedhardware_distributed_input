@@ -36,6 +36,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 constexpr uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
+constexpr uint32_t DINPUT_INJECT_EVENT_FAIL = 2;
 const std::string INPUT_NODE_DHID = "dhId";
 class DistributedInputNodeManager {
 public:
@@ -96,7 +97,7 @@ private:
     bool IsVirtualDev(int fd);
     bool GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath);
     void SetPathForDevMap(const std::string &dhId, const std::string &devicePath);
-    void RunInjectEventCallback(const std::string &dhId);
+    void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
