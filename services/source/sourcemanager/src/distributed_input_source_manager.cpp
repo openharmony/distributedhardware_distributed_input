@@ -1220,11 +1220,13 @@ int32_t DistributedInputSourceManager::RegisterSessionStateCb(sptr<ISessionState
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_SESSION_STATE_CB_IS_NULL;
     }
     DistributedInputTransportBase::GetInstance().RegisterSessionStateCb(callback);
+    DistributedInputInject::GetInstance().RegisterInjectEventCb(callback);
     return DH_SUCCESS;
 }
 int32_t DistributedInputSourceManager::UnregisterSessionStateCb()
 {
     DistributedInputTransportBase::GetInstance().UnregisterSessionStateCb();
+    DistributedInputInject::GetInstance().UnregisterInjectEventCb();
     return DH_SUCCESS;
 }
 
