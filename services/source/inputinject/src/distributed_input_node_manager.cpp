@@ -453,7 +453,7 @@ void DistributedInputNodeManager::InjectInputEvent(const std::string &dhId, cons
     VirtualDevice* device = nullptr;
     if (GetDevice(dhId, device) < 0) {
         DHLOGE("could not find the device");
-        RunInjectEventCallback(dhId);
+        RunInjectEventCallback(dhId, DINPUT_INJECT_EVENT_FAIL);
         return;
     }
     if (device != nullptr) {
@@ -464,19 +464,20 @@ void DistributedInputNodeManager::InjectInputEvent(const std::string &dhId, cons
 void DistributedInputNodeManager::RegisterInjectEventCb(sptr<ISessionStateCallback> callback)
 {
     DHLOGI("RegisterInjectEventCb");
-    InjectEventCallback_ = callback;
+    SessionStateCallback_ = callback;
 }
 
 void DistributedInputNodeManager::UnregisterInjectEventCb()
 {
     DHLOGI("UnregisterInjectEventCb");
-    InjectEventCallback_ = nullptr;
+    SessionStateCallback_ = nullptr;
 }
 
 void DistributedInputNodeManager::RunInjectEventCallback(const std::string &dhId)
 {
     DHLOGI("RunInjectEventCallback start.");
-    if (InjectEventCallback_ != nullptr) {
+    if (SessionStateCallback_ != nullptr) {
+        SessionStateCallback_->OnResult(dhId, DINPUT_INJECT_EVENT_FAIL);
         return;
     }
     DHLOGI("RunInjectEventCallback InjectEventCallback_ is null.");
