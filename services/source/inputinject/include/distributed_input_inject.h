@@ -47,6 +47,8 @@ public:
     int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t GetDhIdsByInputType(const std::string &devId, const uint32_t &inputTypes, std::vector<std::string> &dhIds);
+    int32_t RegisterInjectEventCb(sptr<ISessionStateCallback> callback);
+    int32_t UnregisterInjectEventCb();
 
     void NotifyNodeMgrScanVirNode(const std::string &dhId);
     void InputDeviceEventInject(const std::shared_ptr<RawEvent> &rawEvent);
