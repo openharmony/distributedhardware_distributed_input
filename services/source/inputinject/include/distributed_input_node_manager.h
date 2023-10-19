@@ -115,7 +115,7 @@ private:
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
     std::atomic<bool> isFirst_;
     DhIdState specEventState_;
-    sptr<IInjectEventCallback> InjectEventCallback_;
+    sptr<ISessionStateCallback> SessionStateCallback_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
