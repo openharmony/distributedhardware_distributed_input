@@ -186,6 +186,8 @@ public:
 
     int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) override;
     int32_t UnregisterSessionStateCb() override;
+    int32_t RegisterInjectEventCb(sptr<ISessionStateCallback> callback) override;
+    int32_t UnregisterInjectEventCb() override;
 
     bool CheckRegisterParam(const std::string &devId, const std::string &dhId,
         const std::string &parameters, sptr<IRegisterDInputCallback> callback);
