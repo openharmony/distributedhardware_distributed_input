@@ -476,11 +476,11 @@ void DistributedInputNodeManager::UnregisterInjectEventCb()
 void DistributedInputNodeManager::RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent)
 {
     DHLOGI("RunInjectEventCallback start.");
-    if (SessionStateCallback_ != nullptr) {
-        SessionStateCallback_->OnResult(dhId, DINPUT_INJECT_EVENT_FAIL);
+    if (SessionStateCallback_ == nullptr) {
+        DHLOGE("RunSessionStateCallback SessionStateCallback_ is null.");
         return;
     }
-    DHLOGI("RunSessionStateCallback SessionStateCallback_ is null.");
+    SessionStateCallback_->OnResult(dhId, DINPUT_INJECT_EVENT_FAIL);
 }
 
 void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent)
