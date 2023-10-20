@@ -256,6 +256,22 @@ int32_t DistributedInputInject::GetVirtualTouchScreenFd()
     return inputNodeManager_->GetVirtualTouchScreenFd();
 }
 
+int32_t DistributedInputInject::RegisterInjectEventCb(sptr<ISessionStateCallback> callback)
+{
+    if (callback == nullptr) {
+        DHLOGE("RegisterInjectEventCb callback is null.");
+        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INJECT_EVENT_CB_IS_NULL;
+    }
+    inputNodeManager_->RegisterInjectEventCb(callback);
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputInject::UnregisterInjectEventCb()
+{
+    inputNodeManager_->UnregisterInjectEventCb();
+    return DH_SUCCESS;
+}
+
 void DistributedInputInject::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
     std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds)
 {

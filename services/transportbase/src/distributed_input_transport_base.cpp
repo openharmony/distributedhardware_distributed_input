@@ -307,7 +307,7 @@ void DistributedInputTransportBase::RunSessionStateCallback(const std::string &r
         SessionStateCallback_->OnResult(remoteDevId, sessionState);
         return;
     }
-    DHLOGI("RunSessionStateCallback SessionStateCallback_ is null.");
+    DHLOGE("RunSessionStateCallback SessionStateCallback_ is null.");
 }
 
 int32_t DistributedInputTransportBase::CountSession(const std::string &remoteDevId)

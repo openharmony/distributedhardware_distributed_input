@@ -79,7 +79,7 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SINK_ENABLE_PERMISSION_CHECK_FAIL;
     }
     DHLOGI("DistributedInputSinkStub InitInner start");
     int32_t ret = Init();
@@ -94,7 +94,7 @@ int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParce
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SINK_ENABLE_PERMISSION_CHECK_FAIL;
     }
     int32_t ret = Release();
     if (!reply.WriteInt32(ret)) {

@@ -29,12 +29,14 @@
 
 #include "constants_dinput.h"
 #include "input_hub.h"
+#include "i_session_state_callback.h"
 #include "virtual_device.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 constexpr uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
+constexpr uint32_t DINPUT_INJECT_EVENT_FAIL = 2;
 const std::string INPUT_NODE_DHID = "dhId";
 class DistributedInputNodeManager {
 public:
@@ -64,6 +66,8 @@ public:
     void UpdateSpecEventFirstStatus(bool status);
     void UpdateSpecEventState(DhIdState state);
     void InjectInputEvent(const std::string &dhId, const struct input_event &event);
+    void RegisterInjectEventCb(sptr<ISessionStateCallback> callback);
+    void UnregisterInjectEventCb();
 
     class DInputNodeManagerEventHandler : public AppExecFwk::EventHandler {
     public:
@@ -93,6 +97,7 @@ private:
     bool IsVirtualDev(int fd);
     bool GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath);
     void SetPathForDevMap(const std::string &dhId, const std::string &devicePath);
+    void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
     /* the key is dhId, and the value is virtualDevice */
     std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
@@ -110,6 +115,7 @@ private:
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
     std::atomic<bool> isFirst_;
     DhIdState specEventState_;
+    sptr<ISessionStateCallback> SessionStateCallback_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

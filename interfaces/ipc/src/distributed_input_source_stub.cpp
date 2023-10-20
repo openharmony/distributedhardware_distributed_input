@@ -107,7 +107,7 @@ int32_t DistributedInputSourceStub::HandleInitDistributedHardware(MessageParcel 
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ENABLE_PERMISSION_CHECK_FAIL;
     }
     std::unique_lock<std::mutex> lock(operatorMutex_);
     if (sourceManagerInitFlag_.load()) {
@@ -127,7 +127,7 @@ int32_t DistributedInputSourceStub::HandleReleaseDistributedHardware(MessageParc
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ENABLE_PERMISSION_CHECK_FAIL;
     }
     std::unique_lock<std::mutex> lock(operatorMutex_);
     if (!sourceManagerInitFlag_.load()) {
@@ -147,7 +147,7 @@ int32_t DistributedInputSourceStub::HandleRegisterDistributedHardware(MessagePar
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ENABLE_PERMISSION_CHECK_FAIL;
     }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
@@ -169,7 +169,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterDistributedHardware(MessageP
 {
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ENABLE_PERMISSION_CHECK_FAIL;
     }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
@@ -190,7 +190,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRemoteInput(MessageParcel &data
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string deviceId = data.ReadString();
     sptr<IPrepareDInputCallback> callback = iface_cast<IPrepareDInputCallback>(data.ReadRemoteObject());
@@ -210,7 +210,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRemoteInput(MessageParcel &da
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string deviceId = data.ReadString();
     sptr<IUnprepareDInputCallback> callback = iface_cast<IUnprepareDInputCallback>(data.ReadRemoteObject());
@@ -230,7 +230,7 @@ int32_t DistributedInputSourceStub::HandleStartRemoteInput(MessageParcel &data, 
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string deviceId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
@@ -251,7 +251,7 @@ int32_t DistributedInputSourceStub::HandleStopRemoteInput(MessageParcel &data, M
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string deviceId = data.ReadString();
     uint32_t inputTypes = data.ReadUint32();
@@ -272,7 +272,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayTypeRemoteInput(MessageParce
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -294,7 +294,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayTypeRemoteInput(MessageParcel
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -316,7 +316,7 @@ int32_t DistributedInputSourceStub::HandlePrepareRelayRemoteInput(MessageParcel 
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -337,7 +337,7 @@ int32_t DistributedInputSourceStub::HandleUnprepareRelayRemoteInput(MessageParce
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -358,7 +358,7 @@ int32_t DistributedInputSourceStub::HandleStartDhidRemoteInput(MessageParcel &da
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string sinkId = data.ReadString();
 
@@ -395,7 +395,7 @@ int32_t DistributedInputSourceStub::HandleStopDhidRemoteInput(MessageParcel &dat
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string sinkId = data.ReadString();
 
@@ -432,7 +432,7 @@ int32_t DistributedInputSourceStub::HandleStartRelayDhidRemoteInput(MessageParce
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -470,7 +470,7 @@ int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     std::string srcId = data.ReadString();
     std::string sinkId = data.ReadString();
@@ -616,7 +616,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     sptr<ISessionStateCallback> callback = iface_cast<ISessionStateCallback>(data.ReadRemoteObject());
     if (callback == nullptr) {
@@ -636,7 +636,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
 {
     if (!HasAccessDHPermission()) {
         DHLOGE("The caller has no ACCESS_DISTRIBUTED_HARDWARE permission.");
-        return ERR_DH_INPUT_CLIENT_STOP_FAIL;
+        return ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL;
     }
     int32_t ret = UnregisterSessionStateCb();
     if (!reply.WriteInt32(ret)) {
