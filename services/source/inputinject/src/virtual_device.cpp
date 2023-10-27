@@ -73,6 +73,12 @@ bool VirtualDevice::CreateKey(const InputDevice &inputDevice)
     evt_type[UI_SET_PROPBIT] = inputDevice.properties;
     evt_type[UI_SET_ABSBIT] = inputDevice.absTypes;
     evt_type[UI_SET_RELBIT] = inputDevice.relTypes;
+
+    evt_type[UI_SET_MSCBIT] = inputDevice.miscellaneous;
+    evt_type[UI_SET_LEDBIT] = inputDevice.leds;
+    evt_type[UI_SET_SWBIT] = inputDevice.switchs;
+    evt_type[UI_SET_FFBIT] = inputDevice.repeats;
+
     for (auto &it : evt_type) {
         if (!fun(it.first, it.second)) {
             return false;
@@ -219,7 +225,7 @@ void VirtualDevice::RecordEventLog(const input_event &event)
             eventType = "EV_ABS";
             break;
         default:
-            eventType = "other type";
+            eventType = "other type " + std::to_string(event.type);
             break;
     }
     DHLOGD("4.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d, Sec: %ld, Sec1: %ld",
