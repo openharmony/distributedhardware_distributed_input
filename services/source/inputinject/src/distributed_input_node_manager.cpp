@@ -129,6 +129,18 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json &inputD
     if (IsArray(inputDeviceJson, PROPERTIES)) {
         pBuf.properties = inputDeviceJson[PROPERTIES].get<std::vector<uint32_t>>();
     }
+    if (IsArray(inputDeviceJson, MISCELLANEOUS)) {
+        pBuf.miscellaneous = inputDeviceJson[MISCELLANEOUS].get<std::vector<uint32_t>>();
+    }
+    if (IsArray(inputDeviceJson, LEDS)) {
+        pBuf.leds = inputDeviceJson[LEDS].get<std::vector<uint32_t>>();
+    }
+    if (IsArray(inputDeviceJson, REPEATS)) {
+        pBuf.repeats = inputDeviceJson[REPEATS].get<std::vector<uint32_t>>();
+    }
+    if (IsArray(inputDeviceJson, SWITCHS)) {
+        pBuf.switchs = inputDeviceJson[SWITCHS].get<std::vector<uint32_t>>();
+    }
 }
 
 void DistributedInputNodeManager::ScanSinkInputDevices(const std::string &dhId)

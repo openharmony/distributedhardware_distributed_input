@@ -187,6 +187,14 @@ namespace DistributedInput {
 
     const std::string PROPERTIES = "properties";
 
+    const std::string MISCELLANEOUS = "miscellaneous";
+
+    const std::string LEDS = "leds";
+
+    const std::string REPEATS = "repeats";
+
+    const std::string SWITCHS = "switchs";
+
     const std::string DH_TOUCH_PAD = "touchpad";
 
     const std::string DINPUT_LOG_TITLE_TAG = "DINPUT";
@@ -258,6 +266,11 @@ namespace DistributedInput {
         std::map<uint32_t, std::vector<int32_t>> absInfos;
         std::vector<uint32_t> relTypes;
         std::vector<uint32_t> properties;
+
+        std::vector<uint32_t> miscellaneous;
+        std::vector<uint32_t> leds;
+        std::vector<uint32_t> switchs;
+        std::vector<uint32_t> repeats;
     };
 
     /*

@@ -454,17 +454,17 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
 
-    InputDevice identifier;
-    if (QueryInputDeviceInfo(fd, identifier) < 0) {
+    // Allocate device. (The device object takes ownership of the fd at this point.)
+    int32_t deviceId = nextDeviceId_++;
+    std::unique_ptr<Device> device = std::make_unique<Device>(fd, deviceId, devicePath);
+
+    if (QueryInputDeviceInfo(fd, device) < 0) {
         CloseFd(fd);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    GenerateDescriptor(identifier);
+    GenerateDescriptor(device->identifier);
 
-    // Allocate device. (The device object takes ownership of the fd at this point.)
-    int32_t deviceId = nextDeviceId_++;
-    std::unique_ptr<Device> device = std::make_unique<Device>(fd, deviceId, devicePath, identifier);
-    RecordDeviceLog(deviceId, devicePath, identifier);
+    RecordDeviceLog(deviceId, devicePath, device->identifier);
 
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
@@ -474,7 +474,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     return DH_SUCCESS;
 }
 
-int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice &identifier)
+int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
 {
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     // Get device name.
@@ -483,11 +483,11 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice &identifier)
             "Could not get device name for %s", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
-        identifier.name = buffer;
+        device->identifier.name = buffer;
     }
     DHLOGD("QueryInputDeviceInfo deviceName: %s", buffer);
     // If the device is already a virtual device, don't monitor it.
-    if (identifier.name.find(VIRTUAL_DEVICE_NAME) != std::string::npos) {
+    if (device->identifier.name.find(VIRTUAL_DEVICE_NAME) != std::string::npos) {
         return ERR_DH_INPUT_HUB_IS_VIRTUAL_DEVICE;
     }
     // Get device driver version.
@@ -502,44 +502,110 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, InputDevice &identifier)
         DHLOGE("could not get device input id for %s\n", ConvertErrNo().c_str());
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    identifier.bus = inputId.bustype;
-    identifier.product = inputId.product;
-    identifier.vendor = inputId.vendor;
-    identifier.version = inputId.version;
+    device->identifier.bus = inputId.bustype;
+    device->identifier.product = inputId.product;
+    device->identifier.vendor = inputId.vendor;
+    device->identifier.version = inputId.version;
     // Get device physical physicalPath.
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE("could not get physicalPath for %s\n", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
-        identifier.physicalPath = buffer;
+        device->identifier.physicalPath = buffer;
     }
     // Get device unique id.
     if (ioctl(fd, EVIOCGUNIQ(sizeof(buffer) - 1), &buffer) < 1) {
         DHLOGE("could not get idstring for %s\n", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
-        identifier.uniqueId = buffer;
+        device->identifier.uniqueId = buffer;
     }
 
-    QueryEventInfo(fd, identifier);
+    QueryEventInfo(fd, device);
     return DH_SUCCESS;
 }
 
-void InputHub::QueryEventInfo(int fd, InputDevice &identifier)
+void InputHub::QueryEventInfo(int fd, std::unique_ptr<Device> &device)
 {
-    DHLOGI("QueryEventInfo: devName: %s, dhId: %s!", identifier.name.c_str(),
-        GetAnonyString(identifier.descriptor).c_str());
+    DHLOGI("QueryEventInfo: devName: %s, dhId: %s!", device->identifier.name.c_str(),
+        GetAnonyString(device->identifier.descriptor).c_str());
     struct libevdev *dev = GetLibEvDev(fd);
     if (dev == nullptr) {
         DHLOGE("dev is nullptr");
         return;
     }
-    GetEventTypes(dev, identifier);
-    GetEventKeys(dev, identifier);
-    GetABSInfo(dev, identifier);
-    GetRELTypes(dev, identifier);
-    GetProperties(dev, identifier);
+    GetEventTypes(dev, device->identifier);
+    GetEventKeys(dev, device->identifier);
+    GetABSInfo(dev, device->identifier);
+    GetRELTypes(dev, device->identifier);
+    GetProperties(dev, device->identifier);
+
+    GetMSCBits(fd, device);
+    GetLEDBits(fd, device);
+    GetSwitchBits(fd, device);
+    GetRepeatBits(fd, device);
+
     libevdev_free(dev);
+}
+
+void InputHub::GetEventMask(int fd, const std::string &eventName, uint32_t type,
+    std::size_t arrayLength, uint8_t *whichBitMask) const
+{
+    int32_t rc = ioctl(fd, EVIOCGBIT(type, arrayLength), whichBitMask);
+    if (rc < 0) {
+        DHLOGE("Could not get events %{public}s mask: %{public}s", eventName.c_str(), strerror(errno));
+    }
+}
+
+void InputHub::GetMSCBits(int fd, std::unique_ptr<Device> &device)
+{
+    uint8_t mscBitmask_[NBYTES(MSC_MAX)] {};
+    GetEventMask(fd, "msc", EV_MSC, sizeof(mscBitmask_), mscBitmask_);
+
+    for (uint32_t msc = MSC_SERIAL; msc < MSC_MAX; ++msc) {
+        if (TestBit(EV_MSC, device->evBitmask) && TestBit(msc, mscBitmask_)) {
+            DHLOGI("Get MSC event: %d", msc);
+            device->identifier.miscellaneous.push_back(msc);
+        }
+    }
+}
+
+void InputHub::GetLEDBits(int fd, std::unique_ptr<Device> &device)
+{
+    uint8_t ledBitmask_[NBYTES(LED_MAX)] {};
+    GetEventMask(fd, "led", EV_LED, sizeof(ledBitmask_), ledBitmask_);
+    for (uint32_t led = LED_NUML; led < LED_MAX; ++led) {
+        if (TestBit(EV_LED, device->evBitmask) && TestBit(led, ledBitmask_)) {
+            DHLOGI("Get LED event: %d", led);
+            device->identifier.leds.push_back(led);
+        }
+    }
+}
+
+void InputHub::GetSwitchBits(int fd, std::unique_ptr<Device> &device)
+{
+    uint8_t switchBitmask_[NBYTES(SW_MAX)] {};
+    GetEventMask(fd, "switch", EV_SW, sizeof(switchBitmask_), switchBitmask_);
+
+    for (uint32_t sw = SW_LID; sw < SW_MAX; ++sw) {
+        if (TestBit(EV_SW, device->evBitmask) && TestBit(sw, switchBitmask_)) {
+            DHLOGI("Get Switch event: %d", sw);
+            device->identifier.switchs.push_back(sw);
+        }
+    }
+}
+
+void InputHub::GetRepeatBits(int fd, std::unique_ptr<Device> &device)
+{
+    uint8_t repBitmask_[NBYTES(REP_MAX)] {};
+    GetEventMask(fd, "repeat", EV_REP, sizeof(repBitmask_), repBitmask_);
+
+    for (uint32_t rep = REP_DELAY; rep < REP_MAX; ++rep) {
+        if (TestBit(EV_REP, device->evBitmask) && TestBit(rep, repBitmask_)) {
+            DHLOGI("Get Repeat event: %d", rep);
+            device->identifier.repeats.push_back(rep);
+        }
+    }
 }
 
 struct libevdev* InputHub::GetLibEvDev(int fd)
@@ -644,11 +710,6 @@ void InputHub::GetProperties(struct libevdev *dev, InputDevice &identifier)
 
 int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
 {
-    // Figure out the kinds of events the device reports.
-    ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(device->keyBitmask)), device->keyBitmask);
-    ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(device->absBitmask)), device->absBitmask);
-    ioctl(fd, EVIOCGBIT(EV_REL, sizeof(device->relBitmask)), device->relBitmask);
-
     // See if this is a multi-touch touchscreen device.
     if (TestBit(BTN_TOUCH, device->keyBitmask) &&
         TestBit(ABS_MT_POSITION_X, device->absBitmask) &&
@@ -702,13 +763,12 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
 int32_t InputHub::QueryLocalTouchScreenInfo(int fd)
 {
     LocalTouchScreenInfo info = DInputContext::GetInstance().GetLocalTouchScreenInfo();
-
-    InputDevice identifier;
-    if (QueryInputDeviceInfo(fd, identifier) < 0) {
+    std::unique_ptr<Device> device = std::make_unique<Device>(fd, 0, "");
+    if (QueryInputDeviceInfo(fd, device) < 0) {
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    identifier.classes |= INPUT_DEVICE_CLASS_TOUCH_MT;
-    info.localAbsInfo.deviceInfo = identifier;
+    device->identifier.classes |= INPUT_DEVICE_CLASS_TOUCH_MT;
+    info.localAbsInfo.deviceInfo = device->identifier;
 
     struct input_absinfo absInfo;
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), &absInfo);
@@ -1264,12 +1324,15 @@ bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsI
     return false;
 }
 
-InputHub::Device::Device(int fd, int32_t id, const std::string &path,
-    const InputDevice &identifier) : next(nullptr), fd(fd), id(id), path(path), identifier(identifier),
-    classes(0), enabled(false), isShare(false), isVirtual(fd < 0) {
-    memset_s(keyBitmask, sizeof(keyBitmask), 0, sizeof(keyBitmask));
-    memset_s(absBitmask, sizeof(absBitmask), 0, sizeof(absBitmask));
-    memset_s(relBitmask, sizeof(relBitmask), 0, sizeof(relBitmask));
+InputHub::Device::Device(int fd, int32_t id, const std::string &path)
+    : next(nullptr), fd(fd), id(id), path(path), identifier({}), classes(0), enabled(false),
+      isShare(false), isVirtual(fd < 0) {
+    // Figure out the kinds of events the device reports.
+    DHLOGE("Ctor Device for get event mask, fd: %d, id: %d, path: %d", fd, id, path.c_str());
+    ioctl(fd, EVIOCGBIT(0, sizeof(evBitmask)), evBitmask);
+    ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBitmask)), keyBitmask);
+    ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absBitmask)), absBitmask);
+    ioctl(fd, EVIOCGBIT(EV_REL, sizeof(relBitmask)), relBitmask);
 }
 
 InputHub::Device::~Device()

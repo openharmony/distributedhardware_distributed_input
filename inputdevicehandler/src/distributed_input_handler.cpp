@@ -74,9 +74,15 @@ void DistributedInputHandler::StructTransJson(const InputDevice &pBuf, std::stri
     tmpJson[REL_TYPES] = pBuf.relTypes;
     tmpJson[PROPERTIES] = pBuf.properties;
 
+    tmpJson[MISCELLANEOUS] = pBuf.miscellaneous;
+    tmpJson[LEDS] = pBuf.leds;
+    tmpJson[REPEATS] = pBuf.repeats;
+    tmpJson[SWITCHS] = pBuf.switchs;
+
     std::ostringstream stream;
     stream << tmpJson.dump();
     strDescriptor = stream.str();
+    DHLOGI("Record InputDevice json info: %s", strDescriptor.c_str());
     return;
 }
 

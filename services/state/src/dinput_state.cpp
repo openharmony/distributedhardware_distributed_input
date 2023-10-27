@@ -116,7 +116,7 @@ void DInputState::RecordEventLog(const input_event &event)
             eventType = "EV_SYN";
             break;
         default:
-            eventType = "other type";
+            eventType = "other type " + std::to_string(event.type);
             break;
     }
     DHLOGD("5.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d",

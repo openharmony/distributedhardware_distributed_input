@@ -36,6 +36,12 @@ struct AffectDhIds {
     std::vector<std::string> noSharingDhIds;
 };
 
+inline constexpr size_t BITS_PER_UINT8 { 8 };
+inline constexpr size_t NBYTES(size_t nbits)
+{
+    return (nbits + BITS_PER_UINT8 - 1) / BITS_PER_UINT8;
+}
+
 class InputHub {
 public:
     InputHub();
@@ -67,11 +73,12 @@ private:
         const std::string path;
         InputDevice identifier;
         uint32_t classes;
-        uint8_t keyBitmask[(KEY_MAX + 1) / 8];
-        uint8_t absBitmask[(ABS_MAX + 1) / 8];
-        uint8_t relBitmask[(REL_MAX + 1) / 8];
+        uint8_t evBitmask[NBYTES(EV_MAX)] {};
+        uint8_t keyBitmask[NBYTES(KEY_MAX)] {};
+        uint8_t absBitmask[NBYTES(ABS_MAX)] {};
+        uint8_t relBitmask[NBYTES(REL_MAX)] {};
 
-        Device(int fd, int32_t id, const std::string &path, const InputDevice &identifier);
+        Device(int fd, int32_t id, const std::string &path);
         ~Device();
         void Close();
         bool enabled; // initially true
@@ -98,14 +105,23 @@ private:
     int32_t RefreshEpollItem(bool isSleep);
 
     int32_t OpenInputDeviceLocked(const std::string &devicePath);
-    int32_t QueryInputDeviceInfo(int fd, InputDevice &identifier);
-    void QueryEventInfo(int fd, InputDevice &identifier);
+    int32_t QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device);
+    void QueryEventInfo(int fd, std::unique_ptr<Device> &device);
     struct libevdev* GetLibEvDev(int fd);
     void GetEventTypes(struct libevdev *dev, InputDevice &identifier);
     int32_t GetEventKeys(struct libevdev *dev, InputDevice &identifier);
     int32_t GetABSInfo(struct libevdev *dev, InputDevice &identifier);
     int32_t GetRELTypes(struct libevdev *dev, InputDevice &identifier);
     void GetProperties(struct libevdev *dev, InputDevice &identifier);
+
+    void GetMSCBits(int fd, std::unique_ptr<Device> &device);
+    void GetLEDBits(int fd, std::unique_ptr<Device> &device);
+    void GetSwitchBits(int fd, std::unique_ptr<Device> &device);
+    void GetRepeatBits(int fd, std::unique_ptr<Device> &device);
+
+    void GetEventMask(int fd, const std::string &eventName, uint32_t type,
+        std::size_t arrayLength, uint8_t *whichBitMask) const;
+
     int32_t MakeDevice(int fd, std::unique_ptr<Device> device);
     void GenerateDescriptor(InputDevice &identifier) const;
     std::string StringPrintf(const char *format, ...) const;
