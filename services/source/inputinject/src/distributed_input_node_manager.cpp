@@ -79,10 +79,16 @@ void DistributedInputNodeManager::ParseInputDeviceJson(const std::string &str, I
         DHLOGE("recMsg parse failed!");
         return;
     }
-    VerifyInputDevice(inputDeviceJson, pBuf);
+    ParseInputDevice(inputDeviceJson, pBuf);
 }
 
-void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf)
+void DistributedInputNodeManager::ParseInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf)
+{
+    ParseInputDeviceBasicInfo(inputDeviceJson, pBuf);
+    ParseInputDeviceEvents(inputDeviceJson, pBuf);
+}
+
+void DistributedInputNodeManager::ParseInputDeviceBasicInfo(const nlohmann::json &inputDeviceJson, InputDevice &pBuf)
 {
     if (IsString(inputDeviceJson, DEVICE_NAME)) {
         pBuf.name = inputDeviceJson[DEVICE_NAME].get<std::string>();
@@ -111,6 +117,10 @@ void DistributedInputNodeManager::VerifyInputDevice(const nlohmann::json &inputD
     if (IsUInt32(inputDeviceJson, CLASSES)) {
         pBuf.classes = inputDeviceJson[CLASSES].get<uint32_t>();
     }
+}
+
+void DistributedInputNodeManager::ParseInputDeviceEvents(const nlohmann::json &inputDeviceJson, InputDevice &pBuf)
+{
     if (IsArray(inputDeviceJson, EVENT_TYPES)) {
         pBuf.eventTypes = inputDeviceJson[EVENT_TYPES].get<std::vector<uint32_t>>();
     }

@@ -89,7 +89,9 @@ private:
     void AddDeviceLocked(const std::string &dhId, std::unique_ptr<VirtualDevice> device);
     int32_t CreateHandle(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId);
     void ParseInputDeviceJson(const std::string &str, InputDevice &pBuf);
-    void VerifyInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
+    void ParseInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
+    void ParseInputDeviceBasicInfo(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
+    void ParseInputDeviceEvents(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
     void InjectEvent();
 
     void ScanSinkInputDevices(const std::string &dhId);
