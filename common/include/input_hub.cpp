@@ -559,11 +559,11 @@ void InputHub::GetEventMask(int fd, const std::string &eventName, uint32_t type,
 
 void InputHub::GetMSCBits(int fd, std::unique_ptr<Device> &device)
 {
-    uint8_t mscBitmask_[NBYTES(MSC_MAX)] {};
-    GetEventMask(fd, "msc", EV_MSC, sizeof(mscBitmask_), mscBitmask_);
+    uint8_t mscBitmask[NBYTES(MSC_MAX)] {};
+    GetEventMask(fd, "msc", EV_MSC, sizeof(mscBitmask), mscBitmask);
 
     for (uint32_t msc = MSC_SERIAL; msc < MSC_MAX; ++msc) {
-        if (TestBit(EV_MSC, device->evBitmask) && TestBit(msc, mscBitmask_)) {
+        if (TestBit(EV_MSC, device->evBitmask) && TestBit(msc, mscBitmask)) {
             DHLOGI("Get MSC event: %d", msc);
             device->identifier.miscellaneous.push_back(msc);
         }
@@ -572,10 +572,10 @@ void InputHub::GetMSCBits(int fd, std::unique_ptr<Device> &device)
 
 void InputHub::GetLEDBits(int fd, std::unique_ptr<Device> &device)
 {
-    uint8_t ledBitmask_[NBYTES(LED_MAX)] {};
-    GetEventMask(fd, "led", EV_LED, sizeof(ledBitmask_), ledBitmask_);
+    uint8_t ledBitmask[NBYTES(LED_MAX)] {};
+    GetEventMask(fd, "led", EV_LED, sizeof(ledBitmask), ledBitmask);
     for (uint32_t led = LED_NUML; led < LED_MAX; ++led) {
-        if (TestBit(EV_LED, device->evBitmask) && TestBit(led, ledBitmask_)) {
+        if (TestBit(EV_LED, device->evBitmask) && TestBit(led, ledBitmask)) {
             DHLOGI("Get LED event: %d", led);
             device->identifier.leds.push_back(led);
         }
@@ -584,11 +584,11 @@ void InputHub::GetLEDBits(int fd, std::unique_ptr<Device> &device)
 
 void InputHub::GetSwitchBits(int fd, std::unique_ptr<Device> &device)
 {
-    uint8_t switchBitmask_[NBYTES(SW_MAX)] {};
-    GetEventMask(fd, "switch", EV_SW, sizeof(switchBitmask_), switchBitmask_);
+    uint8_t switchBitmask[NBYTES(SW_MAX)] {};
+    GetEventMask(fd, "switch", EV_SW, sizeof(switchBitmask), switchBitmask);
 
     for (uint32_t sw = SW_LID; sw < SW_MAX; ++sw) {
-        if (TestBit(EV_SW, device->evBitmask) && TestBit(sw, switchBitmask_)) {
+        if (TestBit(EV_SW, device->evBitmask) && TestBit(sw, switchBitmask)) {
             DHLOGI("Get Switch event: %d", sw);
             device->identifier.switchs.push_back(sw);
         }
@@ -597,11 +597,11 @@ void InputHub::GetSwitchBits(int fd, std::unique_ptr<Device> &device)
 
 void InputHub::GetRepeatBits(int fd, std::unique_ptr<Device> &device)
 {
-    uint8_t repBitmask_[NBYTES(REP_MAX)] {};
-    GetEventMask(fd, "repeat", EV_REP, sizeof(repBitmask_), repBitmask_);
+    uint8_t repBitmask[NBYTES(REP_MAX)] {};
+    GetEventMask(fd, "repeat", EV_REP, sizeof(repBitmask), repBitmask);
 
     for (uint32_t rep = REP_DELAY; rep < REP_MAX; ++rep) {
-        if (TestBit(EV_REP, device->evBitmask) && TestBit(rep, repBitmask_)) {
+        if (TestBit(EV_REP, device->evBitmask) && TestBit(rep, repBitmask)) {
             DHLOGI("Get Repeat event: %d", rep);
             device->identifier.repeats.push_back(rep);
         }
