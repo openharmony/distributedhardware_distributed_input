@@ -171,9 +171,12 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
         size_t count = ReadInputEvent(readSize, *GetDeviceByFdLocked(eventItem.data.fd));
         Device* device = GetSupportDeviceByFd(eventItem.data.fd);
         if (!device) {
+            DHLOGE("Can not find device by fd: %d", eventItem.data.fd);
             continue;
         }
         if (!sharedDHIds_[device->identifier.descriptor]) {
+            DHLOGE("Not in sharing stat, device descriptor: %s",
+                GetAnonyString(device->identifier.descriptor).c_str());
             continue;
         }
         DHLOGD("shared device dhId: %s, name: %s", GetAnonyString(device->identifier.descriptor).c_str(),
@@ -434,6 +437,7 @@ bool InputHub::IsDeviceRegistered(const std::string &devicePath)
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[deviceId, device] : devices_) {
         if (device->path == devicePath) {
+            DHLOGI("Device node already registered, node path: %s", device->path.c_str());
             return true; // device was already registered
         }
     }
@@ -447,7 +451,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     }
 
     std::lock_guard<std::mutex> my_lock(operationMutex_);
-    DHLOGI("Opening device: %s", devicePath.c_str());
+    DHLOGI("Opening device start: %s", devicePath.c_str());
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
@@ -468,9 +472,11 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
 
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
+        DHLOGI("Opening device error: %s", devicePath.c_str());
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
     }
 
+    DHLOGI("Opening device finish: %s", devicePath.c_str());
     return DH_SUCCESS;
 }
 
@@ -714,12 +720,12 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
     if (TestBit(BTN_TOUCH, device->keyBitmask) &&
         TestBit(ABS_MT_POSITION_X, device->absBitmask) &&
         TestBit(ABS_MT_POSITION_Y, device->absBitmask)) {
-        QueryLocalTouchScreenInfo(fd);
+        QueryLocalTouchScreenInfo(fd, device);
         device->classes |= INPUT_DEVICE_CLASS_TOUCH | INPUT_DEVICE_CLASS_TOUCH_MT;
     } else if (TestBit(BTN_TOUCH, device->keyBitmask) &&
         TestBit(ABS_X, device->absBitmask) &&
         TestBit(ABS_Y, device->absBitmask)) {
-        QueryLocalTouchScreenInfo(fd);
+        QueryLocalTouchScreenInfo(fd, device);
         device->classes |= INPUT_DEVICE_CLASS_TOUCH;
     }
 
@@ -760,13 +766,9 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
     return DH_SUCCESS;
 }
 
-int32_t InputHub::QueryLocalTouchScreenInfo(int fd)
+int32_t InputHub::QueryLocalTouchScreenInfo(int fd, std::unique_ptr<Device> &device)
 {
     LocalTouchScreenInfo info = DInputContext::GetInstance().GetLocalTouchScreenInfo();
-    std::unique_ptr<Device> device = std::make_unique<Device>(fd, 0, "");
-    if (QueryInputDeviceInfo(fd, device) < 0) {
-        return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
-    }
     device->identifier.classes |= INPUT_DEVICE_CLASS_TOUCH_MT;
     info.localAbsInfo.deviceInfo = device->identifier;
 
