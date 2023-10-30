@@ -158,7 +158,7 @@ private:
     void RecordEventLog(const RawEvent *event);
     void RecordDeviceLog(const int32_t deviceId, const std::string &devicePath, const InputDevice &identifier);
     void HandleTouchScreenEvent(struct input_event readBuffer[], const size_t count, std::vector<bool> &needFilted);
-    int32_t QueryLocalTouchScreenInfo(int fd);
+    int32_t QueryLocalTouchScreenInfo(int fd, std::unique_ptr<Device> &device);
     bool CheckTouchPointRegion(struct input_event readBuffer[], const AbsInfo &absInfo);
     size_t CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
         const size_t count);
