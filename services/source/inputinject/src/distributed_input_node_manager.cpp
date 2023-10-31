@@ -526,7 +526,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
                 .code = event.code,
                 .value = KEY_DOWN_STATE
             };
-            DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
+            DHLOGI("Spec Inject KEY DOWN dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
                 GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
             InjectInputEvent(dhId, inputEvent);
 
@@ -535,7 +535,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const std::shared_ptr<RawEv
                 .code = 0,
                 .value = 0
             };
-            DHLOGI("InjectEvent dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
+            DHLOGI("Spec Inject KEY SYNC dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
                 GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent->when);
             InjectInputEvent(dhId, inputEvent);
             UpdateSpecEventFirstStatus(true);

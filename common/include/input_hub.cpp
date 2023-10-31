@@ -1330,7 +1330,7 @@ InputHub::Device::Device(int fd, int32_t id, const std::string &path)
     : next(nullptr), fd(fd), id(id), path(path), identifier({}), classes(0), enabled(false),
       isShare(false), isVirtual(fd < 0) {
     // Figure out the kinds of events the device reports.
-    DHLOGE("Ctor Device for get event mask, fd: %d, id: %d, path: %d", fd, id, path.c_str());
+    DHLOGE("Ctor Device for get event mask, fd: %d, id: %d, path: %s", fd, id, path.c_str());
     ioctl(fd, EVIOCGBIT(0, sizeof(evBitmask)), evBitmask);
     ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBitmask)), keyBitmask);
     ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absBitmask)), absBitmask);
