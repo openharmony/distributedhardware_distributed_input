@@ -119,6 +119,7 @@ std::vector<DHItem> DistributedInputHandler::Query()
         for (auto iter : vecInput) {
             DHItem item;
             item.dhId = iter.descriptor;
+            item.subtype = "input";
             StructTransJson(iter, item.attrs);
             retInfos.push_back(item);
         }
