@@ -22,12 +22,10 @@
 #include <unistd.h>
 #include <vector>
 
-#include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
 #include "dinput_utils_tool.h"
 #include "distributed_input_collector.h"
-#include "distributed_input_inject.h"
 #include "distributed_input_sink_transport.h"
 
 namespace OHOS {
@@ -48,8 +46,15 @@ int32_t DInputState::Init()
 int32_t DInputState::Release()
 {
     DHLOGI("DInputState Release.");
-    std::lock_guard<std::mutex> mapLock(operationMutex_);
-    dhIdStateMap_.clear();
+    {
+        std::lock_guard<std::mutex> mapLock(operationMutex_);
+        dhIdStateMap_.clear();
+    }
+    ClearDeviceStates();
+    {
+        std::lock_guard<std::mutex> lock(absPosMtx_);
+        absPositionsMap_.clear();
+    }
     return DH_SUCCESS;
 }
 
@@ -63,12 +68,8 @@ int32_t DInputState::RecordDhIds(const std::vector<std::string> &dhIds, DhIdStat
     }
 
     if (state == DhIdState::THROUGH_OUT) {
-        CreateSpecialEventInjectThread(sessionId, dhIds);
+        SimulateEventInjectToSrc(sessionId, dhIds);
     }
-
-    DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
-    DistributedInputInject::GetInstance().UpdateSpecEventState(state);
-
     return DH_SUCCESS;
 }
 
@@ -93,171 +94,151 @@ DhIdState DInputState::GetStateByDhid(const std::string &dhId)
     return dhIdStateMap_[dhId];
 }
 
-void DInputState::CreateSpecialEventInjectThread(const int32_t sessionId, const std::vector<std::string> &dhIds)
+void DInputState::SimulateEventInjectToSrc(const int32_t sessionId, const std::vector<std::string> &dhIds)
 {
-    DHLOGI("CreateSpecialEventInjectThread enter, dhIds.size = %d, sessionId = %d.", dhIds.size(), sessionId);
-    std::thread specEventInjectThread =
-        std::thread(&DInputState::SpecEventInject, this, sessionId, dhIds);
-    int32_t ret = pthread_setname_np(specEventInjectThread.native_handle(), CHECK_KEY_STATUS_THREAD_NAME);
-    if (ret != 0) {
-        DHLOGE("specEventInjectThread setname failed.");
-    }
-    specEventInjectThread.detach();
-}
-
-void DInputState::RecordEventLog(const input_event &event)
-{
-    std::string eventType = "";
-    switch (event.type) {
-        case EV_KEY:
-            eventType = "EV_KEY";
-            break;
-        case EV_SYN:
-            eventType = "EV_SYN";
-            break;
-        default:
-            eventType = "other type " + std::to_string(event.type);
-            break;
-    }
-    DHLOGD("5.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d",
-        eventType.c_str(), event.code, event.value);
-}
-
-void DInputState::WriteEventToDev(const int fd, const input_event &event)
-{
-    if (write(fd, &event, sizeof(event)) < static_cast<ssize_t>(sizeof(event))) {
-        DHLOGE("could not inject event, removed? (fd: %d)", fd);
-        return;
-    }
-    RecordEventLog(event);
-}
-
-void DInputState::SpecEventInject(const int32_t sessionId, const std::vector<std::string> &dhIds)
-{
-    DHLOGI("SpecEveInject enter, sessionId %d, dhIds size %d", sessionId, dhIds.size());
-    // mouse event send to remote device
-    if (sessionId != -1) {
-        std::string mouseNodePath;
-        std::string mouseNodeDhId;
-        DistributedInputCollector::GetInstance().GetMouseNodePath(dhIds, mouseNodePath, mouseNodeDhId);
-        SyncMouseKeyState(sessionId, mouseNodePath, mouseNodeDhId);
-    }
-
-    // keyboard up event inject local device
-    std::vector<std::string> keyboardNodePaths;
-    std::vector<std::string> keyboardNodeDhIds;
-    DistributedInputInject::GetInstance().GetVirtualKeyboardPathsByDhIds(dhIds, keyboardNodePaths, keyboardNodeDhIds);
-    size_t len = keyboardNodePaths.size();
-    for (size_t i = 0; i < len; ++i) {
-        std::vector<uint32_t> pressedKeys;
-        int fd = UN_INIT_FD_VALUE;
-        CheckKeyboardState(keyboardNodeDhIds[i], keyboardNodePaths[i], pressedKeys, fd);
-        struct input_event event = {
-            .type = EV_KEY,
-            .code = 0,
-            .value = KEY_UP_STATE
-        };
-        for (auto &code : pressedKeys) {
-            event.type = EV_KEY;
-            event.code = code;
-            WriteEventToDev(fd, event);
-            event.type = EV_SYN;
-            event.code = 0;
-            WriteEventToDev(fd, event);
-        }
-        CloseFd(fd);
-    }
-}
-
-void DInputState::CheckKeyboardState(const std::string &dhId, const std::string &keyboardNodePath,
-    std::vector<uint32_t> &pressedKeys, int &fd)
-{
-    DHLOGI("CheckKeyboardState enter,  dhId %s, keyboardNodePath %s.", GetAnonyString(dhId).c_str(),
-        keyboardNodePath.c_str());
-    char canonicalPath[PATH_MAX] = {0x00};
-    if (keyboardNodePath.length() == 0 || keyboardNodePath.length() >= PATH_MAX ||
-        realpath(keyboardNodePath.c_str(), canonicalPath) == nullptr) {
-        DHLOGE("keyboard Nodepath check fail, error path: %s", keyboardNodePath.c_str());
-        return;
-    }
-    fd = open(canonicalPath, O_WRONLY | O_NONBLOCK);
-    if (fd < 0) {
-        DHLOGE("open keyboard Node Path error:", errno);
+    DHLOGI("SimulateEventInject enter, sessionId %d, dhIds size %d", sessionId, dhIds.size());
+    // mouse/keyboard/touchpad/touchscreen event send to remote device if these device pass through.
+    if (sessionId == -1) {
+        DHLOGE("SimulateEventInjectToSrc SessionId invalid");
         return;
     }
 
-    uint32_t count = 0;
-    unsigned long keyState[NLONGS(KEY_CNT)] = { 0 };
-    while (true) {
-        if (count > READ_RETRY_MAX) {
-            break;
-        }
-        int rc = ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState);
-        if (rc < 0) {
-            DHLOGE("read all key state failed, rc=%d ", rc);
-            count += 1;
-            std::this_thread::sleep_for(std::chrono::milliseconds(READ_SLEEP_TIME_MS));
+    for (const std::string &dhId : dhIds) {
+        // check if this device is key event
+        std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+        auto iter = keyDownStateMap_.find(dhId);
+        if (iter == keyDownStateMap_.end()) {
+            DHLOGI("The shared Device not has down state key, dhId: %s", dhId.c_str());
             continue;
         }
-        for (int32_t keyIndex = 0; keyIndex < KEY_MAX; keyIndex++) {
-            if (BitIsSet(keyState, keyIndex)) {
-                DHLOGD("keyIndex = %d, not up.", keyIndex);
-                pressedKeys.push_back(keyIndex);
+
+        for (const auto &event : iter->second) {
+            if (event.code == BTN_TOUCH) {
+                DHLOGI("Simulate Touch Down event for device path: %s, dhId: %s",
+                    event.path.c_str(), event.descriptor.c_str());
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_ABS, ABS_MT_TRACKING_ID, SIM_TOUCH_TRACKING_ID);
+                std::pair<int32_t, int32_t> absPos = GetAndClearABSPosition(event.descriptor);
+                if (absPos.first != -1) {
+                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                        EV_ABS, ABS_MT_POSITION_X, absPos.first);
+                }
+
+                if (absPos.second != -1) {
+                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                        EV_ABS, ABS_MT_POSITION_Y, absPos.second);
+                }
+
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_KEY, event.code, KEY_DOWN_STATE);
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE);
+
+                if (absPos.first != -1) {
+                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                        EV_ABS, ABS_X, absPos.first);
+                }
+
+                if (absPos.second != -1) {
+                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                        EV_ABS, ABS_Y, absPos.second);
+                }
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_MSC, MSC_TIMESTAMP, 0x0);
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_SYN, SYN_REPORT, 0x0);
+            } else {
+                DHLOGI("Simulate Key event for device path: %s, dhId: %s",
+                    event.path.c_str(), event.descriptor.c_str());
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_KEY, event.code, KEY_DOWN_STATE);
+                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+                    EV_SYN, SYN_REPORT, 0x0);
             }
         }
-        break;
+
+        keyDownStateMap_.erase(dhId);
     }
 }
 
-void DInputState::SyncMouseKeyState(const int32_t sessionId, const std::string &mouseNodePath,
-    const std::string &mouseNodeDhId)
+void DInputState::RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY)
 {
-    DHLOGI("SyncMouseKeyState enter, mouseNodePath %s, mouseNodeDhId %s, sessionId %d.", mouseNodePath.c_str(),
-        GetAnonyString(mouseNodeDhId).c_str(), sessionId);
-    char canonicalPath[PATH_MAX] = {0x00};
-    if (mouseNodePath.length() == 0 || mouseNodePath.length() >= PATH_MAX ||
-        realpath(mouseNodePath.c_str(), canonicalPath) == nullptr) {
-        DHLOGE("mouse Nodepath check fail, error path: %s", mouseNodePath.c_str());
-        return;
+    std::lock_guard<std::mutex> lock(absPosMtx_);
+    if (absX != -1) {
+        absPositionsMap_[dhId].first = absX;
     }
-    int fd = open(canonicalPath, O_RDONLY | O_NONBLOCK);
-    if (fd < 0) {
-        DHLOGE("open mouse Node Path error:", errno);
+
+    if (absY != -1) {
+        absPositionsMap_[dhId].second = absY;
+    }
+}
+
+std::pair<int32_t, int32_t> DInputState::GetAndClearABSPosition(const std::string &dhId)
+{
+    std::lock_guard<std::mutex> lock(absPosMtx_);
+    std::pair<int32_t, int32_t> absPos = { -1, -1 };
+    if (absPositionsMap_.find(dhId) == absPositionsMap_.end()) {
+        return absPos;
+    }
+
+    absPos = absPositionsMap_[dhId];
+    absPositionsMap_.erase(dhId);
+    return absPos;
+}
+
+void DInputState::AddKeyDownState(struct RawEvent event)
+{
+    std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+    keyDownStateMap_[event.descriptor].push_back(event);
+}
+
+void DInputState::RemoveKeyDownState(struct RawEvent event)
+{
+    std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+    auto iter = keyDownStateMap_.find(event.descriptor);
+    if (iter == keyDownStateMap_.end()) {
         return;
     }
 
-    uint32_t count = 0;
-    int leftKeyVal = 0;
-    int rightKeyVal = 0;
-    int midKeyVal = 0;
-    unsigned long keyState[NLONGS(KEY_CNT)] = { 0 };
-    while (true) {
-        if (count > READ_RETRY_MAX) {
-            break;
-        }
-        // Query all key state
-        int rc = ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState);
-        if (rc < 0) {
-            DHLOGE("read all key state failed, rc=%d ", rc);
-            count += 1;
-            std::this_thread::sleep_for(std::chrono::milliseconds(READ_SLEEP_TIME_MS));
-            continue;
-        }
-        leftKeyVal = BitIsSet(keyState, BTN_LEFT);
-        if (leftKeyVal != 0) {
-            DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, mouseNodeDhId, BTN_LEFT);
-        }
-        rightKeyVal = BitIsSet(keyState, BTN_RIGHT);
-        if (rightKeyVal != 0) {
-            DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, mouseNodeDhId, BTN_RIGHT);
-        }
-        midKeyVal = BitIsSet(keyState, BTN_MIDDLE);
-        if (midKeyVal != 0) {
-            DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, mouseNodeDhId, BTN_MIDDLE);
-        }
-        break;
+    auto evIter = std::find(keyDownStateMap_[event.descriptor].begin(),
+        keyDownStateMap_[event.descriptor].end(), event);
+    if (evIter == keyDownStateMap_[event.descriptor].end()) {
+        return;
     }
-    CloseFd(fd);
+
+    keyDownStateMap_[event.descriptor].erase(evIter);
+    if (keyDownStateMap_[event.descriptor].empty()) {
+        keyDownStateMap_.erase(event.descriptor);
+    }
+}
+
+void DInputState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
+{
+    std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+    auto iter = keyDownStateMap_.find(event.descriptor);
+    if (iter == keyDownStateMap_.end()) {
+        return;
+    }
+
+    auto evIter = std::find(keyDownStateMap_[event.descriptor].begin(),
+        keyDownStateMap_[event.descriptor].end(), event);
+    // If not find the cache key on pressing, or it is already the last one, just return
+    if (evIter == keyDownStateMap_[event.descriptor].end() ||
+        evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
+        return;
+    }
+
+    // Ohterwhise, move the key to the last cached position.
+    RawEvent backEv = *evIter;
+    keyDownStateMap_[event.descriptor].erase(evIter);
+    keyDownStateMap_[event.descriptor].push_back(backEv);
+    DHLOGI("Find long pressed key: %d, move the cached pressed key: %d to the last position", event.code, backEv.code);
+}
+
+void DInputState::ClearDeviceStates()
+{
+    std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+    keyDownStateMap_.clear();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

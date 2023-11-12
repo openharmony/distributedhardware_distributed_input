@@ -25,6 +25,7 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <thread>
 #include <unistd.h>
 #include <utility>
 
@@ -32,6 +33,7 @@
 #include "dinput_context.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
+#include "dinput_state.h"
 #include "dinput_utils_tool.h"
 
 namespace OHOS {
@@ -39,6 +41,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
 const uint32_t SLEEP_TIME_US = 100 * 1000;
+const std::string MOUSE_NODE_KEY = "mouse";
 }
 
 InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevices_(true), nextDeviceId_(1),
@@ -93,28 +96,50 @@ int32_t InputHub::Release()
     return DH_SUCCESS;
 }
 
+bool InputHub::IsInputNodeNoNeedScan(const std::string &path)
+{
+    {
+        std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+        auto iter = devices_.find(path);
+        if (iter != devices_.end()) {
+            return true;
+        }
+    }
+
+    if (path.find(MOUSE_NODE_KEY) != std::string::npos) {
+        DHLOGI("Skip mouse node for no permission, path: %s", path.c_str());
+        return true;
+    }
+
+    return IsSkipDevicePath(path);
+}
+
+void InputHub::ScanAndRecordInputDevices()
+{
+    DHLOGI("Scan local input devices.");
+    ScanInputDevices(DEVICE_PATH);
+
+    {
+        std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+        while (!openingDevices_.empty()) {
+            std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
+            openingDevices_.pop_back();
+            DHLOGI("Reporting device opened: path=%s, name=%s\n",
+                device->path.c_str(), device->identifier.name.c_str());
+            auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
+            if (!inserted) {
+                DHLOGI("Device with this path %s exists, replaced. \n", device->path.c_str());
+            }
+        }
+    }
+}
+
 size_t InputHub::StartCollectInputEvents(RawEvent *buffer, size_t bufferSize)
 {
     size_t count = 0;
     isStartCollectEvent_ = true;
     while (isStartCollectEvent_) {
-        if (needToScanDevices_) {
-            needToScanDevices_ = false;
-            ScanInputDevices(DEVICE_PATH);
-        }
-        {
-            std::lock_guard<std::mutex> deviceLock(devicesMutex_);
-            while (!openingDevices_.empty()) {
-                std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
-                openingDevices_.pop_back();
-                DHLOGI("Reporting device opened: id=%s, name=%s\n",
-                    GetAnonyInt32(device->id).c_str(), device->path.c_str());
-                auto [dev_it, inserted] = devices_.insert_or_assign(device->id, std::move(device));
-                if (!inserted) {
-                    DHLOGI("Device id %s exists, replaced. \n", GetAnonyInt32(device->id).c_str());
-                }
-            }
-        }
+        ScanAndRecordInputDevices();
 
         deviceChanged_ = false;
         count = GetEvents(buffer, bufferSize);
@@ -175,6 +200,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
             continue;
         }
         if (!sharedDHIds_[device->identifier.descriptor]) {
+            RecordDeviceChangeStates(device, readBuffer, count);
             DHLOGE("Not in sharing stat, device descriptor: %s",
                 GetAnonyString(device->identifier.descriptor).c_str());
             continue;
@@ -206,6 +232,52 @@ bool InputHub::IsTouchPad(const InputDevice &inputDevice)
         return false;
     }
     return true;
+}
+
+void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count)
+{
+    DHLOGD("RecordDeviceChangeStates enter.");
+    bool isTouchEvent = false;
+    if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
+        if (!IsTouchPad(device->identifier)) {
+            isTouchEvent = true;
+        }
+    }
+
+    for (size_t i = 0; i < count; i++) {
+        RawEvent event;
+        const struct input_event& iev = readBuffer[i];
+        event.when = ProcessEventTimestamp(iev);
+        event.type = iev.type;
+        event.code = iev.code;
+        event.value = iev.value;
+        event.path = device->path;
+        event.descriptor = isTouchEvent ? touchDescriptor : device->identifier.descriptor;
+
+        // Deal key state
+        if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
+            DInputState::GetInstance().AddKeyDownState(event);
+            RecordChangeEventLog(event);
+        }
+
+        if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
+            DInputState::GetInstance().RemoveKeyDownState(event);
+            RecordChangeEventLog(event);
+        }
+
+        if (event.type == EV_KEY && event.value == KEY_REPEAT) {
+            DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
+        }
+
+        if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
+            DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
+        }
+
+        if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
+            DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
+        }
+        DHLOGD("RecordDeviceChangeStates end.");
+    }
 }
 
 size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
@@ -272,7 +344,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
         for (auto it = closingDevices_.begin(); it != closingDevices_.end();) {
             std::unique_ptr<Device> device = std::move(*it);
             DHLOGI("Reporting device closed: id=%s, name=%s\n",
-                GetAnonyInt32(device->id).c_str(), device->path.c_str());
+                device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_REMOVED;
             event->deviceInfo = device->identifier;
             event += 1;
@@ -295,14 +367,14 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
             std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
             openingDevices_.pop_back();
             DHLOGI("Reporting device opened: id=%s, name=%s\n",
-                GetAnonyInt32(device->id).c_str(), device->path.c_str());
+                device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_ADDED;
             event->deviceInfo = device->identifier;
             event += 1;
 
-            auto [dev_it, inserted] = devices_.insert_or_assign(device->id, std::move(device));
+            auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device id %s exists, replaced. \n", GetAnonyInt32(device->id).c_str());
+                DHLOGI("Device path %s exists, replaced. \n", device->path.c_str());
             }
             if (capacity == 0) {
                 break;
@@ -428,6 +500,10 @@ void InputHub::ScanInputDevices(const std::string &dirName)
     std::vector<std::string> inputDevPaths;
     ScanInputDevicesPath(dirName, inputDevPaths);
     for (const auto &tempPath: inputDevPaths) {
+        if (IsInputNodeNoNeedScan(tempPath)) {
+            DHLOGI("This input node path should skip. Path: %s", tempPath.c_str());
+            continue;
+        }
         OpenInputDeviceLocked(tempPath);
     }
 }
@@ -455,12 +531,12 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
+        RecordSkipDevicePath(devicePath);
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
 
     // Allocate device. (The device object takes ownership of the fd at this point.)
-    int32_t deviceId = nextDeviceId_++;
-    std::unique_ptr<Device> device = std::make_unique<Device>(fd, deviceId, devicePath);
+    std::unique_ptr<Device> device = std::make_unique<Device>(fd, devicePath);
 
     if (QueryInputDeviceInfo(fd, device) < 0) {
         CloseFd(fd);
@@ -468,7 +544,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     }
     GenerateDescriptor(device->identifier);
 
-    RecordDeviceLog(deviceId, devicePath, device->identifier);
+    RecordDeviceLog(devicePath, device->identifier);
 
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
@@ -478,6 +554,18 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
 
     DHLOGI("Opening device finish: %s", devicePath.c_str());
     return DH_SUCCESS;
+}
+
+void InputHub::RecordSkipDevicePath(std::string path)
+{
+    std::lock_guard<std::mutex> lock(skipDevicePathsMutex_);
+    skipDevicePaths_.insert(path);
+}
+
+bool InputHub::IsSkipDevicePath(const std::string &path)
+{
+    std::lock_guard<std::mutex> lock(skipDevicePathsMutex_);
+    return skipDevicePaths_.find(path) != skipDevicePaths_.end();
 }
 
 int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
@@ -494,6 +582,7 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     DHLOGD("QueryInputDeviceInfo deviceName: %s", buffer);
     // If the device is already a virtual device, don't monitor it.
     if (device->identifier.name.find(VIRTUAL_DEVICE_NAME) != std::string::npos) {
+        RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_IS_VIRTUAL_DEVICE;
     }
     // Get device driver version.
@@ -865,7 +954,7 @@ int32_t InputHub::RegisterDeviceForEpollLocked(const Device &device)
 {
     int32_t result = RegisterFdForEpoll(device.fd);
     if (result != DH_SUCCESS) {
-        DHLOGE("Could not add input device fd to epoll for device %d", device.id);
+        DHLOGE("Could not add input device fd to epoll for device, path: %s", device.path.c_str());
         return result;
     }
     return result;
@@ -891,29 +980,27 @@ void InputHub::AddDeviceLocked(std::unique_ptr<Device> device)
 
 void InputHub::CloseDeviceLocked(Device &device)
 {
-    DHLOGI("Removed device: path=%s name=%s id=%s fd=%d classes=0x%x",
-        device.path.c_str(), device.identifier.name.c_str(), GetAnonyInt32(device.id).c_str(),
-        device.fd, device.classes);
+    DHLOGI("Removed device: path=%s name=%s fd=%d classes=0x%x",
+        device.path.c_str(), device.identifier.name.c_str(), device.fd, device.classes);
 
     UnregisterDeviceFromEpollLocked(device);
     device.Close();
     {
         std::lock_guard<std::mutex> devicesLock(devicesMutex_);
-        closingDevices_.push_back(std::move(devices_[device.id]));
-        devices_.erase(device.id);
+        closingDevices_.push_back(std::move(devices_[device.path]));
+        devices_.erase(device.path);
     }
 }
 
 void InputHub::CloseDeviceForAllLocked(Device &device)
 {
-    DHLOGI("Removed device: path=%s name=%s id=%s fd=%d classes=0x%x",
-        device.path.c_str(), device.identifier.name.c_str(), GetAnonyInt32(device.id).c_str(),
-        device.fd, device.classes);
+    DHLOGI("Removed device: path=%s name=%s fd=%d classes=0x%x",
+        device.path.c_str(), device.identifier.name.c_str(), device.fd, device.classes);
 
     UnregisterDeviceFromEpollLocked(device);
     device.Close();
-    closingDevices_.push_back(std::move(devices_[device.id]));
-    devices_.erase(device.id);
+    closingDevices_.push_back(std::move(devices_[device.path]));
+    devices_.erase(device.path);
 }
 
 int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device &device) const
@@ -921,8 +1008,7 @@ int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device &device) const
     if (device.HasValidFd()) {
         int32_t result = UnregisterFdFromEpoll(device.fd);
         if (result != DH_SUCCESS) {
-            DHLOGE("Could not remove input device fd from epoll for device %s",
-                GetAnonyInt32(device.id).c_str());
+            DHLOGE("Could not remove input device fd from epoll for device, path: %s", device.path.c_str());
             return result;
         }
     }
@@ -1032,7 +1118,7 @@ InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device != nullptr && device->fd == fd) {
-            DHLOGI("GetSupportDeviceByFd device: %d, fd: %d, path: %s, dhId: %s, classes=0x%x", id, device->fd,
+            DHLOGI("GetSupportDeviceByFd device fd: %d, path: %s, dhId: %s, classes=0x%x", device->fd,
                 device->path.c_str(), GetAnonyString(device->identifier.descriptor).c_str(), device->classes);
             return device.get();
         }
@@ -1215,9 +1301,9 @@ bool InputHub::IsAllDevicesStoped()
     return true;
 }
 
-void InputHub::RecordDeviceLog(const int32_t deviceId, const std::string &devicePath, const InputDevice &identifier)
+void InputHub::RecordDeviceLog(const std::string &devicePath, const InputDevice &identifier)
 {
-    DHLOGI("add device %d: %s\n", deviceId, devicePath.c_str());
+    DHLOGI("add device: %s\n", devicePath.c_str());
     DHLOGI("  bus:        %04x\n"
            "  vendor      %04x\n"
            "  product     %04x\n"
@@ -1227,6 +1313,31 @@ void InputHub::RecordDeviceLog(const int32_t deviceId, const std::string &device
     DHLOGI("  physicalPath:   \"%s\"\n", identifier.physicalPath.c_str());
     DHLOGI("  unique id:  \"%s\"\n", identifier.uniqueId.c_str());
     DHLOGI("  descriptor: \"%s\"\n", GetAnonyString(identifier.descriptor).c_str());
+}
+
+void InputHub::RecordChangeEventLog(const RawEvent &event)
+{
+    std::string eventType = "";
+    switch (event.type) {
+        case EV_KEY:
+            eventType = "EV_KEY";
+            break;
+        case EV_REL:
+            eventType = "EV_REL";
+            break;
+        case EV_ABS:
+            eventType = "EV_ABS";
+            break;
+        case EV_SYN:
+            eventType = "EV_SYN";
+            break;
+        default:
+            eventType = "other type " + std::to_string(event.type);
+            break;
+    }
+    DHLOGD("0.E2E-Test Sink collect change event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
+        "When:%" PRId64 "", eventType.c_str(), event.code, event.value, event.path.c_str(),
+        GetAnonyString(event.descriptor).c_str(), event.when);
 }
 
 void InputHub::RecordEventLog(const RawEvent *event)
@@ -1326,11 +1437,120 @@ bool InputHub::CheckTouchPointRegion(struct input_event readBuffer[], const AbsI
     return false;
 }
 
-InputHub::Device::Device(int fd, int32_t id, const std::string &path)
-    : next(nullptr), fd(fd), id(id), path(path), identifier({}), classes(0), enabled(false),
+std::vector<InputHub::Device*> InputHub::CollectTargetDevices()
+{
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    std::vector<InputHub::Device*> tarVec;
+    for (const auto &dev : devices_) {
+        if (((dev.second->classes & INPUT_DEVICE_CLASS_TOUCH) != 0) ||
+            ((dev.second->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0) ||
+            ((dev.second->classes & INPUT_DEVICE_CLASS_CURSOR) != 0) ||
+            ((dev.second->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
+            DHLOGI("Find target devs need check stat, path: %s, name: %s",
+                dev.first.c_str(), dev.second->identifier.name.c_str());
+            tarVec.push_back(dev.second.get());
+        }
+    }
+
+    return tarVec;
+}
+
+void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
+{
+    struct RawEvent event = {
+        .type = EV_KEY,
+        .code = keyCode,
+        .value = KEY_DOWN_STATE,
+        .descriptor = dev->identifier.descriptor,
+        .path = dev->path
+    };
+    DInputState::GetInstance().AddKeyDownState(event);
+    DHLOGI("Find Pressed key: %d, device path: %s, dhId: %s", keyCode, dev->path.c_str(),
+        dev->identifier.descriptor.c_str());
+}
+
+void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState)
+{
+    //If device is a mouse, record the mouse pressed key.
+    if ((dev->classes & INPUT_DEVICE_CLASS_CURSOR) != 0) {
+        int mouseLeftBtnState = BitIsSet(keyState, BTN_LEFT);
+        if (mouseLeftBtnState != 0) {
+            SavePressedKeyState(dev, BTN_LEFT);
+        }
+
+        int mouseRightBtnState = BitIsSet(keyState, BTN_RIGHT);
+        if (mouseRightBtnState != 0) {
+            SavePressedKeyState(dev, BTN_RIGHT);
+        }
+
+        int mouseMidBtnState = BitIsSet(keyState, BTN_MIDDLE);
+        if (mouseMidBtnState != 0) {
+            SavePressedKeyState(dev, BTN_MIDDLE);
+        }
+    }
+
+    // If device is a keyboard, record all the pressed keys.
+    if ((dev->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0) {
+        for (int32_t keyIndex = 0; keyIndex < KEY_MAX; keyIndex++) {
+            if (BitIsSet(keyState, keyIndex) != 0) {
+                SavePressedKeyState(dev, keyIndex);
+            }
+        }
+    }
+
+    // If device is a touchscreen or touchpad, record the touch event.
+    if ((dev->classes & INPUT_DEVICE_CLASS_TOUCH) != 0 || (dev->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0) {
+        int btnTouchState = BitIsSet(keyState, BTN_TOUCH);
+        if (btnTouchState != 0) {
+            SavePressedKeyState(dev, BTN_TOUCH);
+        }
+    }
+}
+
+void InputHub::CheckTargetDevicesState(std::vector<InputHub::Device*> targetDevices)
+{
+    uint32_t count = 0;
+    unsigned long keyState[NLONGS(KEY_CNT)] = { 0 };
+    for (const auto *dev : targetDevices) {
+        while (true) {
+            if (count > READ_RETRY_MAX) {
+                break;
+            }
+            // Query all key state
+            int rc = ioctl(dev->fd, EVIOCGKEY(sizeof(keyState)), keyState);
+            if (rc < 0) {
+                DHLOGE("read all key state failed, rc=%d", rc);
+                count += 1;
+                std::this_thread::sleep_for(std::chrono::milliseconds(READ_SLEEP_TIME_MS));
+                continue;
+            }
+            CheckTargetKeyState(dev, keyState);
+            break;
+        }
+    }
+}
+
+void InputHub::RecordDeviceStates()
+{
+    DHLOGI("Start Record keys states");
+    ScanAndRecordInputDevices();
+    std::vector<InputHub::Device*> tarDevices = CollectTargetDevices();
+    DHLOGI("Check target states device num: %d", tarDevices.size());
+    CheckTargetDevicesState(tarDevices);
+    DHLOGI("Finish Record Keys states");
+}
+
+void InputHub::ClearDeviceStates()
+{
+    DHLOGI("Clear Device state");
+    DInputState::GetInstance().ClearDeviceStates();
+}
+
+InputHub::Device::Device(int fd, const std::string &path)
+    : next(nullptr), fd(fd), path(path), identifier({}), classes(0), enabled(false),
       isShare(false), isVirtual(fd < 0) {
     // Figure out the kinds of events the device reports.
-    DHLOGE("Ctor Device for get event mask, fd: %d, id: %d, path: %s", fd, id, path.c_str());
+    DHLOGE("Ctor Device for get event mask, fd: %d, path: %s", fd, path.c_str());
     ioctl(fd, EVIOCGBIT(0, sizeof(evBitmask)), evBitmask);
     ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBitmask)), keyBitmask);
     ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absBitmask)), absBitmask);

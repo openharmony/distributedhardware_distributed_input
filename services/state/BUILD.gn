@@ -48,9 +48,7 @@ ohos_shared_library("libdinput_state") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${services_sink_path}/inputcollector:libdinput_collector",
     "${services_sink_path}/transport:libdinput_sink_trans",
-    "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
   ]

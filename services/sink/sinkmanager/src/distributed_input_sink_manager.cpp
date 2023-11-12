@@ -654,6 +654,9 @@ int32_t DistributedInputSinkManager::Init()
     }
     projectWindowListener_ = new ProjectWindowListener(this);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, projectWindowListener_);
+
+    DistributedInputCollector::GetInstance().PreInit();
+
     return DH_SUCCESS;
 }
 

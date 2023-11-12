@@ -51,7 +51,7 @@ namespace {
     constexpr int32_t DOUBLE_TIMES = 2;
     constexpr int32_t INT32_STRING_LENGTH = 40;
     constexpr uint32_t ERROR_MSG_MAX_LEN = 256;
-    constexpr int32_t MAX_RETRY_COUNT = 5;
+    constexpr int32_t MAX_RETRY_COUNT = 3;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
 }
 DevInfo GetLocalDeviceInfo()
@@ -352,6 +352,92 @@ void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &
         vecInputDevPath.push_back(tmpDevName);
     }
     closedir(dir);
+}
+
+void RecordEventLog(const input_event &event)
+{
+    std::string eventType = "";
+    switch (event.type) {
+        case EV_KEY:
+            eventType = "EV_KEY";
+            break;
+        case EV_SYN:
+            eventType = "EV_SYN";
+            break;
+        default:
+            eventType = "other type " + std::to_string(event.type);
+            break;
+    }
+    DHLOGD("5.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d",
+        eventType.c_str(), event.code, event.value);
+}
+
+void WriteEventToDevice(const int fd, const input_event &event)
+{
+    if (write(fd, &event, sizeof(event)) < static_cast<ssize_t>(sizeof(event))) {
+        DHLOGE("could not inject event, fd: %d", fd);
+        return;
+    }
+    RecordEventLog(event);
+}
+
+void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
+{
+    unsigned long keyState[NLONGS(KEY_CNT)] = { 0 };
+    for (const auto &path : nodePaths) {
+        DHLOGI("Check and reset key state, path: %s", path.c_str());
+        std::vector<uint32_t> pressedKeys;
+        int fd = OpenInputDeviceFdByPath(path);
+        if (fd == -1) {
+            DHLOGE("Open virtual keyboard node failed, path: %s", path.c_str());
+            continue;
+        }
+
+        int rc = ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState);
+        if (rc < 0) {
+            DHLOGE("Read all key state failed, rc: %d, path: %s", rc, path.c_str());
+            continue;
+        }
+
+        for (int32_t keyIndex = 0; keyIndex < KEY_MAX; keyIndex++) {
+            if (BitIsSet(keyState, keyIndex)) {
+                DHLOGI("key index: %d pressed.", keyIndex);
+                pressedKeys.push_back(keyIndex);
+            }
+        }
+
+        if (pressedKeys.empty()) {
+            continue;
+        }
+
+        struct input_event event = {
+            .type = EV_KEY,
+            .code = 0,
+            .value = KEY_UP_STATE
+        };
+        for (auto &code : pressedKeys) {
+            event.type = EV_KEY;
+            event.code = code;
+            WriteEventToDevice(fd, event);
+            event.type = EV_SYN;
+            event.code = 0;
+            WriteEventToDevice(fd, event);
+        }
+    }
+}
+
+std::string GetString(const std::vector<std::string> &vec)
+{
+    std::string retStr = "[";
+    for (uint32_t i = 0; i < vec.size(); i++) {
+        if (i != (vec.size() - 1)) {
+            retStr += vec[i] + ", ";
+        } else {
+            retStr += vec[i];
+        }
+    }
+    retStr += "]";
+    return retStr;
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

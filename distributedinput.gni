@@ -28,6 +28,8 @@ services_source_path = "${distributedinput_path}/services/source"
 
 services_sink_path = "${distributedinput_path}/services/sink"
 
+services_state_path = "${distributedinput_path}/services/state"
+
 innerkits_path = "${distributedinput_path}/interfaces/inner_kits"
 
 ipc_path = "${distributedinput_path}/interfaces/ipc"

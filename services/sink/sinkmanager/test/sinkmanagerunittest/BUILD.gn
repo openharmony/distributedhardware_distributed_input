@@ -38,6 +38,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${services_sink_path}/sinkmanager/include",
     "${frameworks_path}/include",
     "${common_path}/include",
+    "${services_state_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
     "${service_common}/include",

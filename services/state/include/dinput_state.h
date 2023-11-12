@@ -27,6 +27,16 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+/*
+ * This enumeration class represents the two states of the peropheral:
+ * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
+ * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
+ */
+enum class DhIdState {
+    THROUGH_IN = 0,
+    THROUGH_OUT,
+};
+
 class DInputState {
     DECLARE_SINGLE_INSTANCE_BASE(DInputState);
 public:
@@ -36,22 +46,41 @@ public:
     int32_t RemoveDhIds(const std::vector<std::string> &dhIds);
     DhIdState GetStateByDhid(const std::string &dhId);
 
+    void AddKeyDownState(struct RawEvent event);
+    void RemoveKeyDownState(struct RawEvent event);
+    /**
+     * If user pressed some keys before we prepare distributed input sucess, because the monitor thread not start,
+     * we CAN NOT monitor those keys.
+     * So, we check all keys state before start input device monitor thread.
+     * But the keys state not contain the pressed order, so we use the key REPEAT event to move the corresponding
+     * cached key last.
+     */
+    void CheckAndSetLongPressedKeyOrder(struct RawEvent event);
+
+    /**
+     * Clear Device stats if unprepare.
+     */
+    void ClearDeviceStates();
+
+    void RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY);
+    std::pair<int32_t, int32_t> GetAndClearABSPosition(const std::string &dhId);
 private:
     DInputState() = default;
     ~DInputState();
-
-    void CreateSpecialEventInjectThread(const int32_t sessionId, const std::vector<std::string> &dhIds);
-    void CheckKeyboardState(const std::string &dhId, const std::string &keyboardNodePath,
-        std::vector<uint32_t> &pressedKeys, int &fd);
-    void SpecEventInject(const int32_t sessionId, const std::vector<std::string> &dhIds);
-    void RecordEventLog(const input_event &event);
-    void WriteEventToDev(const int fd, const input_event &event);
-    void SyncMouseKeyState(const int32_t sessionId, const std::string &mouseNodePath,
-        const std::string &mouseNodeDhId);
+    // Simulate device state to the pass through target device.
+    void SimulateEventInjectToSrc(const int32_t sessionId, const std::vector<std::string> &dhIds);
 
 private:
     std::mutex operationMutex_;
     std::map<std::string, DhIdState> dhIdStateMap_;
+
+    std::mutex keyDownStateMapMtx_;
+    // Record key down state of each device dhid
+    std::unordered_map<std::string, std::vector<struct RawEvent>> keyDownStateMap_;
+
+    std::mutex absPosMtx_;
+    // Record abs x/y of touchpad
+    std::unordered_map<std::string, std::pair<int32_t, int32_t>> absPositionsMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

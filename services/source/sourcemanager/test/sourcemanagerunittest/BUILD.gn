@@ -37,6 +37,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${frameworks_path}/include",
     "${distributedinput_path}/inputdevicehandler/include",
     "${common_path}/include",
+    "${services_state_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
     "${service_common}/include",
@@ -111,6 +112,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${utils_path}:libdinput_utils",
     "${distributedinput_path}/services/state:libdinput_state",
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/transport:libdinput_source_trans",

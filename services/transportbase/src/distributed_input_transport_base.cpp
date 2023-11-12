@@ -30,7 +30,6 @@
 #include "dinput_log.h"
 #include "dinput_softbus_define.h"
 #include "dinput_utils_tool.h"
-#include "distributed_input_inject.h"
 #include "hidumper.h"
 
 #ifndef COMPILE_TEST_MODE
@@ -189,7 +188,8 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
     }
 
     std::string peerSessionName = SESSION_NAME + remoteDevId.substr(0, INTERCEPT_STRING_LENGTH);
-    DHLOGI("OpenInputSoftbus peerSessionName:%s", peerSessionName.c_str());
+    DHLOGI("OpenInputSoftbus localSessionName: %s, peerSessionName:%s, remoteDevId: %s",
+        localSessionName_.c_str(), peerSessionName.c_str(), remoteDevId.c_str());
 
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
     int32_t sessionId = OpenSession(localSessionName_.c_str(), peerSessionName.c_str(), remoteDevId.c_str(),
