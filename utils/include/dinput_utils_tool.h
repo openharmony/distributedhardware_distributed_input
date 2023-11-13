@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <string>
 
+#include <linux/input.h>
 #include "nlohmann/json.hpp"
 
 #include "dinput_log.h"
@@ -56,6 +57,14 @@ void SplitStringToVector(const std::string &str, const char split, std::vector<s
 int OpenInputDeviceFdByPath(const std::string &devicePath);
 std::string ConvertErrNo();
 void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &vecInputDevPath);
+
+/**
+ * If we pressed the sink keyboard while mouse pass throuth from source to sink, we need reset the virtual keyboard
+ * key states at the source side.
+ */
+void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths);
+
+std::string GetString(const std::vector<std::string> &vec);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

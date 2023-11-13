@@ -28,7 +28,6 @@
 #include "dinput_errcode.h"
 #include "dinput_hitrace.h"
 #include "dinput_log.h"
-#include "dinput_state.h"
 #include "dinput_utils_tool.h"
 #include "distributed_input_client.h"
 #include "distributed_input_inject.h"
@@ -80,7 +79,6 @@ void DistributedInputSourceManager::DInputSrcMgrListener::ResetSrcMgrResStatus()
         return;
     }
     sourceManagerObj_->ClearResourcesStatus();
-    sourceManagerObj_->UpdateSpecEventStatus();
 }
 
 void DistributedInputSourceManager::OnStart()
@@ -164,11 +162,6 @@ int32_t DistributedInputSourceManager::Init()
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_STOP_DSCREEN, stopDScreenListener_);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_DEV_OFFLINE, deviceOfflineListener_);
 
-    ret = DInputState::GetInstance().Init();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DInputState init fail!");
-        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INIT_FAIL;
-    }
     return DH_SUCCESS;
 }
 
@@ -1716,12 +1709,6 @@ void DistributedInputSourceManager::ClearResourcesStatus()
     std::lock_guard<std::mutex> lock(mutex_);
     relayPreCallbacks_.clear();
     relayUnpreCallbacks_.clear();
-}
-
-void DistributedInputSourceManager::UpdateSpecEventStatus()
-{
-    DistributedInputInject::GetInstance().UpdateSpecEventFirstStatus(false);
-    DistributedInputInject::GetInstance().UpdateSpecEventState(DhIdState::THROUGH_OUT);
 }
 
 void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId, uint32_t value)

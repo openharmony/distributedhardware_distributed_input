@@ -38,7 +38,6 @@
 #include "distributed_input_source_event_handler.h"
 #include "distributed_input_source_sa_cli_mgr.h"
 #include "distributed_input_source_stub.h"
-#include "dinput_state.h"
 #include "dinput_source_listener.h"
 #include "dinput_source_manager_event_handler.h"
 
@@ -283,7 +282,6 @@ public:
     uint32_t GetInputTypesMap(const std::string deviceId);
     uint32_t GetAllInputTypesMap();
     void ClearResourcesStatus();
-    void UpdateSpecEventStatus();
 
 public:
     void RunRelayPrepareCallback(const std::string &srcId, const std::string &sinkId, const int32_t status);

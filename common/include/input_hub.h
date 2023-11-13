@@ -19,6 +19,7 @@
 #include <atomic>
 #include <mutex>
 #include <map>
+#include <set>
 #include <unordered_map>
 
 #include <libevdev/libevdev.h>
@@ -44,6 +45,35 @@ inline constexpr size_t NBYTES(size_t nbits)
 
 class InputHub {
 public:
+    struct Device  {
+        Device* next;
+        int fd; // may be -1 if device is closed
+        const std::string path;
+        InputDevice identifier;
+        uint32_t classes;
+        uint8_t evBitmask[NBYTES(EV_MAX)] {};
+        uint8_t keyBitmask[NBYTES(KEY_MAX)] {};
+        uint8_t absBitmask[NBYTES(ABS_MAX)] {};
+        uint8_t relBitmask[NBYTES(REL_MAX)] {};
+
+        Device(int fd, const std::string &path);
+        ~Device();
+        void Close();
+        bool enabled; // initially true
+        bool isShare;
+        int32_t Enable();
+        int32_t Disable();
+        bool HasValidFd() const;
+        const bool isVirtual; // set if fd < 0 is passed to constructor
+    };
+
+    struct AbsInfo {
+        uint32_t absX;
+        uint32_t absY;
+        int32_t absXIndex;
+        int32_t absYIndex;
+    };
+
     InputHub();
     ~InputHub();
     size_t StartCollectInputEvents(RawEvent *buffer, size_t bufferSize);
@@ -65,37 +95,12 @@ public:
     bool IsAllDevicesStoped();
     void ScanInputDevices(const std::string &dirName);
 
+    void RecordDeviceStates();
+    void CheckTargetDevicesState(std::vector<Device*> targetDevices);
+    void CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState);
+    void SavePressedKeyState(const Device *dev, int32_t keyCode);
+    void ClearDeviceStates();
 private:
-    struct Device  {
-        Device* next;
-        int fd; // may be -1 if device is closed
-        const int32_t id;
-        const std::string path;
-        InputDevice identifier;
-        uint32_t classes;
-        uint8_t evBitmask[NBYTES(EV_MAX)] {};
-        uint8_t keyBitmask[NBYTES(KEY_MAX)] {};
-        uint8_t absBitmask[NBYTES(ABS_MAX)] {};
-        uint8_t relBitmask[NBYTES(REL_MAX)] {};
-
-        Device(int fd, int32_t id, const std::string &path);
-        ~Device();
-        void Close();
-        bool enabled; // initially true
-        bool isShare;
-        int32_t Enable();
-        int32_t Disable();
-        bool HasValidFd() const;
-        const bool isVirtual; // set if fd < 0 is passed to constructor
-    };
-
-    struct AbsInfo {
-        uint32_t absX;
-        uint32_t absY;
-        int32_t absXIndex;
-        int32_t absYIndex;
-    };
-
     int32_t Initialize();
     int32_t Release();
 
@@ -156,7 +161,9 @@ private:
     /* this macro computes the number of bytes needed to represent a bit array of the specified size */
     uint32_t SizeofBitArray(uint32_t bit);
     void RecordEventLog(const RawEvent *event);
-    void RecordDeviceLog(const int32_t deviceId, const std::string &devicePath, const InputDevice &identifier);
+    // Record Event log that will change the key state.
+    void RecordChangeEventLog(const RawEvent &event);
+    void RecordDeviceLog(const std::string &devicePath, const InputDevice &identifier);
     void HandleTouchScreenEvent(struct input_event readBuffer[], const size_t count, std::vector<bool> &needFilted);
     int32_t QueryLocalTouchScreenInfo(int fd, std::unique_ptr<Device> &device);
     bool CheckTouchPointRegion(struct input_event readBuffer[], const AbsInfo &absInfo);
@@ -166,15 +173,43 @@ private:
      * isEnable: true for sharing dhid, false for no sharing dhid
      */
     void SaveAffectDhId(bool isEnable, const std::string &dhId, AffectDhIds &affDhIds);
+    /*
+     * Record Mouse/KeyBoard/TouchPad state such as key down.
+     */
+    void RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count);
 
+    /*
+     * Scan the input device node and save info.
+     */
+    void ScanAndRecordInputDevices();
+
+    /*
+     * Check is this node has been scaned for collecting info.
+     * Return: True for scaned and cached. False for not scaned.
+     */
+    bool IsInputNodeNoNeedScan(const std::string &path);
+
+    /*
+     * Some input device should simulate state for pass through, such as Mouse, KeyBoard, TouchPad, etc.
+     * Before we prepare the pass through, we need check and get the key states of these devices.
+     */
+    std::vector<Device*> CollectTargetDevices();
+
+    void RecordSkipDevicePath(std::string path);
+    bool IsSkipDevicePath(const std::string &path);
+
+private:
     int epollFd_;
     int iNotifyFd_;
     int inputWd_;
 
     std::vector<std::unique_ptr<Device>> openingDevices_;
     std::vector<std::unique_ptr<Device>> closingDevices_;
-    std::unordered_map<int32_t, std::unique_ptr<Device>> devices_;
+    std::unordered_map<std::string, std::unique_ptr<Device>> devices_;
     std::mutex devicesMutex_;
+
+    std::mutex skipDevicePathsMutex_;
+    std::set<std::string> skipDevicePaths_;
 
     std::atomic<bool> needToScanDevices_;
     std::string deviceId_;

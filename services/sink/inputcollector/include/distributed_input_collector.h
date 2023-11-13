@@ -38,6 +38,9 @@ namespace DistributedInput {
 class DistributedInputCollector {
 public:
     static DistributedInputCollector &GetInstance();
+    // PreInit for get the local input devices basic info.
+    // Collect all the local input basic info cost too much time(200+ ms).
+    void PreInit();
     int32_t Init(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler);
     void Release();
     AffectDhIds SetSharingTypes(bool enabled, const uint32_t &inputType);
@@ -50,6 +53,7 @@ public:
     int32_t RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener);
     void ReportDhIdSharingState(const AffectDhIds &dhIds);
     void GetDeviceInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &deviceInfo);
+    void ResetSpecEventStatus();
 
 private:
     DistributedInputCollector();

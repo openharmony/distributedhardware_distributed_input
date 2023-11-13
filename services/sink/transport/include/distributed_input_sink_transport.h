@@ -58,7 +58,8 @@ public:
     int32_t RespStartRemoteInput(const int32_t sessionId, std::string &smsg);
     int32_t RespStopRemoteInput(const int32_t sessionId, std::string &smsg);
     int32_t RespLatency(const int32_t sessionId, std::string &smsg);
-    void SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId, const uint32_t btnCode);
+    void SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId, uint32_t type, const uint32_t btnCode,
+        int32_t value);
 
     class DInputSinkEventHandler : public AppExecFwk::EventHandler {
     public:
@@ -90,6 +91,8 @@ private:
     void NotifyRelayStopDhidRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyRelayStartTypeRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyRelayStopTypeRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
+
+    void RecordEventLog(const std::string &dhId, int32_t type, int32_t code, int32_t value);
 private:
     std::string mySessionName_;
     std::shared_ptr<DistributedInputSinkTransport::DInputSinkEventHandler> eventHandler_;

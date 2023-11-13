@@ -204,7 +204,7 @@ int32_t DistributedInputSinkTransport::RespLatency(const int32_t sessionId, std:
 }
 
 void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId,
-    const uint32_t btnCode)
+    uint32_t type, const uint32_t btnCode, int32_t value)
 {
     if (sessionId <= 0) {
         DHLOGE("SendKeyStateNodeMsg error, sessionId <= 0.");
@@ -214,14 +214,37 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId,
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_KEY_STATE;
     jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_DHID] = dhId;
-    jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_TYPE] = EV_KEY;
+    jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_TYPE] = type;
     jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_CODE] = btnCode;
-    jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_VALUE] = KEY_DOWN_STATE;
+    jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_VALUE] = value;
     std::string msg = jsonStr.dump();
     int32_t ret = SendMessage(sessionId, msg);
     if (ret != DH_SUCCESS) {
         DHLOGE("SendKeyStateNodeMsg error, SendMessage fail.");
     }
+    RecordEventLog(dhId, type, btnCode, value);
+}
+
+void DistributedInputSinkTransport::RecordEventLog(const std::string &dhId, int32_t type, int32_t code, int32_t value)
+{
+    std::string eventType;
+    switch (type) {
+        case EV_KEY:
+            eventType = "EV_KEY";
+            break;
+        case EV_REL:
+            eventType = "EV_REL";
+            break;
+        case EV_ABS:
+            eventType = "EV_ABS";
+            break;
+        default:
+            eventType = "other type " + std::to_string(type);
+            break;
+    }
+
+    DHLOGD("2.E2E-Test Sink softBus send, EventType: %s, Code: %d, Value: %d, dhId: %s",
+        eventType.c_str(), code, value, dhId.c_str());
 }
 
 int32_t DistributedInputSinkTransport::SendMessage(int32_t sessionId, std::string &message)
@@ -518,7 +541,7 @@ void DistributedInputSinkTransport::DInputSinkEventHandler::RecordEventLog(
                 eventType = "EV_ABS";
                 break;
             default:
-                eventType = "other type";
+                eventType = "other type " + std::to_string(evType);
                 break;
         }
         int64_t when = event[INPUT_KEY_WHEN];

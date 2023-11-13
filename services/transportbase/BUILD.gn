@@ -39,7 +39,6 @@ ohos_shared_library("libdinput_trans_base") {
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${distributedinput_path}/services/transportbase/include",
-    "${distributedinput_path}/services/source/inputinject/include",
     "${distributedinput_path}/inputdevicehandler/include",
   ]
 
@@ -53,7 +52,6 @@ ohos_shared_library("libdinput_trans_base") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
   ]

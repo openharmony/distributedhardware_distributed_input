@@ -39,8 +39,7 @@ namespace DistributedInput {
     const char INPUT_STRING_SPLIT_POINT = '.';
     const uint32_t KEY_DOWN_STATE = 1;
     const uint32_t KEY_UP_STATE = 0;
-    const uint32_t KEY_LONGPRESS_STATE = 2;
-    const uint32_t KEY_OTHER_TYPE = 5;
+    const uint32_t KEY_REPEAT = 2;
     const uint32_t READ_SLEEP_TIME_MS = 50;
     const uint32_t READ_RETRY_MAX = 5;
     const uint32_t DH_ID_LENGTH_MAX = 256;
@@ -49,6 +48,7 @@ namespace DistributedInput {
     const uint32_t SCREEN_MSG_MAX = 40 * 1024 * 1024;
     const uint32_t AUTH_SESSION_SIDE_SERVER = 0;
     const uint32_t IPC_VECTOR_MAX_SIZE = 32;
+    const uint32_t SIM_TOUCH_TRACKING_ID = 0x0001;
 
     /*
      * Device Type definitions
@@ -243,6 +243,12 @@ namespace DistributedInput {
         int32_t value;
         std::string descriptor;
         std::string path;
+
+        bool operator == (const RawEvent &e)
+        {
+            return this->type == e.type && this->code == e.code &&
+                this->descriptor == e.descriptor && this->path == e.path;
+        }
     };
 
     /*
@@ -336,16 +342,6 @@ namespace DistributedInput {
         OPENING = 0x01,
         OPENED = 0x02,
         CLOSING = 0x03,
-    };
-
-    /*
-    * This enumeration class represents the two states of the peropheral:
-    * THROUGH_IN : The state indicates the peripheral takes effect on the local device.
-    * THROUGH_OUT : The state indicates that the peripheral takes effect at the remote device.
-    */
-    enum class DhIdState {
-        THROUGH_IN = 0,
-        THROUGH_OUT,
     };
 } // namespace DistributedInput
 } // namespace DistributedHardware

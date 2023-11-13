@@ -53,13 +53,21 @@ DistributedInputCollector &DistributedInputCollector::GetInstance()
     return instance;
 }
 
+void DistributedInputCollector::PreInit()
+{
+    DHLOGI("PreInit for record local device infos");
+    inputHub_->RecordDeviceStates();
+}
+
 int32_t DistributedInputCollector::Init(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler)
 {
     sinkHandler_ = sinkHandler;
-    if (sinkHandler_ == nullptr) {
-        DHLOGE("DistributedInputCollector::Init sinkHandler_ failed \n");
+    if (sinkHandler_ == nullptr || inputHub_ == nullptr) {
+        DHLOGE("DistributedInputCollector::Init sinkHandler_ or inputHub_ invalid \n");
         return ERR_DH_INPUT_SERVER_SINK_COLLECTOR_INIT_FAIL;
     }
+
+    DHLOGI("Try start collect thread");
     if (!isStartGetDeviceHandlerThread) {
         InitCollectEventsThread();
         isStartGetDeviceHandlerThread = true;
@@ -151,6 +159,7 @@ void DistributedInputCollector::StopCollectEventsThread()
         pthread_join(collectThreadID_, NULL);
         collectThreadID_ = (pthread_t)(-1);
     }
+    inputHub_->ClearDeviceStates();
     DHLOGW("DistributedInputCollector::StopCollectEventsThread exit!");
 }
 

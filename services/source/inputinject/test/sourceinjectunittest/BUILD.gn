@@ -34,6 +34,7 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "${services_source_path}/inputinject/include",
     "${frameworks_path}/include",
     "${common_path}/include",
+    "${services_state_path}/include",
     "${frameworks_path}/include",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
