@@ -57,8 +57,8 @@ ohos_shared_library("libdinput_inject") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${utils_path}:libdinput_utils",
     "${services_state_path}:libdinput_state",
+    "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
     "//third_party/openssl:libcrypto_shared",
   ]
