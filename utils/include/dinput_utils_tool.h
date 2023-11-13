@@ -17,9 +17,9 @@
 #define OHOS_DISTRIBUTED_INPUT_UTILS_TOOL_H
 
 #include <cstdint>
-#include <linux/input.h>
 #include <string>
 
+#include <linux/input.h>
 #include "nlohmann/json.hpp"
 
 #include "dinput_log.h"

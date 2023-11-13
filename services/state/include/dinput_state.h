@@ -69,7 +69,8 @@ private:
     ~DInputState();
     // Simulate device state to the pass through target device.
     void SimulateEventInjectToSrc(const int32_t sessionId, const std::vector<std::string> &dhIds);
-
+    void SimulateBtnTouchEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event);
+    void SimulateNormalEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event);
 private:
     std::mutex operationMutex_;
     std::map<std::string, DhIdState> dhIdStateMap_;

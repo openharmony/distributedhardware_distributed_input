@@ -63,6 +63,7 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
 
   deps = [
     "${utils_path}:libdinput_utils",
+    "${services_state_path}:libdinput_state",
     "//third_party/libevdev:libevdev",
     "//third_party/openssl:libcrypto_shared",
   ]

@@ -1471,7 +1471,7 @@ void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
 
 void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState)
 {
-    //If device is a mouse, record the mouse pressed key.
+    // If device is a mouse, record the mouse pressed key.
     if ((dev->classes & INPUT_DEVICE_CLASS_CURSOR) != 0) {
         int mouseLeftBtnState = BitIsSet(keyState, BTN_LEFT);
         if (mouseLeftBtnState != 0) {

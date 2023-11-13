@@ -44,7 +44,7 @@ inline constexpr size_t NBYTES(size_t nbits)
 }
 
 class InputHub {
-private:
+public:
     struct Device  {
         Device* next;
         int fd; // may be -1 if device is closed
@@ -73,7 +73,7 @@ private:
         int32_t absXIndex;
         int32_t absYIndex;
     };
-public:
+
     InputHub();
     ~InputHub();
     size_t StartCollectInputEvents(RawEvent *buffer, size_t bufferSize);

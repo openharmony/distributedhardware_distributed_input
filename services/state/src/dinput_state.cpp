@@ -116,49 +116,57 @@ void DInputState::SimulateEventInjectToSrc(const int32_t sessionId, const std::v
             if (event.code == BTN_TOUCH) {
                 DHLOGI("Simulate Touch Down event for device path: %s, dhId: %s",
                     event.path.c_str(), event.descriptor.c_str());
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_ABS, ABS_MT_TRACKING_ID, SIM_TOUCH_TRACKING_ID);
-                std::pair<int32_t, int32_t> absPos = GetAndClearABSPosition(event.descriptor);
-                if (absPos.first != -1) {
-                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                        EV_ABS, ABS_MT_POSITION_X, absPos.first);
-                }
-
-                if (absPos.second != -1) {
-                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                        EV_ABS, ABS_MT_POSITION_Y, absPos.second);
-                }
-
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_KEY, event.code, KEY_DOWN_STATE);
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE);
-
-                if (absPos.first != -1) {
-                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                        EV_ABS, ABS_X, absPos.first);
-                }
-
-                if (absPos.second != -1) {
-                    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                        EV_ABS, ABS_Y, absPos.second);
-                }
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_MSC, MSC_TIMESTAMP, 0x0);
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_SYN, SYN_REPORT, 0x0);
+                SimulateBtnTouchEvent(sessionId, dhId, event);
             } else {
                 DHLOGI("Simulate Key event for device path: %s, dhId: %s",
                     event.path.c_str(), event.descriptor.c_str());
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_KEY, event.code, KEY_DOWN_STATE);
-                DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
-                    EV_SYN, SYN_REPORT, 0x0);
+                SimulateNormalEvent(sessionId, dhId, event);
             }
         }
 
         keyDownStateMap_.erase(dhId);
     }
+}
+
+void DInputState::SimulateBtnTouchEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event)
+{
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_ABS, ABS_MT_TRACKING_ID, SIM_TOUCH_TRACKING_ID);
+    std::pair<int32_t, int32_t> absPos = GetAndClearABSPosition(event.descriptor);
+    if (absPos.first != -1) {
+        DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+            EV_ABS, ABS_MT_POSITION_X, absPos.first);
+    }
+    if (absPos.second != -1) {
+        DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+            EV_ABS, ABS_MT_POSITION_Y, absPos.second);
+    }
+
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_KEY, event.code, KEY_DOWN_STATE);
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE);
+
+    if (absPos.first != -1) {
+        DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+            EV_ABS, ABS_X, absPos.first);
+    }
+    if (absPos.second != -1) {
+        DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+            EV_ABS, ABS_Y, absPos.second);
+    }
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_MSC, MSC_TIMESTAMP, 0x0);
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_SYN, SYN_REPORT, 0x0);
+}
+
+void DInputState::SimulateNormalEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event)
+{
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_KEY, event.code, KEY_DOWN_STATE);
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
+        EV_SYN, SYN_REPORT, 0x0);
 }
 
 void DInputState::RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY)
