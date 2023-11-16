@@ -34,7 +34,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 std::shared_ptr<DistributedInputClient> DistributedInputClient::instance(new DistributedInputClient());
 DistributedInputClient::DistributedInputClient() : isAddWhiteListCbReg(false), isDelWhiteListCbReg(false),
-    isNodeMonitorCbReg(false), isSimulationEventCbReg(false), isSharingDhIdsReg(false)
+    isNodeMonitorCbReg(false), isSimulationEventCbReg(false), isSharingDhIdsReg(false), isGetSinkScreenInfosCbReg(false)
 {
     DHLOGI("DistributedInputClient init start");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
