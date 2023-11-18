@@ -41,6 +41,10 @@ public:
     int32_t UnsubscribeLocalHardware(const std::string &dhId) override;
     void OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote);
     void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
+    int32_t RegisterPrivacyResources(std::shared_ptr<PrivacyResourcesListener> listener) override;
+    int32_t PauseDistributedHardware(const std::string &networkId) override;
+    int32_t ResumeDistributedHardware(const std::string &networkId) override;
+    int32_t StopDistributedHardware(const std::string &networkId) override;
 
 public:
     class SALoadSinkCb : public OHOS::SystemAbilityLoadCallbackStub {
