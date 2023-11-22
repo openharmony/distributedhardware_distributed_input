@@ -155,6 +155,26 @@ void DistributedInputSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> 
     dInputSinkProxy_ = nullptr;
 }
 
+int32_t DistributedInputSinkHandler::RegisterPrivacyResources(std::shared_ptr<PrivacyResourcesListener> listener)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputSinkHandler::PauseDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputSinkHandler::ResumeDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputSinkHandler::StopDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
 IDistributedHardwareSink *GetSinkHardwareHandler()
 {
     return &DistributedInputSinkHandler::GetInstance();
