@@ -97,7 +97,8 @@ public:
 
     void RecordDeviceStates();
     void CheckTargetDevicesState(std::vector<Device*> targetDevices);
-    void CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState);
+    bool IsLengthExceeds(const unsigned long *keyState, const unsigned long len, int keyIndex);
+    void CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState, const unsigned long len);
     void SavePressedKeyState(const Device *dev, int32_t keyCode);
     void ClearDeviceStates();
 private:
