@@ -226,9 +226,6 @@ public:
         void OnMessage(const DHTopic topic, const std::string &message) override;
 
     private:
-        void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
-
-    private:
         DistributedInputSourceManager *sourceManagerContext_;
     };
 
@@ -422,8 +419,6 @@ private:
     sptr<DeviceOfflineListener> deviceOfflineListener_ = nullptr;
 
     std::mutex valMutex_;
-    std::mutex syncNodeInfoMutex_;
-    std::map<std::string, std::set<BeRegNodeInfo>> syncNodeInfoMap_;
 
     int32_t RelayStartRemoteInputByType(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback);
@@ -438,10 +433,7 @@ private:
     int32_t RelayStopRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
         const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback);
     bool IsStringDataSame(const std::vector<std::string> &oldDhIds, std::vector<std::string> newDhIds);
-    void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
-    std::set<BeRegNodeInfo> GetSyncNodeInfo(const std::string &devId);
-    void UpdateSyncNodeInfo(const std::string &devId, const std::string &dhId, const std::string &nodeDesc);
-    void DeleteSyncNodeInfo(const std::string &devId);
+
     void UnregisterDHFwkPublisher();
 };
 } // namespace DistributedInput

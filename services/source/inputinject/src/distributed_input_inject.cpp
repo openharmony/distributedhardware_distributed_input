@@ -79,13 +79,7 @@ int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string 
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_UNREGISTER_FAIL;
     }
 
-    std::string srcDevId;
-    inputNodeManager_->GetDeviceInfo(srcDevId);
-
-    DHLOGI("UnregisterDistributedHardware called, device = %s, dhId = %s, OnNodeOffLine",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-    SyncNodeOfflineInfo(srcDevId, devId, dhId);
-
+    DHLOGI("UnregisterDistributedHardware success");
     return DH_SUCCESS;
 }
 

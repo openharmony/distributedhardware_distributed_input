@@ -1669,34 +1669,6 @@ void DistributedInputSourceManager::SetInputTypesMap(const std::string deviceId,
     InputTypesMap_[deviceId] = value;
 }
 
-std::set<BeRegNodeInfo> DistributedInputSourceManager::GetSyncNodeInfo(const std::string &devId)
-{
-    std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
-    if (syncNodeInfoMap_.find(devId) == syncNodeInfoMap_.end()) {
-        DHLOGI("syncNodeInfoMap find not the key: %s", GetAnonyString(devId).c_str());
-        return {};
-    }
-    return syncNodeInfoMap_[devId];
-}
-
-void DistributedInputSourceManager::UpdateSyncNodeInfo(const std::string &userDevId, const std::string &dhId,
-    const std::string &nodeDesc)
-{
-    std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
-    if (syncNodeInfoMap_.find(userDevId) == syncNodeInfoMap_.end()) {
-        DHLOGI("syncNodeInfoMap has not the key: %s, So create this entry", GetAnonyString(userDevId).c_str());
-        std::set<BeRegNodeInfo> syncNodeInfo;
-        syncNodeInfoMap_[userDevId] = syncNodeInfo;
-    }
-    syncNodeInfoMap_[userDevId].insert({userDevId, dhId, nodeDesc});
-}
-
-void DistributedInputSourceManager::DeleteSyncNodeInfo(const std::string &devId)
-{
-    std::lock_guard<std::mutex> lock(syncNodeInfoMutex_);
-    syncNodeInfoMap_.erase(devId);
-}
-
 void DistributedInputSourceManager::StartDScreenListener::OnMessage(const DHTopic topic, const std::string &message)
 {
     DHLOGI("StartDScreenListener OnMessage!");
@@ -1887,26 +1859,6 @@ void DistributedInputSourceManager::DeviceOfflineListener::OnMessage(const DHTop
         DHLOGE("this message is empty");
         return;
     }
-    DeleteNodeInfoAndNotify(message);
-}
-
-void DistributedInputSourceManager::DeviceOfflineListener::DeleteNodeInfoAndNotify(const std::string &offlineDevId)
-{
-    DHLOGI("DeviceOfflineListener DeleteNodeInfoAndNotify!");
-    if (sourceManagerContext_ == nullptr) {
-        DHLOGE("sourceManagerContext is nullptr!");
-        return;
-    }
-    std::set<BeRegNodeInfo> nodeSet = sourceManagerContext_->GetSyncNodeInfo(offlineDevId);
-    std::string localNetWorkId = GetLocalNetworkId();
-    for (const auto &node : nodeSet) {
-        DHLOGI("DeleteNodeInfoAndNotify device: %s, dhId: %s", GetAnonyString(offlineDevId).c_str(),
-            GetAnonyString(node.dhId).c_str());
-        // Notify multimodal
-        DistributedInputInject::GetInstance().SyncNodeOfflineInfo(offlineDevId, localNetWorkId, node.dhId);
-    }
-    // Delete info
-    sourceManagerContext_->DeleteSyncNodeInfo(offlineDevId);
 }
 
 DistributedInputSourceManager::DScreenSourceSvrRecipient::DScreenSourceSvrRecipient(const std::string &srcDevId,

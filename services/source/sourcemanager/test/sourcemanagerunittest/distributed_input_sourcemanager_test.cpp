@@ -1632,47 +1632,6 @@ HWTEST_F(DistributedInputSourceManagerTest, SetInputTypesMap_01, testing::ext::T
     EXPECT_EQ(true, sourceManager_->InputTypesMap_.empty());
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, GetSyncNodeInfo_01, testing::ext::TestSize.Level1)
-{
-    std::string userDevId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::string dhId = "input_slkdiek3kddkeojfe";
-    std::string nodeDesc = "input_deviceid:umkyu1b165e1be98151891erbe8r91ev, input_dhid:slkdiek3kddkeojfe";
-    sourceManager_->syncNodeInfoMap_[userDevId].insert({userDevId, dhId, nodeDesc});
-    std::string devId = "sd6f4s6d5f46s5d4f654564sdfdfsdfsdfd55";
-    sourceManager_->GetSyncNodeInfo(devId);
-    EXPECT_EQ(1, sourceManager_->GetSyncNodeInfo(userDevId).size());
-}
-
-HWTEST_F(DistributedInputSourceManagerTest, UpdateSyncNodeInfo_01, testing::ext::TestSize.Level1)
-{
-    std::string userDevId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::string dhId = "input_slkdiek3kddkeojfe";
-    std::string nodeDesc = "input_deviceid:umkyu1b165e1be98151891erbe8r91ev, input_dhid:slkdiek3kddkeojfe";
-    sourceManager_->syncNodeInfoMap_[userDevId].insert({userDevId, dhId, nodeDesc});
-    sourceManager_->UpdateSyncNodeInfo(userDevId, dhId, nodeDesc);
-    EXPECT_EQ(1, sourceManager_->syncNodeInfoMap_.size());
-}
-
-HWTEST_F(DistributedInputSourceManagerTest, UpdateSyncNodeInfo_02, testing::ext::TestSize.Level1)
-{
-    std::string userDevId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::string dhId = "input_slkdiek3kddkeojfe";
-    std::string nodeDesc = "input_deviceid:umkyu1b165e1be98151891erbe8r91ev, input_dhid:slkdiek3kddkeojfe";
-    sourceManager_->syncNodeInfoMap_.clear();
-    sourceManager_->UpdateSyncNodeInfo(userDevId, dhId, nodeDesc);
-    EXPECT_EQ(1, sourceManager_->syncNodeInfoMap_.size());
-}
-
-HWTEST_F(DistributedInputSourceManagerTest, DeleteSyncNodeInfo_01, testing::ext::TestSize.Level1)
-{
-    std::string userDevId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::string dhId = "input_slkdiek3kddkeojfe";
-    std::string nodeDesc = "input_deviceid:umkyu1b165e1be98151891erbe8r91ev, input_dhid:slkdiek3kddkeojfe";
-    sourceManager_->syncNodeInfoMap_[userDevId].insert({userDevId, dhId, nodeDesc});
-    sourceManager_->DeleteSyncNodeInfo(userDevId);
-    EXPECT_EQ(0, sourceManager_->syncNodeInfoMap_.size());
-}
-
 HWTEST_F(DistributedInputSourceManagerTest, Dump_01, testing::ext::TestSize.Level1)
 {
     int32_t fd = 1;
