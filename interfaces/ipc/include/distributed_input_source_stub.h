@@ -54,9 +54,6 @@ private:
     int32_t HandleStopRelayDhidRemoteInput(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterAddWhiteListCallback(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterDelWhiteListCallback(MessageParcel &data, MessageParcel &reply);
-    int32_t HandleRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply);
-    int32_t HandleUnRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply);
-    int32_t HandleSyncNodeInfoRemoteInput(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     int32_t HandleUnregisterSimulationEventListener(MessageParcel &data, MessageParcel &reply);
     int32_t HandleRegisterSessionStateCb(MessageParcel &data, MessageParcel &reply);

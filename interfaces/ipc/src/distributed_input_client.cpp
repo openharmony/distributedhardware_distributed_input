@@ -160,7 +160,6 @@ void DistributedInputClient::CheckSourceRegisterCallback()
         isSimulationEventCbReg.load());
 
     CheckWhiteListCallback();
-    CheckNodeMonitorCallback();
     CheckKeyStateCallback();
 }
 
@@ -220,19 +219,6 @@ void DistributedInputClient::CheckWhiteListCallback()
         } else {
             DHLOGE("CheckWhiteListCallback client RegisterDelWhiteListCallback fail");
         }
-    }
-}
-
-void DistributedInputClient::CheckNodeMonitorCallback()
-{
-    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
-        DHLOGE("CheckNodeMonitorCallback client get source proxy fail");
-        return;
-    }
-    if (!isNodeMonitorCbReg && regNodeListener_ != nullptr) {
-        DHLOGI("CheckNodeMonitorCallback need continue register regNodeListener_.");
-        DInputSAManager::GetInstance().dInputSourceProxy_->RegisterInputNodeListener(regNodeListener_);
-        isNodeMonitorCbReg = true;
     }
 }
 
@@ -578,50 +564,6 @@ bool DistributedInputClient::IsStartDistributedInput(const std::string &dhId)
         return false;
     }
     return sharingDhIds_.find(dhId) != sharingDhIds_.end();
-}
-
-int32_t DistributedInputClient::RegisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    DHLOGI("RegisterInputNodeListener called");
-    if (listener == nullptr) {
-        DHLOGE("RegisterInputNodeListener param error, client fail");
-        return ERR_DH_INPUT_CLIENT_REG_NODE_CB_FAIL;
-    }
-    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
-        DHLOGE("RegisterInputNodeListener proxy error, client fail");
-        isNodeMonitorCbReg = false;
-        regNodeListener_ = listener;
-        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
-    }
-
-    int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterInputNodeListener(listener);
-    if (ret == DH_SUCCESS) {
-        isNodeMonitorCbReg = true;
-    } else {
-        isNodeMonitorCbReg = false;
-        regNodeListener_ = listener;
-        DHLOGE("RegisterInputNodeListener Failed, ret = %d", ret);
-    }
-    return ret;
-}
-
-int32_t DistributedInputClient::UnregisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    DHLOGI("UnregisterInputNodeListener called");
-    if (listener == nullptr) {
-        DHLOGE("UnregisterInputNodeListener param error, client fail");
-        return ERR_DH_INPUT_CLIENT_UNREG_NODE_CB_FAIL;
-    }
-    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
-        DHLOGE("UnregisterInputNodeListener proxy error, client fail");
-        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
-    }
-
-    int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterInputNodeListener(listener);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DInputSAManager UnregisterInputNodeListener Failed, ret = %d", ret);
-    }
-    return ret;
 }
 
 int32_t DistributedInputClient::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)

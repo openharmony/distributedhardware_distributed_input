@@ -44,17 +44,12 @@ public:
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
     int32_t RemoveVirtualTouchScreenNode(const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
-    int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
-    int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
     int32_t GetDhIdsByInputType(const std::string &devId, const uint32_t &inputTypes, std::vector<std::string> &dhIds);
     int32_t RegisterInjectEventCb(sptr<ISessionStateCallback> callback);
     int32_t UnregisterInjectEventCb();
 
     void NotifyNodeMgrScanVirNode(const std::string &dhId);
     void InputDeviceEventInject(const std::shared_ptr<RawEvent> &rawEvent);
-    void SyncNodeOfflineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId);
-    void SyncNodeOnlineInfo(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId,
-        const std::string &sinkNodeDesc);
     void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds);
 private:
@@ -63,8 +58,6 @@ private:
 
     std::unique_ptr<DistributedInputNodeManager> inputNodeManager_;
     std::mutex inputNodeManagerMutex_;
-    std::set<sptr<InputNodeListener>> inputNodeListeners_;
-    std::mutex inputNodeListenersMutex_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

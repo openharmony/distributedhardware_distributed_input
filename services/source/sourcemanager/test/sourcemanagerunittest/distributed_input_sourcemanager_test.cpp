@@ -1073,16 +1073,6 @@ HWTEST_F(DistributedInputSourceManagerTest, RegisterDelWhiteListCallback02, test
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, RegisterInputNodeListener_01, testing::ext::TestSize.Level1)
-{
-    sptr<TestInputNodeListenerCb> callback = nullptr;
-    int32_t ret = sourceManager_->RegisterInputNodeListener(callback);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_NODE_LISTENER_CALLBACK_ERR, ret);
-
-    ret = sourceManager_->UnregisterInputNodeListener(callback);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_NODE_LISTENER_CALLBACK_ERR, ret);
-}
-
 HWTEST_F(DistributedInputSourceManagerTest, RegisterSimulationEventListener_01, testing::ext::TestSize.Level1)
 {
     sptr<TestSimulationEventCb> callback = nullptr;

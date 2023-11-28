@@ -101,9 +101,6 @@ public:
     int32_t NotifyStartDScreen(const std::string &networkId, const std::string &srcDevId, const uint64_t srcWinId);
     int32_t NotifyStopDScreen(const std::string &networkId, const std::string &srcScreenInfoKey);
 
-    int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
-    int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
-
     int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
 

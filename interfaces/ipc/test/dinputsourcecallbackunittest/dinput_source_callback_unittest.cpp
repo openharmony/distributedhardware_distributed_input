@@ -224,30 +224,6 @@ int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterDelWhite
     return DH_SUCCESS;
 }
 
-int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterInputNodeListener(
-    sptr<InputNodeListener> listener)
-{
-    (void)listener;
-    return DH_SUCCESS;
-}
-
-int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::UnregisterInputNodeListener(
-    sptr<InputNodeListener> listener)
-{
-    (void)listener;
-    return DH_SUCCESS;
-}
-
-int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::SyncNodeInfoRemoteInput(
-    const std::string &userDevId, const std::string &dhid,
-    const std::string &nodeDesc)
-{
-    (void)userDevId;
-    (void)dhid;
-    (void)nodeDesc;
-    return DH_SUCCESS;
-}
-
 int32_t DInputSourceCallBackTest::TestDInputSourceCallBackStub::RegisterSimulationEventListener(
     sptr<ISimulationEventListener> listener)
 {
@@ -587,35 +563,6 @@ HWTEST_F(DInputSourceCallBackTest, RegisterDelWhiteListCallback01, testing::ext:
     DistributedInputSourceProxy callBackProxy(callBackStubPtr);
     sptr<TestDelWhiteListInfosCallBack> callback(new TestDelWhiteListInfosCallBack());
     int32_t ret = callBackProxy.RegisterDelWhiteListCallback(callback);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DInputSourceCallBackTest, RegisterInputNodeListener01, testing::ext::TestSize.Level1)
-{
-    sptr<IRemoteObject> callBackStubPtr(new TestDInputSourceCallBackStub());
-    DistributedInputSourceProxy callBackProxy(callBackStubPtr);
-    sptr<TestDInputNodeListenerCallBack> listener(new TestDInputNodeListenerCallBack());
-    int32_t ret = callBackProxy.RegisterInputNodeListener(listener);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DInputSourceCallBackTest, UnregisterInputNodeListener01, testing::ext::TestSize.Level1)
-{
-    sptr<IRemoteObject> callBackStubPtr(new TestDInputSourceCallBackStub());
-    DistributedInputSourceProxy callBackProxy(callBackStubPtr);
-    sptr<TestDInputNodeListenerCallBack> listener(new TestDInputNodeListenerCallBack());
-    int32_t ret = callBackProxy.UnregisterInputNodeListener(listener);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DInputSourceCallBackTest, SyncNodeInfoRemoteInput01, testing::ext::TestSize.Level1)
-{
-    sptr<IRemoteObject> callBackStubPtr(new TestDInputSourceCallBackStub());
-    DistributedInputSourceProxy callBackProxy(callBackStubPtr);
-    const std::string userDevId = "a4sd654q8w7e9qwe";
-    const std::string dhid = "Input_sd65f46df46s54f";
-    const std::string nodeDesc = "65d4f6s54f6sd4f665d4sf6";
-    int32_t ret = callBackProxy.SyncNodeInfoRemoteInput(userDevId, dhid, nodeDesc);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 

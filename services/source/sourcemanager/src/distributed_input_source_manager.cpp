@@ -301,16 +301,7 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     // 4.notify source distributedfwk register hardware success
     callback->OnResult(devId, dhId, DH_SUCCESS);
 
-    // 5. notify remote side that this side is registerd remote dhid
-    sptr<IDistributedSourceInput> cli = DInputSourceSACliMgr::GetInstance().GetRemoteCli(devId);
-    if (cli == nullptr) {
-        DHLOGE("Get Remote DInput Source Proxy return null");
-        return DH_SUCCESS;
-    }
-
-    cli->SyncNodeInfoRemoteInput(GetLocalNetworkId(), dhId, GetNodeDesc(parameters));
-
-    // 6. Notify node mgr to scan vir dev node info
+    // 5. Notify node mgr to scan vir dev node info
     DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(dhId);
     return DH_SUCCESS;
 }
@@ -1147,41 +1138,6 @@ int32_t DistributedInputSourceManager::RegisterDelWhiteListCallback(sptr<IDelWhi
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceManager::RegisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    DHLOGI("RegisterInputNodeListener.");
-    if (listener == nullptr) {
-        DHLOGE("RegisterInputNodeListener callback is null.");
-        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_NODE_LISTENER_CALLBACK_ERR;
-    }
-    DistributedInputInject::GetInstance().RegisterInputNodeListener(listener);
-    SendExistVirNodeInfos(listener);
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputSourceManager::UnregisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    DHLOGI("UnregisterInputNodeListener.");
-    if (listener == nullptr) {
-        DHLOGE("UnregisterInputNodeListener callback is null.");
-        return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_NODE_LISTENER_CALLBACK_ERR;
-    }
-    DistributedInputInject::GetInstance().UnregisterInputNodeListener(listener);
-    return DH_SUCCESS;
-}
-
-void DistributedInputSourceManager::SendExistVirNodeInfos(sptr<InputNodeListener> listener)
-{
-    DHLOGI("SendExistVirNodeInfos call");
-    std::lock_guard<std::mutex> lock(operationMutex_);
-    DevInfo localDevInfo = GetLocalDeviceInfo();
-    for (const auto &node : inputDevice_) {
-        DHLOGI("Send Exist Vir Node: srcId: %s, sinkId: %s, dhId: %s", GetAnonyString(localDevInfo.networkId).c_str(),
-            GetAnonyString(node.devId).c_str(), GetAnonyString(node.dhId).c_str());
-        listener->OnNodeOnLine(localDevInfo.networkId, node.devId, node.dhId, node.nodeDesc);
-    }
-}
-
 int32_t DistributedInputSourceManager::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
     DHLOGI("RegisterSimulationEventListener called.");
@@ -1220,16 +1176,6 @@ int32_t DistributedInputSourceManager::UnregisterSessionStateCb()
 {
     DistributedInputTransportBase::GetInstance().UnregisterSessionStateCb();
     DistributedInputInject::GetInstance().UnregisterInjectEventCb();
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputSourceManager::SyncNodeInfoRemoteInput(const std::string &userDevId, const std::string &dhId,
-    const std::string &nodeDesc)
-{
-    // store info
-    UpdateSyncNodeInfo(userDevId, dhId, nodeDesc);
-    // notify multimodal
-    DistributedInputInject::GetInstance().SyncNodeOnlineInfo(userDevId, GetLocalNetworkId(), dhId, nodeDesc);
     return DH_SUCCESS;
 }
 

@@ -69,16 +69,10 @@ void DistributedInputSourceStub::RegRespFunMap()
         &DistributedInputSourceStub::HandleRegisterAddWhiteListCallback;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT)] =
         &DistributedInputSourceStub::HandleRegisterDelWhiteListCallback;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_NODE_LISTENER)] =
-        &DistributedInputSourceStub::HandleRegisterInputNodeListener;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_NODE_LISTENER)] =
-        &DistributedInputSourceStub::HandleUnRegisterInputNodeListener;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SIMULATION_EVENT_LISTENER)] =
         &DistributedInputSourceStub::HandleRegisterSimulationEventListener;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SIMULATION_EVENT_LISTENER)] =
         &DistributedInputSourceStub::HandleUnregisterSimulationEventListener;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::SYNC_NODE_INFO_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SESSION_STATE_CB)] =
         &DistributedInputSourceStub::HandleRegisterSessionStateCb;
     memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SESSION_STATE_CB)] =
@@ -504,20 +498,6 @@ int32_t DistributedInputSourceStub::HandleStopRelayDhidRemoteInput(MessageParcel
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSourceStub::HandleSyncNodeInfoRemoteInput(MessageParcel &data, MessageParcel &reply)
-{
-    std::string userDevId = data.ReadString();
-    std::string dhid = data.ReadString();
-    std::string nodeDesc = data.ReadString();
-
-    int32_t ret = SyncNodeInfoRemoteInput(userDevId, dhid, nodeDesc);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleSyncNodeInfoRemoteInput write ret failed");
-        return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
-    }
-    return DH_SUCCESS;
-}
-
 int32_t DistributedInputSourceStub::HandleRegisterAddWhiteListCallback(MessageParcel &data, MessageParcel &reply)
 {
     sptr<IAddWhiteListInfosCallback> callback = iface_cast<IAddWhiteListInfosCallback>(data.ReadRemoteObject());
@@ -545,38 +525,6 @@ int32_t DistributedInputSourceStub::HandleRegisterDelWhiteListCallback(MessagePa
         DHLOGE("HandleRegisterDelWhiteListCallback write ret failed");
         return ERR_DH_INPUT_IPC_WRITE_VALID_FAIL;
     }
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputSourceStub::HandleRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply)
-{
-    sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleRegisterInputNodeListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
-    }
-    int32_t ret = RegisterInputNodeListener(callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleRegisterInputNodeListener write ret failed");
-        return ERR_DH_INPUT_SOURCE_STUB_REGISTER_NODE_LISTENER_FAIL;
-    }
-
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputSourceStub::HandleUnRegisterInputNodeListener(MessageParcel &data, MessageParcel &reply)
-{
-    sptr<InputNodeListener> callback = iface_cast<InputNodeListener>(data.ReadRemoteObject());
-    if (callback == nullptr) {
-        DHLOGE("HandleUnRegisterInputNodeListener failed, callback is nullptr.");
-        return ERR_DH_INPUT_POINTER_NULL;
-    }
-    int32_t ret = RegisterInputNodeListener(callback);
-    if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnRegisterInputNodeListener write ret failed");
-        return ERR_DH_INPUT_SOURCE_STUB_UNREGISTER_NODE_LISTENER_FAIL;
-    }
-
     return DH_SUCCESS;
 }
 
