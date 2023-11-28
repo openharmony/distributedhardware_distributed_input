@@ -15,6 +15,8 @@
 
 #include "distributed_input_inject.h"
 
+#include <sstream>
+
 #include "nlohmann/json.hpp"
 
 #include "dinput_errcode.h"
