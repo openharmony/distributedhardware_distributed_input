@@ -654,7 +654,13 @@ int32_t DistributedInputSourceStub::OnRemoteRequest(
         DHLOGE("DistributedInputSourceStub read token valid failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
+    if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_REMOTE_INPUT)) {
+        DHLOGI("Receive Register DInput cmd");
+    }
 
+    if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT)) {
+        DHLOGI("Receive UnRegister DInput cmd");
+    }
     if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::INIT)) {
         return HandleInitDistributedHardware(reply);
     } else if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::RELEASE)) {
