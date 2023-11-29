@@ -60,6 +60,7 @@ public:
     int32_t RespLatency(const int32_t sessionId, std::string &smsg);
     void SendKeyStateNodeMsg(const int32_t sessionId, const std::string &dhId, uint32_t type, const uint32_t btnCode,
         int32_t value);
+    void SendKeyStateNodeMsgBatch(const int32_t sessionId, const std::vector<struct RawEvent> &events);
 
     class DInputSinkEventHandler : public AppExecFwk::EventHandler {
     public:
@@ -93,6 +94,7 @@ private:
     void NotifyRelayStopTypeRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
 
     void RecordEventLog(const std::string &dhId, int32_t type, int32_t code, int32_t value);
+    void RecordEventLog(const std::vector<struct RawEvent> &events);
 private:
     std::string mySessionName_;
     std::shared_ptr<DistributedInputSinkTransport::DInputSinkEventHandler> eventHandler_;

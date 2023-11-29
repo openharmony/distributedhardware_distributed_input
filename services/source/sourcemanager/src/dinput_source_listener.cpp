@@ -325,24 +325,31 @@ void DInputSourceListener::OnResponseKeyState(const std::string deviceId,
     sourceManagerObj_->GetCallbackEventHandler()->SendEvent(msgEvent, 0, AppExecFwk::EventQueue::Priority::IMMEDIATE);
 }
 
-void DInputSourceListener::OnReceivedEventRemoteInput(
-    const std::string deviceId, const std::string &event)
+
+void DInputSourceListener::OnResponseKeyStateBatch(const std::string deviceId, const std::string &event)
+{
+    DHLOGI("OnResponseKeyStateBatch events, deviceId: %s.", GetAnonyString(deviceId).c_str());
+    OnReceivedEventRemoteInput(deviceId, event);
+}
+
+void DInputSourceListener::OnReceivedEventRemoteInput(const std::string deviceId, const std::string &event)
 {
     nlohmann::json inputData = nlohmann::json::parse(event, nullptr, false);
     if (inputData.is_discarded()) {
         DHLOGE("inputData parse failed!");
         return;
     }
-    size_t jsonSize = inputData.size();
-    DHLOGI("OnReceivedEventRemoteInput called, deviceId: %s, json size:%d.",
-        GetAnonyString(deviceId).c_str(), jsonSize);
 
     if (!inputData.is_array()) {
         DHLOGE("inputData not vector!");
         return;
     }
 
-    RawEvent mEventBuffer[jsonSize];
+    size_t jsonSize = inputData.size();
+    DHLOGI("OnReceivedEventRemoteInput called, deviceId: %s, json size:%d.",
+        GetAnonyString(deviceId).c_str(), jsonSize);
+
+    std::vector<RawEvent> mEventBuffer(jsonSize);
     int idx = 0;
     for (auto it = inputData.begin(); it != inputData.end(); ++it) {
         nlohmann::json oneData = (*it);
@@ -362,7 +369,8 @@ void DInputSourceListener::OnReceivedEventRemoteInput(
             oneData[INPUT_KEY_VALUE], oneData[INPUT_KEY_PATH]);
         ++idx;
     }
-    DistributedInputInject::GetInstance().RegisterDistributedEvent(mEventBuffer, jsonSize);
+
+    DistributedInputInject::GetInstance().RegisterDistributedEvent(mEventBuffer);
 }
 
 void DInputSourceListener::OnReceiveRelayPrepareResult(int32_t status,

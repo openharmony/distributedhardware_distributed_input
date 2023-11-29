@@ -48,7 +48,6 @@ namespace DistributedInput {
     const uint32_t SCREEN_MSG_MAX = 40 * 1024 * 1024;
     const uint32_t AUTH_SESSION_SIDE_SERVER = 0;
     const uint32_t IPC_VECTOR_MAX_SIZE = 32;
-    const uint32_t SIM_TOUCH_TRACKING_ID = 0x0001;
 
     /*
      * Device Type definitions

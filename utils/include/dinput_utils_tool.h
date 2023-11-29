@@ -65,6 +65,7 @@ void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &
 void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths);
 
 std::string GetString(const std::vector<std::string> &vec);
+int32_t GetRandomInt32();
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

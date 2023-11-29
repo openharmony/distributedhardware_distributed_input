@@ -15,8 +15,11 @@
 
 #include "dinput_utils_tool.h"
 
+#include <climits>
 #include <cstdarg>
 #include <cstdio>
+#include <random>
+
 #include <dirent.h>
 #include <fcntl.h>
 #include <sys/time.h>
@@ -438,6 +441,14 @@ std::string GetString(const std::vector<std::string> &vec)
     }
     retStr += "]";
     return retStr;
+}
+
+int32_t GetRandomInt32()
+{
+    std::default_random_engine engine(time(nullptr));
+
+    std::uniform_int_distribution<int> distribution(0, INT32_MAX);
+    return distribution(engine);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

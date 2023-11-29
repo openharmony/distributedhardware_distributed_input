@@ -99,6 +99,7 @@ private:
     void NotifyResponseStartRemoteInputDhid(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyResponseStopRemoteInputDhid(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyResponseKeyState(int32_t sessionId, const nlohmann::json &recMsg);
+    void NotifyResponseKeyStateBatch(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyReceivedEventRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void ReceiveSrcTSrcRelayPrepare(int32_t sessionId, const nlohmann::json &recMsg);
     void ReceiveSrcTSrcRelayUnprepare(int32_t sessionId, const nlohmann::json &recMsg);

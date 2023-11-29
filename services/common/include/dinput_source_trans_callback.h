@@ -33,6 +33,7 @@ public:
     virtual void OnResponseStopRemoteInputDhid(const std::string deviceId, const std::string &dhids, bool result) = 0;
     virtual void OnResponseKeyState(const std::string deviceId, const std::string &dhid, const uint32_t type,
         const uint32_t code, const uint32_t value) = 0;
+    virtual void OnResponseKeyStateBatch(const std::string deviceId, const std::string &object) = 0;
     virtual void OnReceivedEventRemoteInput(const std::string deviceId, const std::string &object) = 0;
 
     virtual void OnResponseRelayPrepareRemoteInput(int32_t sessionId, const std::string &deviceId, bool result,
