@@ -15,13 +15,13 @@
 
 #include "dinput_utils_tool.h"
 
+#include <climits>
 #include <cstdarg>
 #include <cstdio>
 #include <random>
 
 #include <dirent.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
