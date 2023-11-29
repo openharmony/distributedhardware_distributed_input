@@ -1469,20 +1469,36 @@ void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
         dev->identifier.descriptor.c_str());
 }
 
-void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState)
+bool InputHub::IsLengthExceeds(const unsigned long *keyState, const unsigned long len, int keyIndex)
+{
+    if (len < (keyIndex / LONG_BITS) + 1) {
+        DHLOGE("Length exceeds for key index: %d", keyIndex);
+        return true;
+    }
+    return false;
+}
+
+void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState, const unsigned long len)
 {
     // If device is a mouse, record the mouse pressed key.
     if ((dev->classes & INPUT_DEVICE_CLASS_CURSOR) != 0) {
+        if (IsLengthExceeds(keyState, len, BTN_LEFT)) {
+            return;
+        }
         int mouseLeftBtnState = BitIsSet(keyState, BTN_LEFT);
         if (mouseLeftBtnState != 0) {
             SavePressedKeyState(dev, BTN_LEFT);
         }
-
+        if (IsLengthExceeds(keyState, len, BTN_RIGHT)) {
+            return;
+        }
         int mouseRightBtnState = BitIsSet(keyState, BTN_RIGHT);
         if (mouseRightBtnState != 0) {
             SavePressedKeyState(dev, BTN_RIGHT);
         }
-
+        if (IsLengthExceeds(keyState, len, BTN_MIDDLE)) {
+            return;
+        }
         int mouseMidBtnState = BitIsSet(keyState, BTN_MIDDLE);
         if (mouseMidBtnState != 0) {
             SavePressedKeyState(dev, BTN_MIDDLE);
@@ -1492,6 +1508,9 @@ void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned l
     // If device is a keyboard, record all the pressed keys.
     if ((dev->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0) {
         for (int32_t keyIndex = 0; keyIndex < KEY_MAX; keyIndex++) {
+            if (IsLengthExceeds(keyState, len, keyIndex)) {
+                return;
+            }
             if (BitIsSet(keyState, keyIndex) != 0) {
                 SavePressedKeyState(dev, keyIndex);
             }
@@ -1500,12 +1519,16 @@ void InputHub::CheckTargetKeyState(const InputHub::Device *dev, const unsigned l
 
     // If device is a touchscreen or touchpad, record the touch event.
     if ((dev->classes & INPUT_DEVICE_CLASS_TOUCH) != 0 || (dev->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0) {
+        if (IsLengthExceeds(keyState, len, BTN_TOUCH)) {
+            return;
+        }
         int btnTouchState = BitIsSet(keyState, BTN_TOUCH);
         if (btnTouchState != 0) {
             SavePressedKeyState(dev, BTN_TOUCH);
         }
     }
 }
+
 
 void InputHub::CheckTargetDevicesState(std::vector<InputHub::Device*> targetDevices)
 {
@@ -1524,7 +1547,7 @@ void InputHub::CheckTargetDevicesState(std::vector<InputHub::Device*> targetDevi
                 std::this_thread::sleep_for(std::chrono::milliseconds(READ_SLEEP_TIME_MS));
                 continue;
             }
-            CheckTargetKeyState(dev, keyState);
+            CheckTargetKeyState(dev, keyState, NLONGS(KEY_CNT));
             break;
         }
     }
