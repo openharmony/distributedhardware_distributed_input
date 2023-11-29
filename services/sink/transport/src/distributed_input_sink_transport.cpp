@@ -225,6 +225,46 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId,
     RecordEventLog(dhId, type, btnCode, value);
 }
 
+void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessionId,
+    const std::vector<struct RawEvent> &events)
+{
+    if (sessionId <= 0) {
+        DHLOGE("SendKeyStateNodeMsgBatch error, sessionId <= 0.");
+        return;
+    }
+    DHLOGI("SendKeyStateNodeMsgBatch sessionId: %d, event size: %d ", sessionId, events.size());
+
+    int64_t currentTimeNs = GetCurrentTime() * 1000LL;
+    std::shared_ptr<nlohmann::json> eventsJsonArr = std::make_shared<nlohmann::json>();
+    for (const auto &ev : events) {
+        nlohmann::json tmpJson;
+        tmpJson[INPUT_KEY_WHEN] = currentTimeNs;
+        tmpJson[INPUT_KEY_TYPE] = ev.type;
+        tmpJson[INPUT_KEY_CODE] = ev.code;
+        tmpJson[INPUT_KEY_VALUE] = ev.value;
+        tmpJson[INPUT_KEY_DESCRIPTOR] = ev.descriptor;
+        tmpJson[INPUT_KEY_PATH] = ev.path;
+        eventsJsonArr->push_back(tmpJson);
+    }
+
+    nlohmann::json jsonStr;
+    jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_KEY_STATE_BATCH;
+    jsonStr[DINPUT_SOFTBUS_KEY_INPUT_DATA] = eventsJsonArr->dump();
+    std::string msg = jsonStr.dump();
+    int32_t ret = SendMessage(sessionId, msg);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("SendKeyStateNodeMsgBatch error, SendMessage fail.");
+    }
+    RecordEventLog(events);
+}
+
+void DistributedInputSinkTransport::RecordEventLog(const std::vector<struct RawEvent> &events)
+{
+    for (auto &ev : events) {
+        RecordEventLog(ev.descriptor, ev.type, ev.code, ev.value);
+    }
+}
+
 void DistributedInputSinkTransport::RecordEventLog(const std::string &dhId, int32_t type, int32_t code, int32_t value)
 {
     std::string eventType;

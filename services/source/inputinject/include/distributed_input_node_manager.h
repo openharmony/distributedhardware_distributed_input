@@ -47,6 +47,7 @@ public:
 
     int32_t GetDevice(const std::string &dhId, VirtualDevice *&device);
     void ReportEvent(const RawEvent rawEvent);
+    void ReportEvent(const std::vector<RawEvent> &events);
     int32_t CloseDeviceLocked(const std::string &dhId);
     void StartInjectThread();
     void StopInjectThread();

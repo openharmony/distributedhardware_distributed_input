@@ -147,10 +147,22 @@ int32_t DistributedInputInject::RegisterDistributedEvent(RawEvent *buffer, size_
         DHLOGE("the DistributedInputNodeManager is null");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    DHLOGI("RegisterDistributedEvent start %zu\n", bufferSize);
+
     for (size_t i = 0; i < bufferSize; i++) {
         inputNodeManager_->ReportEvent(buffer[i]);
     }
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputInject::RegisterDistributedEvent(const std::vector<RawEvent> &events)
+{
+    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
+    if (inputNodeManager_ == nullptr) {
+        DHLOGE("the DistributedInputNodeManager is null");
+        return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
+    }
+
+    inputNodeManager_->ReportEvent(events);
     return DH_SUCCESS;
 }
 

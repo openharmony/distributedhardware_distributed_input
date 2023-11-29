@@ -88,6 +88,7 @@ namespace DistributedInput {
     const uint32_t TRANS_SINK_MSG_ON_RELAY_STOPDHID   = 25;
     const uint32_t TRANS_SINK_MSG_ON_RELAY_STARTTYPE  = 26;
     const uint32_t TRANS_SINK_MSG_ON_RELAY_STOPTYPE   = 27;
+    const uint32_t TRANS_SINK_MSG_KEY_STATE_BATCH    = 28;
 
     // src or sink
     const uint32_t TRANS_MSG_SRC_SINK_SPLIT    = 30;

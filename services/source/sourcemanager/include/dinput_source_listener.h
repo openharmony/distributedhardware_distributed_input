@@ -52,6 +52,7 @@ public:
     void OnResponseStopRemoteInputDhid(const std::string deviceId, const std::string &dhids, bool result) override;
     void OnResponseKeyState(const std::string deviceId, const std::string &dhid, const uint32_t type,
         const uint32_t code, const uint32_t value) override;
+    void OnResponseKeyStateBatch(const std::string deviceId, const std::string &event) override;
     void OnReceivedEventRemoteInput(const std::string deviceId, const std::string &event) override;
     void OnResponseRelayPrepareRemoteInput(int32_t sessionId, const std::string &deviceId, bool result,
         const std::string &object) override;

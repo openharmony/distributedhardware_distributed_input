@@ -79,6 +79,7 @@ void DistributedInputSourceTransport::RegRespFunMap()
     memberFuncMap_[TRANS_SINK_MSG_DHID_ONSTART] = &DistributedInputSourceTransport::NotifyResponseStartRemoteInputDhid;
     memberFuncMap_[TRANS_SINK_MSG_DHID_ONSTOP] = &DistributedInputSourceTransport::NotifyResponseStopRemoteInputDhid;
     memberFuncMap_[TRANS_SINK_MSG_KEY_STATE] = &DistributedInputSourceTransport::NotifyResponseKeyState;
+    memberFuncMap_[TRANS_SINK_MSG_KEY_STATE_BATCH] = &DistributedInputSourceTransport::NotifyResponseKeyStateBatch;
     memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_PREPARE] = &DistributedInputSourceTransport::ReceiveSrcTSrcRelayPrepare;
     memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_PREPARE] =
         &DistributedInputSourceTransport::NotifyResponseRelayPrepareRemoteInput;
@@ -1045,6 +1046,22 @@ void DistributedInputSourceTransport::NotifyResponseKeyState(int32_t sessionId, 
     callback_->OnResponseKeyState(deviceId, recMsg[DINPUT_SOFTBUS_KEY_KEYSTATE_DHID],
         recMsg[DINPUT_SOFTBUS_KEY_KEYSTATE_TYPE], recMsg[DINPUT_SOFTBUS_KEY_KEYSTATE_CODE],
         recMsg[DINPUT_SOFTBUS_KEY_KEYSTATE_VALUE]);
+}
+
+void DistributedInputSourceTransport::NotifyResponseKeyStateBatch(int32_t sessionId, const nlohmann::json &recMsg)
+{
+    DHLOGI("OnBytesReceived cmdType is TRANS_SINK_MSG_KEY_STATE_BATCH.");
+    if (!IsString(recMsg, DINPUT_SOFTBUS_KEY_INPUT_DATA)) {
+        DHLOGE("The DINPUT_SOFTBUS_KEY_INPUT_DATA is invalid");
+        return;
+    }
+    std::string deviceId = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
+    if (deviceId.empty()) {
+        DHLOGE("OnBytesReceived cmdType is TRANS_SINK_MSG_KEY_STATE_BATCH, deviceId is error.");
+        return;
+    }
+    std::string inputDataStr = recMsg[DINPUT_SOFTBUS_KEY_INPUT_DATA];
+    callback_->OnResponseKeyStateBatch(deviceId, inputDataStr);
 }
 
 void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t sessionId, const nlohmann::json &recMsg)

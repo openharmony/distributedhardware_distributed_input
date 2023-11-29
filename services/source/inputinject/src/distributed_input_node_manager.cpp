@@ -427,6 +427,15 @@ void DistributedInputNodeManager::ReportEvent(const RawEvent rawEvent)
     conditionVariable_.notify_all();
 }
 
+void DistributedInputNodeManager::ReportEvent(const std::vector<RawEvent> &events)
+{
+    std::lock_guard<std::mutex> lockGuard(injectThreadMutex_);
+    for (auto ev : events) {
+        injectQueue_.push(std::make_shared<RawEvent>(ev));
+    }
+    conditionVariable_.notify_all();
+}
+
 void DistributedInputNodeManager::InjectEvent()
 {
     int32_t ret = pthread_setname_np(pthread_self(), EVENT_INJECT_THREAD_NAME);
