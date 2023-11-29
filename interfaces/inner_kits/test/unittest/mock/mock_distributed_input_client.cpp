@@ -218,16 +218,6 @@ bool DistributedInputClient::IsStartDistributedInput(const std::string &dhId)
     return true;
 }
 
-int32_t DistributedInputClient::RegisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputClient::UnregisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    return DH_SUCCESS;
-}
-
 int32_t DistributedInputClient::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
     return DH_SUCCESS;

@@ -77,8 +77,6 @@ public:
      */
     static bool IsStartDistributedInput(const std::string &dhId);
 
-    static int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener);
-    static int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener);
     static int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener);
     static int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener);
 

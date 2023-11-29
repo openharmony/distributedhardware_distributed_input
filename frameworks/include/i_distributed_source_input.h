@@ -92,11 +92,7 @@ public:
 
     virtual int32_t RegisterAddWhiteListCallback(sptr<IAddWhiteListInfosCallback> addWhiteListCallback) = 0;
     virtual int32_t RegisterDelWhiteListCallback(sptr<IDelWhiteListInfosCallback> delWhiteListCallback) = 0;
-    virtual int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener) = 0;
-    virtual int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener) = 0;
 
-    virtual int32_t SyncNodeInfoRemoteInput(const std::string &userDevId, const std::string &dhid,
-        const std::string &nodeDesc) = 0;
     virtual int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
     virtual int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) = 0;
     virtual int32_t RegisterSessionStateCb(sptr<ISessionStateCallback> callback) = 0;

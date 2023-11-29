@@ -213,34 +213,6 @@ HWTEST_F(DistributedInputIpcTest, IsStartDistributedInput03, testing::ext::TestS
     EXPECT_EQ(false, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, RegisterInputNodeListener01, testing::ext::TestSize.Level1)
-{
-    sptr<TestInputNodeListener> listener = nullptr;
-    int32_t ret = DistributedInputClient::GetInstance().RegisterInputNodeListener(listener);
-    EXPECT_EQ(ERR_DH_INPUT_CLIENT_REG_NODE_CB_FAIL, ret);
-}
-
-HWTEST_F(DistributedInputIpcTest, RegisterInputNodeListener02, testing::ext::TestSize.Level1)
-{
-    sptr<TestInputNodeListener> listener(new TestInputNodeListener());
-    int32_t ret = DistributedInputClient::GetInstance().RegisterInputNodeListener(listener);
-    EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
-}
-
-HWTEST_F(DistributedInputIpcTest, UnregisterInputNodeListener01, testing::ext::TestSize.Level1)
-{
-    sptr<TestInputNodeListener> listener = nullptr;
-    int32_t ret = DistributedInputClient::GetInstance().UnregisterInputNodeListener(listener);
-    EXPECT_EQ(ERR_DH_INPUT_CLIENT_UNREG_NODE_CB_FAIL, ret);
-}
-
-HWTEST_F(DistributedInputIpcTest, UnregisterInputNodeListener02, testing::ext::TestSize.Level1)
-{
-    sptr<TestInputNodeListener> listener(new TestInputNodeListener());
-    int32_t ret = DistributedInputClient::GetInstance().UnregisterInputNodeListener(listener);
-    EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
-}
-
 HWTEST_F(DistributedInputIpcTest, RegisterSimulationEventListener01, testing::ext::TestSize.Level1)
 {
     sptr<TestSimulationEventListenerStub> listener = nullptr;

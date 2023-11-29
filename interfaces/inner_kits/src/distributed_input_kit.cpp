@@ -110,16 +110,6 @@ int32_t DistributedInputKit::StopRemoteInput(const std::string &srcId, const std
     return DistributedInputClient::GetInstance().StopRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
-int32_t DistributedInputKit::RegisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    return DistributedInputClient::GetInstance().RegisterInputNodeListener(listener);
-}
-
-int32_t DistributedInputKit::UnregisterInputNodeListener(sptr<InputNodeListener> listener)
-{
-    return DistributedInputClient::GetInstance().UnregisterInputNodeListener(listener);
-}
-
 int32_t DistributedInputKit::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
     return DistributedInputClient::GetInstance().RegisterSimulationEventListener(listener);

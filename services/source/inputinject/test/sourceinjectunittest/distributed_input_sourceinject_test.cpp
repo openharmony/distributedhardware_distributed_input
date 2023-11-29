@@ -287,19 +287,6 @@ HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent04, testing::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL, ret);
 }
 
-HWTEST_F(DistributedInputSourceInjectTest, RegisterInputNodeListener, testing::ext::TestSize.Level1)
-{
-    inputNodelistener_ = (std::make_unique<TestInputNodeListener>()).release();
-    int32_t ret = DistributedInputInject::GetInstance().RegisterInputNodeListener(inputNodelistener_);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DistributedInputSourceInjectTest, UnRegisterInputNodeListener, testing::ext::TestSize.Level1)
-{
-    int32_t ret = DistributedInputInject::GetInstance().UnregisterInputNodeListener(inputNodelistener_);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
 HWTEST_F(DistributedInputSourceInjectTest, GetDhIdsByInputType_001, testing::ext::TestSize.Level1)
 {
     std::string devId = "umkyu1b165e1be98151891erbe8r91ev";

@@ -175,11 +175,7 @@ public:
 
     int32_t RegisterAddWhiteListCallback(sptr<IAddWhiteListInfosCallback> addWhiteListCallback) override;
     int32_t RegisterDelWhiteListCallback(sptr<IDelWhiteListInfosCallback> delWhiteListCallback) override;
-    int32_t RegisterInputNodeListener(sptr<InputNodeListener> listener) override;
-    int32_t UnregisterInputNodeListener(sptr<InputNodeListener> listener) override;
 
-    int32_t SyncNodeInfoRemoteInput(const std::string &userDevId, const std::string &dhId,
-        const std::string &nodeDesc) override;
     int32_t RegisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
     int32_t UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener) override;
 
@@ -228,9 +224,6 @@ public:
         ~DeviceOfflineListener() = default;
 
         void OnMessage(const DHTopic topic, const std::string &message) override;
-
-    private:
-        void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
 
     private:
         DistributedInputSourceManager *sourceManagerContext_;
@@ -426,8 +419,6 @@ private:
     sptr<DeviceOfflineListener> deviceOfflineListener_ = nullptr;
 
     std::mutex valMutex_;
-    std::mutex syncNodeInfoMutex_;
-    std::map<std::string, std::set<BeRegNodeInfo>> syncNodeInfoMap_;
 
     int32_t RelayStartRemoteInputByType(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback);
@@ -442,11 +433,7 @@ private:
     int32_t RelayStopRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
         const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback);
     bool IsStringDataSame(const std::vector<std::string> &oldDhIds, std::vector<std::string> newDhIds);
-    void DeleteNodeInfoAndNotify(const std::string &offlineDevId);
-    void SendExistVirNodeInfos(sptr<InputNodeListener> listener);
-    std::set<BeRegNodeInfo> GetSyncNodeInfo(const std::string &devId);
-    void UpdateSyncNodeInfo(const std::string &devId, const std::string &dhId, const std::string &nodeDesc);
-    void DeleteSyncNodeInfo(const std::string &devId);
+
     void UnregisterDHFwkPublisher();
 };
 } // namespace DistributedInput
