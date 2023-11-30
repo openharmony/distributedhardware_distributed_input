@@ -195,8 +195,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayUnprepareRemoteInpu
 {
     DHLOGI("OnRelayUnprepareRemoteInput called, toSinkSessionId: %d, devId: %s", toSinkSessionId,
         GetAnonyString(deviceId).c_str());
-    DistributedInputCollector::GetInstance().SetSharingTypes(false, static_cast<uint32_t>(DInputDeviceType::ALL));
-    DistributedInputSinkSwitch::GetInstance().StopAllSwitch();
+    OnStopRemoteInput(toSinkSessionId, static_cast<uint32_t>(DInputDeviceType::ALL));
     DistributedInputSinkSwitch::GetInstance().RemoveSession(toSinkSessionId);
 
     nlohmann::json jsonStr;
@@ -503,25 +502,6 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStopTypeRemoteInput
     }
 }
 
-bool DistributedInputSinkManager::IsStopDhidOnCmdStillNeed(int32_t sessionId, const std::string &stopDhId)
-{
-    for (auto sessionDhid : sharingDhIdsMap_) {
-        if (sessionDhid.first == sessionId) {
-            DHLOGW("IsStopDhidOnCmdStillNeed sessionId=%d is self, ignore.", sessionId);
-            continue;
-        }
-        for (auto dhid : sessionDhid.second) {
-            if (stopDhId == dhid) {
-                DHLOGI("IsStopDhidOnCmdStillNeed stopDhId=%s is find in session: %d", GetAnonyString(stopDhId).c_str(),
-                    sessionDhid.first);
-                return true;
-            }
-        }
-    }
-    DHLOGW("IsStopDhidOnCmdStillNeed stopDhId=%s is not find.", GetAnonyString(stopDhId).c_str());
-    return false;
-}
-
 void DistributedInputSinkManager::DeleteStopDhids(int32_t sessionId, const std::vector<std::string> stopDhIds,
     std::vector<std::string> &stopIndeedDhIds)
 {
@@ -541,13 +521,10 @@ void DistributedInputSinkManager::DeleteStopDhids(int32_t sessionId, const std::
     } else {
         DHLOGI("DeleteStopDhids sessionId=%d after has dhid.size=%d.", sessionId, sharingDhIdsMap_[sessionId].size());
     }
-    // find which dhid can be stop
-    for (auto tmp : stopDhIds) {
-        bool isFind = IsStopDhidOnCmdStillNeed(sessionId, tmp);
-        if (!isFind) {
-            stopIndeedDhIds.push_back(tmp);
-            sharingDhIds_.erase(tmp);
-        }
+
+    stopIndeedDhIds.assign(stopDhIds.begin(), stopDhIds.end());
+    for (const &id : stopDhIds) {
+        sharingDhIds_.erase(id);
     }
 }
 

@@ -125,31 +125,6 @@ HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.
     EXPECT_EQ(inputTypes, retType);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, IsStopDhidOnCmdStillNeed01, testing::ext::TestSize.Level0)
-{
-    int32_t sessionId = 1;
-    std::vector<std::string> dhIds;
-    dhIds.push_back("Input_123123123123");
-    dhIds.push_back("Input_456456456456");
-    dhIds.push_back("Input_789789789789");
-    sinkManager_->StoreStartDhids(100, dhIds);
-    std::set<std::string> dhIdSet;
-    dhIdSet.insert("Input_123123123123");
-    sinkManager_->sharingDhIdsMap_[sessionId] = dhIdSet;
-    sinkManager_->StoreStartDhids(sessionId, dhIds);
-    std::string stopDhId = "Input_123123123123";
-    bool ret = sinkManager_->IsStopDhidOnCmdStillNeed(sessionId, stopDhId);
-    EXPECT_EQ(true, ret);
-}
-
-HWTEST_F(DistributedInputSinkManagerTest, IsStopDhidOnCmdStillNeed02, testing::ext::TestSize.Level0)
-{
-    int32_t sessionId = 1000;
-    std::string stopDhId = "Input_123123123123";
-    bool ret = sinkManager_->IsStopDhidOnCmdStillNeed(sessionId, stopDhId);
-    EXPECT_EQ(false, ret);
-}
-
 HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestSize.Level0)
 {
     int32_t sessionId = 1;
@@ -164,7 +139,6 @@ HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestS
     sinkManager_->DeleteStopDhids(sessionId, stopDhIds, stopIndeedDhIds);
     EXPECT_EQ(0, sinkManager_->sharingDhIdsMap_.size());
 }
-
 
 HWTEST_F(DistributedInputSinkManagerTest, GetSinkScreenInfosCbackSize01, testing::ext::TestSize.Level0)
 {
