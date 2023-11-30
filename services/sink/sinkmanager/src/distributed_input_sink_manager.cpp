@@ -523,7 +523,7 @@ void DistributedInputSinkManager::DeleteStopDhids(int32_t sessionId, const std::
     }
 
     stopIndeedDhIds.assign(stopDhIds.begin(), stopDhIds.end());
-    for (const &id : stopDhIds) {
+    for (auto &id : stopDhIds) {
         sharingDhIds_.erase(id);
     }
 }
