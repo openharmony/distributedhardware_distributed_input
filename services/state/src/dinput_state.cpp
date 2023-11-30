@@ -247,7 +247,7 @@ void DInputState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
         return;
     }
 
-    //it is already the last one, just return
+    // it is already the last one, just return
     if (evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
         DHLOGI("Pressed key already last one, node id: %s, type: %d, key code: %d, value: %d",
             event.descriptor.c_str(), event.type, event.code, event.value);
