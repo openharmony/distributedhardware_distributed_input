@@ -231,14 +231,26 @@ void DInputState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
     auto iter = keyDownStateMap_.find(event.descriptor);
     if (iter == keyDownStateMap_.end()) {
+        DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
+            event.descriptor.c_str(), event.type, event.code, event.value);
+        keyDownStateMap_[event.descriptor].push_back(event);
         return;
     }
 
     auto evIter = std::find(keyDownStateMap_[event.descriptor].begin(),
         keyDownStateMap_[event.descriptor].end(), event);
-    // If not find the cache key on pressing, or it is already the last one, just return
-    if (evIter == keyDownStateMap_[event.descriptor].end() ||
-        evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
+    // If not find the cache key on pressing, save it
+    if (evIter == keyDownStateMap_[event.descriptor].end()) {
+        DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
+            event.descriptor.c_str(), event.type, event.code, event.value);
+        keyDownStateMap_[event.descriptor].push_back(event);
+        return;
+    }
+
+    //it is already the last one, just return
+    if (evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
+        DHLOGI("Pressed key already last one, node id: %s, type: %d, key code: %d, value: %d",
+            event.descriptor.c_str(), event.type, event.code, event.value);
         return;
     }
 
