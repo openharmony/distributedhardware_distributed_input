@@ -226,7 +226,8 @@ void DistributedInputHandler::NotifyHardWare(int iCnt)
             if (this->m_listener != nullptr) {
                 std::string hdInfo;
                 StructTransJson(mEventBuffer[iCnt].deviceInfo, hdInfo);
-                this->m_listener->PluginHardware(mEventBuffer[iCnt].deviceInfo.descriptor, hdInfo);
+                std::string subtype = "input";
+                this->m_listener->PluginHardware(mEventBuffer[iCnt].deviceInfo.descriptor, hdInfo, subtype);
             }
             break;
         case DeviceType::DEVICE_REMOVED:
