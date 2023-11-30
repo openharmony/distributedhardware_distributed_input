@@ -186,11 +186,10 @@ private:
     /*
      * Stop dhids on cmd,
      * stoDhIds: dhIds on cmd
-     * stopIndeedDhIds: dhId that no session (retmote node) need, stop capture event.
+     * stopIndeedDhIds: dhId that need stop capture event.
      */
     void DeleteStopDhids(int32_t sessionId, const std::vector<std::string> stopDhIds,
         std::vector<std::string> &stopIndeedDhIds);
-    bool IsStopDhidOnCmdStillNeed(int32_t sessionId, const std::string &stopDhId);
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
