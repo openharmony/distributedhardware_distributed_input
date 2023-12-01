@@ -287,33 +287,6 @@ HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent04, testing::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL, ret);
 }
 
-HWTEST_F(DistributedInputSourceInjectTest, GetDhIdsByInputType_001, testing::ext::TestSize.Level1)
-{
-    std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::vector<std::string> dhIds;
-    std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
-    dhIds.push_back(dhId);
-    std::shared_ptr<RawEvent> rawEvent = nullptr;
-    DistributedInputInject::GetInstance().InputDeviceEventInject(rawEvent);
-    DistributedInputInject::GetInstance().inputNodeManager_ = std::make_unique<DistributedInputNodeManager>();
-    int32_t ret = DistributedInputInject::GetInstance().GetDhIdsByInputType(devId,
-        static_cast<uint32_t>(DInputDeviceType::ALL), dhIds);
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DistributedInputSourceInjectTest, GetDhIdsByInputType_002, testing::ext::TestSize.Level1)
-{
-    DistributedInputInject::GetInstance().inputNodeManager_ = nullptr;
-    std::shared_ptr<RawEvent> rawEvent = std::make_shared<RawEvent>();
-    DistributedInputInject::GetInstance().InputDeviceEventInject(rawEvent);
-
-    std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
-    std::vector<std::string> dhIds;
-    int32_t ret = DistributedInputInject::GetInstance().GetDhIdsByInputType(devId,
-        static_cast<uint32_t>(DInputDeviceType::ALL), dhIds);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL, ret);
-}
-
 HWTEST_F(DistributedInputSourceInjectTest, GenerateVirtualTouchScreenDHId_001, testing::ext::TestSize.Level1)
 {
     std::string ret = DistributedInputInject::GetInstance().GenerateVirtualTouchScreenDHId(1, 1860, 980);
@@ -337,8 +310,9 @@ HWTEST_F(DistributedInputSourceInjectTest, GetVirtualTouchScreenFd_001, testing:
 
 HWTEST_F(DistributedInputSourceInjectTest, RemoveVirtualTouchScreenNode_001, testing::ext::TestSize.Level1)
 {
+    std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
     std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
-    int32_t ret = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(dhId);
+    int32_t ret = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(devId, dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -353,9 +327,10 @@ HWTEST_F(DistributedInputSourceInjectTest, CreateVirtualTouchScreenNode_002, tes
 
 HWTEST_F(DistributedInputSourceInjectTest, RemoveVirtualTouchScreenNode_002, testing::ext::TestSize.Level1)
 {
+    std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
     std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
     DistributedInputInject::GetInstance().inputNodeManager_ = nullptr;
-    int32_t ret = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(dhId);
+    int32_t ret = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(devId, dhId);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL, ret);
 }
 
@@ -379,25 +354,10 @@ HWTEST_F(DistributedInputSourceInjectTest, CreateVirtualTouchScreenNode_003, tes
 
 HWTEST_F(DistributedInputSourceInjectTest, RemoveVirtualTouchScreenNode_003, testing::ext::TestSize.Level1)
 {
+    std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
     std::string dhId = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
-    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->RemoveVirtualTouchScreenNode(dhId);
+    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->RemoveVirtualTouchScreenNode(devId, dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-HWTEST_F(DistributedInputSourceInjectTest, GetVirtualTouchScreenFd_003, testing::ext::TestSize.Level1)
-{
-    std::string networkId = "umkyu1b165e1be98151891erbe8r91ev";
-    uint32_t inputTypes = 1;
-    std::map<int32_t, std::string> datas;
-    DistributedInputInject::GetInstance().inputNodeManager_->GetDevicesInfoByType(networkId, inputTypes, datas);
-
-    inputTypes = 2;
-    DistributedInputInject::GetInstance().inputNodeManager_->GetDevicesInfoByType(networkId, inputTypes, datas);
-
-    std::vector<std::string> dhidsVec;
-    DistributedInputInject::GetInstance().inputNodeManager_->GetDevicesInfoByDhId(dhidsVec, datas);
-    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->GetVirtualTouchScreenFd();
-    EXPECT_NE(-1, ret);
 }
 
 HWTEST_F(DistributedInputSourceInjectTest, GetDevice_001, testing::ext::TestSize.Level1)

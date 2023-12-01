@@ -370,7 +370,7 @@ void DInputSourceListener::OnReceivedEventRemoteInput(const std::string deviceId
         ++idx;
     }
 
-    DistributedInputInject::GetInstance().RegisterDistributedEvent(mEventBuffer);
+    DistributedInputInject::GetInstance().RegisterDistributedEvent(deviceId, mEventBuffer);
 }
 
 void DInputSourceListener::OnReceiveRelayPrepareResult(int32_t status,
