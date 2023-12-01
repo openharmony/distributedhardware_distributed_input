@@ -39,7 +39,9 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-
+namespace {
+    const char DHID_SPLIT = '.';
+}
 DistributedInputSourceTransport::~DistributedInputSourceTransport()
 {
     DHLOGI("Dtor DistributedInputSourceTransport");
@@ -323,6 +325,8 @@ int32_t DistributedInputSourceTransport::StopRemoteInputDhids(int32_t srcTsrcSeI
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL;
     }
     DHLOGI("StopRemoteInputDhids srcTsrcSeId:%d, sinkSessionId:%d.", srcTsrcSeId, sinkSessionId);
+    std::vector<std::string> dhIdsVec = SplitDhIdString(dhids);
+    ResetKeyboardKeyState(dhIdsVec);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID_FOR_REL;
@@ -897,8 +901,15 @@ std::string DistributedInputSourceTransport::JointDhIds(const std::vector<std::s
     if (dhids.size() <= 0) {
         return "";
     }
-    auto dotFold = [](std::string a, std::string b) {return std::move(a) + '.' + std::move(b);};
+    auto dotFold = [](std::string a, std::string b) {return std::move(a) + DHID_SPLIT + std::move(b);};
     return std::accumulate(std::next(dhids.begin()), dhids.end(), dhids[0], dotFold);
+}
+
+std::vector<std::string> DistributedInputSourceTransport::SplitDhIdString(const std::string &dhIdsString)
+{
+    std::vector<std::string> dhIdsVec;
+    SplitStringToVector(dhIdsString, DHID_SPLIT, dhIdsVec);
+    return dhIdsVec;
 }
 
 int32_t DistributedInputSourceTransport::SendMessage(int32_t sessionId, std::string &message)
