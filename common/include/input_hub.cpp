@@ -44,7 +44,7 @@ const uint32_t SLEEP_TIME_US = 100 * 1000;
 const std::string MOUSE_NODE_KEY = "mouse";
 }
 
-InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevices_(true), nextDeviceId_(1),
+InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevices_(true),
     mPendingEventItems{}, pendingEventCount_(0), pendingEventIndex_(0), pendingINotify_(false), deviceChanged_(false),
     inputTypes_(0), isStartCollectEvent_(false), isStartCollectHandler_(false)
 {

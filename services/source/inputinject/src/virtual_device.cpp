@@ -110,8 +110,8 @@ void VirtualDevice::SetABSInfo(struct uinput_user_dev &inputUserDev, const Input
 bool VirtualDevice::SetPhys(const std::string &deviceName, const std::string &dhId)
 {
     std::string phys;
-    phys.append(deviceName).append(pid_).append("/").append(pid_).append("|")
-        .append(netWorkId_).append("|").append(dhId);
+    phys.append(deviceName).append(pid_).append(VIR_NODE_PID_SPLIT).append(pid_).append(VIR_NODE_SPLIT)
+        .append(netWorkId_).append(VIR_NODE_SPLIT).append(dhId);
 
     if (ioctl(fd_, UI_SET_PHYS, phys.c_str()) < 0) {
         return false;

@@ -37,7 +37,19 @@ namespace DistributedHardware {
 namespace DistributedInput {
 constexpr uint32_t DINPUT_NODE_MANAGER_SCAN_ALL_NODE = 1;
 constexpr uint32_t DINPUT_INJECT_EVENT_FAIL = 2;
+const std::string INPUT_NODE_DEVID = "devId";
 const std::string INPUT_NODE_DHID = "dhId";
+/**
+ * @brief the unique id for the input peripheral.
+ * left is device networkid, right is dhId in that device.
+ */
+using DhUniqueID = std::pair<std::string, std::string>;
+/**
+ * @brief a batch events form one device
+ * left: device networid where these events from
+ * right: the event batch
+ */
+using EventBatch = std::pair<std::string, std::vector<RawEvent>>;
 class DistributedInputNodeManager {
 public:
     DistributedInputNodeManager();
@@ -45,25 +57,28 @@ public:
 
     int32_t OpenDevicesNode(const std::string &devId, const std::string &dhId, const std::string &parameters);
 
-    int32_t GetDevice(const std::string &dhId, VirtualDevice *&device);
-    void ReportEvent(const RawEvent rawEvent);
-    void ReportEvent(const std::vector<RawEvent> &events);
-    int32_t CloseDeviceLocked(const std::string &dhId);
+    int32_t GetDevice(const std::string &devId, const std::string &dhId, VirtualDevice *&device);
+    void ReportEvent(const std::string &devId, const std::vector<RawEvent> &events);
+    int32_t CloseDeviceLocked(const std::string &devId, const std::string &dhId);
     void StartInjectThread();
     void StopInjectThread();
     int32_t CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId, const uint64_t srcWinId,
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
-    int32_t RemoveVirtualTouchScreenNode(const std::string &dhId);
+    int32_t RemoveVirtualTouchScreenNode(const std::string &devId, const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
 
-    int32_t GetDeviceInfo(std::string &deviceId);
-    void GetDevicesInfoByType(const std::string &networkId, uint32_t inputTypes, std::map<int32_t, std::string> &datas);
-    void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
-    void ProcessInjectEvent(const std::shared_ptr<RawEvent> &rawEvent);
+    void ProcessInjectEvent(const EventBatch &events);
 
-    void GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
-        std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds);
-    void NotifyNodeMgrScanVirNode(const std::string &dhId);
+    /**
+     * @brief Get the Virtual Keyboard Paths By Dh Ids object
+     *
+     * @param dhKeys list for device identify({networkId, dhId})
+     * @param virKeyboardPaths the matched keyboard device
+     * @param virKeyboardDhIds matched keyboard device identify
+     */
+    void GetVirtualKeyboardPaths(const std::vector<DhUniqueID> &dhUniqueIds,
+        std::vector<std::string> &virKeyboardPaths);
+    void NotifyNodeMgrScanVirNode(const std::string &devId, const std::string &dhId);
     void RegisterInjectEventCb(sptr<ISessionStateCallback> callback);
     void UnregisterInjectEventCb();
 
@@ -84,7 +99,7 @@ public:
     };
 
 private:
-    void AddDeviceLocked(const std::string &dhId, std::unique_ptr<VirtualDevice> device);
+    void AddDeviceLocked(const std::string &networkId, const std::string &dhId, std::unique_ptr<VirtualDevice> device);
     int32_t CreateHandle(const InputDevice &inputDevice, const std::string &devId, const std::string &dhId);
     void ParseInputDeviceJson(const std::string &str, InputDevice &pBuf);
     void ParseInputDevice(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
@@ -92,15 +107,15 @@ private:
     void ParseInputDeviceEvents(const nlohmann::json &inputDeviceJson, InputDevice &pBuf);
     void InjectEvent();
 
-    void ScanSinkInputDevices(const std::string &dhId);
-    void OpenInputDevice(const std::string &devicePath, const std::string &dhId);
+    void ScanSinkInputDevices(const std::string &devId, const std::string &dhId);
+    bool MatchAndSavePhysicalPath(const std::string &devicePath, const std::string &devId, const std::string &dhId);
     bool IsVirtualDev(int fd);
-    bool GetDevDhIdByFd(int fd, std::string &dhId, std::string &physicalPath);
-    void SetPathForDevMap(const std::string &dhId, const std::string &devicePath);
+    bool GetDevDhUniqueIdByFd(int fd, DhUniqueID &dhUnqueId, std::string &physicalPath);
+    void SetPathForVirDev(const DhUniqueID &dhUniqueId, const std::string &devicePath);
     void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
-    /* the key is dhId, and the value is virtualDevice */
-    std::map<std::string, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
+    /* the key is {networkId, dhId}, and the value is virtualDevice */
+    std::map<DhUniqueID, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
     std::mutex virtualDeviceMapMutex_;
     std::atomic<bool> isInjectThreadCreated_;
     std::atomic<bool> isInjectThreadRunning_;
@@ -108,7 +123,7 @@ private:
     std::thread eventInjectThread_;
     std::mutex injectThreadMutex_;
     std::condition_variable conditionVariable_;
-    std::queue<std::shared_ptr<RawEvent>> injectQueue_;
+    std::queue<EventBatch> injectQueue_;
     std::unique_ptr<InputHub> inputHub_;
     int32_t virtualTouchScreenFd_;
     std::once_flag callOnceFlag_;

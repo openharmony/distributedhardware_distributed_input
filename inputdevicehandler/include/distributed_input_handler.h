@@ -53,7 +53,6 @@ private:
     DistributedInputHandler();
     ~DistributedInputHandler();
     void StructTransJson(const InputDevice &pBuf, std::string &strDescriptor);
-    int32_t GetDeviceInfo(std::string &deviceId);
     std::shared_ptr<PluginListener> m_listener;
     bool InitCollectEventsThread();
     void NotifyHardWare(int iCnt);
@@ -62,7 +61,7 @@ private:
     bool isCollectingEvents_;
     bool isStartCollectEventThread;
     static void *CollectEventsThread(void *param);
-    void StartInputMonitorDeviceThread(const std::string deviceId);
+    void StartInputMonitorDeviceThread();
     void StopInputMonitorDeviceThread();
 
     // The event queue.

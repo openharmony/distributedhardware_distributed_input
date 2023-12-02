@@ -149,21 +149,6 @@ void DistributedInputHandler::UnRegisterPluginListener()
     this->m_listener = nullptr;
 }
 
-int32_t DistributedInputHandler::GetDeviceInfo(std::string &deviceId)
-{
-    std::unique_lock<std::mutex> my_lock(operationMutex_);
-    auto localNode = std::make_unique<NodeBasicInfo>();
-    int32_t retCode = GetLocalNodeDeviceInfo("ohos.dhardware", localNode.get());
-    if (retCode != 0) {
-        DHLOGE("Could not get device id.");
-        return ERR_DH_INPUT_HANDLER_GET_DEVICE_ID_FAIL;
-    }
-
-    deviceId = localNode->networkId;
-    DHLOGI("device id is %s", GetAnonyString(deviceId).c_str());
-    return DH_SUCCESS;
-}
-
 bool DistributedInputHandler::InitCollectEventsThread()
 {
     pthread_attr_t attr;
@@ -190,15 +175,12 @@ void *DistributedInputHandler::CollectEventsThread(void *param)
         DHLOGE("CollectEventsThread setname failed.");
     }
     DistributedInputHandler *pThis = reinterpret_cast<DistributedInputHandler *>(param);
-
-    std::string deviceId;
-    pThis->GetDeviceInfo(deviceId);
-    pThis->StartInputMonitorDeviceThread(deviceId);
+    pThis->StartInputMonitorDeviceThread();
     DHLOGI("DistributedInputHandler::CollectEventsThread exist!");
     return nullptr;
 }
 
-void DistributedInputHandler::StartInputMonitorDeviceThread(const std::string deviceId)
+void DistributedInputHandler::StartInputMonitorDeviceThread()
 {
     if (inputHub_ == nullptr) {
         DHLOGE("inputHub_ not initialized");

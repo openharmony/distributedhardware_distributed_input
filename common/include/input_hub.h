@@ -213,9 +213,7 @@ private:
     std::set<std::string> skipDevicePaths_;
 
     std::atomic<bool> needToScanDevices_;
-    std::string deviceId_;
     std::string touchDescriptor;
-    std::atomic<int32_t> nextDeviceId_;
 
     // The array of pending epoll events and the index of the next event to be handled.
     struct epoll_event mPendingEventItems[EPOLL_MAX_EVENTS];

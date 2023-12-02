@@ -74,28 +74,12 @@ int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string 
         DHLOGE("the DistributedInputNodeManager is null\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    if (inputNodeManager_->CloseDeviceLocked(dhId) < 0) {
+    if (inputNodeManager_->CloseDeviceLocked(devId, dhId) < 0) {
         DHLOGE("delete virtual device error\n");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_UNREGISTER_FAIL;
     }
 
     DHLOGI("UnregisterDistributedHardware success");
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputInject::GetDhIdsByInputType(const std::string &devId, const uint32_t &inputTypes,
-    std::vector<std::string> &dhIds)
-{
-    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
-    if (inputNodeManager_ == nullptr) {
-        DHLOGE("the inputNodeListener is nullptr");
-        return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
-    }
-    std::map<int32_t, std::string> datas;
-    inputNodeManager_->GetDevicesInfoByType(devId, inputTypes, datas);
-    for (const auto &data_ : datas) {
-        dhIds.push_back(data_.second);
-    }
     return DH_SUCCESS;
 }
 
@@ -126,21 +110,8 @@ int32_t DistributedInputInject::StructTransJson(const InputDevice &pBuf, std::st
     return DH_SUCCESS;
 }
 
-void DistributedInputInject::InputDeviceEventInject(const std::shared_ptr<RawEvent> &rawEvent)
-{
-    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
-    if (inputNodeManager_ == nullptr) {
-        DHLOGE("the inputNodeListener is nullptr");
-        return;
-    }
-    if (rawEvent == nullptr) {
-        DHLOGE("the rawEvent is nullptr");
-        return;
-    }
-    inputNodeManager_->ProcessInjectEvent(rawEvent);
-}
-
-int32_t DistributedInputInject::RegisterDistributedEvent(RawEvent *buffer, size_t bufferSize)
+int32_t DistributedInputInject::RegisterDistributedEvent(const std::string &devId,
+    const std::vector<RawEvent> &events)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
@@ -148,21 +119,7 @@ int32_t DistributedInputInject::RegisterDistributedEvent(RawEvent *buffer, size_
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
 
-    for (size_t i = 0; i < bufferSize; i++) {
-        inputNodeManager_->ReportEvent(buffer[i]);
-    }
-    return DH_SUCCESS;
-}
-
-int32_t DistributedInputInject::RegisterDistributedEvent(const std::vector<RawEvent> &events)
-{
-    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
-    if (inputNodeManager_ == nullptr) {
-        DHLOGE("the DistributedInputNodeManager is null");
-        return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
-    }
-
-    inputNodeManager_->ReportEvent(events);
+    inputNodeManager_->ReportEvent(devId, events);
     return DH_SUCCESS;
 }
 
@@ -201,14 +158,14 @@ int32_t DistributedInputInject::CreateVirtualTouchScreenNode(const std::string &
     return inputNodeManager_->CreateVirtualTouchScreenNode(devId, dhId, srcWinId, sourcePhyWidth, sourcePhyHeight);
 }
 
-int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string &dhId)
+int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string &devId, const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
         DHLOGE("inputNodeManager is nullptr");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    return inputNodeManager_->RemoveVirtualTouchScreenNode(dhId);
+    return inputNodeManager_->RemoveVirtualTouchScreenNode(devId, dhId);
 }
 
 int32_t DistributedInputInject::GetVirtualTouchScreenFd()
@@ -237,25 +194,31 @@ int32_t DistributedInputInject::UnregisterInjectEventCb()
     return DH_SUCCESS;
 }
 
-void DistributedInputInject::GetVirtualKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
-    std::vector<std::string> &virKeyboardPaths, std::vector<std::string> &virKeyboardDhIds)
+void DistributedInputInject::GetVirtualKeyboardPaths(const std::string &devId,
+    const std::vector<std::string> &dhIds, std::vector<std::string> &virKeyboardPaths)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
         DHLOGE("inputNodeManager is nullptr");
         return;
     }
-    inputNodeManager_->GetVirtualKeyboardPathsByDhIds(dhIds, virKeyboardPaths, virKeyboardDhIds);
+    std::vector<DhUniqueID> dhUniqIds;
+    std::for_each(dhIds.begin(), dhIds.end(),
+        [&devId, &dhUniqIds](std::string dhId) {
+            DhUniqueID id = {devId, dhId};
+            dhUniqIds.push_back(id);
+        });
+    inputNodeManager_->GetVirtualKeyboardPaths(dhUniqIds, virKeyboardPaths);
 }
 
-void DistributedInputInject::NotifyNodeMgrScanVirNode(const std::string &dhId)
+void DistributedInputInject::NotifyNodeMgrScanVirNode(const std::string &devId, const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
         DHLOGE("inputNodeManager is nullptr");
         return;
     }
-    inputNodeManager_->NotifyNodeMgrScanVirNode(dhId);
+    inputNodeManager_->NotifyNodeMgrScanVirNode(devId, dhId);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

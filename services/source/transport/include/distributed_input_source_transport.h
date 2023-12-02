@@ -139,7 +139,7 @@ private:
     std::vector<std::string> SplitDhIdString(const std::string &dhIdsString);
     void RegRespFunMap();
 
-    void ResetKeyboardKeyState(const std::vector<std::string> &dhids);
+    void ResetKeyboardKeyState(const std::string &deviceId, const std::vector<std::string> &dhids);
 private:
     std::mutex operationMutex_;
     std::set<int32_t> sessionIdSet_;

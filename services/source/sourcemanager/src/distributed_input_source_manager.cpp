@@ -302,7 +302,7 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     callback->OnResult(devId, dhId, DH_SUCCESS);
 
     // 5. Notify node mgr to scan vir dev node info
-    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(dhId);
+    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(devId, dhId);
     return DH_SUCCESS;
 }
 
@@ -1580,7 +1580,8 @@ void DistributedInputSourceManager::RunKeyStateCallback(const std::string &sinkI
     mEventBuffer.code = code;
     mEventBuffer.value = value;
     mEventBuffer.descriptor = dhId;
-    DistributedInputInject::GetInstance().RegisterDistributedEvent(&mEventBuffer, DINPUT_SOURCE_WRITE_EVENT_SIZE);
+    std::vector<RawEvent> eventBuffers = {mEventBuffer};
+    DistributedInputInject::GetInstance().RegisterDistributedEvent(sinkId, eventBuffers);
     return;
 }
 
@@ -1801,7 +1802,7 @@ void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic
     SrcScreenInfo srcScreenInfo = DInputContext::GetInstance().GetSrcScreenInfo(screenInfoKey);
 
     int32_t removeNodeRes = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(
-        srcScreenInfo.sourcePhyId);
+        sourceDevId, srcScreenInfo.sourcePhyId);
     if (removeNodeRes != DH_SUCCESS) {
         DHLOGE("Remove virtual touch screen node failed!");
         return;
@@ -1880,9 +1881,9 @@ void DistributedInputSourceManager::DScreenSourceSvrRecipient::OnRemoteDied(cons
     }
     std::string screenInfoKey = DInputContext::GetInstance().GetScreenInfoKey(srcDevId_, srcWinId_);
     SrcScreenInfo srcScreenInfo = DInputContext::GetInstance().GetSrcScreenInfo(screenInfoKey);
-
+    std::string sourceDevId = GetLocalNetworkId();
     int32_t removeNodeRes = DistributedInputInject::GetInstance().RemoveVirtualTouchScreenNode(
-        srcScreenInfo.sourcePhyId);
+        sourceDevId, srcScreenInfo.sourcePhyId);
     if (removeNodeRes != DH_SUCCESS) {
         DHLOGE("Remove virtual touch screen node failed!");
         return;
