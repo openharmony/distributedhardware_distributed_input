@@ -113,6 +113,13 @@ int32_t DistributedInputInnerTest::TestSimulationEventListenerStub::OnSimulation
     return DH_SUCCESS;
 }
 
+void DistributedInputInnerTest::TestRegisterSessionStateCb::OnResult(const std::string &devId, const uint32_t status)
+{
+    (void)devId;
+    (void)status;
+    return;
+}
+
 int DistributedInputInnerTest::CheckSourceProxy() const
 {
     OHOS::sptr<OHOS::ISystemAbilityManager> systemAbilityManager =
@@ -484,6 +491,19 @@ HWTEST_F(DistributedInputInnerTest, UnregisterSimulationEventListener02, testing
 {
     sptr<TestSimulationEventListenerStub> listener = nullptr;
     int32_t ret = DistributedInputKit::UnregisterSimulationEventListener(listener);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+HWTEST_F(DistributedInputInnerTest, RegisterSessionStateCb01, testing::ext::TestSize.Level0)
+{
+    sptr<TestRegisterSessionStateCb> listener(new TestRegisterSessionStateCb());
+    int32_t ret = DistributedInputKit::RegisterSessionStateCb(listener);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+HWTEST_F(DistributedInputInnerTest, UnregisterSessionStateCb01, testing::ext::TestSize.Level0)
+{
+    int32_t ret = DistributedInputKit::UnregisterSessionStateCb();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 } // namespace DistributedInput

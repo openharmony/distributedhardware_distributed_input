@@ -227,6 +227,17 @@ int32_t DistributedInputClient::UnregisterSimulationEventListener(sptr<ISimulati
 {
     return DH_SUCCESS;
 }
+
+int32_t DistributedInputClient::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
+{
+    (void)callback;
+    return DH_SUCCESS;
+}
+
+int32_t DistributedInputClient::UnregisterSessionStateCb()
+{
+    return DH_SUCCESS;
+}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS
