@@ -58,11 +58,10 @@ HWTEST_F(DInputHandlerTest, FindDevicesInfoByType_001, testing::ext::TestSize.Le
     uint32_t inputTypes = static_cast<uint32_t>(DInputDeviceType::ALL);
     std::map<int32_t, std::string> datas;
     std::vector<std::string> dhidsVec;
-    std::string deviceId = "deviceId_test";
     dInputHandler.FindDevicesInfoByType(inputTypes, datas);
     dInputHandler.FindDevicesInfoByDhId(dhidsVec, datas);
     dInputHandler.Query();
-    dInputHandler.StartInputMonitorDeviceThread(deviceId);
+    dInputHandler.StartInputMonitorDeviceThread();
 
     InputDevice inputDevice;
     dInputHandler.mEventBuffer[0].type = DeviceType::DEVICE_ADDED;
@@ -77,7 +76,7 @@ HWTEST_F(DInputHandlerTest, FindDevicesInfoByType_001, testing::ext::TestSize.Le
     std::map<std::string, std::string> ret = dInputHandler.QueryExtraInfo();
     EXPECT_EQ(0, ret.size());
     dInputHandler.inputHub_ = std::make_unique<InputHub>();
-    dInputHandler.StartInputMonitorDeviceThread(deviceId);
+    dInputHandler.StartInputMonitorDeviceThread();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
