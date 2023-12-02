@@ -110,7 +110,7 @@ int32_t DistributedInputInject::StructTransJson(const InputDevice &pBuf, std::st
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputInject::RegisterDistributedEvent(const std::string deviceId,
+int32_t DistributedInputInject::RegisterDistributedEvent(const std::string &devId,
     const std::vector<RawEvent> &events)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
@@ -119,7 +119,7 @@ int32_t DistributedInputInject::RegisterDistributedEvent(const std::string devic
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
 
-    inputNodeManager_->ReportEvent(deviceId, events);
+    inputNodeManager_->ReportEvent(devId, events);
     return DH_SUCCESS;
 }
 
@@ -158,14 +158,14 @@ int32_t DistributedInputInject::CreateVirtualTouchScreenNode(const std::string &
     return inputNodeManager_->CreateVirtualTouchScreenNode(devId, dhId, srcWinId, sourcePhyWidth, sourcePhyHeight);
 }
 
-int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string &deviceId, const std::string &dhId)
+int32_t DistributedInputInject::RemoveVirtualTouchScreenNode(const std::string &devId, const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
         DHLOGE("inputNodeManager is nullptr");
         return ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL;
     }
-    return inputNodeManager_->RemoveVirtualTouchScreenNode(deviceId, dhId);
+    return inputNodeManager_->RemoveVirtualTouchScreenNode(devId, dhId);
 }
 
 int32_t DistributedInputInject::GetVirtualTouchScreenFd()
@@ -194,7 +194,7 @@ int32_t DistributedInputInject::UnregisterInjectEventCb()
     return DH_SUCCESS;
 }
 
-void DistributedInputInject::GetVirtualKeyboardPaths(const std::string &deviceId,
+void DistributedInputInject::GetVirtualKeyboardPaths(const std::string &devId,
     const std::vector<std::string> &dhIds, std::vector<std::string> &virKeyboardPaths)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
@@ -204,8 +204,8 @@ void DistributedInputInject::GetVirtualKeyboardPaths(const std::string &deviceId
     }
     std::vector<DhUniqueID> dhUniqIds;
     std::for_each(dhIds.begin(), dhIds.end(),
-        [&deviceId, &dhUniqIds](std::string dhId) {
-            DhUniqueID id = {deviceId, dhId};
+        [&devId, &dhUniqIds](std::string dhId) {
+            DhUniqueID id = {devId, dhId};
             dhUniqIds.push_back(id);
         });
     inputNodeManager_->GetVirtualKeyboardPaths(dhUniqIds, virKeyboardPaths);

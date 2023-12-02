@@ -34,7 +34,7 @@ public:
     int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
         const std::string &parameters);
     int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId);
-    int32_t RegisterDistributedEvent(const std::string deviceId, const std::vector<RawEvent> &events);
+    int32_t RegisterDistributedEvent(const std::string &devId, const std::vector<RawEvent> &events);
     int32_t StructTransJson(const InputDevice &pBuf, std::string &strDescriptor);
     void StartInjectThread();
     void StopInjectThread();
@@ -42,13 +42,13 @@ public:
         const uint32_t sourceWinHeight);
     int32_t CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId, const uint64_t srcWinId,
         const uint32_t sourcePhyWidth, const uint32_t sourcePhyHeight);
-    int32_t RemoveVirtualTouchScreenNode(const std::string &deviceId, const std::string &dhId);
+    int32_t RemoveVirtualTouchScreenNode(const std::string &devId, const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
     int32_t RegisterInjectEventCb(sptr<ISessionStateCallback> callback);
     int32_t UnregisterInjectEventCb();
 
     void NotifyNodeMgrScanVirNode(const std::string &devId, const std::string &dhId);
-    void GetVirtualKeyboardPaths(const std::string &deviceId, const std::vector<std::string> &dhIds,
+    void GetVirtualKeyboardPaths(const std::string &devId, const std::vector<std::string> &dhIds,
         std::vector<std::string> &virKeyboardPaths);
 private:
     DistributedInputInject();
