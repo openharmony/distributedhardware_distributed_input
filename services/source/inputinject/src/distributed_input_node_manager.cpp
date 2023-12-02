@@ -250,7 +250,7 @@ bool DistributedInputNodeManager::GetDevDhUniqueIdByFd(int fd, DhUniqueID &dhUnq
 
     DHLOGD("GetDevDhUniqueIdByFd physicalPath %s.", physicalPath.c_str());
     std::vector<std::string> phyPathVec;
-    SplitStringToVector(physicalPath, VIR_NODE_SPLIT, phyPathVec);
+    SplitStringToVector(physicalPath, VIR_NODE_SPLIT_CHAR, phyPathVec);
     if (phyPathVec.size() != VIR_NODE_PHY_LEN) {
         DHLOGE("The physical path is invalid");
         return false;
@@ -405,18 +405,18 @@ void DistributedInputNodeManager::AddDeviceLocked(const std::string &networkId, 
 int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &devId, const std::string &dhId)
 {
     DHLOGI("CloseDeviceLocked called, deviceId=%s, dhId=%s",
-        GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
+        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     DhUniqueID dhUniqueId = {devId, dhId};
     std::map<DhUniqueID, std::unique_ptr<VirtualDevice>>::iterator iter = virtualDeviceMap_.find(dhUniqueId);
     if (iter != virtualDeviceMap_.end()) {
         DHLOGI("CloseDeviceLocked called success, deviceId=%s, dhId=%s",
-            GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
         virtualDeviceMap_.erase(iter);
         return DH_SUCCESS;
     }
     DHLOGE("CloseDeviceLocked called failure, deviceId=%s, dhId=%s",
-        GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
+        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
 
