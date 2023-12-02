@@ -57,9 +57,9 @@ public:
 
     int32_t OpenDevicesNode(const std::string &devId, const std::string &dhId, const std::string &parameters);
 
-    int32_t GetDevice(const std::string &networkId, const std::string &dhId, VirtualDevice *&device);
+    int32_t GetDevice(const std::string &devId, const std::string &dhId, VirtualDevice *&device);
     void ReportEvent(const std::string &devId, const std::vector<RawEvent> &events);
-    int32_t CloseDeviceLocked(const std::string &networkId, const std::string &dhId);
+    int32_t CloseDeviceLocked(const std::string &devId, const std::string &dhId);
     void StartInjectThread();
     void StopInjectThread();
     int32_t CreateVirtualTouchScreenNode(const std::string &devId, const std::string &dhId, const uint64_t srcWinId,

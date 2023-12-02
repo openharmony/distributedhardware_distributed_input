@@ -402,12 +402,12 @@ void DistributedInputNodeManager::AddDeviceLocked(const std::string &networkId, 
     }
 }
 
-int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &networkId, const std::string &dhId)
+int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &devId, const std::string &dhId)
 {
     DHLOGI("CloseDeviceLocked called, deviceId=%s, dhId=%s",
         GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
-    DhUniqueID dhUniqueId = {networkId, dhId};
+    DhUniqueID dhUniqueId = {devId, dhId};
     std::map<DhUniqueID, std::unique_ptr<VirtualDevice>>::iterator iter = virtualDeviceMap_.find(dhUniqueId);
     if (iter != virtualDeviceMap_.end()) {
         DHLOGI("CloseDeviceLocked called success, deviceId=%s, dhId=%s",
@@ -420,11 +420,11 @@ int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &networ
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
 
-int32_t DistributedInputNodeManager::GetDevice(const std::string &networkId, const std::string &dhId,
+int32_t DistributedInputNodeManager::GetDevice(const std::string &devId, const std::string &dhId,
     VirtualDevice *&device)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
-    auto iter = virtualDeviceMap_.find({ networkId, dhId });
+    auto iter = virtualDeviceMap_.find({ devId, dhId });
     if (iter != virtualDeviceMap_.end()) {
         device = iter->second.get();
         return DH_SUCCESS;
