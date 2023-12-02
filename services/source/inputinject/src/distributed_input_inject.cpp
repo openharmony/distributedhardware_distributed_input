@@ -110,7 +110,8 @@ int32_t DistributedInputInject::StructTransJson(const InputDevice &pBuf, std::st
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputInject::RegisterDistributedEvent(const std::string deviceId, const std::vector<RawEvent> &events)
+int32_t DistributedInputInject::RegisterDistributedEvent(const std::string deviceId,
+    const std::vector<RawEvent> &events)
 {
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {

@@ -424,7 +424,7 @@ int32_t DistributedInputNodeManager::GetDevice(const std::string &networkId, con
     VirtualDevice *&device)
 {
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
-    auto iter = virtualDeviceMap_.find({networkId, dhId});
+    auto iter = virtualDeviceMap_.find({ networkId, dhId });
     if (iter != virtualDeviceMap_.end()) {
         device = iter->second.get();
         return DH_SUCCESS;
@@ -461,7 +461,7 @@ void DistributedInputNodeManager::StopInjectThread()
 void DistributedInputNodeManager::ReportEvent(const std::string deviceId, const std::vector<RawEvent> &events)
 {
     std::lock_guard<std::mutex> lockGuard(injectThreadMutex_);
-    injectQueue_.push({deviceId, events});
+    injectQueue_.push({ deviceId, events });
     conditionVariable_.notify_all();
 }
 
