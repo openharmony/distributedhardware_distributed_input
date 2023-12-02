@@ -162,38 +162,38 @@ HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent01, testing::
 {
     RawEvent event1 = {
         .when = 0,
-        .type = EV_KEy,
+        .type = EV_KEY,
         .code = KEY_D,
         .value = 1,
-        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d";
+        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d"
     };
     RawEvent event2 = {
         .when = 1,
-        .type = EV_KEy,
+        .type = EV_KEY,
         .code = KEY_D,
         .value = 0,
-        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d";
+        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d"
     };
     RawEvent event3 = {
         .when = 2,
-        .type = EV_KEy,
+        .type = EV_KEY,
         .code = KEY_D,
         .value = 1,
-        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d";
+        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d"
     };
     RawEvent event4 = {
         .when = 3,
-        .type = EV_KEy,
+        .type = EV_KEY,
         .code = KEY_D,
         .value = 0,
-        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d";
+        .descriptor = "afv4s8b1dr1b8er1bd65fb16redb1dfb18d1b56df1b68d"
     };
     std::vector<RawEvent> writeBuffer = { event1, event2, event3, event4 };
 
     DistributedInputInject::GetInstance().inputNodeManager_ = std::make_unique<DistributedInputNodeManager>();
     DistributedInputInject::GetInstance().StartInjectThread();
     DistributedInputInject::GetInstance().StopInjectThread();
-    std::string deviceId = "deviceId123";
+    std::string deviceId = "aefbg1nr81n521be8rb1erbe1w8bg1erb18";
     int32_t ret = DistributedInputInject::GetInstance().RegisterDistributedEvent(deviceId, writeBuffer);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -205,38 +205,38 @@ HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent02, testing::
         .type = EV_REL,
         .code = REL_X,
         .value = 2,
-        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18";
+        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18"
     };
     RawEvent event2 = {
         .when = 1,
         .type = EV_REL,
         .code = REL_Y,
         .value = 2,
-        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18";
+        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18"
     };
     RawEvent event3 = {
         .when = 2,
         .type = EV_REL,
         .code = REL_X,
         .value = 3,
-        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18";
+        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18"
     };
     RawEvent event4 = {
         .when = 3,
         .type = EV_REL,
         .code = REL_Y,
         .value = 3,
-        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18";
+        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18"
     };
     RawEvent event5 = {
         .when = 4,
         .type = EV_SYN,
         .code = SYN_REPORT,
         .value = 0,
-        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18";
+        .descriptor = "rt12r1nr81n521be8rb1erbe1w8bg1erb18"
     };
-    std::vector<RawEvent> writeBuffer = { event1, event2, event3, event4, event5};
-    std::string deviceId = "deviceId123";
+    std::vector<RawEvent> writeBuffer = { event1, event2, event3, event4, event5 };
+    std::string deviceId = "aefbg1nr81n521be8rb1erbe1w8bg1erb18";
     int32_t ret = DistributedInputInject::GetInstance().RegisterDistributedEvent(deviceId, writeBuffer);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -248,39 +248,39 @@ HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent03, testing::
         .type = EV_ABS,
         .code = ABS_X,
         .value = 1,
-        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
+        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8"
     };
     RawEvent event2 = {
         .when = 1,
         .type = EV_ABS,
         .code = ABS_X,
         .value = 2,
-        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
+        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8"
     };
     RawEvent event3 = {
         .when = 2,
         .type = EV_ABS,
         .code = ABS_X,
         .value = 3,
-        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
+        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8"
     };
     RawEvent event4 = {
         .when = 3,
         .type = EV_ABS,
         .code = ABS_X,
         .value = 4,
-        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
+        .descriptor = "1ds56v18e1v21v8v1erv15r1v8r1j1ty8"
     };
     std::vector<RawEvent> writeBuffer = { event1, event2, event3, event4 };
-    std::string deviceId = "deviceId123";
+    std::string deviceId = "aefbg1nr81n521be8rb1erbe1w8bg1erb18";
     int32_t ret = DistributedInputInject::GetInstance().RegisterDistributedEvent(deviceId, writeBuffer);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedEvent04, testing::ext::TestSize.Level1)
 {
-    std::string deviceId = "deviceId123";
-    struct RawEvent writeBuffer[4];
+    std::string deviceId = "aefbg1nr81n521be8rb1erbe1w8bg1erb18";
+    std::vector<RawEvent> writeBuffer(4);
     DistributedInputInject::GetInstance().inputNodeManager_ = nullptr;
     int32_t ret = DistributedInputInject::GetInstance().RegisterDistributedEvent(deviceId, writeBuffer);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_INJECT_NODE_MANAGER_IS_NULL, ret);
@@ -404,14 +404,6 @@ HWTEST_F(DistributedInputSourceInjectTest, OpenDevicesNode_002, testing::ext::Te
     std::string param(STRING_MAX_SIZE + 1, 'a');
     ret = DistributedInputInject::GetInstance().inputNodeManager_->OpenDevicesNode(devId, dhIdtest, param);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL, ret);
-}
-
-HWTEST_F(DistributedInputSourceInjectTest, GetDeviceInfo_001, testing::ext::TestSize.Level1)
-{
-    std::string deviceId = "";
-    DistributedInputInject::GetInstance().inputNodeManager_->InjectEvent();
-    int32_t ret = DistributedInputInject::GetInstance().inputNodeManager_->GetDeviceInfo(deviceId);
-    EXPECT_EQ(DH_SUCCESS, ret);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

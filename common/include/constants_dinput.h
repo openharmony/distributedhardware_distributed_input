@@ -136,6 +136,12 @@ namespace DistributedInput {
 
     const std::string DINPUT_SPLIT_COMMA = ", ";
 
+    const char VIR_NODE_SPLIT = '|';
+    const char VIR_NODE_PID_SPLIT = '/';
+    const uint32_t VIR_NODE_PHY_LEN = 3;
+    const uint32_t VIR_NODE_PHY_DEVID_IDX = 1;
+    const uint32_t VIR_NODE_PHY_DHID_IDX = 2;
+
     const std::string SOURCE_DEVICE_ID = "sourceDevId";
 
     const std::string SINK_DEVICE_ID = "sinkDevId";

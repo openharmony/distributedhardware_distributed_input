@@ -154,7 +154,7 @@ void DistributedInputNodeManager::ParseInputDeviceEvents(const nlohmann::json &i
 
 void DistributedInputNodeManager::ScanSinkInputDevices(const std::string &devId, const std::string &dhId)
 {
-    DHLOGI("ScanSinkInputDevices enter, deviceId:%s, dhId %s.",
+    DHLOGI("ScanSinkInputDevices enter, deviceId: %s, dhId: %s.",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::vector<std::string> vecInputDevPath;
     ScanInputDevicesPath(DEVICE_PATH, vecInputDevPath);
@@ -250,13 +250,13 @@ bool DistributedInputNodeManager::GetDevDhUniqueIdByFd(int fd, DhUniqueID &dhUnq
 
     DHLOGD("GetDevDhUniqueIdByFd physicalPath %s.", physicalPath.c_str());
     std::vector<std::string> phyPathVec;
-    SplitStringToVector(physicalPath, '|', phyPathVec);
-    if (phyPathVec.size() != 3) {
+    SplitStringToVector(physicalPath, VIR_NODE_SPLIT, phyPathVec);
+    if (phyPathVec.size() != VIR_NODE_PHY_LEN) {
         DHLOGE("The physical path is invalid");
         return false;
     }
-    std::string devId = phyPathVec[1];
-    std::string dhId = phyPathVec[2];
+    std::string devId = phyPathVec[VIR_NODE_PHY_DEVID_IDX];
+    std::string dhId = phyPathVec[VIR_NODE_PHY_DHID_IDX];
     if (devId.empty() || dhId.empty()) {
         DHLOGE("Get dev deviceid and dhid failed.");
         return false;
@@ -272,7 +272,7 @@ void DistributedInputNodeManager::SetPathForVirDev(const DhUniqueID &dhUniqueId,
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.begin();
     while (iter != virtualDeviceMap_.end()) {
-        DHLOGD("Check Virtual device deviceId %s, dhid %s.", iter->first.first.c_str(), iter->first.second.c_str());
+        DHLOGD("Check Virtual device, deviceId %s, dhid %s.", iter->first.first.c_str(), iter->first.second.c_str());
         if (iter->first == dhUniqueId) {
             DHLOGD("Found the virtual device, set path :%s", devicePath.c_str());
             iter->second->SetPath(devicePath);
@@ -304,7 +304,7 @@ bool DistributedInputNodeManager::MatchAndSavePhysicalPath(const std::string &de
         return false;
     }
 
-    DHLOGD("This opening node deviceId: %s, dhId %s, to match node deviceId: %s, dhId: %s",
+    DHLOGD("This opening node deviceId: %s, dhId: %s, to match node deviceId: %s, dhId: %s",
         GetAnonyString(curDhUniqueId.first).c_str(), GetAnonyString(curDhUniqueId.second).c_str(),
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
 
@@ -535,21 +535,6 @@ void DistributedInputNodeManager::ProcessInjectEvent(const EventBatch &events)
             device->InjectInputEvent(event);
         }
     }
-}
-
-int32_t DistributedInputNodeManager::GetDeviceInfo(std::string &devId)
-{
-    std::unique_lock<std::mutex> my_lock(operationMutex_);
-    auto localNode = std::make_unique<NodeBasicInfo>();
-    int32_t retCode = GetLocalNodeDeviceInfo(DINPUT_PKG_NAME.c_str(), localNode.get());
-    if (retCode != 0) {
-        DHLOGE("Could not get device id.");
-        return ERR_DH_INPUT_HANDLER_GET_DEVICE_ID_FAIL;
-    }
-
-    devId = localNode->networkId;
-    DHLOGI("device id is %s", GetAnonyString(devId).c_str());
-    return DH_SUCCESS;
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

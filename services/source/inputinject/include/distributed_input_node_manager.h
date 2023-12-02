@@ -67,7 +67,6 @@ public:
     int32_t RemoveVirtualTouchScreenNode(const std::string &devId, const std::string &dhId);
     int32_t GetVirtualTouchScreenFd();
 
-    int32_t GetDeviceInfo(std::string &devId);
     void ProcessInjectEvent(const EventBatch &events);
 
     /**
