@@ -140,23 +140,7 @@ size_t InputHub::StartCollectInputEvents(RawEvent *buffer, size_t bufferSize)
     isStartCollectEvent_ = true;
     while (isStartCollectEvent_) {
         ScanAndRecordInputDevices();
-
-        deviceChanged_ = false;
         count = GetEvents(buffer, bufferSize);
-        // readNotify() will modify the list of devices so this must be done after
-        // processing all other events to ensure that we read all remaining events
-        // before closing the devices.
-        if (pendingINotify_ && pendingEventIndex_ >= pendingEventCount_) {
-            pendingINotify_ = false;
-            ReadNotifyLocked();
-            deviceChanged_ = true;
-        }
-
-        // Report added or removed devices immediately.
-        if (deviceChanged_) {
-            continue;
-        }
-
         if (count > 0) {
             break;
         }
@@ -184,11 +168,6 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
         std::lock_guard<std::mutex> my_lock(operationMutex_);
         const struct epoll_event& eventItem = mPendingEventItems[pendingEventIndex_++];
         if (eventItem.data.fd == iNotifyFd_) {
-            if (eventItem.events & EPOLLIN) {
-                pendingINotify_ = true;
-            } else {
-                DHLOGI("Received no epoll event 0x%08x.", eventItem.events);
-            }
             continue;
         }
         struct input_event readBuffer[bufferSize];
@@ -216,7 +195,6 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
             }
         } else if (eventItem.events & EPOLLHUP) {
             DHLOGI("Removing device %s due to epoll hang-up event.", device->identifier.name.c_str());
-            deviceChanged_ = true;
             CloseDeviceLocked(*device);
         }
     }
@@ -319,7 +297,6 @@ size_t InputHub::ReadInputEvent(int32_t readSize, Device &device)
         DHLOGE("could not get event, removed? (fd: %d size: %d"
             " errno: %d)\n",
             device.fd, readSize, errno);
-        deviceChanged_ = true;
         CloseDeviceLocked(device);
     } else if (readSize < 0) {
         if (errno != EAGAIN && errno != EINTR) {
