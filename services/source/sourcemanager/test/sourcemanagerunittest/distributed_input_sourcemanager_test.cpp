@@ -430,7 +430,7 @@ HWTEST_F(DistributedInputSourceManagerTest, PrepareRemoteInput_02, testing::ext:
     std::string devId = "umkyu1b165e1be98151891erbe8r91ev";
     sptr<TestPrepareDInputCallback> callback(new TestPrepareDInputCallback());
     DistributedInputSourceManager::DInputClientPrepareInfo info {devId, callback};
-    sourceManager_->preCallbacks_.push_back(info);
+    sourceManager_->preCallbacks_.insert(info);
     int32_t ret = sourceManager_->PrepareRemoteInput(devId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
 }
@@ -453,7 +453,7 @@ HWTEST_F(DistributedInputSourceManagerTest, UnprepareRemoteInput_02, testing::ex
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
     devId = "umkyu1b165e1be98151891erbe8r91ev";
     DistributedInputSourceManager::DInputClientUnprepareInfo info {devId, callback};
-    sourceManager_->unpreCallbacks_.push_back(info);
+    sourceManager_->unpreCallbacks_.insert(info);
     ret = sourceManager_->UnprepareRemoteInput(devId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
@@ -714,12 +714,12 @@ HWTEST_F(DistributedInputSourceManagerTest, PrepareRemoteInput_03, testing::ext:
     srcId = "srcId_4810input4809_test";
     sinkId = "umkyu1b165e1be98151891erbe8r91ev";
     DistributedInputSourceManager::DInputClientRelayPrepareInfo info(srcId, sinkId, callback);
-    sourceManager_->relayPreCallbacks_.push_back(info);
+    sourceManager_->relayPreCallbacks_.insert(info);
     ret = sourceManager_->PrepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
     srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
     DistributedInputSourceManager::DInputClientPrepareInfo preInfo {sinkId, callback};
-    sourceManager_->preCallbacks_.push_back(preInfo);
+    sourceManager_->preCallbacks_.insert(preInfo);
     ret = sourceManager_->PrepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
 }
@@ -753,12 +753,12 @@ HWTEST_F(DistributedInputSourceManagerTest, UnprepareRemoteInput_05, testing::ex
     srcId = "srcId_4810input4809_test";
     sinkId = "umkyu1b165e1be98151891erbe8r91ev";
     DistributedInputSourceManager::DInputClientRelayUnprepareInfo info(srcId, sinkId, callback);
-    sourceManager_->relayUnpreCallbacks_.push_back(info);
+    sourceManager_->relayUnpreCallbacks_.insert(info);
     ret = sourceManager_->UnprepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
     srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
     DistributedInputSourceManager::DInputClientUnprepareInfo unpreInfo {sinkId, callback};
-    sourceManager_->unpreCallbacks_.push_back(unpreInfo);
+    sourceManager_->unpreCallbacks_.insert(unpreInfo);
     ret = sourceManager_->UnprepareRemoteInput(srcId, sinkId, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
@@ -1267,12 +1267,12 @@ HWTEST_F(DistributedInputSourceManagerTest, RunPrepareCallback_01, testing::ext:
     std::string object = "runprepareobject";
     sptr<TestPrepareDInputCallback> callback(new TestPrepareDInputCallback());
     DistributedInputSourceManager::DInputClientPrepareInfo info {devId, callback};
-    sourceManager_->preCallbacks_.push_back(info);
+    sourceManager_->preCallbacks_.insert(info);
     sourceManager_->RunPrepareCallback(devId, status, object);
     EXPECT_EQ(0, sourceManager_->preCallbacks_.size());
 
     DistributedInputSourceManager::DInputClientPrepareInfo preInfo {devId, callback};
-    sourceManager_->preCallbacks_.push_back(preInfo);
+    sourceManager_->preCallbacks_.insert(preInfo);
     devId = "devId_20221221_test";
     sourceManager_->RunPrepareCallback(devId, status, object);
     EXPECT_EQ(1, sourceManager_->preCallbacks_.size());
@@ -1295,12 +1295,12 @@ HWTEST_F(DistributedInputSourceManagerTest, RunRelayPrepareCallback_01, testing:
     int32_t status = 0;
     sptr<TestPrepareDInputCallback> callback(new TestPrepareDInputCallback());
     DistributedInputSourceManager::DInputClientRelayPrepareInfo info {srcId, sinkId, callback};
-    sourceManager_->relayPreCallbacks_.push_back(info);
+    sourceManager_->relayPreCallbacks_.insert(info);
     sourceManager_->RunRelayPrepareCallback(srcId, sinkId, status);
     EXPECT_EQ(0, sourceManager_->relayPreCallbacks_.size());
 
     DistributedInputSourceManager::DInputClientRelayPrepareInfo preInfo {srcId, sinkId, callback};
-    sourceManager_->relayPreCallbacks_.push_back(preInfo);
+    sourceManager_->relayPreCallbacks_.insert(preInfo);
     srcId = "devId_20221221_test";
     sourceManager_->RunRelayPrepareCallback(srcId, sinkId, status);
     EXPECT_EQ(1, sourceManager_->relayPreCallbacks_.size());
@@ -1322,12 +1322,12 @@ HWTEST_F(DistributedInputSourceManagerTest, RunRelayUnprepareCallback_01, testin
     int32_t status = 0;
     sptr<TestUnprepareDInputCallback> callback(new TestUnprepareDInputCallback());
     DistributedInputSourceManager::DInputClientRelayUnprepareInfo info {srcId, sinkId, callback};
-    sourceManager_->relayUnpreCallbacks_.push_back(info);
+    sourceManager_->relayUnpreCallbacks_.insert(info);
     sourceManager_->RunRelayUnprepareCallback(srcId, sinkId, status);
     EXPECT_EQ(0, sourceManager_->relayUnpreCallbacks_.size());
 
     DistributedInputSourceManager::DInputClientRelayUnprepareInfo unpreInfo {srcId, sinkId, callback};
-    sourceManager_->relayUnpreCallbacks_.push_back(unpreInfo);
+    sourceManager_->relayUnpreCallbacks_.insert(unpreInfo);
     srcId = "devId_20221221_test";
     sourceManager_->RunRelayUnprepareCallback(srcId, sinkId, status);
     EXPECT_EQ(1, sourceManager_->relayUnpreCallbacks_.size());
@@ -1348,12 +1348,12 @@ HWTEST_F(DistributedInputSourceManagerTest, RunUnprepareCallback_01, testing::ex
     std::string object = "runprepareobject";
     sptr<TestUnprepareDInputCallback> callback(new TestUnprepareDInputCallback());
     DistributedInputSourceManager::DInputClientUnprepareInfo info {devId, callback};
-    sourceManager_->unpreCallbacks_.push_back(info);
+    sourceManager_->unpreCallbacks_.insert(info);
     sourceManager_->RunUnprepareCallback(devId, status);
     EXPECT_EQ(0, sourceManager_->unpreCallbacks_.size());
 
     DistributedInputSourceManager::DInputClientUnprepareInfo unpreInfo {devId, callback};
-    sourceManager_->unpreCallbacks_.push_back(unpreInfo);
+    sourceManager_->unpreCallbacks_.insert(unpreInfo);
 
     devId = "devId_20221221_test";
     sourceManager_->RunUnprepareCallback(devId, status);

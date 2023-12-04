@@ -322,6 +322,7 @@ void DistributedInputTransportBase::EraseSessionId(const std::string &remoteDevI
 
 int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_t result)
 {
+    DHLOGI("OnSessionOpened, sessionId: %d, result: %d", sessionId, result);
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
     if (result != DH_SUCCESS) {
         std::string deviceId = GetDevIdBySessionId(sessionId);
@@ -332,12 +333,6 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_
             EraseSessionId(deviceId);
         }
         return DH_SUCCESS;
-    }
-
-    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
-    if (dhFwkKit != nullptr) {
-        DHLOGD("Enable low Latency!");
-        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
     }
 
     char mySessionName[SESSION_NAME_SIZE_MAX] = {0};
@@ -373,20 +368,22 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_
         openSessionWaitCond_.notify_all();
     }
     RunSessionStateCallback(peerDevId, SESSION_STATUS_OPENED);
+    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
+    if (dhFwkKit != nullptr) {
+        DHLOGD("Enable low Latency!");
+        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
+    }
+    DHLOGI("OnSessionOpened finish");
     return DH_SUCCESS;
 }
 
 void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)
 {
+    DHLOGI("OnSessionClosed, sessionId: %d", sessionId);
     std::string deviceId = GetDevIdBySessionId(sessionId);
-    DHLOGI("OnSessionClosed, sessionId: %d, deviceId:%s", sessionId, GetAnonyString(deviceId).c_str());
+    DHLOGI("OnSessionClosed notify session closed, sessionId: %d, peer deviceId:%s",
+        sessionId, GetAnonyString(deviceId).c_str());
     RunSessionStateCallback(deviceId, SESSION_STATUS_CLOSED);
-
-    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
-    if (dhFwkKit != nullptr) {
-        DHLOGD("Disable low Latency!");
-        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
-    }
 
     {
         std::unique_lock<std::mutex> sessionLock(operationMutex_);
@@ -419,6 +416,13 @@ void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)
         }
         sinkMgrCallback_->ResetSinkMgrResStatus();
     }
+
+    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
+    if (dhFwkKit != nullptr) {
+        DHLOGD("Disable low Latency!");
+        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
+    }
+    DHLOGI("OnSessionClosed finish");
 }
 
 bool DistributedInputTransportBase::CheckRecivedData(const std::string &message)
