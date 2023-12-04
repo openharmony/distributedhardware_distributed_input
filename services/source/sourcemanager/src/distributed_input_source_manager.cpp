@@ -492,7 +492,7 @@ int32_t DistributedInputSourceManager::PrepareRemoteInput(
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, "Dinput prepare failed in transport prepare");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
         DHLOGE("Can not send message by softbus, prepare fail, ret: %d", ret);
-        info.preCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL);
+        info.preCallback->OnResult(deviceId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL);
         RemovePrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
@@ -519,7 +519,7 @@ int32_t DistributedInputSourceManager::UnprepareRemoteInput(
         HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, "Dinput unprepare failed in transport unprepare.");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
-        info.unpreCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL);
+        info.unpreCallback->OnResult(deviceId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL);
         RemoveUnPrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
     }
@@ -1852,7 +1852,7 @@ int32_t DistributedInputSourceManager::Dump(int32_t fd, const std::vector<std::u
     return DH_SUCCESS;
 }
 
-void DistributedInputSourceManager::AddPrepareCallbacks(const DInputClientPrepareInfo &info);
+void DistributedInputSourceManager::AddPrepareCallbacks(const DInputClientPrepareInfo &info)
 {
     std::lock_guard<std::mutex> lock(prepareMutex_);
     preCallbacks_.insert(info);
