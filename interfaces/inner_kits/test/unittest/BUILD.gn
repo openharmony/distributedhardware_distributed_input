@@ -62,6 +62,8 @@ ohos_unittest("distributed_input_inner_test") {
     "${ipc_path}/src/prepare_d_input_call_back_stub.cpp",
     "${ipc_path}/src/register_d_input_call_back_proxy.cpp",
     "${ipc_path}/src/register_d_input_call_back_stub.cpp",
+    "${ipc_path}/src/register_session_state_callback_proxy.cpp",
+    "${ipc_path}/src/register_session_state_callback_stub.cpp",
     "${ipc_path}/src/sharing_dhid_listener_proxy.cpp",
     "${ipc_path}/src/sharing_dhid_listener_stub.cpp",
     "${ipc_path}/src/simulation_event_listener_proxy.cpp",

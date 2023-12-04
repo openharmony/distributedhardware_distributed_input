@@ -37,6 +37,7 @@
 #include "stop_d_input_call_back_stub.h"
 #include "simulation_event_listener_stub.h"
 #include "unprepare_d_input_call_back_stub.h"
+#include "register_session_state_callback_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -108,6 +109,14 @@ public:
         TestSimulationEventListenerStub() = default;
         virtual ~TestSimulationEventListenerStub() = default;
         int32_t OnSimulationEvent(uint32_t type, uint32_t code, int32_t value);
+    };
+    
+    class TestRegisterSessionStateCb : public
+        OHOS::DistributedHardware::DistributedInput::RegisterSessionStateCallbackStub {
+    public:
+        TestRegisterSessionStateCb() = default;
+        virtual ~TestRegisterSessionStateCb() = default;
+        void OnResult(const std::string &devId, const uint32_t status);
     };
 };
 } // namespace DistributedInput
