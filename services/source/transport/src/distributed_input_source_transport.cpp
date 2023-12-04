@@ -140,7 +140,7 @@ int32_t DistributedInputSourceTransport::OpenInputSoftbus(const std::string &rem
     int32_t ret = DistributedInputTransportBase::GetInstance().StartSession(remoteDevId);
     if (ret != DH_SUCCESS) {
         DHLOGE("StartSession fail! remoteDevId:%s.", GetAnonyString(remoteDevId).c_str());
-            return ret;
+        return ret;
     }
 
     if (isToSrc) {

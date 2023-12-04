@@ -307,11 +307,31 @@ private:
 
         DInputClientPrepareInfo(std::string deviceId, sptr<IPrepareDInputCallback> prepareCallback)
             : devId(deviceId), preCallback(prepareCallback) {}
+
+        bool operator < (const DInputClientPrepareInfo &info) const
+        {
+            return this->devId.compare(info.devId) < 0;
+        }
+
+        bool operator == (const DInputClientPrepareInfo &info) const
+        {
+            return this->devId == info.devId;
+        }
     };
 
     struct DInputClientUnprepareInfo {
         std::string devId;
         sptr<IUnprepareDInputCallback> unpreCallback = nullptr;
+
+        bool operator < (const DInputClientUnprepareInfo &info) const
+        {
+            return this->devId.compare(info.devId) < 0;
+        }
+
+        bool operator == (const DInputClientUnprepareInfo &info) const
+        {
+            return this->devId == info.devId;
+        }
     };
 
     struct DInputClientStartInfo {
@@ -338,6 +358,17 @@ private:
         DInputClientRelayPrepareInfo(std::string sourceId, std::string sinkid,
             sptr<IPrepareDInputCallback> prepareCallback)
             : srcId(sourceId), sinkId(sinkid), preCallback(prepareCallback) {}
+
+        bool operator < (const DInputClientRelayPrepareInfo &info) const
+        {
+            return this->srcId.compare(info.srcId) < 0 ||
+                (this->srcId.compare(info.srcId) == 0 && this->sinkId.compare(info.sinkId) < 0);
+        }
+
+        bool operator == (const DInputClientRelayPrepareInfo &info) const
+        {
+            return this->srcId == info.srcId && this->sinkId == info.sinkId;
+        }
     };
     struct DInputClientRelayUnprepareInfo {
         std::string srcId;
@@ -346,6 +377,17 @@ private:
         DInputClientRelayUnprepareInfo(std::string sourceId, std::string sinkid,
             sptr<IUnprepareDInputCallback> unprepareCallback)
             : srcId(sourceId), sinkId(sinkid), unpreCallback(unprepareCallback) {}
+
+        bool operator < (const DInputClientRelayUnprepareInfo &info) const
+        {
+            return this->srcId.compare(info.srcId) < 0 ||
+                (this->srcId.compare(info.srcId) == 0 && this->sinkId.compare(info.sinkId) < 0);
+        }
+
+        bool operator == (const DInputClientRelayUnprepareInfo &info) const
+        {
+            return this->srcId == info.srcId && this->sinkId == info.sinkId;
+        }
     };
 
     struct DInputClientStartDhidInfo {
@@ -385,16 +427,16 @@ private:
 
     std::vector<DInputClientRegistInfo> regCallbacks_;
     std::vector<DInputClientUnregistInfo> unregCallbacks_;
-    std::vector<DInputClientPrepareInfo> preCallbacks_;
-    std::vector<DInputClientUnprepareInfo> unpreCallbacks_;
+    std::set<DInputClientPrepareInfo> preCallbacks_;
+    std::set<DInputClientUnprepareInfo> unpreCallbacks_;
     std::vector<DInputClientStartInfo> staCallbacks_;
     std::vector<DInputClientStopInfo> stpCallbacks_;
 
     std::vector<DInputClientStartDhidInfo> staStringCallbacks_;
     std::vector<DInputClientStopDhidInfo> stpStringCallbacks_;
 
-    std::vector<DInputClientRelayPrepareInfo> relayPreCallbacks_;
-    std::vector<DInputClientRelayUnprepareInfo> relayUnpreCallbacks_;
+    std::set<DInputClientRelayPrepareInfo> relayPreCallbacks_;
+    std::set<DInputClientRelayUnprepareInfo> relayUnpreCallbacks_;
     std::vector<DInputClientStartDhidInfo> relayStaDhidCallbacks_;
     std::vector<DInputClientStopDhidInfo> relayStpDhidCallbacks_;
     std::vector<DInputClientStartTypeInfo> relayStaTypeCallbacks_;
@@ -412,13 +454,16 @@ private:
     std::vector<InputDeviceId> inputDevice_;
     bool InitAuto();
     void handleStartServerCallback(const std::string &devId);
-    std::mutex mutex_;
-    std::mutex operationMutex_;
+
+    std::mutex regDisHardwareMutex_;
+    std::mutex prepareMutex_;
+    std::mutex startStopMutex_;
+
+    std::mutex simEventMutex_;
+    std::mutex whiteListMutex_;
     sptr<StartDScreenListener> startDScreenListener_ = nullptr;
     sptr<StopDScreenListener> stopDScreenListener_ = nullptr;
     sptr<DeviceOfflineListener> deviceOfflineListener_ = nullptr;
-
-    std::mutex valMutex_;
 
     int32_t RelayStartRemoteInputByType(const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes,
         sptr<IStartDInputCallback> callback);
@@ -435,6 +480,15 @@ private:
     bool IsStringDataSame(const std::vector<std::string> &oldDhIds, std::vector<std::string> newDhIds);
 
     void UnregisterDHFwkPublisher();
+
+    void AddPrepareCallbacks(const DInputClientPrepareInfo &info);
+    void RemovePrepareCallbacks(const DInputClientPrepareInfo &info);
+    void AddUnPrepareCallbacks(const DInputClientUnprepareInfo &info);
+    void RemoveUnPrepareCallbacks(const DInputClientUnprepareInfo &info);
+    void AddRelayPrepareCallbacks(const DInputClientRelayPrepareInfo &info);
+    void RemoveRelayPrepareCallbacks(const DInputClientRelayPrepareInfo &info);
+    void AddRelayUnPrepareCallbacks(const DInputClientRelayUnprepareInfo &info);
+    void RemoveRelayUnPrepareCallbacks(const DInputClientRelayUnprepareInfo &info);
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

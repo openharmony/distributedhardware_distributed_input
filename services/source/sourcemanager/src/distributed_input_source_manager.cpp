@@ -264,7 +264,7 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     }
     DHLOGI("RegisterDistributedHardware called, deviceId: %s, dhId: %s, parameters: %s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
-    std::lock_guard<std::mutex> lock(operationMutex_);
+    std::lock_guard<std::mutex> lock(regDisHardwareMutex_);
     DInputClientRegistInfo info {devId, dhId, callback};
     regCallbacks_.push_back(info);
     InputDeviceId inputDeviceId {devId, dhId, GetNodeDesc(parameters)};
@@ -434,7 +434,7 @@ int32_t DistributedInputSourceManager::UnregisterDistributedHardware(const std::
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNREGISTER_FAIL;
     }
     DHLOGI("Unregister called, deviceId: %s,  dhId: %s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-    std::lock_guard<std::mutex> lock(operationMutex_);
+    std::lock_guard<std::mutex> lock(regDisHardwareMutex_);
     DInputClientUnregistInfo info {devId, dhId, callback};
     unregCallbacks_.push_back(info);
 
@@ -474,19 +474,9 @@ int32_t DistributedInputSourceManager::PrepareRemoteInput(
     }
 
     DHLOGI("Prepare called, deviceId: %s", GetAnonyString(deviceId).c_str());
-    for (auto iter : preCallbacks_) {
-        if (iter.devId == deviceId) {
-            callback->OnResult(deviceId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL);
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, "Dinput prepare failed in already prepared.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-        }
-    }
-
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(deviceId, false);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Open softbus session fail.");
+        DHLOGE("Open softbus session fail, ret: %d", ret);
         HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, "Dinput prepare failed in open softbus");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
@@ -494,20 +484,16 @@ int32_t DistributedInputSourceManager::PrepareRemoteInput(
     }
 
     DInputClientPrepareInfo info {deviceId, callback};
-    preCallbacks_.push_back(info);
+    AddPrepareCallbacks(info);
+
     ret = DistributedInputSourceTransport::GetInstance().PrepareRemoteInput(deviceId);
     if (ret != DH_SUCCESS) {
         HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, "Dinput prepare failed in transport prepare");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
-        DHLOGE("Can not send message by softbus, prepare fail.");
-        for (auto iter = preCallbacks_.begin(); iter != preCallbacks_.end(); ++iter) {
-            if (iter->devId == deviceId) {
-                iter->preCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL);
-                preCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-            }
-        }
+        DHLOGE("Can not send message by softbus, prepare fail, ret: %d", ret);
+        info.preCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL);
+        RemovePrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -525,31 +511,16 @@ int32_t DistributedInputSourceManager::UnprepareRemoteInput(
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
     }
     DHLOGI("Unprepare called, deviceId: %s", GetAnonyString(deviceId).c_str());
-    for (auto iter : unpreCallbacks_) {
-        if (iter.devId == deviceId) {
-            callback->OnResult(deviceId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL);
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, "Dinput unprepare failed in already unprepared.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-        }
-    }
-
     DInputClientUnprepareInfo info {deviceId, callback};
-    unpreCallbacks_.push_back(info);
+    AddUnPrepareCallbacks(info);
     int32_t ret = DistributedInputSourceTransport::GetInstance().UnprepareRemoteInput(deviceId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Can not send message by softbus, unprepare fail.");
+        DHLOGE("Can not send message by softbus, unprepare fail, ret: %d", ret);
         HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, deviceId,
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, "Dinput unprepare failed in transport unprepare.");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
-        for (auto iter = unpreCallbacks_.begin(); iter != unpreCallbacks_.end(); ++iter) {
-            if (iter->devId == deviceId) {
-                iter->unpreCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL);
-                unpreCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-            }
-        }
+        info.unpreCallback->OnResult(iter->devId, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL);
+        RemoveUnPrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -751,7 +722,7 @@ int32_t DistributedInputSourceManager::StopRemoteInput(const std::string &srcId,
 int32_t DistributedInputSourceManager::RelayStartRemoteInputByType(const std::string &srcId, const std::string &sinkId,
     const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     for (auto iter : relayStaTypeCallbacks_) {
         if (iter.srcId == srcId && iter.sinkId == sinkId && iter.inputTypes == inputTypes) {
             DHLOGE("Repeat call.");
@@ -780,7 +751,7 @@ int32_t DistributedInputSourceManager::RelayStartRemoteInputByType(const std::st
 int32_t DistributedInputSourceManager::RelayStopRemoteInputByType(
     const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     for (auto iter : relayStpTypeCallbacks_) {
         if (iter.srcId == srcId && iter.sinkId == sinkId && iter.inputTypes == inputTypes) {
             DHLOGE("Repeat call.");
@@ -824,28 +795,18 @@ int32_t DistributedInputSourceManager::PrepareRemoteInput(const std::string &src
         return RelayPrepareRemoteInput(srcId, sinkId, callback);
     }
     // current device is source device
-    for (auto iter : preCallbacks_) {
-        if (iter.devId == sinkId) {
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-        }
-    }
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(sinkId, false);
     if (ret != DH_SUCCESS) {
         DHLOGE("Open softbus session fail ret=%d.", ret);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
     DInputClientPrepareInfo info {sinkId, callback};
-    preCallbacks_.push_back(info);
+    AddPrepareCallbacks(info);
 
     ret = DistributedInputSourceTransport::GetInstance().PrepareRemoteInput(sinkId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Can not send message by softbus, prepare fail.");
-        for (auto iter = preCallbacks_.begin(); iter != preCallbacks_.end(); ++iter) {
-            if (iter->devId == sinkId) {
-                preCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-            }
-        }
+        DHLOGE("Can not send message by softbus, prepare fail, ret: %d", ret);
+        RemovePrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -870,23 +831,12 @@ int32_t DistributedInputSourceManager::UnprepareRemoteInput(const std::string &s
     }
 
     // current device is source device
-    for (auto iter : unpreCallbacks_) {
-        if (iter.devId == sinkId) {
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-        }
-    }
-
     DInputClientUnprepareInfo info {sinkId, callback};
-    unpreCallbacks_.push_back(info);
+    AddUnPrepareCallbacks(info);
     int32_t ret = DistributedInputSourceTransport::GetInstance().UnprepareRemoteInput(sinkId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Can not send message by softbus, unprepare fail.");
-        for (auto iter = unpreCallbacks_.begin(); iter != unpreCallbacks_.end(); ++iter) {
-            if (iter->devId == sinkId) {
-                unpreCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-            }
-        }
+        DHLOGE("Can not send message by softbus, unprepare fail, ret: %d", ret);
+        RemoveUnPrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -1121,7 +1071,7 @@ int32_t DistributedInputSourceManager::RegisterAddWhiteListCallback(sptr<IAddWhi
         DHLOGE("RegisterAddWhiteListCallback callback is null.");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_REG_CALLBACK_ERR;
     }
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(whiteListMutex_);
     addWhiteListCallbacks_.insert(callback);
     return DH_SUCCESS;
 }
@@ -1133,7 +1083,7 @@ int32_t DistributedInputSourceManager::RegisterDelWhiteListCallback(sptr<IDelWhi
         DHLOGE("RegisterDelWhiteListCallback callback is null.");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_REG_CALLBACK_ERR;
     }
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(whiteListMutex_);
     delWhiteListCallbacks_.insert(callback);
     return DH_SUCCESS;
 }
@@ -1145,7 +1095,7 @@ int32_t DistributedInputSourceManager::RegisterSimulationEventListener(sptr<ISim
         DHLOGE("RegisterSimulationEventListener callback is null.");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_SIMULATION_EVENT_CALLBACK_ERR;
     }
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(simEventMutex_);
     this->simulationEventCallbacks_.insert(listener);
     return DH_SUCCESS;
 }
@@ -1157,7 +1107,7 @@ int32_t DistributedInputSourceManager::UnregisterSimulationEventListener(sptr<IS
         DHLOGE("UnregisterSimulationEventListener callback is null.");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_SIMULATION_EVENT_CALLBACK_ERR;
     }
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(simEventMutex_);
     this->simulationEventCallbacks_.erase(listener);
     return DH_SUCCESS;
 }
@@ -1182,31 +1132,18 @@ int32_t DistributedInputSourceManager::UnregisterSessionStateCb()
 int32_t DistributedInputSourceManager::RelayPrepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IPrepareDInputCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    for (auto iter : relayPreCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-        }
-    }
-
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(srcId, true);
     if (ret != DH_SUCCESS) {
         DHLOGE("Open softbus session fail.");
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
     DInputClientRelayPrepareInfo info(srcId, sinkId, callback);
-    relayPreCallbacks_.push_back(info);
+    AddRelayPrepareCallbacks(info);
 
     ret = DistributedInputSourceTransport::GetInstance().SendRelayPrepareRequest(srcId, sinkId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Can not send message by softbus, prepare fail.");
-        for (auto iter = relayPreCallbacks_.begin(); iter != relayPreCallbacks_.end(); ++iter) {
-            if (iter->srcId == srcId && iter->sinkId == sinkId) {
-                relayPreCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
-            }
-        }
+        DHLOGE("Can not send message by softbus, prepare fail, ret: %d", ret);
+        RemoveRelayPrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -1215,26 +1152,13 @@ int32_t DistributedInputSourceManager::RelayPrepareRemoteInput(const std::string
 int32_t DistributedInputSourceManager::RelayUnprepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IUnprepareDInputCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    for (auto iter : relayUnpreCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-        }
-    }
-
     DInputClientRelayUnprepareInfo info(srcId, sinkId, callback);
-    relayUnpreCallbacks_.push_back(info);
+    AddRelayUnPrepareCallbacks(info);
 
     int32_t ret = DistributedInputSourceTransport::GetInstance().SendRelayUnprepareRequest(srcId, sinkId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Can not send message by softbus, prepare fail.");
-        for (auto iter = relayUnpreCallbacks_.begin(); iter != relayUnpreCallbacks_.end(); ++iter) {
-            if (iter->srcId == srcId && iter->sinkId == sinkId) {
-                relayUnpreCallbacks_.erase(iter);
-                return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
-            }
-        }
+        DHLOGE("Can not send message by softbus, prepare fail, ret: %d", ret);
+        RemoveRelayUnPrepareCallbacks(info);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL;
     }
     return DH_SUCCESS;
@@ -1243,7 +1167,7 @@ int32_t DistributedInputSourceManager::RelayUnprepareRemoteInput(const std::stri
 int32_t DistributedInputSourceManager::RelayStartRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     for (auto iter : relayStaDhidCallbacks_) {
         if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
             DHLOGE("Repeat call.");
@@ -1271,7 +1195,7 @@ int32_t DistributedInputSourceManager::RelayStartRemoteInputByDhid(const std::st
 int32_t DistributedInputSourceManager::RelayStopRemoteInputByDhid(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     for (auto iter : relayStpDhidCallbacks_) {
         if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
             DHLOGE("Repeat call.");
@@ -1299,7 +1223,7 @@ int32_t DistributedInputSourceManager::RelayStopRemoteInputByDhid(const std::str
 void DistributedInputSourceManager::RunRegisterCallback(
     const std::string &devId, const std::string &dhId, const int32_t &status)
 {
-    std::lock_guard<std::mutex> lock(operationMutex_);
+    std::lock_guard<std::mutex> lock(regDisHardwareMutex_);
     for (auto iter = regCallbacks_.begin(); iter != regCallbacks_.end(); ++iter) {
         if (iter->devId == devId && iter->dhId == dhId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RIGISTER_MSG");
@@ -1314,7 +1238,7 @@ void DistributedInputSourceManager::RunRegisterCallback(
 void DistributedInputSourceManager::RunUnregisterCallback(
     const std::string &devId, const std::string &dhId, const int32_t &status)
 {
-    std::lock_guard<std::mutex> lock(operationMutex_);
+    std::lock_guard<std::mutex> lock(regDisHardwareMutex_);
     for (auto iter = unregCallbacks_.begin(); iter != unregCallbacks_.end(); ++iter) {
         if (iter->devId == devId && iter->dhId == dhId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_UNRIGISTER_MSG");
@@ -1330,6 +1254,7 @@ void DistributedInputSourceManager::RunPrepareCallback(
     const std::string &devId, const int32_t &status, const std::string &object)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
+    std::lock_guard<std::mutex> lock(prepareMutex_);
     for (auto iter = preCallbacks_.begin(); iter != preCallbacks_.end(); ++iter) {
         if (iter->devId == devId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_PREPARE_MSG");
@@ -1344,7 +1269,7 @@ void DistributedInputSourceManager::RunPrepareCallback(
 
 void DistributedInputSourceManager::RunWhiteListCallback(const std::string &devId, const std::string &object)
 {
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(whiteListMutex_);
     if (addWhiteListCallbacks_.size() == 0) {
         DHLOGE("addWhiteListCallbacks_ is empty.");
         return;
@@ -1358,6 +1283,7 @@ void DistributedInputSourceManager::RunRelayPrepareCallback(const std::string &s
     const int32_t status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
+    std::lock_guard<std::mutex> lock(prepareMutex_);
     for (auto iter = relayPreCallbacks_.begin(); iter != relayPreCallbacks_.end(); ++iter) {
         if (iter->srcId == srcId && iter->sinkId == sinkId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI");
@@ -1373,6 +1299,7 @@ void DistributedInputSourceManager::RunRelayUnprepareCallback(const std::string 
     const int32_t status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
+    std::lock_guard<std::mutex> lock(prepareMutex_);
     for (auto iter = relayUnpreCallbacks_.begin(); iter != relayUnpreCallbacks_.end(); ++iter) {
         if (iter->srcId == srcId && iter->sinkId == sinkId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI");
@@ -1387,12 +1314,13 @@ void DistributedInputSourceManager::RunRelayUnprepareCallback(const std::string 
 void DistributedInputSourceManager::RunUnprepareCallback(const std::string &devId, const int32_t &status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
+    std::lock_guard<std::mutex> lock(prepareMutex_);
     for (auto iter = unpreCallbacks_.begin(); iter != unpreCallbacks_.end(); ++iter) {
         if (iter->devId == devId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_UNPREPARE_MSG");
             iter->unpreCallback->OnResult(devId, status);
             unpreCallbacks_.erase(iter);
-            std::lock_guard<std::mutex> lock(valMutex_);
+            std::lock_guard<std::mutex> lock(whiteListMutex_);
             if (delWhiteListCallbacks_.size() == 0) {
                 DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_UNPREPARE_MSG delWhiteListCallback is null.");
                 return;
@@ -1568,7 +1496,7 @@ void DistributedInputSourceManager::RunKeyStateCallback(const std::string &sinkI
     const uint32_t type, const uint32_t code, const uint32_t value)
 {
     // 1.notify multiinput
-    std::lock_guard<std::mutex> lock(valMutex_);
+    std::lock_guard<std::mutex> lock(simEventMutex_);
     for (const auto &cb : simulationEventCallbacks_) {
         cb->OnSimulationEvent(type, code, value);
     }
@@ -1653,7 +1581,9 @@ uint32_t DistributedInputSourceManager::GetAllInputTypesMap()
 
 void DistributedInputSourceManager::ClearResourcesStatus()
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    preCallbacks_.clear();
+    unpreCallbacks_.clear();
     relayPreCallbacks_.clear();
     relayUnpreCallbacks_.clear();
 }
@@ -1920,6 +1850,54 @@ int32_t DistributedInputSourceManager::Dump(int32_t fd, const std::vector<std::u
         return ERR_DH_INPUT_HIDUMP_DPRINTF_FAIL;
     }
     return DH_SUCCESS;
+}
+
+void DistributedInputSourceManager::AddPrepareCallbacks(const DInputClientPrepareInfo &info);
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    preCallbacks_.insert(info);
+}
+
+void DistributedInputSourceManager::RemovePrepareCallbacks(const DInputClientPrepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    preCallbacks_.erase(info);
+}
+
+void DistributedInputSourceManager::AddUnPrepareCallbacks(const DInputClientUnprepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    unpreCallbacks_.insert(info);
+}
+
+void DistributedInputSourceManager::RemoveUnPrepareCallbacks(const DInputClientUnprepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    unpreCallbacks_.erase(info);
+}
+
+void DistributedInputSourceManager::AddRelayPrepareCallbacks(const DInputClientRelayPrepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    relayPreCallbacks_.insert(info);
+}
+
+void DistributedInputSourceManager::RemoveRelayPrepareCallbacks(const DInputClientRelayPrepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    relayPreCallbacks_.erase(info);
+}
+
+void DistributedInputSourceManager::AddRelayUnPrepareCallbacks(const DInputClientRelayUnprepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    relayUnpreCallbacks_.insert(info);
+}
+
+void DistributedInputSourceManager::RemoveRelayUnPrepareCallbacks(const DInputClientRelayUnprepareInfo &info)
+{
+    std::lock_guard<std::mutex> lock(prepareMutex_);
+    relayUnpreCallbacks_.erase(info);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
