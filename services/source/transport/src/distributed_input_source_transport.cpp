@@ -1107,7 +1107,7 @@ void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const 
     recvNum_ += 1;
     eachLatencyDetails_ += (std::to_string(deltaTime_) + DINPUT_SPLIT_COMMA);
     if (deltaTime_ >= MSG_LATENCY_ALARM_US) {
-        DHLOGW("The RTT time between send req and receive rsp is too long: llu% us");
+        DHLOGW("The RTT time between send req and receive rsp is too long: %llu us", deltaTime_);
     }
 }
 

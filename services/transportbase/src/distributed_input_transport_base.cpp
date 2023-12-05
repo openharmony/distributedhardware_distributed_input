@@ -485,7 +485,7 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
         return;
     }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
-    DHLOGI("HandleSession cmdType %u.", cmdType);
+    DHLOGD("HandleSession cmdType %u.", cmdType);
     if (cmdType < TRANS_MSG_SRC_SINK_SPLIT) {
         if (srcCallback_ == nullptr) {
             DHLOGE("srcCallback is nullptr.");

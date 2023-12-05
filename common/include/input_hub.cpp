@@ -180,7 +180,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
         }
         if (!sharedDHIds_[device->identifier.descriptor]) {
             RecordDeviceChangeStates(device, readBuffer, count);
-            DHLOGE("Not in sharing stat, device descriptor: %s",
+            DHLOGD("Not in sharing stat, device descriptor: %s",
                 GetAnonyString(device->identifier.descriptor).c_str());
             continue;
         }
@@ -204,7 +204,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
 bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 {
     std::string dhName = inputDevice.name;
-    DHLOGI("device name is %s.", dhName.c_str());
+    DHLOGD("device name is %s.", dhName.c_str());
     transform(dhName.begin(), dhName.end(), dhName.begin(), ::tolower);
     if (dhName.find(DH_TOUCH_PAD) == std::string::npos) {
         return false;
@@ -1314,7 +1314,7 @@ void InputHub::RecordChangeEventLog(const RawEvent &event)
             eventType = "other type " + std::to_string(event.type);
             break;
     }
-    DHLOGD("0.E2E-Test Sink collect change event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
+    DHLOGI("0.E2E-Test Sink collect change event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
         "When:%" PRId64 "", eventType.c_str(), event.code, event.value, event.path.c_str(),
         GetAnonyString(event.descriptor).c_str(), event.when);
 }
