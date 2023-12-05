@@ -95,7 +95,7 @@ std::string GetUUIDBySoftBus(const std::string &networkId)
     return (ret == DH_SUCCESS) ? std::string(uuid) : "";
 }
 
-uint64_t GetCurrentTime()
+uint64_t GetCurrentTimeUs()
 {
     constexpr int32_t usOneSecond = 1000 * 1000;
     struct timeval tv;

@@ -41,6 +41,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
     const char DHID_SPLIT = '.';
+    const uint64_t MSG_LATENCY_ALARM_US = 20;
 }
 DistributedInputSourceTransport::~DistributedInputSourceTransport()
 {
@@ -673,7 +674,7 @@ void DistributedInputSourceTransport::StartLatencyCount(const std::string &devic
             recvNum_ = 0;
             eachLatencyDetails_ = "";
         }
-        sendTime_ = GetCurrentTime();
+        sendTime_ = GetCurrentTimeUs();
         LatencyCount(deviceId);
         sendNum_ += 1;
         usleep(INPUT_LATENCY_DELAYTIME_US);
@@ -1101,10 +1102,13 @@ void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const 
         return;
     }
 
-    deltaTime_ = GetCurrentTime() - sendTime_;
+    deltaTime_ = GetCurrentTimeUs() - sendTime_;
     deltaTimeAll_ += deltaTime_;
     recvNum_ += 1;
     eachLatencyDetails_ += (std::to_string(deltaTime_) + DINPUT_SPLIT_COMMA);
+    if (deltaTime_ >= MSG_LATENCY_ALARM_US) {
+        DHLOGW("The RTT time between send req and receive rsp is too long: llu% us");
+    }
 }
 
 void DistributedInputSourceTransport::ReceiveSrcTSrcRelayPrepare(int32_t sessionId, const nlohmann::json &recMsg)

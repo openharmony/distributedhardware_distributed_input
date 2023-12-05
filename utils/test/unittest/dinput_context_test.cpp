@@ -204,7 +204,7 @@ HWTEST_F(DInputContextTest, GetUUIDBySoftBus_001, testing::ext::TestSize.Level1)
 
 HWTEST_F(DInputContextTest, GetCurrentTime_001, testing::ext::TestSize.Level1)
 {
-    uint64_t ret = GetCurrentTime();
+    uint64_t ret = GetCurrentTimeUs();
     EXPECT_NE(0, ret);
 }
 

@@ -199,7 +199,7 @@ int32_t DistributedInputSinkTransport::RespLatency(const int32_t sessionId, std:
         return ERR_DH_INPUT_SERVER_SINK_TRANSPORT_RESP_LATENCY_FAIL;
     }
 
-    DHLOGI("RespLatency sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
+    DHLOGD("RespLatency sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
 
@@ -234,7 +234,7 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessi
     }
     DHLOGI("SendKeyStateNodeMsgBatch sessionId: %d, event size: %d ", sessionId, events.size());
 
-    int64_t currentTimeNs = GetCurrentTime() * 1000LL;
+    int64_t currentTimeNs = GetCurrentTimeUs() * 1000LL;
     std::shared_ptr<nlohmann::json> eventsJsonArr = std::make_shared<nlohmann::json>();
     for (const auto &ev : events) {
         nlohmann::json tmpJson;
