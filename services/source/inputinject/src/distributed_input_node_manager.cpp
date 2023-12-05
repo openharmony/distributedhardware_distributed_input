@@ -471,7 +471,7 @@ void DistributedInputNodeManager::InjectEvent()
     if (ret != 0) {
         DHLOGE("InjectEvent setname failed.");
     }
-    DHLOGI("start");
+    DHLOGD("start");
     while (isInjectThreadRunning_.load()) {
         EventBatch events;
         {
@@ -488,7 +488,7 @@ void DistributedInputNodeManager::InjectEvent()
         DHLOGD("process event, inject queue size: %zu", injectQueue_.size());
         ProcessInjectEvent(events);
     }
-    DHLOGI("end");
+    DHLOGD("end");
 }
 
 void DistributedInputNodeManager::RegisterInjectEventCb(sptr<ISessionStateCallback> callback)

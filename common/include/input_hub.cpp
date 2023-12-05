@@ -717,7 +717,7 @@ int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
             DHLOGD("The device is not support eventKey: %d", eventKey);
             continue;
         }
-        DHLOGI("QueryInputDeviceInfo eventKey: %d", eventKey);
+        DHLOGD("QueryInputDeviceInfo eventKey: %d", eventKey);
         identifier.eventKeys.push_back(eventKey);
     }
     return DH_SUCCESS;

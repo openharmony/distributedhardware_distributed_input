@@ -1078,7 +1078,7 @@ void DistributedInputSourceTransport::NotifyResponseKeyStateBatch(int32_t sessio
 
 void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    DHLOGI("OnBytesReceived cmdType is TRANS_SINK_MSG_BODY_DATA.");
+    DHLOGD("OnBytesReceived cmdType is TRANS_SINK_MSG_BODY_DATA.");
     if (!IsString(recMsg, DINPUT_SOFTBUS_KEY_INPUT_DATA)) {
         DHLOGE("The key is invaild.");
         return;
@@ -1095,7 +1095,7 @@ void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t ses
 
 void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    DHLOGI("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY.");
+    DHLOGD("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY.");
     std::string deviceId = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
     if (deviceId.empty()) {
         DHLOGE("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY, deviceId is error.");
