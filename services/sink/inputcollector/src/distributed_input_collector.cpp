@@ -117,7 +117,7 @@ void DistributedInputCollector::StartCollectEventsThread()
         }
         size_t count = inputHub_->StartCollectInputEvents(mEventBuffer, INPUT_EVENT_BUFFER_SIZE);
         if (count > 0) {
-            DHLOGI("Count: %zu", count);
+            DHLOGD("Count: %zu", count);
         } else {
             continue;
         }

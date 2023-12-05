@@ -346,7 +346,7 @@ void DInputSourceListener::OnReceivedEventRemoteInput(const std::string deviceId
     }
 
     size_t jsonSize = inputData.size();
-    DHLOGI("OnReceivedEventRemoteInput called, deviceId: %s, json size:%d.",
+    DHLOGD("OnReceivedEventRemoteInput called, deviceId: %s, json size:%d.",
         GetAnonyString(deviceId).c_str(), jsonSize);
 
     std::vector<RawEvent> mEventBuffer(jsonSize);

@@ -41,6 +41,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
     const char DHID_SPLIT = '.';
+    const uint64_t MSG_LATENCY_ALARM_US = 20 * 1000;
 }
 DistributedInputSourceTransport::~DistributedInputSourceTransport()
 {
@@ -673,7 +674,7 @@ void DistributedInputSourceTransport::StartLatencyCount(const std::string &devic
             recvNum_ = 0;
             eachLatencyDetails_ = "";
         }
-        sendTime_ = GetCurrentTime();
+        sendTime_ = GetCurrentTimeUs();
         LatencyCount(deviceId);
         sendNum_ += 1;
         usleep(INPUT_LATENCY_DELAYTIME_US);
@@ -1077,7 +1078,7 @@ void DistributedInputSourceTransport::NotifyResponseKeyStateBatch(int32_t sessio
 
 void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    DHLOGI("OnBytesReceived cmdType is TRANS_SINK_MSG_BODY_DATA.");
+    DHLOGD("OnBytesReceived cmdType is TRANS_SINK_MSG_BODY_DATA.");
     if (!IsString(recMsg, DINPUT_SOFTBUS_KEY_INPUT_DATA)) {
         DHLOGE("The key is invaild.");
         return;
@@ -1094,17 +1095,20 @@ void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t ses
 
 void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    DHLOGI("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY.");
+    DHLOGD("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY.");
     std::string deviceId = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
     if (deviceId.empty()) {
         DHLOGE("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY, deviceId is error.");
         return;
     }
 
-    deltaTime_ = GetCurrentTime() - sendTime_;
+    deltaTime_ = GetCurrentTimeUs() - sendTime_;
     deltaTimeAll_ += deltaTime_;
     recvNum_ += 1;
     eachLatencyDetails_ += (std::to_string(deltaTime_) + DINPUT_SPLIT_COMMA);
+    if (deltaTime_ >= MSG_LATENCY_ALARM_US) {
+        DHLOGW("The RTT time between send req and receive rsp is too long: %llu us", deltaTime_);
+    }
 }
 
 void DistributedInputSourceTransport::ReceiveSrcTSrcRelayPrepare(int32_t sessionId, const nlohmann::json &recMsg)
