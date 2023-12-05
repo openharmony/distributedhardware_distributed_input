@@ -41,7 +41,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
     const char DHID_SPLIT = '.';
-    const uint64_t MSG_LATENCY_ALARM_US = 20*1000;
+    const uint64_t MSG_LATENCY_ALARM_US = 20 * 1000;
 }
 DistributedInputSourceTransport::~DistributedInputSourceTransport()
 {
