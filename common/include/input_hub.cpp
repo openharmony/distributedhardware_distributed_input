@@ -107,7 +107,7 @@ bool InputHub::IsInputNodeNoNeedScan(const std::string &path)
     }
 
     if (path.find(MOUSE_NODE_KEY) != std::string::npos) {
-        DHLOGI("Skip mouse node for no permission, path: %s", path.c_str());
+        DHLOGD("Skip mouse node for no permission, path: %s", path.c_str());
         return true;
     }
 
@@ -116,7 +116,7 @@ bool InputHub::IsInputNodeNoNeedScan(const std::string &path)
 
 void InputHub::ScanAndRecordInputDevices()
 {
-    DHLOGI("Scan local input devices.");
+    DHLOGD("Scan local input devices.");
     ScanInputDevices(DEVICE_PATH);
 
     {
@@ -473,12 +473,12 @@ std::vector<InputDevice> InputHub::GetAllInputDevices()
 
 void InputHub::ScanInputDevices(const std::string &dirName)
 {
-    DHLOGI("ScanInputDevices enter, dirName %s.", dirName.c_str());
+    DHLOGD("ScanInputDevices enter, dirName %s.", dirName.c_str());
     std::vector<std::string> inputDevPaths;
     ScanInputDevicesPath(dirName, inputDevPaths);
     for (const auto &tempPath: inputDevPaths) {
         if (IsInputNodeNoNeedScan(tempPath)) {
-            DHLOGI("This input node path should skip. Path: %s", tempPath.c_str());
+            DHLOGD("This input node path should skip. Path: %s", tempPath.c_str());
             continue;
         }
         OpenInputDeviceLocked(tempPath);
@@ -504,7 +504,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     }
 
     std::lock_guard<std::mutex> my_lock(operationMutex_);
-    DHLOGI("Opening device start: %s", devicePath.c_str());
+    DHLOGD("Opening device start: %s", devicePath.c_str());
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
@@ -550,8 +550,7 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     // Get device name.
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE(
-            "Could not get device name for %s", ConvertErrNo().c_str());
+        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
         device->identifier.name = buffer;
@@ -559,6 +558,7 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     DHLOGD("QueryInputDeviceInfo deviceName: %s", buffer);
     // If the device is already a virtual device, don't monitor it.
     if (device->identifier.name.find(VIRTUAL_DEVICE_NAME) != std::string::npos) {
+        DHLOGE("this is a virtual driver, skip it.");
         RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_IS_VIRTUAL_DEVICE;
     }
@@ -566,12 +566,14 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     int driverVersion;
     if (ioctl(fd, EVIOCGVERSION, &driverVersion)) {
         DHLOGE("could not get driver version for %s\n", ConvertErrNo().c_str());
+        RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     // Get device identifier.
     struct input_id inputId;
     if (ioctl(fd, EVIOCGID, &inputId)) {
         DHLOGE("could not get device input id for %s\n", ConvertErrNo().c_str());
+        RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     device->identifier.bus = inputId.bustype;
@@ -1091,11 +1093,11 @@ InputHub::Device* InputHub::GetDeviceByFdLocked(int fd)
 
 InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
 {
-    DHLOGI("GetSupportDeviceByFd fd: %d", fd);
+    DHLOGD("GetSupportDeviceByFd fd: %d", fd);
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device != nullptr && device->fd == fd) {
-            DHLOGI("GetSupportDeviceByFd device fd: %d, path: %s, dhId: %s, classes=0x%x", device->fd,
+            DHLOGD("GetSupportDeviceByFd device fd: %d, path: %s, dhId: %s, classes=0x%x", device->fd,
                 device->path.c_str(), GetAnonyString(device->identifier.descriptor).c_str(), device->classes);
             return device.get();
         }
@@ -1550,7 +1552,7 @@ InputHub::Device::Device(int fd, const std::string &path)
     : next(nullptr), fd(fd), path(path), identifier({}), classes(0), enabled(false),
       isShare(false), isVirtual(fd < 0) {
     // Figure out the kinds of events the device reports.
-    DHLOGE("Ctor Device for get event mask, fd: %d, path: %s", fd, path.c_str());
+    DHLOGI("Ctor Device for get event mask, fd: %d, path: %s", fd, path.c_str());
     ioctl(fd, EVIOCGBIT(0, sizeof(evBitmask)), evBitmask);
     ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBitmask)), keyBitmask);
     ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absBitmask)), absBitmask);
