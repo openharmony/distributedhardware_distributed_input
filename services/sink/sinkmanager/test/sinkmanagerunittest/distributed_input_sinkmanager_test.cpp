@@ -37,7 +37,7 @@ namespace DistributedInput {
 void DistributedInputSinkManagerTest::SetUp()
 {
     sinkManager_ = new DistributedInputSinkManager(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, true);
-
+    sinkManager_->projectWindowListener_ = new DistributedInputSinkManager::ProjectWindowListener(sinkManager_);
     uint64_t tokenId;
     const char *perms[2];
     perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
