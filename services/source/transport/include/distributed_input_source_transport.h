@@ -147,7 +147,7 @@ private:
     std::shared_ptr<DistributedInputSourceTransport::DInputTransbaseSourceListener> statuslistener_;
     std::string mySessionName_ = "";
     std::condition_variable openSessionWaitCond_;
-    uint64_t  deltaTime_ = 0;
+    uint64_t deltaTime_ = 0;
     uint64_t deltaTimeAll_ = 0;
     uint64_t sendTime_ = 0;
     uint32_t sendNum_ = 0;
