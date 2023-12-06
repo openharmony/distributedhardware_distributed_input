@@ -1314,13 +1314,13 @@ void DistributedInputSourceManager::RunRelayUnprepareCallback(const std::string 
 void DistributedInputSourceManager::RunUnprepareCallback(const std::string &devId, const int32_t &status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
-    std::lock_guard<std::mutex> lock(prepareMutex_);
+    std::lock_guard<std::mutex> prepareLock(prepareMutex_);
     for (auto iter = unpreCallbacks_.begin(); iter != unpreCallbacks_.end(); ++iter) {
         if (iter->devId == devId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_UNPREPARE_MSG");
             iter->unpreCallback->OnResult(devId, status);
             unpreCallbacks_.erase(iter);
-            std::lock_guard<std::mutex> lock(whiteListMutex_);
+            std::lock_guard<std::mutex> whiteListLock(whiteListMutex_);
             if (delWhiteListCallbacks_.size() == 0) {
                 DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_UNPREPARE_MSG delWhiteListCallback is null.");
                 return;
