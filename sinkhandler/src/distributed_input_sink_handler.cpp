@@ -42,32 +42,31 @@ DistributedInputSinkHandler::~DistributedInputSinkHandler()
 
 int32_t DistributedInputSinkHandler::InitSink(const std::string &params)
 {
-    DHLOGD("InitSource");
+    DHLOGI("DistributedInputSinkHandler InitSink begin");
     std::unique_lock<std::mutex> lock(proxyMutex_);
-    if (!DInputSAManager::GetInstance().HasDInputSinkProxy()) {
-        sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-        if (!samgr) {
-            DHLOGE("Failed to get system ability mgr.");
-            return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
-        }
-        sptr<LoadDInputSinkCallback> loadCallback(new LoadDInputSinkCallback(params));
-        HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
-            "dinput sink LoadSystemAbility call");
-        int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, loadCallback);
-        if (ret != ERR_OK) {
-            DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
-                   DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, ret);
-            return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
-        }
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (!samgr) {
+        DHLOGE("Failed to get system ability mgr.");
+        return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
+    }
+    sptr<LoadDInputSinkCallback> loadCallback(new LoadDInputSinkCallback(params));
+    HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
+        "dinput sink LoadSystemAbility call");
+    int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, loadCallback);
+    if (ret != ERR_OK) {
+        DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
+               DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, ret);
+        return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
     }
 
     auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(INPUT_LOAD_SA_TIMEOUT_MS),
         [this]() { return (DInputSAManager::GetInstance().HasDInputSinkProxy()); });
     if (!waitStatus) {
-        DHLOGE("dinput load sa timeout.");
+        DHLOGE("dinput load sink sa timeout.");
         return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
     }
 
+    DHLOGI("DistributedInputSinkHandler InitSink end");
     return DH_SUCCESS;
 }
 

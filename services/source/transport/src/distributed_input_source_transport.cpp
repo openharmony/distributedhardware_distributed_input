@@ -651,7 +651,7 @@ int32_t DistributedInputSourceTransport::LatencyCount(const std::string &deviceI
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_LATENCY_FAIL;
     }
 
-    DHLOGI("LatencyCount deviceId:%s, sessionId: %d, smsg:%s.",
+    DHLOGD("LatencyCount deviceId:%s, sessionId: %d, smsg:%s.",
         GetAnonyString(deviceId).c_str(), sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
@@ -1102,7 +1102,14 @@ void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const 
         return;
     }
 
-    deltaTime_ = GetCurrentTimeUs() - sendTime_;
+    uint64_t curTimeUs = GetCurrentTimeUs();
+    if (curTimeUs <= sendTime_) {
+        DHLOGE("Latency time error, currtime is before than send time, curTime: %llu us, sendTime: %llu us",
+            curTimeUs, sendTime_);
+        return;
+    }
+
+    deltaTime_ = curTimeUs - sendTime_;
     deltaTimeAll_ += deltaTime_;
     recvNum_ += 1;
     eachLatencyDetails_ += (std::to_string(deltaTime_) + DINPUT_SPLIT_COMMA);

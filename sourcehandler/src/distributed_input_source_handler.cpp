@@ -41,32 +41,31 @@ DistributedInputSourceHandler::DistributedInputSourceHandler()
 
 int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
 {
-    DHLOGD("InitSource");
+    DHLOGI("DistributedInputSourceHandler InitSource begin");
     std::unique_lock<std::mutex> lock(proxyMutex_);
-    if (!DInputSAManager::GetInstance().HasDInputSourceProxy()) {
-        sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-        if (!samgr) {
-            DHLOGE("Failed to get system ability mgr.");
-            return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
-        }
-        sptr<LoadDInputSourceCallback> loadCallback(new LoadDInputSourceCallback(params));
-        HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
-            "dinput init source sa start.");
-        int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, loadCallback);
-        if (ret != ERR_OK) {
-            DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
-                   DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, ret);
-            return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
-        }
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (!samgr) {
+        DHLOGE("Failed to get system ability mgr.");
+        return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
+    }
+    sptr<LoadDInputSourceCallback> loadCallback(new LoadDInputSourceCallback(params));
+    HisyseventUtil::GetInstance().SysEventWriteBehavior(DINPUT_INIT,
+        "dinput init source sa start.");
+    int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, loadCallback);
+    if (ret != ERR_OK) {
+        DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
+            DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, ret);
+        return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
     }
 
     auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(INPUT_LOAD_SA_TIMEOUT_MS),
         [this]() { return (DInputSAManager::GetInstance().HasDInputSourceProxy()); });
     if (!waitStatus) {
-        DHLOGE("dinput load sa timeout.");
+        DHLOGE("dinput load source sa timeout.");
         return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
     }
 
+    DHLOGI("DistributedInputSourceHandler InitSource end");
     return DH_SUCCESS;
 }
 
