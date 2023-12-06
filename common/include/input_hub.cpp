@@ -414,17 +414,15 @@ void InputHub::GetDeviceHandler()
             continue;
         }
 
-        Device* device = GetDeviceByFdLocked(eventItem.data.fd);
-        if (!device) {
-            DHLOGE(
-                "Received unexpected epoll event 0x%08x for unknown fd %d.",
-                eventItem.events, eventItem.data.fd);
-            continue;
-        }
-
         if (eventItem.events & EPOLLHUP) {
             DHLOGI("Removing device %s due to epoll hang-up event.",
                 device->identifier.name.c_str());
+            Device* device = GetDeviceByFdLocked(eventItem.data.fd);
+            if (!device) {
+                DHLOGE("Received unexpected epoll event 0x%08x for unknown fd %d.",
+                    eventItem.events, eventItem.data.fd);
+                continue;
+            }
             deviceChanged_ = true;
             CloseDeviceLocked(*device);
         }
