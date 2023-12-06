@@ -325,13 +325,7 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_
     DHLOGI("OnSessionOpened, sessionId: %d, result: %d", sessionId, result);
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
     if (result != DH_SUCCESS) {
-        std::string deviceId = GetDevIdBySessionId(sessionId);
-        DHLOGE("session open failed, sessionId: %d, result:%d, deviceId:%s", sessionId, result,
-            GetAnonyString(deviceId).c_str());
-        std::unique_lock<std::mutex> sessionLock(operationMutex_);
-        if (CountSession(deviceId) > 0) {
-            EraseSessionId(deviceId);
-        }
+        OnSessionOpenedError(sessionId, result);
         return DH_SUCCESS;
     }
 
@@ -375,6 +369,18 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, int32_
     }
     DHLOGI("OnSessionOpened finish");
     return DH_SUCCESS;
+}
+
+void DistributedInputTransportBase::OnSessionOpenedError(int32_t sessionId, int32_t result)
+{
+    std::string deviceId = GetDevIdBySessionId(sessionId);
+    DHLOGE("session open failed, sessionId: %d, result:%d, deviceId:%s", sessionId, result,
+        GetAnonyString(deviceId).c_str());
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
+    if (CountSession(deviceId) > 0) {
+        EraseSessionId(deviceId);
+    }
+    return;
 }
 
 void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)

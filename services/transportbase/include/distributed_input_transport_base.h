@@ -67,6 +67,7 @@ public:
 private:
     DistributedInputTransportBase() = default;
     ~DistributedInputTransportBase();
+    void OnSessionOpenedError(int32_t sessionId, int32_t result);
     int32_t CheckDeviceSessionState(const std::string &remoteDevId);
     bool CheckRecivedData(const std::string &message);
     void HandleSession(int32_t sessionId, const std::string &message);
