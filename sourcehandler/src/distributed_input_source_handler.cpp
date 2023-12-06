@@ -54,7 +54,7 @@ int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
     int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, loadCallback);
     if (ret != ERR_OK) {
         DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
-                DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, ret);
+            DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, ret);
         return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
     }
 
