@@ -651,7 +651,7 @@ int32_t DistributedInputSourceTransport::LatencyCount(const std::string &deviceI
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_LATENCY_FAIL;
     }
 
-    DHLOGI("LatencyCount deviceId:%s, sessionId: %d, smsg:%s.",
+    DHLOGD("LatencyCount deviceId:%s, sessionId: %d, smsg:%s.",
         GetAnonyString(deviceId).c_str(), sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
