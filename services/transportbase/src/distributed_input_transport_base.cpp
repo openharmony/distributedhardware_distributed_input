@@ -380,7 +380,6 @@ void DistributedInputTransportBase::OnSessionOpenedError(int32_t sessionId, int3
     if (CountSession(deviceId) > 0) {
         EraseSessionId(deviceId);
     }
-    return;
 }
 
 void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId)
