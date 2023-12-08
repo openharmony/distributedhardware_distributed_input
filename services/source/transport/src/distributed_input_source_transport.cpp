@@ -328,7 +328,7 @@ int32_t DistributedInputSourceTransport::StopRemoteInputDhids(int32_t srcTsrcSeI
     DHLOGI("StopRemoteInputDhids srcTsrcSeId:%d, sinkSessionId:%d.", srcTsrcSeId, sinkSessionId);
     std::vector<std::string> dhIdsVec = SplitDhIdString(dhids);
     ResetKeyboardKeyState(deviceId, dhIdsVec);
-    ResetTouchPadBtnMouseState(deviceId, dhIdsVec);
+    DistributedInputInject::GetInstance().ResetTouchPadBtnMouseState(deviceId, dhIdsVec);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID_FOR_REL;
@@ -776,7 +776,7 @@ int32_t DistributedInputSourceTransport::StopRemoteInput(const std::string &devi
     }
     DHLOGI("StopRemoteInput sessionId:%d.", sessionId);
     ResetKeyboardKeyState(deviceId, dhids);
-    ResetTouchPadBtnMouseState(deviceId, dhids);
+    DistributedInputInject::GetInstance().ResetTouchPadBtnMouseState(deviceId, dhids);
 
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SOURCE_MSG_STOP_DHID;

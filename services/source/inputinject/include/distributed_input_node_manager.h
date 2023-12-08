@@ -115,7 +115,7 @@ private:
     void SetPathForVirDev(const DhUniqueID &dhUniqueId, const std::string &devicePath);
     void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
-    void RecordEvents(const RawEvent &event, const VirtualDevice* device);
+    void RecordEvents(const RawEvent &event, VirtualDevice* device);
     bool IsTouchPad(const std::string &deviceName);
 
     void AddBtnMouseDownState(int32_t fd);

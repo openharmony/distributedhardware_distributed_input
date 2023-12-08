@@ -544,7 +544,7 @@ void DistributedInputNodeManager::ClearCachedState(int32_t fd)
     downTouchPadBtnMouseFds_.erase(fd);
 }
 
-void DistributedInputNodeManager::RecordEvents(const RawEvent &event, const VirtualDevice* device)
+void DistributedInputNodeManager::RecordEvents(const RawEvent &event, VirtualDevice* device)
 {
     bool isTouchEvent = false;
     if (((device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH)) &&
@@ -566,12 +566,12 @@ void DistributedInputNodeManager::RecordEvents(const RawEvent &event, const Virt
 
     // Deal btn mouse state
     if (event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_DOWN_STATE) {
-        AddBtnMouseDownState(event);
+        AddBtnMouseDownState(device->GetDeviceFd());
         RecordChangeEventLog(event);
     }
 
     if (event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE) {
-        RemoveBtnMouseDownState(event);
+        RemoveBtnMouseDownState(device->GetDeviceFd());
         RecordChangeEventLog(event);
     }
 }
@@ -617,7 +617,7 @@ void DistributedInputNodeManager::ResetTouchPadBtnMouseState(const std::string &
     const std::vector<std::string> &dhIds)
 {
     VirtualDevice* device = nullptr;
-    bool isTouchPad = false;
+    bool isTouchPadDevice = false;
     for (auto const &dhId : dhIds) {
         if (GetDevice(deviceId, dhId, device) < 0 || device == nullptr) {
             DHLOGE("could not find the device");
@@ -627,10 +627,10 @@ void DistributedInputNodeManager::ResetTouchPadBtnMouseState(const std::string &
         if (((device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH_MT) ||
             (device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH)) &&
             IsTouchPad(device->GetDeviceName())) {
-            isTouchPad = true;
+            isTouchPadDevice = true;
         }
 
-        if (!isTouchPad) {
+        if (!isTouchPadDevice) {
             continue;
         }
 
@@ -672,32 +672,32 @@ void DistributedInputNodeManager::SimulateTouchPadUpState(const std::string &dev
     DHLOGI("Sinmulate touch pad UP state events, deviceId: %s, dhId: %s, fd: %d, dx: %d, dy: %d",
         deviceId.c_str(), dhId.c_str(), fd, dx, dy);
     int32_t simTrackingId = 0xffffffff;
-    input_event touchTrackingIdEv1 = { EV_ABS, ABS_MT_TRACKING_ID, simTrackingId };
-    input_event btnToolFingerDownEv = { EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE };
-    input_event btnToolDoubleTapUpEv = { EV_KEY, BTN_TOOL_DOUBLETAP, KEY_UP_STATE };
-    input_event mscEv1 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
-    input_event sycReportEv1 = { EV_SYN, SYN_REPORT, 0x0 };
+    input_event touchTrackingIdEv1 = { .type = EV_ABS, .code = ABS_MT_TRACKING_ID, .value = simTrackingId };
+    input_event btnToolFingerDownEv = { .type = EV_KEY, .code = BTN_TOOL_FINGER, .value = KEY_DOWN_STATE };
+    input_event btnToolDoubleTapUpEv = { .type = EV_KEY, .code = BTN_TOOL_DOUBLETAP, .value = KEY_UP_STATE };
+    input_event mscEv1 = { .type = EV_MSC, .code = MSC_TIMESTAMP, .value = 0x0 };
+    input_event sycReportEv1 = { .type = EV_SYN, .code = SYN_REPORT, .value = 0x0 };
 
-    input_event absMtPosX1 = { EV_ABS, ABS_MT_POSITION_X, dx };
-    input_event absMtPosY1 = { EV_ABS, ABS_MT_POSITION_Y, dy };
-    input_event absPosX1 = { EV_ABS, ABS_X, dx };
-    input_event absPosY1 = { EV_ABS, ABS_Y, dy };
-    input_event mscEv2 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
-    input_event sycReportEv2 = { EV_SYN, SYN_REPORT, 0x0 };
+    input_event absMtPosX1 = { .type = EV_ABS, .code = ABS_MT_POSITION_X, .value = dx };
+    input_event absMtPosY1 = { .type = EV_ABS, .code = ABS_MT_POSITION_Y, .value = dy };
+    input_event absPosX1 = { .type = EV_ABS, .code = ABS_X, .value = dx };
+    input_event absPosY1 = { .type = EV_ABS, .code = ABS_Y, .value = dy };
+    input_event mscEv2 = { .type = EV_MSC, .code = MSC_TIMESTAMP, .value = 0x0 };
+    input_event sycReportEv2 = { .type = EV_SYN, .code = SYN_REPORT, .value = 0x0 };
 
-    input_event absMtPosX2 = { EV_ABS, ABS_MT_POSITION_X, dx };
-    input_event absMtPosY2 = { EV_ABS, ABS_MT_POSITION_Y, dy };
-    input_event btnMouseUpEv = { EV_KEY, BTN_MOUSE, KEY_UP_STATE };
-    input_event absPosX2 = { EV_ABS, ABS_X, dx };
-    input_event absPosY2 = { EV_ABS, ABS_Y, dy };
-    input_event mscEv3 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
-    input_event sycReportEv3 = { EV_SYN, SYN_REPORT, 0x0 };
+    input_event absMtPosX2 = { .type = EV_ABS, .code = ABS_MT_POSITION_X, .value = dx };
+    input_event absMtPosY2 = { .type = EV_ABS, .code = ABS_MT_POSITION_Y, .value = dy };
+    input_event btnMouseUpEv = { .type = EV_KEY, .code = BTN_MOUSE, .value = KEY_UP_STATE };
+    input_event absPosX2 = { .type = EV_ABS, .code = ABS_X, .value = dx };
+    input_event absPosY2 = { .type = EV_ABS, .code = ABS_Y, .value = dy };
+    input_event mscEv3 = { .type = EV_MSC, .code = MSC_TIMESTAMP, .value = 0x0 };
+    input_event sycReportEv3 = { .type = EV_SYN, .code = SYN_REPORT, .value = 0x0 };
 
-    input_event touchTrackingIdEv2 = { EV_ABS, ABS_MT_TRACKING_ID, simTrackingId };
-    input_event btnTouchUpEv = { EV_KEY, BTN_TOUCH, KEY_UP_STATE };
-    input_event btnToolFingerUpEv = { EV_KEY, BTN_TOOL_FINGER, KEY_UP_STATE };
-    input_event mscEv4 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
-    input_event sycReportEv4 = { EV_SYN, SYN_REPORT, 0x0 };
+    input_event touchTrackingIdEv2 = { .type = EV_ABS, .code = ABS_MT_TRACKING_ID, .value = simTrackingId };
+    input_event btnTouchUpEv = { .type = EV_KEY, .code = BTN_TOUCH, .value = KEY_UP_STATE };
+    input_event btnToolFingerUpEv = { .type = EV_KEY, .code = BTN_TOOL_FINGER, .value = KEY_UP_STATE };
+    input_event mscEv4 = { .type = EV_MSC, .code = MSC_TIMESTAMP, .value = 0x0 };
+    input_event sycReportEv4 = { .type = EV_SYN, .code = SYN_REPORT, .value = 0x0 };
 
     std::vector<input_event> simEvents = {
         touchTrackingIdEv1, btnToolFingerDownEv, btnToolDoubleTapUpEv, mscEv1, sycReportEv1,
