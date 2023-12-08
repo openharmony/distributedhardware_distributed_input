@@ -204,7 +204,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
 bool InputHub::IsTouchPad(Device *device)
 {
     return ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) &&
-        IsTouchPad(device->identifier));
+        IsTouchPad(device->identifier);
 }
 
 bool InputHub::IsTouchPad(const InputDevice &inputDevice)
