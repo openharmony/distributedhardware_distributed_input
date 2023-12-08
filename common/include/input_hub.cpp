@@ -201,6 +201,12 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
     return event - buffer;
 }
 
+bool InputHub::IsTouchPad(Device *device)
+{
+    return ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) &&
+        IsTouchPad(device->identifier));
+}
+
 bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 {
     std::string dhName = inputDevice.name;
@@ -254,6 +260,13 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
         if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
             DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
         }
+
+        if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
+            !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
+                DHLOGI("Find touchpad UP state that not down effective at sink side, dhId: %s",
+                    event.descriptor.c_str());
+                DInputState::GetInstance().SimulateTouchPadUpState(event.descriptor, event);
+            }
         DHLOGD("RecordDeviceChangeStates end.");
     }
 }
