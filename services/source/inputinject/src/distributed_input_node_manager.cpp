@@ -513,6 +513,202 @@ void DistributedInputNodeManager::RunInjectEventCallback(const std::string &dhId
     SessionStateCallback_->OnResult(dhId, DINPUT_INJECT_EVENT_FAIL);
 }
 
+bool DistributedInputNodeManager::IsTouchPad(const std::string &deviceName)
+{
+    DHLOGD("device name is %s.", deviceName.c_str());
+    transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::tolower);
+    if (deviceName.find(DH_TOUCH_PAD) == std::string::npos) {
+        return false;
+    }
+    return true;
+}
+
+void DistributedInputNodeManager::AddBtnMouseDownState(int32_t fd)
+{
+    std::lock_guard<std::mutex> mapLock(downBtnMouseFdsMtx_);
+    downTouchPadBtnMouseFds_.insert(fd);
+}
+
+void DistributedInputNodeManager::RemoveBtnMouseDownState(int32_t fd)
+{
+    std::lock_guard<std::mutex> mapLock(downBtnMouseFdsMtx_);
+    downTouchPadBtnMouseFds_.erase(fd);
+}
+
+void DistributedInputNodeManager::ClearCachedState(int32_t fd)
+{
+    std::lock_guard<std::mutex> lock(absPosMtx_);
+    absPositionsMap_.erase(fd);
+
+    std::lock_guard<std::mutex> mapLock(downBtnMouseFdsMtx_);
+    downTouchPadBtnMouseFds_.erase(fd);
+}
+
+void DistributedInputNodeManager::RecordEvents(const RawEvent &event, const VirtualDevice* device)
+{
+    bool isTouchEvent = false;
+    if (((device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH)) &&
+        IsTouchPad(device->GetDeviceName())) {
+        isTouchEvent = true;
+    }
+
+    if (!isTouchEvent) {
+        return;
+    }
+
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
+        RefreshABSPosition(device->GetDeviceFd(), event.value, -1);
+    }
+
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
+        RefreshABSPosition(device->GetDeviceFd(), -1, event.value);
+    }
+
+    // Deal btn mouse state
+    if (event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_DOWN_STATE) {
+        AddBtnMouseDownState(event);
+        RecordChangeEventLog(event);
+    }
+
+    if (event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE) {
+        RemoveBtnMouseDownState(event);
+        RecordChangeEventLog(event);
+    }
+}
+
+void DistributedInputNodeManager::RecordChangeEventLog(const RawEvent &event)
+{
+    std::string eventType = "";
+    switch (event.type) {
+        case EV_KEY:
+            eventType = "EV_KEY";
+            break;
+        case EV_REL:
+            eventType = "EV_REL";
+            break;
+        case EV_ABS:
+            eventType = "EV_ABS";
+            break;
+        case EV_SYN:
+            eventType = "EV_SYN";
+            break;
+        default:
+            eventType = "other type " + std::to_string(event.type);
+            break;
+    }
+    DHLOGI("6.E2E-Test Sink collect change event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
+        "When:%" PRId64 "", eventType.c_str(), event.code, event.value, event.path.c_str(),
+        GetAnonyString(event.descriptor).c_str(), event.when);
+}
+
+void DistributedInputNodeManager::RefreshABSPosition(int32_t fd, int32_t absX, int32_t absY)
+{
+    std::lock_guard<std::mutex> lock(absPosMtx_);
+    if (absX != -1) {
+        absPositionsMap_[fd].first = absX;
+    }
+
+    if (absY != -1) {
+        absPositionsMap_[fd].second = absY;
+    }
+}
+
+void DistributedInputNodeManager::ResetTouchPadBtnMouseState(const std::string &deviceId,
+    const std::vector<std::string> &dhIds)
+{
+    VirtualDevice* device = nullptr;
+    bool isTouchPad = false;
+    for (auto const &dhId : dhIds) {
+        if (GetDevice(deviceId, dhId, device) < 0 || device == nullptr) {
+            DHLOGE("could not find the device");
+            continue;
+        }
+
+        if (((device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH_MT) ||
+            (device->GetClasses() & INPUT_DEVICE_CLASS_TOUCH)) &&
+            IsTouchPad(device->GetDeviceName())) {
+            isTouchPad = true;
+        }
+
+        if (!isTouchPad) {
+            continue;
+        }
+
+        int32_t fd = device->GetDeviceFd();
+
+        DHLOGI("Find the touchpad stopped, try reset it's state, deviceId: %s, dhId: %s, fd: %d",
+            deviceId.c_str(), dhId.c_str(), fd);
+        int32_t dx = -1;
+        int32_t dy = -1;
+        {
+            std::lock_guard<std::mutex> lock(downBtnMouseFdsMtx_);
+            if (downTouchPadBtnMouseFds_.count(fd) == 0) {
+                continue;
+            } else {
+                downTouchPadBtnMouseFds_.erase(fd);
+                DHLOGI("Find this touchpad fd should reset, fd: %d", fd);
+            }
+        }
+        
+        {
+            std::lock_guard<std::mutex> lock(absPosMtx_);
+            if (absPositionsMap_.count(fd) == 0) {
+                DHLOGE("Find touch pad need reset, but CAN NOT find dx,dy");
+                dx = 0;
+                dy = 0;
+            } else {
+                dx = absPositionsMap_[fd].first;
+                dy = absPositionsMap_[fd].second;
+                absPositionsMap_.erase(fd);
+            }
+        }
+        SimulateTouchPadUpState(deviceId, dhId, fd, dx, dy);
+    }
+}
+
+void DistributedInputNodeManager::SimulateTouchPadUpState(const std::string &deviceId, const std::string &dhId,
+    int32_t fd, int32_t dx, int32_t dy)
+{
+    DHLOGI("Sinmulate touch pad UP state events, deviceId: %s, dhId: %s, fd: %d, dx: %d, dy: %d",
+        deviceId.c_str(), dhId.c_str(), fd, dx, dy);
+    int32_t simTrackingId = 0xffffffff;
+    input_event touchTrackingIdEv1 = { EV_ABS, ABS_MT_TRACKING_ID, simTrackingId };
+    input_event btnToolFingerDownEv = { EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE };
+    input_event btnToolDoubleTapUpEv = { EV_KEY, BTN_TOOL_DOUBLETAP, KEY_UP_STATE };
+    input_event mscEv1 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
+    input_event sycReportEv1 = { EV_SYN, SYN_REPORT, 0x0 };
+
+    input_event absMtPosX1 = { EV_ABS, ABS_MT_POSITION_X, dx };
+    input_event absMtPosY1 = { EV_ABS, ABS_MT_POSITION_Y, dy };
+    input_event absPosX1 = { EV_ABS, ABS_X, dx };
+    input_event absPosY1 = { EV_ABS, ABS_Y, dy };
+    input_event mscEv2 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
+    input_event sycReportEv2 = { EV_SYN, SYN_REPORT, 0x0 };
+
+    input_event absMtPosX2 = { EV_ABS, ABS_MT_POSITION_X, dx };
+    input_event absMtPosY2 = { EV_ABS, ABS_MT_POSITION_Y, dy };
+    input_event btnMouseUpEv = { EV_KEY, BTN_MOUSE, KEY_UP_STATE };
+    input_event absPosX2 = { EV_ABS, ABS_X, dx };
+    input_event absPosY2 = { EV_ABS, ABS_Y, dy };
+    input_event mscEv3 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
+    input_event sycReportEv3 = { EV_SYN, SYN_REPORT, 0x0 };
+
+    input_event touchTrackingIdEv2 = { EV_ABS, ABS_MT_TRACKING_ID, simTrackingId };
+    input_event btnTouchUpEv = { EV_KEY, BTN_TOUCH, KEY_UP_STATE };
+    input_event btnToolFingerUpEv = { EV_KEY, BTN_TOOL_FINGER, KEY_UP_STATE };
+    input_event mscEv4 = { EV_MSC, MSC_TIMESTAMP, 0x0 };
+    input_event sycReportEv4 = { EV_SYN, SYN_REPORT, 0x0 };
+
+    std::vector<input_event> simEvents = {
+        touchTrackingIdEv1, btnToolFingerDownEv, btnToolDoubleTapUpEv, mscEv1, sycReportEv1,
+        absMtPosX1, absMtPosY1, absPosX1, absPosY1, mscEv2, sycReportEv2, 
+        absMtPosX2, absMtPosY2, btnMouseUpEv, absPosX2, absPosY2, mscEv3, sycReportEv3,
+        touchTrackingIdEv2, btnTouchUpEv, btnToolFingerUpEv, mscEv4, sycReportEv4 };
+    for (auto &event : simEvents) {
+        WriteEventToDevice(fd, event);
+    }
+}
+
 void DistributedInputNodeManager::ProcessInjectEvent(const EventBatch &events)
 {
     std::string deviceId = events.first;
@@ -532,6 +728,7 @@ void DistributedInputNodeManager::ProcessInjectEvent(const EventBatch &events)
             return;
         }
         if (device != nullptr) {
+            RecordEvents(rawEvent, device);
             device->InjectInputEvent(event);
         }
     }

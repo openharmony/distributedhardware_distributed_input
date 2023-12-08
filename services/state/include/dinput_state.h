@@ -16,7 +16,6 @@
 #ifndef DISTRIBUTED_INPUT_STATE_BASE_H
 #define DISTRIBUTED_INPUT_STATE_BASE_H
 
-#include <atomic>
 #include <map>
 #include <mutex>
 #include <string>
@@ -65,16 +64,6 @@ public:
 
     void RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY);
     std::pair<int32_t, int32_t> GetAndClearABSPosition(const std::string &dhId);
-
-    void SimulateTouchPadUpState(const std::string &dhId, const struct RawEvent &event);
-    /**
-     * @brief check is one device in down state
-     *
-     * @param dhId the dhid
-     * @return true in down state
-     * @return false NOT in down state
-     */
-    bool IsDhIdDown(const std::string &dhId);
 private:
     DInputState() = default;
     ~DInputState();
@@ -93,7 +82,6 @@ private:
     std::mutex absPosMtx_;
     // Record abs x/y of touchpad
     std::unordered_map<std::string, std::pair<int32_t, int32_t>> absPositionsMap_;
-    std::atomic<int32_t> lastSessionId_ {0};
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -50,6 +50,7 @@ public:
     void NotifyNodeMgrScanVirNode(const std::string &devId, const std::string &dhId);
     void GetVirtualKeyboardPaths(const std::string &devId, const std::vector<std::string> &dhIds,
         std::vector<std::string> &virKeyboardPaths);
+    void ResetTouchPadBtnMouseState(const std::string &deviceId, const std::vector<std::string> &dhIds);
 private:
     DistributedInputInject();
     ~DistributedInputInject();
