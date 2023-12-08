@@ -513,7 +513,7 @@ void DistributedInputNodeManager::RunInjectEventCallback(const std::string &dhId
     SessionStateCallback_->OnResult(dhId, DINPUT_INJECT_EVENT_FAIL);
 }
 
-bool DistributedInputNodeManager::IsTouchPad(const std::string &deviceName)
+bool DistributedInputNodeManager::IsTouchPad(std::string deviceName)
 {
     DHLOGD("device name is %s.", deviceName.c_str());
     transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::tolower);

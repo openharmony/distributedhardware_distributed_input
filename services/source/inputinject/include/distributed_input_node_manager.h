@@ -116,7 +116,7 @@ private:
     void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
     void RecordEvents(const RawEvent &event, VirtualDevice* device);
-    bool IsTouchPad(const std::string &deviceName);
+    bool IsTouchPad(std::string deviceName);
 
     void AddBtnMouseDownState(int32_t fd);
     void RemoveBtnMouseDownState(int32_t fd);
