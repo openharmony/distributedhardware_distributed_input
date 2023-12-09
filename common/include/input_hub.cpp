@@ -201,6 +201,11 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
     return event - buffer;
 }
 
+bool InputHub::IsCuror(Device *device)
+{
+    return device->classes & INPUT_DEVICE_CLASS_CURSOR;
+}
+
 bool InputHub::IsTouchPad(Device *device)
 {
     return ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) &&
@@ -218,6 +223,53 @@ bool InputHub::IsTouchPad(const InputDevice &inputDevice)
     return true;
 }
 
+void InputHub::MatchAndDealEvent(const RawEvent &event)
+{
+    // Deal key state
+    if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
+        DInputState::GetInstance().AddKeyDownState(event);
+        RecordChangeEventLog(event);
+    }
+
+    if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
+        DInputState::GetInstance().RemoveKeyDownState(event);
+        RecordChangeEventLog(event);
+    }
+
+    if (event.type == EV_KEY && event.value == KEY_REPEAT) {
+        DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
+    }
+
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
+        DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
+    }
+
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
+        DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
+    }
+
+    if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
+        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
+        DHLOGI("Find touchpad BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
+            event.descriptor.c_str());
+        DInputState::GetInstance().SimulateTouchPadBtnMouseUpState(event.descriptor, event);
+    }
+
+    if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_TOUCH && event.value == KEY_UP_STATE &&
+        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
+        DHLOGI("Find touchpad BTN_TOUCH UP state that not down effective at sink side, dhId: %s",
+            event.descriptor.c_str());
+        DInputState::GetInstance().SimulateTouchPadBtnTouchUpState(event.descriptor, event);
+    }
+
+    if (IsCuror(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
+        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
+        DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
+            event.descriptor.c_str());
+        DInputState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
+    }
+}
+
 void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count)
 {
     DHLOGD("RecordDeviceChangeStates enter.");
@@ -229,46 +281,17 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
     }
 
     for (size_t i = 0; i < count; i++) {
-        RawEvent event;
         const struct input_event& iev = readBuffer[i];
+        RawEvent event;
         event.when = ProcessEventTimestamp(iev);
         event.type = iev.type;
         event.code = iev.code;
         event.value = iev.value;
         event.path = device->path;
         event.descriptor = isTouchEvent ? touchDescriptor : device->identifier.descriptor;
-
-        // Deal key state
-        if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
-            DInputState::GetInstance().AddKeyDownState(event);
-            RecordChangeEventLog(event);
-        }
-
-        if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
-            DInputState::GetInstance().RemoveKeyDownState(event);
-            RecordChangeEventLog(event);
-        }
-
-        if (event.type == EV_KEY && event.value == KEY_REPEAT) {
-            DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
-        }
-
-        if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
-            DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
-        }
-
-        if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
-            DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
-        }
-
-        if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
-            !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
-            DHLOGI("Find touchpad UP state that not down effective at sink side, dhId: %s",
-                event.descriptor.c_str());
-            DInputState::GetInstance().SimulateTouchPadUpState(event.descriptor, event);
-        }
-        DHLOGD("RecordDeviceChangeStates end.");
+        MatchAndDealEvent(event);
     }
+    DHLOGD("RecordDeviceChangeStates end.");
 }
 
 size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],

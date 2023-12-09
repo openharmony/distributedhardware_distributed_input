@@ -168,12 +168,12 @@ void DInputState::SimulateBtnTouchEvent(const int32_t sessionId, const std::stri
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(sessionId, simEvents);
 }
 
-void DInputState::SimulateTouchPadUpState(const std::string &dhId, const struct RawEvent &event)
+void DInputState::SimulateTouchPadBtnMouseUpState(const std::string &dhId, const struct RawEvent &event)
 {
     std::pair<int32_t, int32_t> touchPos = GetAndClearABSPosition(dhId);
     int32_t dx = touchPos.first;
     int32_t dy = touchPos.second;
-    DHLOGI("Sinmulate touch pad UP state to source, dhId: %s, dx: %d, dy: %d", dhId.c_str(), dx, dy);
+    DHLOGI("Sinmulate touch pad BTN_MOUSE UP state to source, dhId: %s, dx: %d, dy: %d", dhId.c_str(), dx, dy);
     int32_t simTrackingId = GetRandomInt32();
     RawEvent touchTrackingIdEv1 = { event.when, EV_ABS, ABS_MT_TRACKING_ID, simTrackingId, dhId, event.path };
     RawEvent btnToolFingerDownEv = { event.when, EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE, dhId, event.path };
@@ -208,6 +208,32 @@ void DInputState::SimulateTouchPadUpState(const std::string &dhId, const struct 
         absMtSlot, absMtPosX1, absMtPosY1, absPosX1, absPosY1, mscEv2, sycReportEv2,
         absMtPosX2, absMtPosY2, btnMouseUpEv, absPosX2, absPosY2, mscEv3, sycReportEv3,
         touchTrackingIdEv2, btnTouchUpEv, btnToolFingerUpEv, mscEv4, sycReportEv4 };
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(lastSessionId_, simEvents);
+}
+
+void DInputState::SimulateTouchPadBtnTouchUpState(const std::string &dhId, const struct RawEvent &event)
+{
+    DHLOGI("Sinmulate touch pad BTN_TOUCH UP state to source, dhId: %s", dhId.c_str());
+    int32_t simTrackingId = GetRandomInt32();
+    RawEvent touchTrackingIdEv = { event.when, EV_ABS, ABS_MT_TRACKING_ID, simTrackingId, dhId, event.path };
+    RawEvent btnTouchUpEv = { event.when, EV_KEY, BTN_TOUCH, KEY_UP_STATE, dhId, event.path };
+    RawEvent btnToolFingerUpEv = { event.when, EV_KEY, BTN_TOOL_FINGER, KEY_UP_STATE, dhId, event.path };
+    RawEvent mscEv = { event.when, EV_MSC, MSC_TIMESTAMP, 0x0, dhId, event.path };
+    RawEvent sycReportEv = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    std::vector<RawEvent> simEvents = { touchTrackingIdEv, btnTouchUpEv, btnToolFingerUpEv, mscEv, sycReportEv };
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(lastSessionId_, simEvents);
+}
+
+void DInputState::SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event)
+{
+    DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %s", dhId.c_str());
+    int32_t scanId = GetRandomInt32();
+    RawEvent mscScanEv = { event.when, EV_MSC, MSC_SCAN, scanId, dhId, event.path };
+    RawEvent btnMouseUpEv = { event.when, EV_KEY, BTN_MOUSE, KEY_UP_STATE, dhId, event.path };
+    RawEvent sycReportEv = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    std::vector<RawEvent> simEvents = { mscScanEv, btnMouseUpEv, sycReportEv };
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(lastSessionId_, simEvents);
 }
 

@@ -150,6 +150,7 @@ private:
 
     bool ContainsNonZeroByte(const uint8_t *array, uint32_t startIndex, uint32_t endIndex);
     int64_t ProcessEventTimestamp(const input_event &event);
+    bool IsCuror(Device *device);
     bool IsTouchPad(const InputDevice &inputDevice);
     bool IsTouchPad(Device *device);
 
@@ -179,7 +180,7 @@ private:
      * Record Mouse/KeyBoard/TouchPad state such as key down.
      */
     void RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count);
-
+    void MatchAndDealEvent(const RawEvent &event);
     /*
      * Scan the input device node and save info.
      */
