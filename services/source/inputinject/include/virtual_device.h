@@ -50,7 +50,6 @@ public:
 
     int32_t GetDeviceFd();
     uint16_t GetDeviceType();
-    std::string GetDeviceName();
 
 private:
     int32_t fd_ = -1;

@@ -68,7 +68,6 @@ public:
     int32_t GetVirtualTouchScreenFd();
 
     void ProcessInjectEvent(const EventBatch &events);
-    void ResetTouchPadBtnMouseState(const std::string &deviceId, const std::vector<std::string> &dhIds);
 
     /**
      * @brief Get the Virtual Keyboard Paths By Dh Ids object
@@ -115,18 +114,6 @@ private:
     void SetPathForVirDev(const DhUniqueID &dhUniqueId, const std::string &devicePath);
     void RunInjectEventCallback(const std::string &dhId, const uint32_t injectEvent);
 
-    void RecordEvents(const RawEvent &event, VirtualDevice* device);
-    bool IsTouchPad(std::string deviceName);
-
-    void AddBtnMouseDownState(int32_t fd);
-    void RemoveBtnMouseDownState(int32_t fd);
-    void RecordChangeEventLog(const RawEvent &event);
-    void RefreshABSPosition(int32_t fd, int32_t absX, int32_t absY);
-    void ClearCachedState(int32_t fd);
-
-    void SimulateTouchPadUpState(const std::string &deviceId, const std::string &dhId,
-        int32_t fd, int32_t dx, int32_t dy);
-
     /* the key is {networkId, dhId}, and the value is virtualDevice */
     std::map<DhUniqueID, std::unique_ptr<VirtualDevice>> virtualDeviceMap_;
     std::mutex virtualDeviceMapMutex_;
@@ -142,13 +129,6 @@ private:
     std::once_flag callOnceFlag_;
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;
     sptr<ISessionStateCallback> SessionStateCallback_;
-
-    std::mutex absPosMtx_;
-    // Record abs x/y of touchpad, {fd, {dx, dy}}
-    std::unordered_map<int32_t, std::pair<int32_t, int32_t>> absPositionsMap_;
-
-    std::mutex downBtnMouseFdsMtx_;
-    std::set<int32_t> downTouchPadBtnMouseFds_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -220,17 +220,6 @@ void DistributedInputInject::NotifyNodeMgrScanVirNode(const std::string &devId, 
     }
     inputNodeManager_->NotifyNodeMgrScanVirNode(devId, dhId);
 }
-
-void DistributedInputInject::ResetTouchPadBtnMouseState(const std::string &deviceId,
-    const std::vector<std::string> &dhIds)
-{
-    std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
-    if (inputNodeManager_ == nullptr) {
-        DHLOGE("ResetTouchPadBtnMouseState inputNodeManager is nullptr");
-        return;
-    }
-    inputNodeManager_->ResetTouchPadBtnMouseState(deviceId, dhIds);
-}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

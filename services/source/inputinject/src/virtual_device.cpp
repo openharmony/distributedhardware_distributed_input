@@ -211,11 +211,6 @@ uint16_t VirtualDevice::GetClasses()
     return classes_;
 }
 
-std::string VirtualDevice::GetDeviceName()
-{
-    return deviceName_;
-}
-
 void VirtualDevice::RecordEventLog(const input_event &event)
 {
     std::string eventType = "";

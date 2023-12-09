@@ -70,6 +70,7 @@ int32_t DInputState::RecordDhIds(const std::vector<std::string> &dhIds, DhIdStat
     if (state == DhIdState::THROUGH_OUT) {
         SimulateEventInjectToSrc(sessionId, dhIds);
     }
+    lastSessionId_ = sessionId;
     return DH_SUCCESS;
 }
 
@@ -167,6 +168,49 @@ void DInputState::SimulateBtnTouchEvent(const int32_t sessionId, const std::stri
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(sessionId, simEvents);
 }
 
+void DInputState::SimulateTouchPadUpState(const std::string &dhId, const struct RawEvent &event)
+{
+    std::pair<int32_t, int32_t> touchPos = GetAndClearABSPosition(dhId);
+    int32_t dx = touchPos.first;
+    int32_t dy = touchPos.second;
+    DHLOGI("Sinmulate touch pad UP state to source, dhId: %s, dx: %d, dy: %d", dhId.c_str(), dx, dy);
+    int32_t simTrackingId = GetRandomInt32();
+    RawEvent touchTrackingIdEv1 = { event.when, EV_ABS, ABS_MT_TRACKING_ID, simTrackingId, dhId, event.path };
+    RawEvent btnToolFingerDownEv = { event.when, EV_KEY, BTN_TOOL_FINGER, KEY_DOWN_STATE, dhId, event.path };
+    RawEvent btnToolDoubleTapUpEv = { event.when, EV_KEY, BTN_TOOL_DOUBLETAP, KEY_UP_STATE, dhId, event.path };
+    RawEvent mscEv1 = { event.when, EV_MSC, MSC_TIMESTAMP, 0x0, dhId, event.path };
+    RawEvent sycReportEv1 = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    RawEvent absMtSlot = { event.when, EV_ABS, ABS_MT_SLOT, 0x0, dhId, event.path };
+    RawEvent absMtPosX1 = { event.when, EV_ABS, ABS_MT_POSITION_X, dx, dhId, event.path };
+    RawEvent absMtPosY1 = { event.when, EV_ABS, ABS_MT_POSITION_Y, dy, dhId, event.path };
+    RawEvent absPosX1 = { event.when, EV_ABS, ABS_X, dx, dhId, event.path };
+    RawEvent absPosY1 = { event.when, EV_ABS, ABS_Y, dy, dhId, event.path };
+    RawEvent mscEv2 = { event.when, EV_MSC, MSC_TIMESTAMP, 0x0, dhId, event.path };
+    RawEvent sycReportEv2 = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    RawEvent absMtPosX2 = { event.when, EV_ABS, ABS_MT_POSITION_X, dx, dhId, event.path };
+    RawEvent absMtPosY2 = { event.when, EV_ABS, ABS_MT_POSITION_Y, dy, dhId, event.path };
+    RawEvent btnMouseUpEv = { event.when, EV_KEY, BTN_MOUSE, KEY_UP_STATE, dhId, event.path };
+    RawEvent absPosX2 = { event.when, EV_ABS, ABS_X, dx, dhId, event.path };
+    RawEvent absPosY2 = { event.when, EV_ABS, ABS_Y, dy, dhId, event.path };
+    RawEvent mscEv3 = { event.when, EV_MSC, MSC_TIMESTAMP, 0x0, dhId, event.path };
+    RawEvent sycReportEv3 = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    RawEvent touchTrackingIdEv2 = { event.when, EV_ABS, ABS_MT_TRACKING_ID, simTrackingId, dhId, event.path };
+    RawEvent btnTouchUpEv = { event.when, EV_KEY, BTN_TOUCH, KEY_UP_STATE, dhId, event.path };
+    RawEvent btnToolFingerUpEv = { event.when, EV_KEY, BTN_TOOL_FINGER, KEY_UP_STATE, dhId, event.path };
+    RawEvent mscEv4 = { event.when, EV_MSC, MSC_TIMESTAMP, 0x0, dhId, event.path };
+    RawEvent sycReportEv4 = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
+
+    std::vector<RawEvent> simEvents = {
+        touchTrackingIdEv1, btnToolFingerDownEv, btnToolDoubleTapUpEv, mscEv1, sycReportEv1,
+        absMtSlot, absMtPosX1, absMtPosY1, absPosX1, absPosY1, mscEv2, sycReportEv2,
+        absMtPosX2, absMtPosY2, btnMouseUpEv, absPosX2, absPosY2, mscEv3, sycReportEv3,
+        touchTrackingIdEv2, btnTouchUpEv, btnToolFingerUpEv, mscEv4, sycReportEv4 };
+    DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(lastSessionId_, simEvents);
+}
+
 void DInputState::SimulateNormalEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event)
 {
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
@@ -198,6 +242,13 @@ std::pair<int32_t, int32_t> DInputState::GetAndClearABSPosition(const std::strin
     absPos = absPositionsMap_[dhId];
     absPositionsMap_.erase(dhId);
     return absPos;
+}
+
+bool DInputState::IsDhIdDown(const std::string &dhId)
+{
+    std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
+    auto iter = keyDownStateMap_.find(dhId);
+    return iter != keyDownStateMap_.end();
 }
 
 void DInputState::AddKeyDownState(struct RawEvent event)

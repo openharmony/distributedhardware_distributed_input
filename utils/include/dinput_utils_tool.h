@@ -58,7 +58,6 @@ int OpenInputDeviceFdByPath(const std::string &devicePath);
 std::string ConvertErrNo();
 void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &vecInputDevPath);
 
-void WriteEventToDevice(const int fd, const input_event &event);
 /**
  * If we pressed the sink keyboard while mouse pass throuth from source to sink, we need reset the virtual keyboard
  * key states at the source side.
