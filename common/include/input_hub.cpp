@@ -223,7 +223,7 @@ bool InputHub::IsTouchPad(const InputDevice &inputDevice)
     return true;
 }
 
-void InputHub::MatchAndDealEvent(const RawEvent &event)
+void InputHub::MatchAndDealEvent(Device *device, const RawEvent &event)
 {
     // Deal key state
     if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
@@ -289,7 +289,7 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
         event.value = iev.value;
         event.path = device->path;
         event.descriptor = isTouchEvent ? touchDescriptor : device->identifier.descriptor;
-        MatchAndDealEvent(event);
+        MatchAndDealEvent(device, event);
     }
     DHLOGD("RecordDeviceChangeStates end.");
 }

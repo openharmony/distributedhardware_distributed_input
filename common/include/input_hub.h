@@ -180,7 +180,7 @@ private:
      * Record Mouse/KeyBoard/TouchPad state such as key down.
      */
     void RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count);
-    void MatchAndDealEvent(const RawEvent &event);
+    void MatchAndDealEvent(Device *device, const RawEvent &event);
     /*
      * Scan the input device node and save info.
      */
