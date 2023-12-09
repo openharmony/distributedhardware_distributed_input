@@ -65,7 +65,9 @@ public:
     void RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY);
     std::pair<int32_t, int32_t> GetAndClearABSPosition(const std::string &dhId);
 
-    void SimulateTouchPadUpState(const std::string &dhId, const struct RawEvent &event);
+    void SimulateTouchPadBtnMouseUpState(const std::string &dhId, const struct RawEvent &event);
+    void SimulateTouchPadBtnTouchUpState(const std::string &dhId, const struct RawEvent &event);
+    void SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event);
     /**
      * @brief check is one device in down state
      *
