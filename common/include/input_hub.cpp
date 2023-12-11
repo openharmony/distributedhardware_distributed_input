@@ -107,7 +107,6 @@ bool InputHub::IsInputNodeNoNeedScan(const std::string &path)
     }
 
     if (path.find(MOUSE_NODE_KEY) != std::string::npos) {
-        DHLOGD("Skip mouse node for no permission, path: %s", path.c_str());
         return true;
     }
 
@@ -116,7 +115,6 @@ bool InputHub::IsInputNodeNoNeedScan(const std::string &path)
 
 void InputHub::ScanAndRecordInputDevices()
 {
-    DHLOGD("Scan local input devices.");
     ScanInputDevices(DEVICE_PATH);
 
     {
@@ -506,12 +504,10 @@ std::vector<InputDevice> InputHub::GetAllInputDevices()
 
 void InputHub::ScanInputDevices(const std::string &dirName)
 {
-    DHLOGD("ScanInputDevices enter, dirName %s.", dirName.c_str());
     std::vector<std::string> inputDevPaths;
     ScanInputDevicesPath(dirName, inputDevPaths);
     for (const auto &tempPath: inputDevPaths) {
         if (IsInputNodeNoNeedScan(tempPath)) {
-            DHLOGD("This input node path should skip. Path: %s", tempPath.c_str());
             continue;
         }
         OpenInputDeviceLocked(tempPath);

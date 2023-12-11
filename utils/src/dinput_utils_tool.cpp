@@ -351,7 +351,6 @@ void ScanInputDevicesPath(const std::string &dirName, std::vector<std::string> &
             continue;
         }
         std::string tmpDevName = dirName + "/" + std::string(de->d_name);
-        DHLOGD("Find input node path: %s", tmpDevName.c_str());
         vecInputDevPath.push_back(tmpDevName);
     }
     closedir(dir);
