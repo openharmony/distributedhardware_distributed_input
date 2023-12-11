@@ -213,7 +213,6 @@ bool InputHub::IsTouchPad(Device *device)
 bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 {
     std::string dhName = inputDevice.name;
-    DHLOGD("device name is %s.", dhName.c_str());
     transform(dhName.begin(), dhName.end(), dhName.begin(), ::tolower);
     if (dhName.find(DH_TOUCH_PAD) == std::string::npos) {
         return false;
@@ -270,7 +269,6 @@ void InputHub::MatchAndDealEvent(Device *device, const RawEvent &event)
 
 void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count)
 {
-    DHLOGD("RecordDeviceChangeStates enter.");
     bool isTouchEvent = false;
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
         if (!IsTouchPad(device->identifier)) {
@@ -289,7 +287,6 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
         event.descriptor = isTouchEvent ? touchDescriptor : device->identifier.descriptor;
         MatchAndDealEvent(device, event);
     }
-    DHLOGD("RecordDeviceChangeStates end.");
 }
 
 size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
@@ -1115,7 +1112,6 @@ InputHub::Device* InputHub::GetDeviceByFdLocked(int fd)
 
 InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
 {
-    DHLOGD("GetSupportDeviceByFd fd: %d", fd);
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device != nullptr && device->fd == fd) {

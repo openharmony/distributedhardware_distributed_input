@@ -69,7 +69,6 @@ DistributedInputSinkTransport &DistributedInputSinkTransport::GetInstance()
 
 void DistributedInputSinkTransport::DInputSinkEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
-    DHLOGD("ProcessEvent");
     EHandlerMsgType eventId = static_cast<EHandlerMsgType>(event->GetInnerEventId());
     switch (eventId) {
         case EHandlerMsgType::DINPUT_SINK_EVENT_HANDLER_MSG: {
