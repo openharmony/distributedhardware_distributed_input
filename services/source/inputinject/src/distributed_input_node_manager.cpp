@@ -485,10 +485,8 @@ void DistributedInputNodeManager::InjectEvent()
             injectQueue_.pop();
         }
 
-        DHLOGD("process event, inject queue size: %zu", injectQueue_.size());
         ProcessInjectEvent(events);
     }
-    DHLOGD("end");
 }
 
 void DistributedInputNodeManager::RegisterInjectEventCb(sptr<ISessionStateCallback> callback)

@@ -467,7 +467,6 @@ void DistributedInputTransportBase::OnBytesReceived(int32_t sessionId, const voi
     }
 
     std::string message(buf, buf + dataLen);
-    DHLOGD("OnBytesReceived sessionId: %d, message:%s.", sessionId, SetAnonyId(message).c_str());
     HandleSession(sessionId, message);
 
     free(buf);

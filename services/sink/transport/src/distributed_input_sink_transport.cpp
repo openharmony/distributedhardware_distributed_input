@@ -198,7 +198,6 @@ int32_t DistributedInputSinkTransport::RespLatency(const int32_t sessionId, std:
         return ERR_DH_INPUT_SERVER_SINK_TRANSPORT_RESP_LATENCY_FAIL;
     }
 
-    DHLOGD("RespLatency sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
 

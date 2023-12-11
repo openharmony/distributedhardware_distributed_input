@@ -651,8 +651,6 @@ int32_t DistributedInputSourceTransport::LatencyCount(const std::string &deviceI
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_LATENCY_FAIL;
     }
 
-    DHLOGD("LatencyCount deviceId:%s, sessionId: %d, smsg:%s.",
-        GetAnonyString(deviceId).c_str(), sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
 
@@ -662,7 +660,6 @@ void DistributedInputSourceTransport::StartLatencyCount(const std::string &devic
     if (ret != 0) {
         DHLOGE("StartLatencyCount setname failed.");
     }
-    DHLOGI("start");
     while (isLatencyThreadRunning_.load()) {
         if (sendNum_ >= INPUT_LATENCY_DELAY_TIMES) {
             uint64_t latency = (uint64_t)(deltaTimeAll_ / 2 / INPUT_LATENCY_DELAY_TIMES);
@@ -679,7 +676,6 @@ void DistributedInputSourceTransport::StartLatencyCount(const std::string &devic
         sendNum_ += 1;
         usleep(INPUT_LATENCY_DELAYTIME_US);
     }
-    DHLOGI("end");
 }
 
 void DistributedInputSourceTransport::StartLatencyThread(const std::string &deviceId)
@@ -1095,7 +1091,6 @@ void DistributedInputSourceTransport::NotifyReceivedEventRemoteInput(int32_t ses
 
 void DistributedInputSourceTransport::CalculateLatency(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    DHLOGD("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY.");
     std::string deviceId = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
     if (deviceId.empty()) {
         DHLOGE("OnBytesReceived cmdType is TRANS_SINK_MSG_LATENCY, deviceId is error.");

@@ -182,8 +182,6 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
                 GetAnonyString(device->identifier.descriptor).c_str());
             continue;
         }
-        DHLOGD("shared device dhId: %s, name: %s", GetAnonyString(device->identifier.descriptor).c_str(),
-            device->identifier.name.c_str());
         if (eventItem.events & EPOLLIN) {
             event += CollectEvent(event, capacity, device, readBuffer, count);
 
@@ -1115,8 +1113,6 @@ InputHub::Device* InputHub::GetSupportDeviceByFd(int fd)
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device != nullptr && device->fd == fd) {
-            DHLOGD("GetSupportDeviceByFd device fd: %d, path: %s, dhId: %s, classes=0x%x", device->fd,
-                device->path.c_str(), GetAnonyString(device->identifier.descriptor).c_str(), device->classes);
             return device.get();
         }
     }
