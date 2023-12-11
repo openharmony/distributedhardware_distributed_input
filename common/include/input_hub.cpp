@@ -756,7 +756,7 @@ int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
         DHLOGE("The device doesn't has EV_ABS type!");
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    DHLOGI("The device has abs info, devName: %s, dhId: %s!", identifier.name.c_str(), dentifier.descriptor.c_str());
+    DHLOGI("The device has abs info, devName: %s, dhId: %s!", identifier.name.c_str(), identifier.descriptor.c_str());
     for (uint32_t absType = 0; absType < ABS_CNT; absType++) {
         if (!libevdev_has_event_code(dev, EV_ABS, absType)) {
             DHLOGD("The device is not support absType: %d", absType);
