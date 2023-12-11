@@ -730,7 +730,6 @@ void InputHub::GetEventTypes(struct libevdev *dev, InputDevice &identifier)
             DHLOGD("The device is not support eventType: %d", eventType);
             continue;
         }
-        DHLOGI("QueryInputDeviceInfo eventType: %d", eventType);
         identifier.eventTypes.push_back(eventType);
     }
 }
@@ -746,7 +745,6 @@ int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
             DHLOGD("The device is not support eventKey: %d", eventKey);
             continue;
         }
-        DHLOGD("QueryInputDeviceInfo eventKey: %d", eventKey);
         identifier.eventKeys.push_back(eventKey);
     }
     return DH_SUCCESS;
@@ -758,22 +756,18 @@ int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
         DHLOGE("The device doesn't has EV_ABS type!");
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    DHLOGI("The device has abs info, devName: %s, dhId: %s!", identifier.name.c_str(),
-        GetAnonyString(identifier.descriptor).c_str());
+    DHLOGI("The device has abs info, devName: %s, dhId: %s!", identifier.name.c_str(), dentifier.descriptor);
     for (uint32_t absType = 0; absType < ABS_CNT; absType++) {
         if (!libevdev_has_event_code(dev, EV_ABS, absType)) {
             DHLOGD("The device is not support absType: %d", absType);
             continue;
         }
-        DHLOGI("QueryInputDeviceInfo abs type: %d", absType);
         identifier.absTypes.push_back(absType);
         const struct input_absinfo *abs = libevdev_get_abs_info(dev, absType);
         if (abs == nullptr) {
             DHLOGE("absInfo is nullptr!");
             continue;
         }
-        DHLOGI("QueryInputDeviceInfo abs info value: %d, min: %d, max: %d, fuzz: %d, flat: %d, res: %d", abs->value,
-            abs->minimum, abs->maximum, abs->fuzz, abs->flat, abs->resolution);
         identifier.absInfos[absType].push_back(abs->value);
         identifier.absInfos[absType].push_back(abs->minimum);
         identifier.absInfos[absType].push_back(abs->maximum);
@@ -792,10 +786,9 @@ int32_t InputHub::GetRELTypes(struct libevdev *dev, InputDevice &identifier)
     }
     for (uint32_t code = 0; code < REL_CNT; code++) {
         if (!libevdev_has_event_code(dev, EV_REL, code)) {
-            DHLOGD("The device is not support eventCode: %d", code);
+            DHLOGD("The device is not support rel code: %d", code);
             continue;
         }
-        DHLOGI("QueryInputDeviceInfo rel types: %d", code);
         identifier.relTypes.push_back(code);
     }
     return DH_SUCCESS;
