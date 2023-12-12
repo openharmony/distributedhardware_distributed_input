@@ -69,7 +69,6 @@ DistributedInputSinkTransport &DistributedInputSinkTransport::GetInstance()
 
 void DistributedInputSinkTransport::DInputSinkEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
-    DHLOGD("ProcessEvent");
     EHandlerMsgType eventId = static_cast<EHandlerMsgType>(event->GetInnerEventId());
     switch (eventId) {
         case EHandlerMsgType::DINPUT_SINK_EVENT_HANDLER_MSG: {
@@ -199,7 +198,6 @@ int32_t DistributedInputSinkTransport::RespLatency(const int32_t sessionId, std:
         return ERR_DH_INPUT_SERVER_SINK_TRANSPORT_RESP_LATENCY_FAIL;
     }
 
-    DHLOGD("RespLatency sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
 }
 

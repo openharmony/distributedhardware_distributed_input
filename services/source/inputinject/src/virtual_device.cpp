@@ -173,15 +173,11 @@ bool VirtualDevice::SetUp(const InputDevice &inputDevice, const std::string &dev
 
 bool VirtualDevice::InjectInputEvent(const input_event &event)
 {
-    DHLOGI("InjectInputEvent %d", fd_);
-
     if (write(fd_, &event, sizeof(event)) < static_cast<ssize_t>(sizeof(event))) {
         DHLOGE("could not inject event, removed? (fd: %d", fd_);
         return false;
     }
     RecordEventLog(event);
-    DHLOGI("InjectInputEvent end\n");
-
     return true;
 }
 

@@ -449,7 +449,6 @@ bool DistributedInputTransportBase::CheckRecivedData(const std::string &message)
 
 void DistributedInputTransportBase::OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen)
 {
-    DHLOGD("OnBytesReceived, sessionId: %d, dataLen:%d", sessionId, dataLen);
     if (sessionId < 0 || data == nullptr || dataLen <= 0) {
         DHLOGE("OnBytesReceived param check failed");
         return;
@@ -468,11 +467,9 @@ void DistributedInputTransportBase::OnBytesReceived(int32_t sessionId, const voi
     }
 
     std::string message(buf, buf + dataLen);
-    DHLOGD("OnBytesReceived message:%s.", SetAnonyId(message).c_str());
     HandleSession(sessionId, message);
 
     free(buf);
-    DHLOGD("OnBytesReceived completed");
     return;
 }
 
@@ -491,13 +488,11 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
         return;
     }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
-    DHLOGD("HandleSession cmdType %u.", cmdType);
     if (cmdType < TRANS_MSG_SRC_SINK_SPLIT) {
         if (srcCallback_ == nullptr) {
             DHLOGE("srcCallback is nullptr.");
             return;
         }
-        DHLOGD("HandleSession to source.");
         srcCallback_->HandleSessionData(sessionId, message);
         return;
     }
@@ -506,14 +501,12 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
             DHLOGE("sinkCallback is nullptr.");
             return;
         }
-        DHLOGD("HandleSession to sink.");
         sinkCallback_->HandleSessionData(sessionId, message);
     }
 }
 
 int32_t DistributedInputTransportBase::SendMsg(int32_t sessionId, std::string &message)
 {
-    DHLOGD("start SendMsg");
     if (message.size() > MSG_MAX_SIZE) {
         DHLOGE("SendMessage error: message.size() > MSG_MAX_SIZE");
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE;
