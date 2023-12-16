@@ -29,7 +29,7 @@ void DistributedInputCollectorTest::SetUp()
 
 void DistributedInputCollectorTest::TearDown()
 {
-    DistributedInputCollector::GetInstance().Release();
+    DistributedInputCollector::GetInstance().StopCollectionThread();
 }
 
 void DistributedInputCollectorTest::SetUpTestCase()
@@ -54,7 +54,7 @@ void DistributedInputCollectorTest::DInputSinkCollectorEventHandler::ProcessEven
 HWTEST_F(DistributedInputCollectorTest, Init01, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AppExecFwk::EventHandler> eventHandler_ = nullptr;
-    int32_t ret = DistributedInputCollector::GetInstance().Init(eventHandler_);
+    int32_t ret = DistributedInputCollector::GetInstance().StartCollectionThread(eventHandler_);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SINK_COLLECTOR_INIT_FAIL, ret);
 }
 
@@ -64,7 +64,7 @@ HWTEST_F(DistributedInputCollectorTest, Init02, testing::ext::TestSize.Level1)
     std::shared_ptr<AppExecFwk::EventHandler> eventHandler_ =
         std::make_shared<DistributedInputCollectorTest::DInputSinkCollectorEventHandler>(runner);
 
-    int32_t ret = DistributedInputCollector::GetInstance().Init(eventHandler_);
+    int32_t ret = DistributedInputCollector::GetInstance().StartCollectionThread(eventHandler_);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 

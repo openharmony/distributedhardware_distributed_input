@@ -532,7 +532,6 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
         DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
-        RecordSkipDevicePath(devicePath);
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
 
@@ -1560,6 +1559,13 @@ void InputHub::ClearDeviceStates()
 {
     DHLOGI("Clear Device state");
     DInputState::GetInstance().ClearDeviceStates();
+}
+
+void InputHub::ClearSkipDevicePaths()
+{
+    DHLOGI("Clear Skip device path");
+    std::lock_guard<std::mutex> lock(skipDevicePathsMutex_);
+    skipDevicePaths_.clear();
 }
 
 InputHub::Device::Device(int fd, const std::string &path)

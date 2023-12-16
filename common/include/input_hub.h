@@ -101,6 +101,7 @@ public:
     void CheckTargetKeyState(const InputHub::Device *dev, const unsigned long *keyState, const unsigned long len);
     void SavePressedKeyState(const Device *dev, int32_t keyCode);
     void ClearDeviceStates();
+    void ClearSkipDevicePaths();
 private:
     int32_t Initialize();
     int32_t Release();
