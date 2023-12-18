@@ -111,6 +111,13 @@ public:
         DistributedInputSinkManager *sinkManagerObj_;
     };
 
+    class PluginStartListener : public PublisherListenerStub {
+    public:
+        explicit PluginStartListener() = default;
+        ~PluginStartListener() override;
+        void OnMessage(const DHTopic topic, const std::string &message) override;
+    };
+
     class DScreenSinkSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
         DScreenSinkSvrRecipient(const std::string &srcDevId, const uint64_t srcWinId);
@@ -179,6 +186,7 @@ private:
     bool InitAuto();
     DInputDeviceType inputTypes_;
     sptr<ProjectWindowListener> projectWindowListener_ = nullptr;
+    sptr<PluginStartListener> pluginStartListener_ = nullptr;
     std::set<std::string> sharingDhIds_;
     std::map<int32_t, std::set<std::string>> sharingDhIdsMap_;
     void StoreStartDhids(int32_t sessionId, const std::vector<std::string> &dhIds);

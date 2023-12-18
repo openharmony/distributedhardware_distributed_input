@@ -41,8 +41,8 @@ public:
     // PreInit for get the local input devices basic info.
     // Collect all the local input basic info cost too much time(200+ ms).
     void PreInit();
-    int32_t Init(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler);
-    void Release();
+    int32_t StartCollectionThread(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler);
+    void StopCollectionThread();
     AffectDhIds SetSharingTypes(bool enabled, const uint32_t &inputType);
     AffectDhIds SetSharingDhIds(bool enabled, std::vector<std::string> dhIds);
     void GetMouseNodePath(const std::vector<std::string> &dhIds, std::string &mouseNodePath, std::string &dhid);
@@ -54,6 +54,7 @@ public:
     void ReportDhIdSharingState(const AffectDhIds &dhIds);
     void GetDeviceInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &deviceInfo);
     void ResetSpecEventStatus();
+    void ClearSkipDevicePaths();
 
 private:
     DistributedInputCollector();

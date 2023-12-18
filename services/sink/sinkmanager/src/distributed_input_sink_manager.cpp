@@ -58,6 +58,7 @@ DistributedInputSinkManager::~DistributedInputSinkManager()
 {
     DHLOGI("DistributedInputSinkManager dtor!");
     projectWindowListener_ = nullptr;
+    pluginStartListener_ = nullptr;
 }
 
 DistributedInputSinkManager::DInputSinkMgrListener::DInputSinkMgrListener(DistributedInputSinkManager *manager)
@@ -132,7 +133,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_ONPREPARE;
     std::string smsg = "";
-    int32_t ret = DistributedInputCollector::GetInstance().Init(
+    int32_t ret = DistributedInputCollector::GetInstance().StartCollectionThread(
         DistributedInputSinkTransport::GetInstance().GetEventHandler());
     if (ret != DH_SUCCESS) {
         DHLOGE("DInputSinkListener init InputCollector error.");
@@ -172,7 +173,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayPrepareRemoteInput(
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_ON_RELAY_PREPARE;
     jsonStr[DINPUT_SOFTBUS_KEY_SESSION_ID] = toSrcSessionId;
     std::string smsg = "";
-    int ret = DistributedInputCollector::GetInstance().Init(
+    int ret = DistributedInputCollector::GetInstance().StartCollectionThread(
         DistributedInputSinkTransport::GetInstance().GetEventHandler());
     if (ret != DH_SUCCESS) {
         DHLOGE("DInputSinkListener init InputCollector error.");
@@ -631,7 +632,8 @@ int32_t DistributedInputSinkManager::Init()
     }
     projectWindowListener_ = new ProjectWindowListener(this);
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, projectWindowListener_);
-
+    pluginStartListener_ = new PluginStartListener();
+    dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_PHY_DEV_PLUGIN, pluginStartListener_);
     DistributedInputCollector::GetInstance().PreInit();
 
     return DH_SUCCESS;
@@ -652,13 +654,17 @@ int32_t DistributedInputSinkManager::Release()
     // notify callback servertype
     SetStartTransFlag(DInputServerType::NULL_SERVER_TYPE);
     // Release input collect resource
-    DistributedInputCollector::GetInstance().Release();
+    DistributedInputCollector::GetInstance().StopCollectionThread();
 
     serviceRunningState_ = ServiceSinkRunningState::STATE_NOT_START;
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr && projectWindowListener_ != nullptr) {
         DHLOGI("UnPublish ProjectWindowListener");
         dhFwkKit->UnregisterPublisherListener(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, projectWindowListener_);
+    }
+    if (dhFwkKit != nullptr && pluginStartListener_ != nullptr) {
+        DHLOGI("UnPublish PluginStartListener");
+        dhFwkKit->UnregisterPublisherListener(DHTopic::TOPIC_PHY_DEV_PLUGIN, pluginStartListener_);
     }
     if (dhFwkKit != nullptr) {
         DHLOGD("Disable low Latency!");
@@ -858,6 +864,26 @@ uint32_t DistributedInputSinkManager::ProjectWindowListener::GetScreenHeight()
         return DEFAULT_VALUE;
     }
     return screen_->GetHeight();
+}
+
+DistributedInputSinkManager::PluginStartListener::~PluginStartListener()
+{
+    DHLOGI("PluginStartListener dtor!");
+}
+
+void DistributedInputSinkManager::PluginStartListener::OnMessage(const DHTopic topic,
+    const std::string &message)
+{
+    DHLOGI("PluginStartListener OnMessage!");
+    if (topic != DHTopic::TOPIC_PHY_DEV_PLUGIN) {
+        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        return;
+    }
+    if (message.empty()) {
+        DHLOGE("this message is empty");
+        return;
+    }
+    DistributedInputCollector::GetInstance().ClearSkipDevicePaths();
 }
 
 DistributedInputSinkManager::DScreenSinkSvrRecipient::DScreenSinkSvrRecipient(const std::string &srcDevId,

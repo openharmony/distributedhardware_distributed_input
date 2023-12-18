@@ -59,7 +59,7 @@ void DistributedInputCollector::PreInit()
     inputHub_->RecordDeviceStates();
 }
 
-int32_t DistributedInputCollector::Init(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler)
+int32_t DistributedInputCollector::StartCollectionThread(std::shared_ptr<AppExecFwk::EventHandler> sinkHandler)
 {
     sinkHandler_ = sinkHandler;
     if (sinkHandler_ == nullptr || inputHub_ == nullptr) {
@@ -201,7 +201,7 @@ void DistributedInputCollector::ReportDhIdSharingState(const AffectDhIds &dhIds)
     }
 }
 
-void DistributedInputCollector::Release()
+void DistributedInputCollector::StopCollectionThread()
 {
     StopCollectEventsThread();
 }
@@ -256,6 +256,15 @@ void DistributedInputCollector::GetDeviceInfoByType(const uint32_t inputTypes, s
         return;
     }
     inputHub_->GetDevicesInfoByType(inputTypes, deviceInfo);
+}
+
+void DistributedInputCollector::ClearSkipDevicePaths()
+{
+    if (inputHub_ == nullptr) {
+        DHLOGE("inputHub is nullptr!");
+        return;
+    }
+    inputHub_->ClearSkipDevicePaths();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
