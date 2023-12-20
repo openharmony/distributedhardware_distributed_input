@@ -31,6 +31,10 @@
 #include "securec.h"
 #include "single_instance.h"
 
+#include "socket.h"
+
+#include "softbus_bus_center.h"
+
 #include "dinput_sink_manager_callback.h"
 #include "dinput_source_manager_callback.h"
 #include "dinput_transbase_source_callback.h"
@@ -46,6 +50,7 @@ public:
     int32_t Init();
     int32_t StartSession(const std::string &remoteDevId);
     void StopSession(const std::string &remoteDevId);
+    void StopAllSession();
 
     void RegisterSrcHandleSessionCallback(std::shared_ptr<DInputTransbaseSourceCallback> callback);
     void RegisterSinkHandleSessionCallback(std::shared_ptr<DInputTransbaseSinkCallback> callback);
@@ -53,8 +58,8 @@ public:
     void RegisterSinkManagerCallback(std::shared_ptr<DInputSinkManagerCallback> callback);
     void RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
     void UnregisterSessionStateCb();
-    int32_t OnSessionOpened(int32_t sessionId, int32_t result);
-    void OnSessionClosed(int32_t sessionId);
+    int32_t OnSessionOpened(int32_t sessionId, PeerSocketInfo info);
+    void OnSessionClosed(int32_t sessionId, ShutdownReason reason);
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen);
 
     int32_t GetCurrentSessionId();
@@ -67,21 +72,23 @@ public:
 private:
     DistributedInputTransportBase() = default;
     ~DistributedInputTransportBase();
-    void OnSessionOpenedError(int32_t sessionId, int32_t result);
     int32_t CheckDeviceSessionState(const std::string &remoteDevId);
     bool CheckRecivedData(const std::string &message);
     void HandleSession(int32_t sessionId, const std::string &message);
     void Release();
     void RunSessionStateCallback(const std::string &remoteDevId, const uint32_t sessionState);
 
+    int32_t CreateServerSocket();
+    int32_t CreateClientSocket(const std::string &remoteDevId);
+
 private:
     std::atomic<bool> isSessSerCreateFlag_ = false;
+    std::atomic<int32_t> localServerSocket_;
     std::mutex sessSerOperMutex_;
     std::mutex operationMutex_;
     std::string remoteDeviceId_;
     std::map<std::string, int32_t> remoteDevSessionMap_;
     std::map<std::string, bool> channelStatusMap_;
-    std::condition_variable openSessionWaitCond_;
     std::string localSessionName_ = "";
     int32_t sessionId_ = 0;
 

@@ -29,7 +29,6 @@
 #include "dinput_softbus_define.h"
 #include "dinput_utils_tool.h"
 #include "hidumper.h"
-#include "session.h"
 #include "softbus_bus_center.h"
 #include "xcollie/watchdog.h"
 
@@ -53,7 +52,6 @@ DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_(
 DistributedInputSinkTransport::~DistributedInputSinkTransport()
 {
     DHLOGI("DistributedInputSinkTransport dtor.");
-    (void)RemoveSessionServer(DINPUT_PKG_NAME.c_str(), mySessionName_.c_str());
 }
 
 DistributedInputSinkTransport::DInputSinkEventHandler::DInputSinkEventHandler(
@@ -550,13 +548,7 @@ void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::str
 
 void DistributedInputSinkTransport::CloseAllSession()
 {
-    std::vector<int32_t> vecSession = DistributedInputSinkSwitch::GetInstance().GetAllSessionId();
-    DHLOGI("CloseAllSession session vector size is %d", vecSession.size());
-    for (size_t kIndex = 0; kIndex < vecSession.size(); ++kIndex) {
-        CloseSession(vecSession[kIndex]);
-        DHLOGI("CloseAllSession [%d] sessionid is %s", kIndex, GetAnonyInt32(vecSession[kIndex]).c_str());
-    }
-
+    DistributedInputTransportBase::GetInstance().StopAllSession();
     // clear session data
     DistributedInputSinkSwitch::GetInstance().InitSwitch();
 }

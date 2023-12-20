@@ -62,7 +62,6 @@ ohos_unittest("distributed_input_utils_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004100",
-    "COMPILE_TEST_MODE",
   ]
 
   deps = [
