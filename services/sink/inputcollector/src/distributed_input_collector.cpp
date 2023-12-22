@@ -116,7 +116,7 @@ void DistributedInputCollector::StartCollectEventsThread()
             return;
         }
         size_t count = inputHub_->StartCollectInputEvents(mEventBuffer, INPUT_EVENT_BUFFER_SIZE);
-        if (count <= 0) {
+        if (count == 0) {
             continue;
         }
 
