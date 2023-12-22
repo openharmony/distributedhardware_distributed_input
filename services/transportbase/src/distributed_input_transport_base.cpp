@@ -373,7 +373,7 @@ void DistributedInputTransportBase::EraseSessionId(const std::string &remoteDevI
     remoteDevSessionMap_.erase(remoteDevId);
 }
 
-int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
+int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, const PeerSocketInfo &info)
 {
     DHLOGI("OnSessionOpened, socket: %d, peerSocketName: %s, peerNetworkId: %s, peerPkgName: %s",
         sessionId, info.name, info.networkId, info.pkgName);

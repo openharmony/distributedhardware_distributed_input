@@ -32,7 +32,6 @@
 #include "single_instance.h"
 
 #include "socket.h"
-
 #include "softbus_bus_center.h"
 
 #include "dinput_sink_manager_callback.h"
@@ -58,7 +57,7 @@ public:
     void RegisterSinkManagerCallback(std::shared_ptr<DInputSinkManagerCallback> callback);
     void RegisterSessionStateCb(sptr<ISessionStateCallback> callback);
     void UnregisterSessionStateCb();
-    int32_t OnSessionOpened(int32_t sessionId, PeerSocketInfo info);
+    int32_t OnSessionOpened(int32_t sessionId, const PeerSocketInfo &info);
     void OnSessionClosed(int32_t sessionId, ShutdownReason reason);
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen);
 
