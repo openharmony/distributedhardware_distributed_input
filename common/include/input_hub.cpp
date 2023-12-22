@@ -221,27 +221,7 @@ bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 void InputHub::MatchAndDealEvent(Device *device, const RawEvent &event)
 {
     // Deal key state
-    if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
-        DInputState::GetInstance().AddKeyDownState(event);
-        RecordChangeEventLog(event);
-    }
-
-    if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
-        DInputState::GetInstance().RemoveKeyDownState(event);
-        RecordChangeEventLog(event);
-    }
-
-    if (event.type == EV_KEY && event.value == KEY_REPEAT) {
-        DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
-    }
-
-    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
-        DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
-    }
-
-    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
-        DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
-    }
+    DealKeyEvent(event);
 
     if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
         !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
@@ -262,6 +242,27 @@ void InputHub::MatchAndDealEvent(Device *device, const RawEvent &event)
         DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
             event.descriptor.c_str());
         DInputState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
+    }
+}
+
+void InputHub::DealKeyEvent(const RawEvent &event)
+{
+    if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
+        DInputState::GetInstance().AddKeyDownState(event);
+        RecordChangeEventLog(event);
+    }
+    if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
+        DInputState::GetInstance().RemoveKeyDownState(event);
+        RecordChangeEventLog(event);
+    }
+    if (event.type == EV_KEY && event.value == KEY_REPEAT) {
+        DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
+    }
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
+        DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
+    }
+    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
+        DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
     }
 }
 
