@@ -50,6 +50,7 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
 
   sources = [
     "${common_path}/include/input_hub.cpp",
+    "${common_path}/test/mock/socket_mock.cpp",
     "${common_path}/test/mock/softbus_bus_center_mock.cpp",
     "${distributedinput_path}/inputdevicehandler/src/distributed_input_handler.cpp",
     "${services_source_path}/inputinject/src/distributed_input_inject.cpp",
