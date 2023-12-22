@@ -23,6 +23,8 @@
 #include <unistd.h>
 #include <refbase.h>
 
+#include "socket.h"
+
 #include "distributed_input_transport_base.h"
 
 namespace OHOS {
@@ -33,7 +35,8 @@ void OnSessionClosedFuzzTest(const uint8_t *data, size_t size)
         return;
     }
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    DistributedInput::DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId);
+    ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
+    DistributedInput::DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

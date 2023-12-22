@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "softbus_bus_center_mock.h"
+#include "softbus_bus_center.h"
 
 constexpr int32_t DH_SUCCESS = 0;
 int32_t GetLocalNodeDeviceInfo(const char *pkgName, NodeBasicInfo *info)

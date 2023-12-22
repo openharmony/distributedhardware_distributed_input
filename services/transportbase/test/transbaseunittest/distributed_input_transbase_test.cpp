@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,6 +26,11 @@ using namespace std;
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    const std::string PEER_SESSION_NAME = "ohos.dhardware.dinput.session8647073e02e7a78f09473aa122";
+    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    const std::string DINPUT_PKG_NAME_TEST = "ohos.dhardware.dinput";
+}
 void DistributedInputTransbaseTest::SetUp()
 {
     sourceTransport_ = new DistributedInputSourceTransport();
@@ -60,7 +65,7 @@ HWTEST_F(DistributedInputTransbaseTest, StartSession01, testing::ext::TestSize.L
 {
     std::string remoteDevId = "";
     int32_t ret = DistributedInputTransportBase::GetInstance().StartSession(remoteDevId);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 HWTEST_F(DistributedInputTransbaseTest, StartSession02, testing::ext::TestSize.Level1)
@@ -76,6 +81,7 @@ HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::Tes
 {
     int32_t sessionId = 0;
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[srcId] = sessionId;
     std::string ret = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
@@ -87,15 +93,19 @@ HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::Tes
 HWTEST_F(DistributedInputTransbaseTest, OnSessionOpened01, testing::ext::TestSize.Level0)
 {
     int32_t sessionId = 0;
-    int32_t result = ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL;
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DINPUT_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[srcId] = sessionId;
-    int32_t ret = DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, result);
+    int32_t ret = DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, peerSocketInfo);
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
     EXPECT_EQ(DH_SUCCESS, ret);
 
-    result = DH_SUCCESS;
-    ret = DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, result);
+    ret = DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, peerSocketInfo);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
