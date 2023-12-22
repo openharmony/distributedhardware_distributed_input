@@ -23,18 +23,30 @@
 #include <unistd.h>
 #include <refbase.h>
 
+#include "dinput_softbus_define.h"
+
 #include "distributed_input_transport_base.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace {
+    const std::string PEER_SESSION_NAME = "ohos.dhardware.dinput.session8647073e02e7a78f09473aa122";
+    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    const std::string DINPUT_PKG_NAME_TEST = "ohos.dhardware.dinput";
+}
 void OnSessionOpenedFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    int32_t result = *(reinterpret_cast<const int32_t*>(data));
-    DistributedInput::DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, result);
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DINPUT_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    DistributedInput::DistributedInputTransportBase::GetInstance().OnSessionOpened(sessionId, peerSocketInfo);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
