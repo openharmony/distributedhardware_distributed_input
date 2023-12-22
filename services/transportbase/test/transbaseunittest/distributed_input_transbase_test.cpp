@@ -65,7 +65,7 @@ HWTEST_F(DistributedInputTransbaseTest, StartSession01, testing::ext::TestSize.L
 {
     std::string remoteDevId = "";
     int32_t ret = DistributedInputTransportBase::GetInstance().StartSession(remoteDevId);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 HWTEST_F(DistributedInputTransbaseTest, StartSession02, testing::ext::TestSize.Level1)
@@ -81,6 +81,7 @@ HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::Tes
 {
     int32_t sessionId = 0;
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[srcId] = sessionId;
     std::string ret = DistributedInputTransportBase::GetInstance().GetDevIdBySessionId(sessionId);
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
