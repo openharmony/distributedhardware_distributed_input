@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <refbase.h>
 
-#include "dinput_softbus_define.h"
+#include "socket.h"
 
 #include "distributed_input_transport_base.h"
 
