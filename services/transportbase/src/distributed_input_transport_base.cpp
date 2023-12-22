@@ -257,7 +257,7 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
 
     PeerSocketInfo peerSocketInfo = {
         .name = const_cast<char*>(peerSessionName.c_str()),
-        .deviceId = const_cast<char*>(remoteDevId.c_str()),
+        .networkId = const_cast<char*>(remoteDevId.c_str()),
         .pkgName = const_cast<char*>(DINPUT_PKG_NAME.c_str()),
         .dataType = DATA_TYPE_BYTES
     };
@@ -376,11 +376,11 @@ void DistributedInputTransportBase::EraseSessionId(const std::string &remoteDevI
 int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
     DHLOGI("OnSessionOpened, socket: %d, peerSocketName: %s, peerNetworkId: %s, peerPkgName: %s",
-        sessionId, info.name, info.deviceId, info.pkgName);
+        sessionId, info.name, info.networkId, info.pkgName);
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
 
     std::string peerDevId;
-    peerDevId.assign(info.deviceId);
+    peerDevId.assign(info.networkId);
     {
         std::unique_lock<std::mutex> sessionLock(operationMutex_);
         remoteDevSessionMap_[peerDevId] = sessionId;

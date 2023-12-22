@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "softbus_bus_center_mock.h"
+#include "softbus_bus_center.h"
 
 constexpr int32_t DH_SUCCESS = 0;
 int32_t GetLocalNodeDeviceInfo(const char *pkgName, NodeBasicInfo *info)

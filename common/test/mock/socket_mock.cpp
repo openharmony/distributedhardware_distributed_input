@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "socket_mock.h"
+#include "socket.h"
 
 int32_t Socket(SocketInfo info)
 {

@@ -91,11 +91,10 @@ HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::Tes
 
 HWTEST_F(DistributedInputTransbaseTest, OnSessionOpened01, testing::ext::TestSize.Level0)
 {
-
     int32_t sessionId = 0;
     PeerSocketInfo peerSocketInfo = {
         .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
-        .deviceId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
         .pkgName = const_cast<char*>(DINPUT_PKG_NAME_TEST.c_str()),
         .dataType = DATA_TYPE_BYTES
     };

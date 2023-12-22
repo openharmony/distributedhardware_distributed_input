@@ -18,7 +18,7 @@
 #include <thread>
 
 #include "securec.h"
-#include "session_mock.h"
+#include "session.h"
 
 constexpr int32_t DH_SUCCESS = 0;
 const uint32_t AUTH_SESSION_SIDE_CLIENT = 1;
