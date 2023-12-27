@@ -41,7 +41,7 @@ ohos_shared_library("libdinput_sink_state") {
   sources = [
     "src/dinput_sink_state.cpp",
     "src/touchpad_event_fragment.cpp",
-    "src/touchpad_event_fragment_mgr.cpp"
+    "src/touchpad_event_fragment_mgr.cpp",
   ]
 
   defines = [
