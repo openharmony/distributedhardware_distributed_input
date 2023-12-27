@@ -15,7 +15,7 @@ import("//build/ohos.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
 
-ohos_shared_library("libdinput_state") {
+ohos_shared_library("libdinput_sink_state") {
   sanitize = {
     boundary_sanitize = true
     integer_overflow = true
@@ -38,11 +38,15 @@ ohos_shared_library("libdinput_state") {
     "${fwk_common_path}/utils/include",
   ]
 
-  sources = [ "src/dinput_state.cpp" ]
+  sources = [
+    "src/dinput_sink_state.cpp",
+    "src/touchpad_event_fragment.cpp",
+    "src/touchpad_event_fragment_mgr.cpp"
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"distributedinputstate\"",
+    "DH_LOG_TAG=\"distributeDInputSinkState\"",
     "LOG_DOMAIN=0xD004100",
   ]
 

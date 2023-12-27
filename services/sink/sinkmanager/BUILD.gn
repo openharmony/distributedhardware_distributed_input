@@ -63,7 +63,7 @@ ohos_shared_library("libdinput_sink") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
-    "${distributedinput_path}/services/state:libdinput_state",
+    "${distributedinput_path}/services/state:libdinput_sink_state",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${innerkits_path}:libdinput_sdk",
     "${services_sink_path}/inputcollector:libdinput_collector",

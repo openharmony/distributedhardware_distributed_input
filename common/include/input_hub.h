@@ -19,6 +19,7 @@
 #include <atomic>
 #include <mutex>
 #include <map>
+#include <memory>
 #include <set>
 #include <unordered_map>
 
@@ -182,7 +183,8 @@ private:
      */
     void RecordDeviceChangeStates(Device *device, struct input_event readBuffer[], const size_t count);
     void MatchAndDealEvent(Device *device, const RawEvent &event);
-    void DealKeyEvent(const RawEvent &event);
+    void DealTouchPadEvent(const RawEvent &event);
+    void DealNormalKeyEvent(Device *device, const RawEvent &event);
     /*
      * Scan the input device node and save info.
      */

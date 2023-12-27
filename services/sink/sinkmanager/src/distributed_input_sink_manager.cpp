@@ -242,7 +242,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInput(
             DHLOGI("deviceInfo dhId, %s", GetAnonyString(deviceInfo.second).c_str());
             std::vector<std::string> devDhIds;
             SplitStringToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, devDhIds);
-            DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
+            DInputSinkState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
         }
     }
 }
@@ -302,7 +302,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnStartRemoteInputDhid(con
 
     std::vector<std::string> devDhIds;
     SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, devDhIds);
-    DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
+    DInputSinkState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, sessionId);
     AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, devDhIds);
     sinkManagerObj_->StoreStartDhids(sessionId, affDhIds.sharingDhIds);
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
@@ -321,7 +321,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnStopRemoteInputDhid(cons
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
 
-    DInputState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, sessionId);
+    DInputSinkState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, sessionId);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", sessionId);
@@ -369,7 +369,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartDhidRemoteInpu
 
     std::vector<std::string> devDhIds;
     SplitStringToVector(strDhids, INPUT_STRING_SPLIT_POINT, devDhIds);
-    DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
+    DInputSinkState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
     AffectDhIds affDhIds = DistributedInputCollector::GetInstance().SetSharingDhIds(true, devDhIds);
     sinkManagerObj_->StoreStartDhids(toSinkSessionId, affDhIds.sharingDhIds);
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(affDhIds);
@@ -388,7 +388,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStopDhidRemoteInput
     stopIndeedOnes.noSharingDhIds = stopIndeedDhIds;
     DistributedInputCollector::GetInstance().ReportDhIdSharingState(stopIndeedOnes);
 
-    DInputState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, toSinkSessionId);
+    DInputSinkState::GetInstance().RecordDhIds(stopOnCmdDhIds, DhIdState::THROUGH_IN, toSinkSessionId);
 
     if (DistributedInputCollector::GetInstance().IsAllDevicesStoped()) {
         DHLOGE("All dhid stop sharing, sessionId: %d is closed.", toSinkSessionId);
@@ -463,7 +463,7 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartTypeRemoteInpu
         DHLOGI("deviceInfo dhId, %s", GetAnonyString(deviceInfo.second).c_str());
         std::vector<std::string> devDhIds;
         SplitStringToVector(deviceInfo.second, INPUT_STRING_SPLIT_POINT, devDhIds);
-        DInputState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
+        DInputSinkState::GetInstance().RecordDhIds(devDhIds, DhIdState::THROUGH_OUT, toSinkSessionId);
     }
 }
 
@@ -611,9 +611,9 @@ int32_t DistributedInputSinkManager::Init()
         return ERR_DH_INPUT_SERVER_SINK_MANAGER_INIT_FAIL;
     }
 
-    ret = DInputState::GetInstance().Init();
+    ret = DInputSinkState::GetInstance().Init();
     if (ret != DH_SUCCESS) {
-        DHLOGE("DInputState init fail!");
+        DHLOGE("DInputSinkState init fail!");
         return ERR_DH_INPUT_SERVER_SINK_MANAGER_INIT_FAIL;
     }
 
