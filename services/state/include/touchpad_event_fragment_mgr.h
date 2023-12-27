@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 
+#ifndef DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_MGR_H
+#define DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_MGR_H
+
 #include "touchpad_event_fragment.h"
 
 #include <map>
@@ -55,3 +58,4 @@ private:
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS
+#endif // DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_MGR_H

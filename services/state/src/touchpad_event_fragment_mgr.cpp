@@ -42,7 +42,8 @@ bool TouchPadEventFragmentMgr::IsWholeTouchFragments(const std::vector<TouchPadE
     return events.front().IsTouchPadOptStart() && events.back().IsTouchPadOptFinish();
 }
 
-std::pair<bool, std::vector<RawEvent>> TouchPadEventFragmentMgr::PushEvent(const std::string &dhId, const RawEvent &event)
+std::pair<bool, std::vector<RawEvent>> TouchPadEventFragmentMgr::PushEvent(const std::string &dhId,
+    const RawEvent &event)
 {
     if (IsPositionEvent(event)) {
         return {false, {}};

@@ -13,6 +13,9 @@
  * limitations under the License.
  */
 
+#ifndef DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_H
+#define DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_H
+
 #include <vector>
 #include <string>
 
@@ -36,3 +39,4 @@ private:
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS
+#endif // DISTRIBUTED_INPUT_TOUCHPAD_EVENT_FRAGMENT_H

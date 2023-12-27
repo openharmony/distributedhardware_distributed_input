@@ -149,7 +149,8 @@ void DInputSinkState::SimulateKeyDownEvents(const int32_t sessionId, const std::
     keyDownStateMap_.erase(dhId);
 }
 
-void DInputSinkState::SimulateKeyDownEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event)
+void DInputSinkState::SimulateKeyDownEvent(const int32_t sessionId, const std::string &dhId,
+    const struct RawEvent &event)
 {
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsg(sessionId, dhId,
         EV_KEY, event.code, KEY_DOWN_STATE);
