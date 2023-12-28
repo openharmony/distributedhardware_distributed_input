@@ -17,12 +17,14 @@
 #define DISTRIBUTED_INPUT_STATE_BASE_H
 
 #include <map>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <linux/input.h>
-#include "constants_dinput.h"
 
+#include "constants_dinput.h"
 #include "single_instance.h"
+#include "touchpad_event_fragment_mgr.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -37,8 +39,8 @@ enum class DhIdState {
     THROUGH_OUT,
 };
 
-class DInputState {
-    DECLARE_SINGLE_INSTANCE_BASE(DInputState);
+class DInputSinkState {
+    DECLARE_SINGLE_INSTANCE_BASE(DInputSinkState);
 public:
     int32_t Init();
     int32_t Release();
@@ -61,13 +63,8 @@ public:
      * Clear Device stats if unprepare.
      */
     void ClearDeviceStates();
-
-    void RefreshABSPosition(const std::string &dhId, int32_t absX, int32_t absY);
-    std::pair<int32_t, int32_t> GetAndClearABSPosition(const std::string &dhId);
-
-    void SimulateTouchPadBtnMouseUpState(const std::string &dhId, const struct RawEvent &event);
-    void SimulateTouchPadBtnTouchUpState(const std::string &dhId, const struct RawEvent &event);
     void SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event);
+    void SimulateTouchPadStateReset(const std::vector<RawEvent> &events);
     /**
      * @brief check is one device in down state
      *
@@ -76,13 +73,15 @@ public:
      * @return false NOT in down state
      */
     bool IsDhIdDown(const std::string &dhId);
+    std::shared_ptr<TouchPadEventFragmentMgr> GetTouchPadEventFragMgr();
 private:
-    DInputState() = default;
-    ~DInputState();
+    DInputSinkState() = default;
+    ~DInputSinkState();
     // Simulate device state to the pass through target device.
     void SimulateEventInjectToSrc(const int32_t sessionId, const std::vector<std::string> &dhIds);
-    void SimulateBtnTouchEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event);
-    void SimulateNormalEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event);
+    void SimulateKeyDownEvents(const int32_t sessionId, const std::string &dhId);
+    void SimulateKeyDownEvent(const int32_t sessionId, const std::string &dhId, const struct RawEvent &event);
+    void SimulateTouchPadEvents(const int32_t sessionId, const std::string &dhId);
 private:
     std::mutex operationMutex_;
     std::map<std::string, DhIdState> dhIdStateMap_;
@@ -95,6 +94,8 @@ private:
     // Record abs x/y of touchpad
     std::unordered_map<std::string, std::pair<int32_t, int32_t>> absPositionsMap_;
     std::atomic<int32_t> lastSessionId_ {0};
+
+    std::shared_ptr<TouchPadEventFragmentMgr> touchPadEventFragMgr_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -33,7 +33,7 @@
 #include "dinput_context.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
-#include "dinput_state.h"
+#include "dinput_sink_state.h"
 #include "dinput_utils_tool.h"
 
 namespace OHOS {
@@ -220,49 +220,43 @@ bool InputHub::IsTouchPad(const InputDevice &inputDevice)
 
 void InputHub::MatchAndDealEvent(Device *device, const RawEvent &event)
 {
-    // Deal key state
-    DealKeyEvent(event);
-
-    if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
-        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
-        DHLOGI("Find touchpad BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
-            event.descriptor.c_str());
-        DInputState::GetInstance().SimulateTouchPadBtnMouseUpState(event.descriptor, event);
-    }
-
-    if (IsTouchPad(device) && event.type == EV_KEY && event.code == BTN_TOUCH && event.value == KEY_UP_STATE &&
-        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
-        DHLOGI("Find touchpad BTN_TOUCH UP state that not down effective at sink side, dhId: %s",
-            event.descriptor.c_str());
-        DInputState::GetInstance().SimulateTouchPadBtnTouchUpState(event.descriptor, event);
-    }
-
-    if (IsCuror(device) && event.type == EV_KEY && event.code == BTN_MOUSE && event.value == KEY_UP_STATE &&
-        !DInputState::GetInstance().IsDhIdDown(event.descriptor)) {
-        DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
-            event.descriptor.c_str());
-        DInputState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
+    bool isTouchPad = IsTouchPad(device);
+    if (!isTouchPad) {
+        // Deal Normal key state, such as keys of keyboard or mouse
+        DealNormalKeyEvent(device, event);
+    } else {
+        // Deal TouchPad events
+        DealTouchPadEvent(event);
     }
 }
 
-void InputHub::DealKeyEvent(const RawEvent &event)
+void InputHub::DealTouchPadEvent(const RawEvent &event)
 {
-    if (event.type == EV_KEY && event.code != BTN_TOOL_FINGER && event.value == KEY_DOWN_STATE) {
-        DInputState::GetInstance().AddKeyDownState(event);
+    auto ret = DInputSinkState::GetInstance().GetTouchPadEventFragMgr()->PushEvent(event.descriptor, event);
+    if (ret.first) {
+        DInputSinkState::GetInstance().SimulateTouchPadStateReset(ret.second);
+    }
+}
+
+void InputHub::DealNormalKeyEvent(Device *device, const RawEvent &event)
+{
+    if (event.type == EV_KEY && event.value == KEY_DOWN_STATE) {
+        DInputSinkState::GetInstance().AddKeyDownState(event);
         RecordChangeEventLog(event);
     }
     if (event.type == EV_KEY && event.value == KEY_UP_STATE) {
-        DInputState::GetInstance().RemoveKeyDownState(event);
+        // Deal mouse left keydown reset
+        if (IsCuror(device) && event.code == BTN_MOUSE &&
+            !DInputSinkState::GetInstance().IsDhIdDown(event.descriptor)) {
+            DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
+                event.descriptor.c_str());
+            DInputSinkState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
+        }
+        DInputSinkState::GetInstance().RemoveKeyDownState(event);
         RecordChangeEventLog(event);
     }
     if (event.type == EV_KEY && event.value == KEY_REPEAT) {
-        DInputState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
-    }
-    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_X || event.code == ABS_X)) {
-        DInputState::GetInstance().RefreshABSPosition(event.descriptor, event.value, -1);
-    }
-    if (event.type == EV_ABS && (event.code == ABS_MT_POSITION_Y || event.code == ABS_Y)) {
-        DInputState::GetInstance().RefreshABSPosition(event.descriptor, -1, event.value);
+        DInputSinkState::GetInstance().CheckAndSetLongPressedKeyOrder(event);
     }
 }
 
@@ -1457,7 +1451,7 @@ void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
         .descriptor = dev->identifier.descriptor,
         .path = dev->path
     };
-    DInputState::GetInstance().AddKeyDownState(event);
+    DInputSinkState::GetInstance().AddKeyDownState(event);
     DHLOGI("Find Pressed key: %d, device path: %s, dhId: %s", keyCode, dev->path.c_str(),
         dev->identifier.descriptor.c_str());
 }
@@ -1559,7 +1553,7 @@ void InputHub::RecordDeviceStates()
 void InputHub::ClearDeviceStates()
 {
     DHLOGI("Clear Device state");
-    DInputState::GetInstance().ClearDeviceStates();
+    DInputSinkState::GetInstance().ClearDeviceStates();
 }
 
 void InputHub::ClearSkipDevicePaths()

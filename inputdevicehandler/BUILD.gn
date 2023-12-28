@@ -52,7 +52,7 @@ ohos_shared_library("libdinput_handler") {
   ]
 
   deps = [
-    "${services_state_path}:libdinput_state",
+    "${services_state_path}:libdinput_sink_state",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
     "//third_party/openssl:libcrypto_shared",
