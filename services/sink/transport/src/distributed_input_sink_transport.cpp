@@ -37,6 +37,10 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    // each time, we send msg batch with MAX 20 events. 
+    constexpr int32_t MSG_BTACH_MAX_SIZE =20;
+}
 DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_("")
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
@@ -230,6 +234,22 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessi
     }
     DHLOGI("SendKeyStateNodeMsgBatch sessionId: %d, event size: %d ", sessionId, events.size());
 
+    std::vector<struct RawEvent> eventBatch;
+    for (int32_t i = 0; i < events.size(); i++) {
+        eventBatch.push_back(events[i]);
+        if (i == MSG_BTACH_MAX_SIZE) {
+            DoSendMsgBatch(sessionId, eventBatch);
+            eventBatch.clear();
+        }
+    }
+
+    if (!eventBatch.empty()) {
+        DoSendMsgBatch(sessionId, eventBatch);
+    }
+}
+
+void DistributedInputSinkTransport::DoSendMsgBatch(const int32_t sessionId, const std::vector<struct RawEvent> &events)
+{
     int64_t currentTimeNs = GetCurrentTimeUs() * 1000LL;
     std::shared_ptr<nlohmann::json> eventsJsonArr = std::make_shared<nlohmann::json>();
     for (const auto &ev : events) {

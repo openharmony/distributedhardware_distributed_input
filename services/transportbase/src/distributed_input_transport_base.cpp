@@ -521,7 +521,7 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
 int32_t DistributedInputTransportBase::SendMsg(int32_t sessionId, std::string &message)
 {
     if (message.size() > MSG_MAX_SIZE) {
-        DHLOGE("SendMessage error: message.size() > MSG_MAX_SIZE");
+        DHLOGE("SendMessage error: message.size() > MSG_MAX_SIZE, msg size: %d", message.size());
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE;
     }
     uint8_t *buf = reinterpret_cast<uint8_t *>(calloc((MSG_MAX_SIZE), sizeof(uint8_t)));
