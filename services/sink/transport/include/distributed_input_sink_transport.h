@@ -95,6 +95,8 @@ private:
 
     void RecordEventLog(const std::string &dhId, int32_t type, int32_t code, int32_t value);
     void RecordEventLog(const std::vector<struct RawEvent> &events);
+
+    void DoSendMsgBatch(const int32_t sessionId, const std::vector<struct RawEvent> &events);
 private:
     std::string mySessionName_;
     std::shared_ptr<DistributedInputSinkTransport::DInputSinkEventHandler> eventHandler_;
