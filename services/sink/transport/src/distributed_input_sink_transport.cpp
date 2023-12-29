@@ -234,12 +234,15 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessi
     }
     DHLOGI("SendKeyStateNodeMsgBatch sessionId: %d, event size: %d ", sessionId, events.size());
 
+    int32_t cnt = 0;
     std::vector<struct RawEvent> eventBatch;
-    for (int32_t i = 0; i < events.size(); i++) {
-        eventBatch.push_back(events[i]);
-        if (i == MSG_BTACH_MAX_SIZE) {
+    for (auto ev : events) {
+        eventBatch.push_back(ev);
+        cnt++;
+        if (cnt == MSG_BTACH_MAX_SIZE) {
             DoSendMsgBatch(sessionId, eventBatch);
             eventBatch.clear();
+            cnt = 0;
         }
     }
 
