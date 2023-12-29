@@ -39,7 +39,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
     // each time, we send msg batch with MAX 20 events. 
-    constexpr int32_t MSG_BTACH_MAX_SIZE =20;
+    constexpr int32_t MSG_BTACH_MAX_SIZE = 20;
 }
 DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_("")
 {
