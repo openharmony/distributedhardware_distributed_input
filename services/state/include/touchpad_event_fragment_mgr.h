@@ -34,10 +34,10 @@ public:
 
     /**
      * @brief Push the touchpad event
-     * 
+     *
      * @param dhId the device dhId where event from
      * @param event the event
-     * @return std::pair<bool, std::vector<RawEvent>> 
+     * @return std::pair<bool, std::vector<RawEvent>>
      *     true for NOT whole touchpad event that need simulate back to the other device.
      *     false for DO Nothing.
      */
