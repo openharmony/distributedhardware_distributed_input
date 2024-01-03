@@ -207,9 +207,10 @@ std::string DistributedInputTransportBase::GetDevIdBySessionId(int32_t sessionId
 int32_t DistributedInputTransportBase::CreateClientSocket(const std::string &remoteDevId)
 {
     DHLOGI("CreateClientSocket start, peerNetworkId: %s", remoteDevId.c_str());
+    std::string localSesionName = localSessionName_ + "_" + std::to_string(GetCurrentTimeUs());
     std::string peerSessionName = SESSION_NAME + remoteDevId.substr(0, INTERCEPT_STRING_LENGTH);
     SocketInfo info = {
-        .name = const_cast<char*>(localSessionName_.c_str()),
+        .name = const_cast<char*>(localSesionName.c_str()),
         .peerName = const_cast<char*>(peerSessionName.c_str()),
         .peerNetworkId = const_cast<char*>(remoteDevId.c_str()),
         .pkgName = const_cast<char*>(DINPUT_PKG_NAME.c_str()),
@@ -217,7 +218,7 @@ int32_t DistributedInputTransportBase::CreateClientSocket(const std::string &rem
     };
     int32_t socket = Socket(info);
     DHLOGI("Bind Socket server, socket: %d, localSessionName: %s, peerSessionName: %s",
-        socket, localSessionName_.c_str(), peerSessionName.c_str());
+        socket, localSesionName.c_str(), peerSessionName.c_str());
     return socket;
 }
 
