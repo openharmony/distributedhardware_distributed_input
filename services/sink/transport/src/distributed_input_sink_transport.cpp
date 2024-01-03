@@ -38,7 +38,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
-    // each time, we send msg batch with MAX 20 events. 
+    // each time, we send msg batch with MAX 20 events.
     constexpr int32_t MSG_BTACH_MAX_SIZE = 20;
 }
 DistributedInputSinkTransport::DistributedInputSinkTransport() : mySessionName_("")
