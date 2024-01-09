@@ -79,7 +79,7 @@ ohos_shared_library("libdinput_sink") {
     "config_policy:configpolicy_util",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

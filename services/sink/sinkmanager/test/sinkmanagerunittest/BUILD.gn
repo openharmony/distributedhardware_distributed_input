@@ -109,7 +109,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hicollie:libhicollie",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

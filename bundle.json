@@ -43,6 +43,7 @@
                 "hisysevent",
                 "hitrace",
                 "graphic_2d",
+                "graphic_surface",
                 "window_manager"
             ],
             "third_party": [
