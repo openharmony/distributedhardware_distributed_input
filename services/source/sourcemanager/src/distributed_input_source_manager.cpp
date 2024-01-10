@@ -1632,7 +1632,7 @@ void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic
 {
     DHLOGI("StopDScreenListener OnMessage!");
     if (topic != DHTopic::TOPIC_STOP_DSCREEN) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     std::string sinkDevId = "";
@@ -1700,7 +1700,7 @@ void DistributedInputSourceManager::DeviceOfflineListener::OnMessage(const DHTop
 {
     DHLOGI("DeviceOfflineListener OnMessage!");
     if (topic != DHTopic::TOPIC_DEV_OFFLINE) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     if (message.empty()) {
