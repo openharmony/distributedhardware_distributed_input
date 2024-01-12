@@ -210,7 +210,7 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId,
         DHLOGE("SendKeyStateNodeMsg error, sessionId <= 0.");
         return;
     }
-    DHLOGI("SendKeyStateNodeMsg sessionId: %d, btnCode: %d.", sessionId, btnCode);
+    DHLOGI("SendKeyStateNodeMsg sessionId: %d, btnCode: %u.", sessionId, btnCode);
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_KEY_STATE;
     jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_DHID] = dhId;

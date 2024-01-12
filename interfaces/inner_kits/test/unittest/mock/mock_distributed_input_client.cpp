@@ -73,7 +73,7 @@ void DistributedInputClient::AddWhiteListInfosCb::OnResult(const std::string &de
         return;
     }
     size_t jsonSize = inputData.size();
-    DHLOGI("AddWhiteListInfosCb OnResult json size:%d.\n", jsonSize);
+    DHLOGI("AddWhiteListInfosCb OnResult json size:%zu.\n", jsonSize);
     TYPE_WHITE_LIST_VEC vecWhiteList = inputData;
     WhiteListUtil::GetInstance().SyncWhiteList(deviceId, vecWhiteList);
 }

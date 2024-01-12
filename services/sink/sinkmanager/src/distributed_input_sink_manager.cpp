@@ -748,7 +748,7 @@ void DistributedInputSinkManager::ProjectWindowListener::OnMessage(const DHTopic
 {
     DHLOGI("ProjectWindowListener OnMessage!");
     if (topic != DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     std::string srcDeviceId = "";
@@ -876,7 +876,7 @@ void DistributedInputSinkManager::PluginStartListener::OnMessage(const DHTopic t
 {
     DHLOGI("PluginStartListener OnMessage!");
     if (topic != DHTopic::TOPIC_PHY_DEV_PLUGIN) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     if (message.empty()) {

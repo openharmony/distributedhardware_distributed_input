@@ -643,7 +643,7 @@ void DistributedInputClient::AddWhiteListInfos(const std::string &deviceId, cons
         return;
     }
     size_t jsonSize = inputData.size();
-    DHLOGI("AddWhiteListInfosCb OnResult deviceId: %s, json str: %s, json size:%d.\n",
+    DHLOGI("AddWhiteListInfosCb OnResult deviceId: %s, json str: %s, json size:%zu.\n",
         GetAnonyString(deviceId).c_str(), GetAnonyString(strJson).c_str(), jsonSize);
     TYPE_WHITE_LIST_VEC vecWhiteList = inputData;
     WhiteListUtil::GetInstance().SyncWhiteList(deviceId, vecWhiteList);
@@ -668,7 +668,7 @@ void DistributedInputClient::UpdateSinkScreenInfos(const std::string &strJson)
         return;
     }
     size_t jsonSize = inputData.size();
-    DHLOGI("OnResult json str: %s, json size:%d.\n", GetAnonyString(strJson).c_str(), jsonSize);
+    DHLOGI("OnResult json str: %s, json size:%zu.\n", GetAnonyString(strJson).c_str(), jsonSize);
     std::vector<std::vector<uint32_t>> transInfos = inputData;
     for (auto info : transInfos) {
         if (info.size() != SINK_SCREEN_INFO_SIZE) {
