@@ -637,15 +637,6 @@ int32_t DistributedInputSourceManager::StartRemoteInput(const std::string &srcId
     if (srcId != localNetworkId) {
         return RelayStartRemoteInputByType(srcId, sinkId, inputTypes, callback);
     }
-    for (auto iter : staCallbacks_) {
-        if (iter.devId == sinkId && iter.inputTypes == inputTypes) {
-            DHLOGE("StartRemoteInput called, repeat call.");
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, "Dinput start use failed in already started.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL;
-        }
-    }
 
     DInputClientStartInfo info {sinkId, inputTypes, callback};
     staCallbacks_.push_back(info);
@@ -690,15 +681,6 @@ int32_t DistributedInputSourceManager::StopRemoteInput(const std::string &srcId,
     if (srcId != localNetworkId) {
         return RelayStopRemoteInputByType(srcId, sinkId, inputTypes, callback);
     }
-    for (auto iter : stpCallbacks_) {
-        if (iter.devId == sinkId && iter.inputTypes == inputTypes) {
-            DHLOGE("StopRemoteInput called, repeat call.");
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, "Dinput stop use failed in already stoped.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-        }
-    }
 
     DInputClientStopInfo info {sinkId, inputTypes, callback};
     stpCallbacks_.push_back(info);
@@ -723,13 +705,6 @@ int32_t DistributedInputSourceManager::RelayStartRemoteInputByType(const std::st
     const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
     std::lock_guard<std::mutex> lock(startStopMutex_);
-    for (auto iter : relayStaTypeCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && iter.inputTypes == inputTypes) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL;
-        }
-    }
-
     DInputClientStartTypeInfo info(srcId, sinkId, inputTypes, callback);
     relayStaTypeCallbacks_.push_back(info);
 
@@ -752,13 +727,6 @@ int32_t DistributedInputSourceManager::RelayStopRemoteInputByType(
     const std::string &srcId, const std::string &sinkId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
     std::lock_guard<std::mutex> lock(startStopMutex_);
-    for (auto iter : relayStpTypeCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && iter.inputTypes == inputTypes) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-        }
-    }
-
     DInputClientStopTypeInfo info(srcId, sinkId, inputTypes, callback);
     relayStpTypeCallbacks_.push_back(info);
 
@@ -882,16 +850,6 @@ int32_t DistributedInputSourceManager::StartRemoteInput(const std::string &sinkI
     }
 
     // current device is source device
-    for (auto iter : staStringCallbacks_) {
-        if (iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, "dinput start use failed in already started");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
-            DHLOGE("sinkId: %s, repeat call.", GetAnonyString(sinkId).c_str());
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL;
-        }
-    }
-
     DInputClientStartDhidInfo info {localNetworkId, sinkId, dhIds, callback};
     staStringCallbacks_.push_back(info);
     DeviceMap_[sinkId] = DINPUT_SOURCE_SWITCH_OFF; // when sink device start success,set DINPUT_SOURCE_SWITCH_ON
@@ -930,15 +888,6 @@ int32_t DistributedInputSourceManager::StopRemoteInput(const std::string &sinkId
             ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, "dinput stop use failed in get networkId");
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
         return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-    }
-    for (auto iter : stpStringCallbacks_) {
-        if (iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, "dinput stop use failed in already stop");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
-            DHLOGE("sinkId: %s, repeat call.", GetAnonyString(sinkId).c_str());
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-        }
     }
 
     DInputClientStopDhidInfo info {localNetworkId, sinkId, dhIds, callback};
@@ -981,15 +930,6 @@ int32_t DistributedInputSourceManager::StartRemoteInput(const std::string &srcId
     }
     if (srcId != localNetworkId) {
         return RelayStartRemoteInputByDhid(srcId, sinkId, dhIds, callback);
-    }
-    for (auto iter : staStringCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, "Dinput start use failed in already start.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
-            DHLOGE("sinkId: %s, repeat call.", GetAnonyString(sinkId).c_str());
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL;
-        }
     }
 
     DInputClientStartDhidInfo info {srcId, sinkId, dhIds, callback};
@@ -1034,15 +974,6 @@ int32_t DistributedInputSourceManager::StopRemoteInput(const std::string &srcId,
     }
     if (srcId != localNetworkId) {
         return RelayStopRemoteInputByDhid(srcId, sinkId, dhIds, callback);
-    }
-    for (auto iter : stpStringCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_OPT_FAIL, sinkId,
-                ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, "Dinput stop use failed in already stop.");
-            FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
-            DHLOGE("sinkId: %s, repeat call.", GetAnonyString(sinkId).c_str());
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-        }
     }
 
     DInputClientStopDhidInfo info {srcId, sinkId, dhIds, callback};
@@ -1168,13 +1099,6 @@ int32_t DistributedInputSourceManager::RelayStartRemoteInputByDhid(const std::st
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
     std::lock_guard<std::mutex> lock(startStopMutex_);
-    for (auto iter : relayStaDhidCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL;
-        }
-    }
-
     DInputClientStartDhidInfo info{srcId, sinkId, dhIds, callback};
     relayStaDhidCallbacks_.push_back(info);
 
@@ -1196,13 +1120,6 @@ int32_t DistributedInputSourceManager::RelayStopRemoteInputByDhid(const std::str
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
     std::lock_guard<std::mutex> lock(startStopMutex_);
-    for (auto iter : relayStpDhidCallbacks_) {
-        if (iter.srcId == srcId && iter.sinkId == sinkId && IsStringDataSame(iter.dhIds, dhIds)) {
-            DHLOGE("Repeat call.");
-            return ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL;
-        }
-    }
-
     DInputClientStopDhidInfo info{srcId, sinkId, dhIds, callback};
     relayStpDhidCallbacks_.push_back(info);
 
@@ -1715,7 +1632,7 @@ void DistributedInputSourceManager::StopDScreenListener::OnMessage(const DHTopic
 {
     DHLOGI("StopDScreenListener OnMessage!");
     if (topic != DHTopic::TOPIC_STOP_DSCREEN) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     std::string sinkDevId = "";
@@ -1783,7 +1700,7 @@ void DistributedInputSourceManager::DeviceOfflineListener::OnMessage(const DHTop
 {
     DHLOGI("DeviceOfflineListener OnMessage!");
     if (topic != DHTopic::TOPIC_DEV_OFFLINE) {
-        DHLOGE("this topic is wrong, %d", static_cast<uint32_t>(topic));
+        DHLOGE("this topic is wrong, %u", static_cast<uint32_t>(topic));
         return;
     }
     if (message.empty()) {

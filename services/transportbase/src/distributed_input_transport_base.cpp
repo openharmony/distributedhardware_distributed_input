@@ -95,7 +95,7 @@ void OnFile(int32_t socket, FileEvent *event)
 
 void OnQos(int32_t socket, QoSEvent eventId, const QosTV *qos, uint32_t qosCount)
 {
-    DHLOGI("OnQos, socket: %d, QoSEvent: %d, qosCount: %ld", socket, (int32_t)eventId, qosCount);
+    DHLOGI("OnQos, socket: %d, QoSEvent: %d, qosCount: %u", socket, (int32_t)eventId, qosCount);
     for (uint32_t idx = 0; idx < qosCount; idx++) {
         DHLOGI("QosTV: type: %d, value: %d", (int32_t)qos[idx].qos, qos[idx].value);
     }
