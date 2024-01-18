@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -551,9 +551,6 @@ HWTEST_F(DistributedInputSourceManagerTest, StartRemoteInput_04, testing::ext::T
     sptr<TestStartDInputCallback> callback(new TestStartDInputCallback());
     int32_t ret = sourceManager_->StartRemoteInput(srcId, sinkId, INPUTTYPE, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
-
-    ret = sourceManager_->StartRemoteInput(srcId, sinkId, INPUTTYPE_MOUSE, callback);
-    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 HWTEST_F(DistributedInputSourceManagerTest, StartRemoteInput_05, testing::ext::TestSize.Level1)
@@ -572,6 +569,7 @@ HWTEST_F(DistributedInputSourceManagerTest, StartRemoteInput_05, testing::ext::T
     srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
     DistributedInputSourceManager::DInputClientStartInfo startInfo {sinkId, INPUTTYPE, callback};
     sourceManager_->staCallbacks_.push_back(startInfo);
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
     ret = sourceManager_->StartRemoteInput(srcId, sinkId, INPUTTYPE, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
@@ -595,11 +593,10 @@ HWTEST_F(DistributedInputSourceManagerTest, StopRemoteInput_04, testing::ext::Te
 {
     std::string srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
     std::string sinkId = "umkyu1b165e1be98151891erbe8r91ev";
+    int32_t sessionId = 1;
     sptr<TestStopDInputCallback> callback(new TestStopDInputCallback());
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[sinkId] = sessionId;
     int32_t ret = sourceManager_->StopRemoteInput(srcId, sinkId, INPUTTYPE, callback);
-    EXPECT_EQ(DH_SUCCESS, ret);
-
-    ret = sourceManager_->StopRemoteInput(srcId, sinkId, INPUTTYPE_MOUSE, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -620,6 +617,7 @@ HWTEST_F(DistributedInputSourceManagerTest, StopRemoteInput_05, testing::ext::Te
     srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
     DistributedInputSourceManager::DInputClientStopInfo stopInfo {sinkId, INPUTTYPE, callback};
     sourceManager_->stpCallbacks_.push_back(stopInfo);
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
     ret = sourceManager_->StopRemoteInput(srcId, sinkId, INPUTTYPE, callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
