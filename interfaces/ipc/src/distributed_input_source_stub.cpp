@@ -598,6 +598,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
 int32_t DistributedInputSourceStub::OnRemoteRequest(
     uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
+    DHLOGI("OnRemoteRequest code: %u.", code);
     if (data.ReadInterfaceToken() != GetDescriptor()) {
         DHLOGE("DistributedInputSourceStub read token valid failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
