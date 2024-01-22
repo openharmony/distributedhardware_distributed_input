@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,26 +52,25 @@ HWTEST_F(DistributedInputSourceTransTest, Init01, testing::ext::TestSize.Level0)
 
 HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus01, testing::ext::TestSize.Level0)
 {
-    std::string remoteDevId = "";
+    std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(remoteDevId, false);
-    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
+    DistributedInputSourceTransport::GetInstance().Release();
 }
 
 HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus02, testing::ext::TestSize.Level0)
 {
-    std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
-    int32_t sessionId = 2;
-    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[srcId] = sessionId;
-    int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(srcId, true);
+    std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(remoteDevId, true);
     EXPECT_EQ(DH_SUCCESS, ret);
-    ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(srcId, false);
-    EXPECT_EQ(DH_SUCCESS, ret);
-    ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(srcId, false);
-    EXPECT_EQ(DH_SUCCESS, ret);
+}
 
-    DistributedInputSourceTransport::GetInstance().CloseInputSoftbus(srcId, false);
-    DistributedInputSourceTransport::GetInstance().CloseInputSoftbus(srcId, false);
-    DistributedInputSourceTransport::GetInstance().CloseInputSoftbus(srcId, true);
+HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus03, testing::ext::TestSize.Level0)
+{
+    std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    DistributedInputSourceTransport::GetInstance().latencyThreadNum = 1;
+    DistributedInputSourceTransport::GetInstance().injectThreadNum = 1;
+    int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(remoteDevId, false);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
