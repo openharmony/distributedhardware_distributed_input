@@ -41,9 +41,9 @@ namespace {
 const int32_t SESSION_STATUS_OPENED = 0;
 const int32_t SESSION_STATUS_CLOSED = 1;
 static QosTV g_qosInfo[] = {
-    { .qos = QOS_TYPE_MIN_BW, .value = 10 * 1024 * 1024},
-    { .qos = QOS_TYPE_MAX_LATENCY, .value = 2000 },
-    { .qos = QOS_TYPE_TRANS_RELIABILITY, .value = QOS_RELIABILITY_FULL }
+    { .qos = QOS_TYPE_MIN_BW, .value = 80 * 1024 * 1024},
+    { .qos = QOS_TYPE_MAX_LATENCY, .value = 8000 },
+    { .qos = QOS_TYPE_MIN_LATENCY, .value = 2000 }
 };
 static uint32_t g_QosTV_Param_Index = static_cast<uint32_t>(sizeof(g_qosInfo) / sizeof(g_qosInfo[0]));
 }

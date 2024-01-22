@@ -21,36 +21,42 @@ namespace DistributedInput {
 int32_t DistributedInputKit::PrepareRemoteInput(
     const std::string &sinkId, sptr<IPrepareDInputCallback> callback)
 {
+    DHLOGI("PrepareRemoteInput entrance by sinkId");
     return DistributedInputClient::GetInstance().PrepareRemoteInput(sinkId, callback);
 }
 
 int32_t DistributedInputKit::UnprepareRemoteInput(
     const std::string &sinkId, sptr<IUnprepareDInputCallback> callback)
 {
+    DHLOGI("UnprepareRemoteInput entrance by sinkId");
     return DistributedInputClient::GetInstance().UnprepareRemoteInput(sinkId, callback);
 }
 
 int32_t DistributedInputKit::StartRemoteInput(
     const std::string &sinkId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
+    DHLOGI("StartRemoteInput entrance by sinkId and inputTypes");
     return DistributedInputClient::GetInstance().StartRemoteInput(sinkId, inputTypes, callback);
 }
 
 int32_t DistributedInputKit::StopRemoteInput(
     const std::string &sinkId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
+    DHLOGI("StopRemoteInput entrance by sinkId and inputTypes");
     return DistributedInputClient::GetInstance().StopRemoteInput(sinkId, inputTypes, callback);
 }
 
 int32_t DistributedInputKit::StartRemoteInput(const std::string &srcId, const std::string &sinkId,
     const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
+    DHLOGI("StartRemoteInput entrance by srcId,sinkId,inputTypes");
     return DistributedInputClient::GetInstance().StartRemoteInput(srcId, sinkId, inputTypes, callback);
 }
 
 int32_t DistributedInputKit::StopRemoteInput(const std::string &srcId, const std::string &sinkId,
     const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
+    DHLOGI("StopRemoteInput entrance by srcId,sinkId,inputTypes");
     return DistributedInputClient::GetInstance().StopRemoteInput(srcId, sinkId, inputTypes, callback);
 }
 
@@ -77,55 +83,65 @@ bool DistributedInputKit::IsStartDistributedInput(const std::string &dhId)
 int32_t DistributedInputKit::PrepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IPrepareDInputCallback> callback)
 {
+    DHLOGI("PrepareRemoteInput entrance by srcId and sinkId");
     return DistributedInputClient::GetInstance().PrepareRemoteInput(srcId, sinkId, callback);
 }
 
 int32_t DistributedInputKit::UnprepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IUnprepareDInputCallback> callback)
 {
+    DHLOGI("UnprepareRemoteInput entrance by srcId and sinkId");
     return DistributedInputClient::GetInstance().UnprepareRemoteInput(srcId, sinkId, callback);
 }
 
 int32_t DistributedInputKit::StartRemoteInput(const std::string &sinkId, const std::vector<std::string> &dhIds,
     sptr<IStartStopDInputsCallback> callback)
 {
+    DHLOGI("StartRemoteInput entrance by sinkId and dhIds");
     return DistributedInputClient::GetInstance().StartRemoteInput(sinkId, dhIds, callback);
 }
 
 int32_t DistributedInputKit::StopRemoteInput(const std::string &sinkId, const std::vector<std::string> &dhIds,
     sptr<IStartStopDInputsCallback> callback)
 {
+    DHLOGI("StopRemoteInput entrance by sinkId and dhIds");
     return DistributedInputClient::GetInstance().StopRemoteInput(sinkId, dhIds, callback);
 }
 
 int32_t DistributedInputKit::StartRemoteInput(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
+    DHLOGI("StartRemoteInput entrance by srcId,sinkId,dhIds");
     return DistributedInputClient::GetInstance().StartRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
 int32_t DistributedInputKit::StopRemoteInput(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
+    DHLOGI("StopRemoteInput entrance by srcId,sinkId,dhIds");
     return DistributedInputClient::GetInstance().StopRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
 int32_t DistributedInputKit::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
+    DHLOGI("RegisterSimulationEventListener entrance");
     return DistributedInputClient::GetInstance().RegisterSimulationEventListener(listener);
 }
 
 int32_t DistributedInputKit::UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
+    DHLOGI("UnregisterSimulationEventListener entrance");
     return DistributedInputClient::GetInstance().UnregisterSimulationEventListener(listener);
 }
 
 int32_t DistributedInputKit::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
 {
+    DHLOGI("RegisterSessionStateCb entrance");
     return DistributedInputClient::GetInstance().RegisterSessionStateCb(callback);
 }
 int32_t DistributedInputKit::UnregisterSessionStateCb()
 {
+    DHLOGI("UnregisterSessionStateCb entrance");
     return DistributedInputClient::GetInstance().UnregisterSessionStateCb();
 }
 } // namespace DistributedInput
