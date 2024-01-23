@@ -52,7 +52,7 @@ ohos_shared_library("libdinput_inject") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinputinjectkit\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [

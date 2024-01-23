@@ -45,7 +45,7 @@ ohos_shared_library("libdinput_dfx_utils") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinputdfxutil\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [ "${utils_path}:libdinput_utils" ]

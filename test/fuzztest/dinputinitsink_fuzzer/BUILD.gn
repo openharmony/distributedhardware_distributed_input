@@ -68,7 +68,7 @@ ohos_fuzztest("DinputInitSinkFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"DinputInitSinkFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 }
 
