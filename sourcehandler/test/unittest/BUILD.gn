@@ -66,7 +66,7 @@ ohos_unittest("distributed_input_source_handler_test") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [

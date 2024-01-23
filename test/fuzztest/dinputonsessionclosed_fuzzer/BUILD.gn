@@ -71,7 +71,7 @@ ohos_fuzztest("DinputOnSessionClosedFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"DinputConfigDhFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 }
 

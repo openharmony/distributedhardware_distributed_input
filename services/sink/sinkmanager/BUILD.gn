@@ -58,7 +58,7 @@ ohos_shared_library("libdinput_sink") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinputmanagerkit\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [

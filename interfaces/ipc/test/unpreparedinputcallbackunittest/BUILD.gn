@@ -59,7 +59,7 @@ ohos_unittest("unprepare_d_input_call_back_test") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [

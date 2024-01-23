@@ -48,7 +48,7 @@ ohos_shared_library("libdinput_handler") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinputhandler\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004120",
   ]
 
   deps = [
