@@ -90,7 +90,7 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hicollie:libhicollie",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
