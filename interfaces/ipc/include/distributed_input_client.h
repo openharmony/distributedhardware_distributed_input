@@ -115,6 +115,7 @@ public:
     void CheckSinkRegisterCallback();
     void CheckSharingDhIdsCallback();
     void CheckSinkScreenInfoCallback();
+    int32_t RestoreRegisterListenerAndCallback();
 
 public:
     class RegisterDInputCb : public OHOS::DistributedHardware::DistributedInput::RegisterDInputCallbackStub {
@@ -190,6 +191,8 @@ private:
     sptr<ISimulationEventListener> unregSimulationEventListener_ = nullptr;
     std::set<sptr<ISharingDhIdListener>> sharingDhIdListeners_;
     std::set<sptr<GetSinkScreenInfosCb>> getSinkScreenInfosCallbacks_;
+    std::set<sptr<ISimulationEventListener>> addSaListeners_;
+    sptr<ISessionStateCallback> addSaCallback_ = nullptr;
 
     std::shared_ptr<DistributedInputClient::DInputClientEventHandler> eventHandler_;
 
@@ -220,6 +223,8 @@ private:
     std::mutex sharingDhIdsMtx_;
     // sharing local dhids
     std::set<std::string> sharingDhIds_;
+    std::mutex addSaListenersMtx_;
+    std::mutex addSaCallbackMtx_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

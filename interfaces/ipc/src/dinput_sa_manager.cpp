@@ -21,6 +21,7 @@
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
+#include "distributed_input_client.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -76,8 +77,12 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG");
             AppExecFwk::InnerEvent::Pointer msgEvent =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG, systemAbilityId);
-            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent, DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME,
-                                                                    AppExecFwk::EventQueue::Priority::IMMEDIATE);
+            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
+                DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
+        }
+        int32_t result = DistributedInputClient::GetInstance().RestoreRegisterListenerAndCallback();
+        if (result != DH_SUCCESS) {
+            DHLOGE("source sa execute RestoreRegisterListenerAndCallback fail, result = %d", result);
         }
     }
 
@@ -88,8 +93,12 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG");
             AppExecFwk::InnerEvent::Pointer msgEvent =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG, systemAbilityId);
-            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent, DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME,
-                                                                    AppExecFwk::EventQueue::Priority::IMMEDIATE);
+            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
+                DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
+        }
+        int32_t result = DistributedInputClient::GetInstance().RestoreRegisterListenerAndCallback();
+        if (result != DH_SUCCESS) {
+            DHLOGE("sink sa execute RestoreRegisterListenerAndCallback fail, result = %d", result);
         }
     }
     DHLOGI("sa %d is added.", systemAbilityId);
