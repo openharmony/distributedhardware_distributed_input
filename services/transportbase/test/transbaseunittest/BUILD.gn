@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -45,6 +45,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "${distributedinput_path}/inputdevicehandler/include",
     "${distributedinput_path}/services/state/include",
     "${common_path}/test/mock",
+    "${ipc_path}/include",
   ]
 
   sources = [
@@ -73,6 +74,7 @@ ohos_unittest("distributed_input_transbase_test") {
 
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
+    "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
@@ -84,6 +86,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "eventhandler:libeventhandler",
     "hicollie:libhicollie",
     "hitrace:hitrace_meter",
+    "ipc:ipc_core",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

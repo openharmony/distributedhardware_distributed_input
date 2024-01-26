@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,6 +27,7 @@
 #include "distributed_input_inject.h"
 #include "distributed_input_node_manager.h"
 #include "input_node_listener_stub.h"
+#include "register_session_state_callback_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -44,6 +45,14 @@ public:
         void OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId, const std::string sinkNodeId,
             const std::string sinkNodeDesc);
         void OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId, const std::string sinkNodeId);
+    };
+
+    class TestRegisterSessionStateCallbackStub :
+        public OHOS::DistributedHardware::DistributedInput::RegisterSessionStateCallbackStub {
+    public:
+        TestRegisterSessionStateCallbackStub() = default;
+        virtual ~TestRegisterSessionStateCallbackStub() = default;
+        void OnResult(const std::string &devId, const uint32_t status);
     };
 private:
     sptr<TestInputNodeListener> inputNodelistener_;

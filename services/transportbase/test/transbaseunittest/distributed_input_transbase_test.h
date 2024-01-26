@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,6 +29,7 @@
 #include "distributed_input_transport_base.h"
 #include "dinput_transbase_source_callback.h"
 #include "dinput_transbase_sink_callback.h"
+#include "register_session_state_callback_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -39,6 +40,14 @@ public:
     static void TearDownTestCase();
     void SetUp() override;
     void TearDown() override;
+
+    class TestRegisterSessionStateCallbackStub :
+        public OHOS::DistributedHardware::DistributedInput::RegisterSessionStateCallbackStub {
+    public:
+        TestRegisterSessionStateCallbackStub() = default;
+        virtual ~TestRegisterSessionStateCallbackStub() = default;
+        void OnResult(const std::string &devId, const uint32_t status);
+    };
 
 private:
     DistributedInputSourceTransport* sourceTransport_;
