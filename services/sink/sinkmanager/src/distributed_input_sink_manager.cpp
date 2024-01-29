@@ -133,16 +133,6 @@ void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_ONPREPARE;
     std::string smsg = "";
-    int32_t ret = DistributedInputCollector::GetInstance().StartCollectionThread(
-        DistributedInputSinkTransport::GetInstance().GetEventHandler());
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DInputSinkListener init InputCollector error.");
-        jsonStr[DINPUT_SOFTBUS_KEY_RESP_VALUE] = false;
-        jsonStr[DINPUT_SOFTBUS_KEY_WHITE_LIST] = "";
-        smsg = jsonStr.dump();
-        DistributedInputSinkTransport::GetInstance().RespPrepareRemoteInput(sessionId, smsg);
-        return;
-    }
 
     DistributedInputSinkSwitch::GetInstance().AddSession(sessionId);
     sinkManagerObj_->QueryLocalWhiteList(jsonStr);
@@ -173,16 +163,6 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayPrepareRemoteInput(
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_ON_RELAY_PREPARE;
     jsonStr[DINPUT_SOFTBUS_KEY_SESSION_ID] = toSrcSessionId;
     std::string smsg = "";
-    int ret = DistributedInputCollector::GetInstance().StartCollectionThread(
-        DistributedInputSinkTransport::GetInstance().GetEventHandler());
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DInputSinkListener init InputCollector error.");
-        jsonStr[DINPUT_SOFTBUS_KEY_RESP_VALUE] = false;
-        jsonStr[DINPUT_SOFTBUS_KEY_WHITE_LIST] = "";
-        smsg = jsonStr.dump();
-        DistributedInputSinkTransport::GetInstance().RespPrepareRemoteInput(toSinkSessionId, smsg);
-        return;
-    }
 
     DistributedInputSinkSwitch::GetInstance().AddSession(toSinkSessionId);
     sinkManagerObj_->QueryLocalWhiteList(jsonStr);
@@ -635,6 +615,13 @@ int32_t DistributedInputSinkManager::Init()
     pluginStartListener_ = new PluginStartListener();
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_PHY_DEV_PLUGIN, pluginStartListener_);
     DistributedInputCollector::GetInstance().PreInit();
+
+    DHLOGI("init InputCollector.");
+    int result = DistributedInputCollector::GetInstance().StartCollectionThread(
+        DistributedInputSinkTransport::GetInstance().GetEventHandler());
+    if (result != DH_SUCCESS) {
+        DHLOGE("init InputCollector error.");
+    }
 
     return DH_SUCCESS;
 }
