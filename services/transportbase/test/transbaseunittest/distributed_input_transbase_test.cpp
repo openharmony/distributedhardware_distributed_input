@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,6 +53,13 @@ void DistributedInputTransbaseTest::SetUpTestCase()
 
 void DistributedInputTransbaseTest::TearDownTestCase()
 {
+}
+
+void DistributedInputTransbaseTest::TestRegisterSessionStateCallbackStub::OnResult(const std::string &devId,
+    const uint32_t status)
+{
+    (void)devId;
+    (void)status;
 }
 
 HWTEST_F(DistributedInputTransbaseTest, Init01, testing::ext::TestSize.Level0)
@@ -175,6 +182,49 @@ HWTEST_F(DistributedInputTransbaseTest, Release01, testing::ext::TestSize.Level1
 {
     DistributedInputTransportBase::GetInstance().Release();
     EXPECT_EQ(0, DistributedInputTransportBase::GetInstance().channelStatusMap_.size());
+}
+
+HWTEST_F(DistributedInputTransbaseTest, StopSession_001, testing::ext::TestSize.Level1)
+{
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
+    std::string remoteDevId = "remoteDevId_test";
+    DistributedInputTransportBase::GetInstance().StopSession(remoteDevId);
+    EXPECT_EQ(0, DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.size());
+}
+
+HWTEST_F(DistributedInputTransbaseTest, RunSessionStateCallback_001, testing::ext::TestSize.Level1)
+{
+    std::string remoteDevId = "remoteDevId_test";
+    uint32_t sessionState = 1;
+    sptr<TestRegisterSessionStateCallbackStub> callback(new TestRegisterSessionStateCallbackStub());
+    DistributedInputTransportBase::GetInstance().RegisterSessionStateCb(callback);
+    DistributedInputTransportBase::GetInstance().RunSessionStateCallback(remoteDevId, sessionState);
+    DistributedInputTransportBase::GetInstance().UnregisterSessionStateCb();
+    auto ret = DistributedInputTransportBase::GetInstance().CountSession(remoteDevId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+}
+
+HWTEST_F(DistributedInputTransbaseTest, OnSessionClosed_001, testing::ext::TestSize.Level1)
+{
+    int32_t sessionId = 1;
+    std::string devId = "devId_741258";
+    ShutdownReason reason = ShutdownReason::SHUTDOWN_REASON_UNKNOWN;
+    DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
+
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[devId] = sessionId;
+    DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
+
+    DistributedInputTransportBase::GetInstance().sinkCallback_ = std::shared_ptr<DInputTransbaseSinkCallback>();
+    DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
+
+    DistributedInputTransportBase::GetInstance().srcCallback_ = std::shared_ptr<DInputTransbaseSourceCallback>();
+    DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
+
+    DistributedInputTransportBase::GetInstance().srcMgrCallback_ = std::shared_ptr<DInputSourceManagerCallback>();
+    DistributedInputTransportBase::GetInstance().OnSessionClosed(sessionId, reason);
+    auto ret = DistributedInputTransportBase::GetInstance().CountSession(devId);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 } // namespace DistributedInput

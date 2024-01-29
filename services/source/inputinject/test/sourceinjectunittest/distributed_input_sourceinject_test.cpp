@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -66,6 +66,13 @@ void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOffLine(cons
     (void)srcDevId;
     (void)sinkDevId;
     (void)sinkNodeId;
+}
+
+void DistributedInputSourceInjectTest::TestRegisterSessionStateCallbackStub::OnResult(const std::string &devId,
+    const uint32_t status)
+{
+    (void)devId;
+    (void)status;
 }
 
 HWTEST_F(DistributedInputSourceInjectTest, RegisterDistributedHardware01, testing::ext::TestSize.Level1)
@@ -404,6 +411,53 @@ HWTEST_F(DistributedInputSourceInjectTest, OpenDevicesNode_002, testing::ext::Te
     std::string param(STRING_MAX_SIZE + 1, 'a');
     ret = DistributedInputInject::GetInstance().inputNodeManager_->OpenDevicesNode(devId, dhIdtest, param);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_OPEN_DEVICE_NODE_FAIL, ret);
+}
+
+HWTEST_F(DistributedInputSourceInjectTest, RegisterInjectEventCb_001, testing::ext::TestSize.Level1)
+{
+    sptr<ISessionStateCallback> callback = nullptr;
+    auto ret = DistributedInputInject::GetInstance().RegisterInjectEventCb(callback);
+    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_INJECT_EVENT_CB_IS_NULL, ret);
+}
+
+HWTEST_F(DistributedInputSourceInjectTest, RegisterInjectEventCb_002, testing::ext::TestSize.Level1)
+{
+    sptr<TestRegisterSessionStateCallbackStub> callback(new TestRegisterSessionStateCallbackStub());
+    auto ret = DistributedInputInject::GetInstance().RegisterInjectEventCb(callback);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+HWTEST_F(DistributedInputSourceInjectTest, GetVirtualKeyboardPaths_001, testing::ext::TestSize.Level1)
+{
+    std::string devId;
+    std::vector<std::string> dhIds;
+    std::vector<std::string> virKeyboardPaths;
+    DistributedInputInject::GetInstance().inputNodeManager_ = nullptr;
+    DistributedInputInject::GetInstance().GetVirtualKeyboardPaths(devId, dhIds, virKeyboardPaths);
+
+    std::string dhId;
+    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(devId, dhId);
+
+    DistributedInputInject::GetInstance().inputNodeManager_ = std::make_unique<DistributedInputNodeManager>();
+    DistributedInputInject::GetInstance().NotifyNodeMgrScanVirNode(devId, dhId);
+
+    auto ret = DistributedInputInject::GetInstance().UnregisterInjectEventCb();
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+HWTEST_F(DistributedInputSourceInjectTest, MatchAndSavePhysicalPath_001, testing::ext::TestSize.Level1)
+{
+    std::string devicePath = "";
+    std::string devId = "";
+    std::string dhId = "";
+    auto ret =
+        DistributedInputInject::GetInstance().inputNodeManager_->MatchAndSavePhysicalPath(devicePath, devId, dhId);
+    EXPECT_EQ(false, ret);
+
+    DistributedInputInject::GetInstance().inputNodeManager_->isInjectThreadCreated_.store(true);
+    DistributedInputInject::GetInstance().inputNodeManager_->StartInjectThread();
+    DistributedInputInject::GetInstance().inputNodeManager_->isInjectThreadCreated_.store(false);
+    DistributedInputInject::GetInstance().inputNodeManager_->StopInjectThread();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
