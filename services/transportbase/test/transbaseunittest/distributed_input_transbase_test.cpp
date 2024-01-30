@@ -202,7 +202,6 @@ HWTEST_F(DistributedInputTransbaseTest, RunSessionStateCallback_001, testing::ex
     DistributedInputTransportBase::GetInstance().UnregisterSessionStateCb();
     auto ret = DistributedInputTransportBase::GetInstance().CountSession(remoteDevId);
     EXPECT_EQ(DH_SUCCESS, ret);
-
 }
 
 HWTEST_F(DistributedInputTransbaseTest, OnSessionClosed_001, testing::ext::TestSize.Level1)
