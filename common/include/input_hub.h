@@ -75,7 +75,7 @@ public:
         int32_t absYIndex;
     };
 
-    InputHub(bool isPluginMonitor);
+    explicit InputHub(bool isPluginMonitor);
     ~InputHub();
     size_t StartCollectInputEvents(RawEvent *buffer, size_t bufferSize);
     size_t StartCollectInputHandler(InputDeviceEvent *buffer, size_t bufferSize);
