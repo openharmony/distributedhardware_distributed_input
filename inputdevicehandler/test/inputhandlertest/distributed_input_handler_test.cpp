@@ -75,7 +75,7 @@ HWTEST_F(DInputHandlerTest, FindDevicesInfoByType_001, testing::ext::TestSize.Le
     dInputHandler.NotifyHardWare(2);
     std::map<std::string, std::string> ret = dInputHandler.QueryExtraInfo();
     EXPECT_EQ(0, ret.size());
-    dInputHandler.inputHub_ = std::make_unique<InputHub>();
+    dInputHandler.inputHub_ = std::make_unique<InputHub>(true);
     dInputHandler.StartInputMonitorDeviceThread();
 }
 } // namespace DistributedInput

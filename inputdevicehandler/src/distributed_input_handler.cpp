@@ -44,7 +44,7 @@ IMPLEMENT_SINGLE_INSTANCE(DistributedInputHandler);
 DistributedInputHandler::DistributedInputHandler()
     : collectThreadID_(-1), isCollectingEvents_(false), isStartCollectEventThread(false)
 {
-    inputHub_ = std::make_unique<InputHub>();
+    inputHub_ = std::make_unique<InputHub>(true);
     this->m_listener = nullptr;
 }
 

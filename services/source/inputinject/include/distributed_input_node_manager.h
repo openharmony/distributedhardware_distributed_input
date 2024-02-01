@@ -124,7 +124,6 @@ private:
     std::mutex injectThreadMutex_;
     std::condition_variable conditionVariable_;
     std::queue<EventBatch> injectQueue_;
-    std::unique_ptr<InputHub> inputHub_;
     int32_t virtualTouchScreenFd_;
     std::once_flag callOnceFlag_;
     std::shared_ptr<DInputNodeManagerEventHandler> callBackHandler_;

@@ -44,9 +44,9 @@ const uint32_t SLEEP_TIME_US = 100 * 1000;
 const std::string MOUSE_NODE_KEY = "mouse";
 }
 
-InputHub::InputHub() : epollFd_(0), iNotifyFd_(0), inputWd_(0), needToScanDevices_(true),
-    mPendingEventItems{}, pendingEventCount_(0), pendingEventIndex_(0), pendingINotify_(false), deviceChanged_(false),
-    inputTypes_(0), isStartCollectEvent_(false), isStartCollectHandler_(false)
+InputHub::InputHub(bool isPluginMonitor) : epollFd_(-1), iNotifyFd_(-1), inputWd_(-1), isPluginMonitor_(isPluginMonitor),
+    needToScanDevices_(true), mPendingEventItems{}, pendingEventCount_(0), pendingEventIndex_(0), pendingINotify_(false),
+    deviceChanged_(false), inputTypes_(0), isStartCollectEvent_(false), isStartCollectHandler_(false)
 {
     Initialize();
 }
@@ -64,21 +64,25 @@ int32_t InputHub::Initialize()
         return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
     }
 
-    iNotifyFd_ = inotify_init();
-    inputWd_ = inotify_add_watch(iNotifyFd_, DEVICE_PATH, IN_DELETE | IN_CREATE);
-    if (inputWd_ < 0) {
-        DHLOGE(
-            "Could not register INotify for %s: %s", DEVICE_PATH, ConvertErrNo().c_str());
-        return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
-    }
+    if (isPluginMonitor_) {
+        DHLOGI("Init InputHub for device plugin monitor");
+        iNotifyFd_ = inotify_init();
+        inputWd_ = inotify_add_watch(iNotifyFd_, DEVICE_PATH, IN_DELETE | IN_CREATE);
+        if (inputWd_ < 0) {
+            DHLOGE("Could not register INotify for %s: %s", DEVICE_PATH, ConvertErrNo().c_str());
+            return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
+        }
 
-    struct epoll_event eventItem = {};
-    eventItem.events = EPOLLIN;
-    eventItem.data.fd = iNotifyFd_;
-    int result = epoll_ctl(epollFd_, EPOLL_CTL_ADD, iNotifyFd_, &eventItem);
-    if (result != 0) {
-        DHLOGE("Could not add INotify to epoll instance.  errno=%d", errno);
-        return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
+        struct epoll_event eventItem = {};
+        eventItem.events = EPOLLIN;
+        eventItem.data.fd = iNotifyFd_;
+        int result = epoll_ctl(epollFd_, EPOLL_CTL_ADD, iNotifyFd_, &eventItem);
+        if (result != 0) {
+            DHLOGE("Could not add INotify to epoll instance.  errno=%d", errno);
+            return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
+        }
+    } else {
+        DHLOGI("Init InputHub for read device events");
     }
 
     return DH_SUCCESS;
@@ -87,11 +91,22 @@ int32_t InputHub::Initialize()
 int32_t InputHub::Release()
 {
     CloseAllDevicesLocked();
+    if (epollFd_ != -1) {
+        ::close(epollFd_);
+        epollFd_ = -1;
+    }
 
-    ::close(epollFd_);
-    ::close(iNotifyFd_);
-    StopCollectInputEvents();
-    StopCollectInputHandler();
+    if (iNotifyFd_ != -1) {
+        ::close(iNotifyFd_);
+        iNotifyFd_ = -1;
+    }
+
+    if (isPluginMonitor_) {
+        StopCollectInputHandler();
+    } else {
+        StopCollectInputEvents();
+    }
+
     sharedDHIds_.clear();
     return DH_SUCCESS;
 }
