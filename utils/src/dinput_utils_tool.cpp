@@ -305,12 +305,12 @@ int OpenInputDeviceFdByPath(const std::string &devicePath)
         DHLOGI("path: %s is a dir.", devicePath.c_str());
         return -1;
     }
-    int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+    int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC);
     int32_t count = 0;
     while ((fd < 0) && (count < MAX_RETRY_COUNT)) {
         ++count;
         usleep(SLEEP_TIME_US);
-        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
+        fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC);
         DHLOGE("could not open the path: %s, errno: %s; retry: %d", devicePath.c_str(), ConvertErrNo().c_str(), count);
     }
     if (count >= MAX_RETRY_COUNT) {

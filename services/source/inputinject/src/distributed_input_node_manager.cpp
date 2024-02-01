@@ -32,7 +32,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
-    isInjectThreadRunning_(false), inputHub_(std::make_unique<InputHub>()), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
+    isInjectThreadRunning_(false), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
     DHLOGI("DistributedInputNodeManager ctor");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
@@ -345,7 +345,6 @@ int32_t DistributedInputNodeManager::CreateHandle(const InputDevice &inputDevice
     const std::string &dhId)
 {
     std::unique_lock<std::mutex> my_lock(operationMutex_);
-    std::call_once(callOnceFlag_, [this]() { inputHub_->ScanInputDevices(DEVICE_PATH); });
     std::unique_ptr<VirtualDevice> virtualDevice = std::make_unique<VirtualDevice>(inputDevice);
 
     virtualDevice->SetNetWorkId(devId);

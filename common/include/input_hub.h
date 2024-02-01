@@ -75,7 +75,7 @@ public:
         int32_t absYIndex;
     };
 
-    InputHub();
+    explicit InputHub(bool isPluginMonitor);
     ~InputHub();
     size_t StartCollectInputEvents(RawEvent *buffer, size_t bufferSize);
     size_t StartCollectInputHandler(InputDeviceEvent *buffer, size_t bufferSize);
@@ -103,6 +103,11 @@ public:
     void SavePressedKeyState(const Device *dev, int32_t keyCode);
     void ClearDeviceStates();
     void ClearSkipDevicePaths();
+    /*
+     * Scan the input device node and save info.
+     */
+    void ScanAndRecordInputDevices();
+
 private:
     int32_t Initialize();
     int32_t Release();
@@ -185,10 +190,6 @@ private:
     void MatchAndDealEvent(Device *device, const RawEvent &event);
     void DealTouchPadEvent(const RawEvent &event);
     void DealNormalKeyEvent(Device *device, const RawEvent &event);
-    /*
-     * Scan the input device node and save info.
-     */
-    void ScanAndRecordInputDevices();
 
     /*
      * Check is this node has been scaned for collecting info.
@@ -209,6 +210,11 @@ private:
     int epollFd_;
     int iNotifyFd_;
     int inputWd_;
+    /*
+     * true: for just monitor device plugin/unplugin;
+     * false: for read device events.
+     */
+    bool isPluginMonitor_;
 
     std::vector<std::unique_ptr<Device>> openingDevices_;
     std::vector<std::unique_ptr<Device>> closingDevices_;
