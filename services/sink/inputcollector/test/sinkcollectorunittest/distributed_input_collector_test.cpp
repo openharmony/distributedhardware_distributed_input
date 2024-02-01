@@ -97,7 +97,7 @@ HWTEST_F(DistributedInputCollectorTest, IsAllDevicesStoped02, testing::ext::Test
 
 HWTEST_F(DistributedInputCollectorTest, SetSharingTypes01, testing::ext::TestSize.Level1)
 {
-    DistributedInputCollector::GetInstance().inputHub_ = std::make_unique<InputHub>();
+    DistributedInputCollector::GetInstance().inputHub_ = std::make_unique<InputHub>(false);
     bool enabled = true;
     uint32_t inputType = static_cast<uint32_t>(DInputDeviceType::ALL);
 
