@@ -39,7 +39,7 @@ namespace DistributedInput {
 DistributedInputCollector::DistributedInputCollector() : mEventBuffer{}, collectThreadID_(-1),
     isCollectingEvents_(false), isStartGetDeviceHandlerThread(false), inputTypes_(0)
 {
-    inputHub_ = std::make_unique<InputHub>();
+    inputHub_ = std::make_unique<InputHub>(false);
 }
 
 DistributedInputCollector::~DistributedInputCollector()
@@ -265,6 +265,7 @@ void DistributedInputCollector::ClearSkipDevicePaths()
         return;
     }
     inputHub_->ClearSkipDevicePaths();
+    inputHub_->ScanAndRecordInputDevices();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
