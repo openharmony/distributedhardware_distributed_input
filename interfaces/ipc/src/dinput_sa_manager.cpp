@@ -21,7 +21,6 @@
 #include "constants_dinput.h"
 #include "dinput_errcode.h"
 #include "dinput_log.h"
-#include "distributed_input_client.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -80,10 +79,6 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
             DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
                 DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
         }
-        int32_t result = DistributedInputClient::GetInstance().RestoreRegisterListenerAndCallback();
-        if (result != DH_SUCCESS) {
-            DHLOGE("source sa execute RestoreRegisterListenerAndCallback fail, result = %d", result);
-        }
     }
 
     if (systemAbilityId == DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID) {
@@ -95,10 +90,6 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG, systemAbilityId);
             DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
                 DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
-        }
-        int32_t result = DistributedInputClient::GetInstance().RestoreRegisterListenerAndCallback();
-        if (result != DH_SUCCESS) {
-            DHLOGE("sink sa execute RestoreRegisterListenerAndCallback fail, result = %d", result);
         }
     }
     DHLOGI("sa %d is added.", systemAbilityId);
@@ -283,6 +274,65 @@ bool DInputSAManager::SetDInputSinkProxy(const sptr<IRemoteObject> &remoteObject
         return false;
     }
     return true;
+}
+
+int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
+{
+    DHLOGI("Restore RegisterPublisherListener");
+    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
+        DHLOGE("RestoreRegisterSimulationEventListener proxy error, client fail");
+        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
+    }
+
+    int32_t result = DH_SUCCESS;
+    std::lock_guard<std::mutex> lock(simEventListenerCacheMtx_);
+        for (const auto& listener : simEventListenerCache_) {
+            int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
+            if (ret != DH_SUCCESS) {
+                result = ret;
+                DHLOGE("SA execute RegisterSimulationEventListener fail, ret = %d", ret);
+            }
+    }
+
+    DHLOGI("Restore RegisterSessionStateCb");
+    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
+        DHLOGE("Restore RegisterSessionStateCb client fail.");
+        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(sessionStateCbCacheMtx_);
+        int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(sessionStateCbCache_);
+        if (ret != DH_SUCCESS) {
+            result = ret;
+            DHLOGE("SA execute RegisterSessionStateCb fail, ret = %d", ret);
+        }
+        return result;
+    }
+}
+
+void DHFWKSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
+{
+    std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    simEventListenerCache_.insert(listener);
+}
+
+void DHFWKSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
+{
+    std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    simEventListenerCache_.erase(listener);
+}
+
+void DHFWKSAManager::AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback)
+{
+    std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
+    sessionStateCbCache_ = callback;
+}
+
+void DHFWKSAManager::()
+{
+    std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
+    sessionStateCbCache_ = nullptr;
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

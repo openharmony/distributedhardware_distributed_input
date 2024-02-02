@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <mutex>
+#include <set>
 
 #include "i_distributed_source_input.h"
 #include "i_distributed_sink_input.h"
@@ -46,6 +47,11 @@ public:
     bool HasDInputSinkProxy();
     bool SetDInputSinkProxy(const sptr<IRemoteObject> &remoteObject);
     void RegisterEventHandler(std::shared_ptr<AppExecFwk::EventHandler> handler);
+    int32_t RestoreRegisterListenerAndCallback();
+    void AddSimEventListenerToCache(sptr<ISimulationEventListener> listener);
+    void RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener);
+    void AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback);
+    void RemoveSessionStateCbFromCache();
 
 public:
     class SystemAbilityListener : public SystemAbilityStatusChangeStub {
@@ -54,6 +60,12 @@ public:
         void OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId) override;
     };
 
+private:
+    std::mutex simEventListenerCacheMtx_;
+    std::set<sptr<ISimulationEventListener>> simEventListenerCache_;
+    std::mutex sessionStateCbCacheMtx_;
+    sptr<ISessionStateCallback> sessionStateCbCache_ = nullptr;
+    
 private:
     DInputSAManager() = default;
     ~DInputSAManager() = default;

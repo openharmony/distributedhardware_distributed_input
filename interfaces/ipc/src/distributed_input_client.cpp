@@ -28,6 +28,7 @@
 #include "input_check_param.h"
 #include "softbus_bus_center.h"
 #include "white_list_util.h"
+#include "dinput_sa_manager.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -128,6 +129,10 @@ void DistributedInputClient::DInputClientEventHandler::ProcessEvent(const AppExe
     DHLOGI("DInputClientEventHandler ProcessEvent start eventId:%d.", eventId);
     if (eventId == DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG) {
         DistributedInputClient::GetInstance().CheckSourceRegisterCallback();
+        int32_t result = DInputSAManager::GetInstance().RestoreRegisterListenerAndCallback();
+        if (result != DH_SUCCESS) {
+            DHLOGE("source sa execute RestoreRegisterListenerAndCallback fail, result = %d", result);
+        }
         return;
     }
 
@@ -581,10 +586,9 @@ int32_t DistributedInputClient::RegisterSimulationEventListener(sptr<ISimulation
     }
 
     int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
-    std::lock_guard<std::mutex> lock(addSaListenersMtx_);
     if (ret == DH_SUCCESS) {
         isSimulationEventCbReg = true;
-        addSaListeners_.insert(listener);
+        DInputSAManager::GetInstance().AddSimEventListenerToCache(listener);
     } else {
         isSimulationEventCbReg = false;
         regSimulationEventListener_ = listener;
@@ -609,9 +613,7 @@ int32_t DistributedInputClient::UnregisterSimulationEventListener(sptr<ISimulati
     if (ret != DH_SUCCESS) {
         DHLOGE("UnregisterSimulationEventListener Failed, ret = %d", ret);
     }
-
-    std::lock_guard<std::mutex> lock(addSaListenersMtx_);
-    addSaListeners_.erase(listener);
+    DInputSAManager::GetInstance().RemoveSimEventListenerFromCache(listener);
     return ret;
 }
 
@@ -754,8 +756,7 @@ int32_t DistributedInputClient::RegisterSessionStateCb(sptr<ISessionStateCallbac
         DHLOGE("RegisterSessionStateCb callback is null.");
         return ERR_DH_INPUT_CLIENT_REGISTER_SESSION_STATE_FAIL;
     }
-    std::lock_guard<std::mutex> lock(addSaCallbackMtx_);
-    addSaCallback_ = (callback);
+    DInputSAManager::GetInstance().AddSessionStateCbToCache(listener);
     return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
 }
 
@@ -765,44 +766,8 @@ int32_t DistributedInputClient::UnregisterSessionStateCb()
         DHLOGE("DinputStart client fail.");
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
-    std::lock_guard<std::mutex> lock(addSaCallbackMtx_);
-    addSaCallback_ = nullptr;
+    DInputSAManager::GetInstance().RemoveSessionStateCbFromCache(listener);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSessionStateCb();
-}
-
-int32_t DistributedInputClient::RestoreRegisterListenerAndCallback()
-{
-    DHLOGI("Restore RegisterPublisherListener");
-    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
-        DHLOGE("RestoreRegisterSimulationEventListener proxy error, client fail");
-        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
-    }
-
-    int32_t result = DH_SUCCESS;
-    std::lock_guard<std::mutex> lock(addSaListenersMtx_);
-        for (const auto& listener : addSaListeners_) {
-            int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
-            if (ret != DH_SUCCESS) {
-                result = ret;
-                DHLOGE("SA execute RegisterSimulationEventListener fail, ret = %d", ret);
-            }
-    }
-
-    DHLOGI("Restore RegisterSessionStateCb");
-    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
-        DHLOGE("Restore RegisterSessionStateCb client fail.");
-        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
-    }
-
-    {
-        std::lock_guard<std::mutex> lock(addSaCallbackMtx_);
-        int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(addSaCallback_);
-        if (ret != DH_SUCCESS) {
-            result = ret;
-            DHLOGE("SA execute RegisterSessionStateCb fail, ret = %d", ret);
-        }
-        return result;
-    }
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
