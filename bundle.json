@@ -14,9 +14,7 @@
     "component": {
         "name": "distributed_input",
         "subsystem": "distributedhardware",
-        "syscap": [
-            "SystemCapability.DistributedHardware.DistributedInput"
-        ],
+        "syscap": [],
         "features": [],
         "adapted_system_type": [
             "standard"
