@@ -50,7 +50,7 @@ public:
     int32_t RestoreRegisterListenerAndCallback();
     void AddSimEventListenerToCache(sptr<ISimulationEventListener> listener);
     void RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener);
-    void AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback);
+    void AddSessionStateCbToCache(sptr<ISessionStateCallback> callback);
     void RemoveSessionStateCbFromCache();
 
 public:
@@ -64,8 +64,8 @@ private:
     std::mutex simEventListenerCacheMtx_;
     std::set<sptr<ISimulationEventListener>> simEventListenerCache_;
     std::mutex sessionStateCbCacheMtx_;
-    sptr<ISessionStateCallback> sessionStateCbCache_ = nullptr;
-    
+    std::set<sptr<ISessionStateCallback>> sessionStateCbCache_;
+
 private:
     DInputSAManager() = default;
     ~DInputSAManager() = default;
