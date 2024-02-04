@@ -756,7 +756,7 @@ int32_t DistributedInputClient::RegisterSessionStateCb(sptr<ISessionStateCallbac
         DHLOGE("RegisterSessionStateCb callback is null.");
         return ERR_DH_INPUT_CLIENT_REGISTER_SESSION_STATE_FAIL;
     }
-    DInputSAManager::GetInstance().AddSessionStateCbToCache(listener);
+    DInputSAManager::GetInstance().AddSessionStateCbToCache(callback);
     return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
 }
 
@@ -766,7 +766,7 @@ int32_t DistributedInputClient::UnregisterSessionStateCb()
         DHLOGE("DinputStart client fail.");
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
-    DInputSAManager::GetInstance().RemoveSessionStateCbFromCache(listener);
+    DInputSAManager::GetInstance().RemoveSessionStateCbFromCache(callback);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSessionStateCb();
 }
 } // namespace DistributedInput
