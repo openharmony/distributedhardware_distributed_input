@@ -311,25 +311,25 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
     }
 }
 
-void DHFWKSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
+void DInputSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
 {
     std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
     simEventListenerCache_.insert(listener);
 }
 
-void DHFWKSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
+void DInputSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
 {
     std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
     simEventListenerCache_.erase(listener);
 }
 
-void DHFWKSAManager::AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback)
+void DInputSAManager::AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback)
 {
     std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
     sessionStateCbCache_ = callback;
 }
 
-void DHFWKSAManager::()
+void DInputSAManager::RemoveSessionStateCbFromCache()
 {
     std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
     sessionStateCbCache_ = nullptr;
