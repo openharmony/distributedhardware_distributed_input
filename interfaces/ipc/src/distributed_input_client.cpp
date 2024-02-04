@@ -766,7 +766,7 @@ int32_t DistributedInputClient::UnregisterSessionStateCb()
         DHLOGE("DinputStart client fail.");
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
-    DInputSAManager::GetInstance().RemoveSessionStateCbFromCache(callback);
+    DInputSAManager::GetInstance().RemoveSessionStateCbFromCache();
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSessionStateCb();
 }
 } // namespace DistributedInput
