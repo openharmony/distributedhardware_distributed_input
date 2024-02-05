@@ -97,6 +97,23 @@ bool DInputSAManager::SetDInputSinkProxy(const sptr<IRemoteObject> &remoteObject
     }
     return true;
 }
+
+int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
+{
+    return DH_SUCCESS;
+}
+
+void DInputSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
+{}
+
+void DInputSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
+{}
+
+void DInputSAManager::AddSessionStateCbToCache(const sptr<ISessionStateCallback> callback)
+{}
+
+void DInputSAManager::RemoveSessionStateCbFromCache()
+{}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS
