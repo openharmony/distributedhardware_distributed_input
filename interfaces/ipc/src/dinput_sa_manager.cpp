@@ -320,19 +320,25 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
 void DInputSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
 {
     std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    if (listener != nullptr) {
     simEventListenerCache_.insert(listener);
+    }
 }
 
 void DInputSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
 {
     std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    if (listener != nullptr) {
     simEventListenerCache_.erase(listener);
+    }
 }
 
 void DInputSAManager::AddSessionStateCbToCache(sptr<ISessionStateCallback> callback)
 {
     std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
+    if (callback != nullptr) {
     sessionStateCbCache_.insert(callback);
+    }
 }
 
 void DInputSAManager::RemoveSessionStateCbFromCache()
