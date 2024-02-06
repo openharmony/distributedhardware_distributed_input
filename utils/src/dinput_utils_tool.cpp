@@ -15,6 +15,7 @@
 
 #include "dinput_utils_tool.h"
 
+#include <algorithm>
 #include <climits>
 #include <cstdarg>
 #include <cstdio>
@@ -52,6 +53,7 @@ namespace {
     constexpr uint32_t ERROR_MSG_MAX_LEN = 256;
     constexpr int32_t MAX_RETRY_COUNT = 3;
     constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
+    constexpr char DHID_SPLIT = '.';
 }
 DevInfo GetLocalDeviceInfo()
 {
@@ -444,6 +446,22 @@ int32_t GetRandomInt32()
 
     std::uniform_int_distribution<int> distribution(0, INT32_MAX);
     return distribution(engine);
+}
+
+std::string JointDhIds(const std::vector<std::string> &dhids)
+{
+    if (dhids.size() <= 0) {
+        return "";
+    }
+    auto dotFold = [](std::string a, std::string b) {return std::move(a) + DHID_SPLIT + std::move(b);};
+    return std::accumulate(std::next(dhids.begin()), dhids.end(), dhids[0], dotFold);
+}
+
+std::vector<std::string> SplitDhIdString(const std::string &dhIdsString)
+{
+    std::vector<std::string> dhIdsVec;
+    SplitStringToVector(dhIdsString, DHID_SPLIT, dhIdsVec);
+    return dhIdsVec;
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

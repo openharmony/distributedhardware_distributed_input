@@ -1210,6 +1210,19 @@ AffectDhIds InputHub::SetSharingDevices(bool enabled, std::vector<std::string> d
     return affDhIds;
 }
 
+std::vector<std::string> InputHub::GetSharingDevices()
+{
+    std::vector<std::string> sharingDevices;
+    std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    for (const auto &[id, device] : devices_) {
+        if (device->isShare) {
+            DHLOGI("Find sharing dhid: %s", GetAnonyString(device->identifier.descriptor).c_str());
+            sharingDevices.push_back(device->identifier.descriptor);
+        }
+    }
+    return sharingDevices;
+}
+
 void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,
     std::string &sharedMouseDhId)
 {

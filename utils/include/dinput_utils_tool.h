@@ -66,6 +66,8 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths);
 
 std::string GetString(const std::vector<std::string> &vec);
 int32_t GetRandomInt32();
+std::string JointDhIds(const std::vector<std::string> &dhids);
+std::vector<std::string> SplitDhIdString(const std::string &dhIdsString);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

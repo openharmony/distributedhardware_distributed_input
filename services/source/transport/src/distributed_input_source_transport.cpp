@@ -15,7 +15,6 @@
 
 #include "distributed_input_source_transport.h"
 
-#include <algorithm>
 #include <cstring>
 #include <pthread.h>
 
@@ -40,7 +39,6 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 namespace {
-    const char DHID_SPLIT = '.';
     const uint64_t MSG_LATENCY_ALARM_US = 20 * 1000;
 }
 DistributedInputSourceTransport::~DistributedInputSourceTransport()
@@ -891,22 +889,6 @@ int32_t DistributedInputSourceTransport::SendRelayStopTypeRequest(const std::str
     DHLOGI("SendRelayStopTypeRequest srcId:%s, sessionId:%d, smsg:%s.",
         GetAnonyString(srcId).c_str(), sessionId, SetAnonyId(smsg).c_str());
     return DH_SUCCESS;
-}
-
-std::string DistributedInputSourceTransport::JointDhIds(const std::vector<std::string> &dhids)
-{
-    if (dhids.size() <= 0) {
-        return "";
-    }
-    auto dotFold = [](std::string a, std::string b) {return std::move(a) + DHID_SPLIT + std::move(b);};
-    return std::accumulate(std::next(dhids.begin()), dhids.end(), dhids[0], dotFold);
-}
-
-std::vector<std::string> DistributedInputSourceTransport::SplitDhIdString(const std::string &dhIdsString)
-{
-    std::vector<std::string> dhIdsVec;
-    SplitStringToVector(dhIdsString, DHID_SPLIT, dhIdsVec);
-    return dhIdsVec;
 }
 
 int32_t DistributedInputSourceTransport::SendMessage(int32_t sessionId, std::string &message)
