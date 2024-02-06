@@ -290,7 +290,7 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
         for (const auto& listener : simEventListenerCache_) {
             if (listener == nullptr) {
                 DHLOGE("simEventListenerCache_ is nullptr");
-                return ERR_DH_INPUT_CLIENT_REGISTER_FAIL;
+                continue;
             }
             int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
             if (ret != DH_SUCCESS) {
@@ -305,7 +305,7 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
         for (const auto& callback : sessionStateCbCache_) {
             if (callback == nullptr) {
                 DHLOGE("sessionStateCbCache_ is nullptr");
-                return ERR_DH_INPUT_CLIENT_REGISTER_FAIL;
+                continue;
             }
             int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
             if (ret != DH_SUCCESS) {
