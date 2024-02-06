@@ -135,8 +135,6 @@ private:
     void ReceiveRelayStopTypeResult(int32_t sessionId, const nlohmann::json &recMsg);
 
     void CalculateLatency(int32_t sessionId, const nlohmann::json &recMsg);
-    std::string JointDhIds(const std::vector<std::string> &dhids);
-    std::vector<std::string> SplitDhIdString(const std::string &dhIdsString);
     void RegRespFunMap();
 
     void ResetKeyboardKeyState(const std::string &deviceId, const std::vector<std::string> &dhids);
