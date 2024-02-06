@@ -87,6 +87,7 @@ public:
     AffectDhIds SetSupportInputType(bool enabled, const uint32_t &inputTypes);
     // return efftive dhids
     AffectDhIds SetSharingDevices(bool enabled, std::vector<std::string> dhIds);
+    std::vector<std::string> GetSharingDevices();
     void GetDevicesInfoByType(const uint32_t inputTypes, std::map<int32_t, std::string> &datas);
     void GetDevicesInfoByDhId(std::vector<std::string> dhidsVec, std::map<int32_t, std::string> &datas);
     void GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,

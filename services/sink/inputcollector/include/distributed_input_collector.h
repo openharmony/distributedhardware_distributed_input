@@ -45,6 +45,7 @@ public:
     void StopCollectionThread();
     AffectDhIds SetSharingTypes(bool enabled, const uint32_t &inputType);
     AffectDhIds SetSharingDhIds(bool enabled, std::vector<std::string> dhIds);
+    std::vector<std::string> GetSharingDhIds();
     void GetMouseNodePath(const std::vector<std::string> &dhIds, std::string &mouseNodePath, std::string &dhid);
     void GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
         std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds);

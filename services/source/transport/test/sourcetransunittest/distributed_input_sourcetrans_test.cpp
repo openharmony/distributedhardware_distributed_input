@@ -483,13 +483,6 @@ HWTEST_F(DistributedInputSourceTransTest, SendRelayStopTypeRequest_02, testing::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, JointDhIds01, testing::ext::TestSize.Level0)
-{
-    std::vector<std::string> dhids;
-    std::string ret = DistributedInputSourceTransport::GetInstance().JointDhIds(dhids);
-    EXPECT_EQ("", ret);
-}
-
 HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput01, testing::ext::TestSize.Level0)
 {
     int32_t sessionId = 0;

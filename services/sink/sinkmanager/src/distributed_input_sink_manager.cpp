@@ -144,7 +144,10 @@ void DistributedInputSinkManager::DInputSinkListener::OnPrepareRemoteInput(
 void DistributedInputSinkManager::DInputSinkListener::OnUnprepareRemoteInput(const int32_t &sessionId)
 {
     DHLOGI("OnUnprepareRemoteInput called, sessionId: %d", sessionId);
-    OnStopRemoteInput(sessionId, static_cast<uint32_t>(DInputDeviceType::ALL));
+    std::vector<std::string> sharingDhIds = DistributedInputCollector::GetInstance().GetSharingDhIds();
+    if (!sharingDhIds.empty()) {
+        OnStopRemoteInputDhid(sessionId, JointDhIds(sharingDhIds));
+    }
     DistributedInputSinkSwitch::GetInstance().RemoveSession(sessionId);
 
     nlohmann::json jsonStr;
@@ -176,7 +179,10 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayUnprepareRemoteInpu
 {
     DHLOGI("OnRelayUnprepareRemoteInput called, toSinkSessionId: %d, devId: %s", toSinkSessionId,
         GetAnonyString(deviceId).c_str());
-    OnStopRemoteInput(toSinkSessionId, static_cast<uint32_t>(DInputDeviceType::ALL));
+    std::vector<std::string> sharingDhIds = DistributedInputCollector::GetInstance().GetSharingDhIds();
+    if (!sharingDhIds.empty()) {
+        OnStopRemoteInputDhid(toSinkSessionId, JointDhIds(sharingDhIds));
+    }
     DistributedInputSinkSwitch::GetInstance().RemoveSession(toSinkSessionId);
 
     nlohmann::json jsonStr;

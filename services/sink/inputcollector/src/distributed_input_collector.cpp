@@ -211,6 +211,11 @@ AffectDhIds DistributedInputCollector::SetSharingDhIds(bool enabled, std::vector
     return inputHub_->SetSharingDevices(enabled, dhIds);
 }
 
+std::vector<std::string> DistributedInputCollector::GetSharingDhIds()
+{
+    return inputHub_->GetSharingDevices();
+}
+
 void DistributedInputCollector::GetMouseNodePath(const std::vector<std::string> &dhIds,
     std::string &mouseNodePath, std::string &dhId)
 {
