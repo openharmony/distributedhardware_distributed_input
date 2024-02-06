@@ -76,8 +76,8 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG");
             AppExecFwk::InnerEvent::Pointer msgEvent =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG, systemAbilityId);
-            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent, DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME,
-                                                                    AppExecFwk::EventQueue::Priority::IMMEDIATE);
+            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
+                DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
         }
     }
 
@@ -88,8 +88,8 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG");
             AppExecFwk::InnerEvent::Pointer msgEvent =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG, systemAbilityId);
-            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent, DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME,
-                                                                    AppExecFwk::EventQueue::Priority::IMMEDIATE);
+            DInputSAManager::GetInstance().eventHandler_->SendEvent(msgEvent,
+                DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
         }
     }
     DHLOGI("sa %d is added.", systemAbilityId);
@@ -274,6 +274,77 @@ bool DInputSAManager::SetDInputSinkProxy(const sptr<IRemoteObject> &remoteObject
         return false;
     }
     return true;
+}
+
+int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
+{
+    DHLOGI("Restore RegisterPublisherListener");
+    if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
+        DHLOGE("RestoreRegisterSimulationEventListener proxy error, client fail");
+        return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
+    }
+
+    int32_t result = DH_SUCCESS;
+    {
+        std::lock_guard<std::mutex> lock(simEventListenerCacheMtx_);
+        for (const auto& listener : simEventListenerCache_) {
+            if (listener == nullptr) {
+                DHLOGE("simEventListenerCache_ is nullptr");
+                continue;
+            }
+            int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
+            if (ret != DH_SUCCESS) {
+                result = ret;
+                DHLOGE("SA execute RegisterSimulationEventListener fail, ret = %d", ret);
+            }
+        }
+    }
+    {
+        DHLOGI("Restore RegisterSessionStateCb");
+        std::lock_guard<std::mutex> lock(sessionStateCbCacheMtx_);
+        for (const auto& callback : sessionStateCbCache_) {
+            if (callback == nullptr) {
+                DHLOGE("sessionStateCbCache_ is nullptr");
+                continue;
+            }
+            int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
+            if (ret != DH_SUCCESS) {
+                result = ret;
+                DHLOGE("SA execute RegisterSessionStateCb fail, ret = %d", ret);
+            }
+        }
+    }
+    return result;
+}
+
+void DInputSAManager::AddSimEventListenerToCache(sptr<ISimulationEventListener> listener)
+{
+    std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    if (listener != nullptr) {
+        simEventListenerCache_.insert(listener);
+    }
+}
+
+void DInputSAManager::RemoveSimEventListenerFromCache(sptr<ISimulationEventListener> listener)
+{
+    std::lock_guard<std::mutex> simEventListenerLock(simEventListenerCacheMtx_);
+    if (listener != nullptr) {
+        simEventListenerCache_.erase(listener);
+    }
+}
+
+void DInputSAManager::AddSessionStateCbToCache(sptr<ISessionStateCallback> callback)
+{
+    std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
+    if (callback != nullptr) {
+        sessionStateCbCache_.insert(callback);
+    }
+}
+
+void DInputSAManager::RemoveSessionStateCbFromCache()
+{
+    std::lock_guard<std::mutex> sessionStateCbLock(sessionStateCbCacheMtx_);
+    sessionStateCbCache_.clear();
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
