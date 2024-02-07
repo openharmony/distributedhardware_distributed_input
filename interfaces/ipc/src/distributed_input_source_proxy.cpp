@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -531,6 +531,7 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, c
 }
 
 int32_t DistributedInputSourceProxy::RegisterAddWhiteListCallback(sptr<IAddWhiteListInfosCallback> addWhiteListCallback)
+    __attribute__((no_sanitize("cfi")))
 {
     if (addWhiteListCallback == nullptr) {
         DHLOGE("DistributedInputSourceProxy addWhiteListCallback is null.");
