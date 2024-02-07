@@ -619,9 +619,9 @@ int32_t DistributedInputSinkManager::Init()
     DHLOGI("init InputCollector.");
     int result = DistributedInputCollector::GetInstance().StartCollectionThread(
         DistributedInputSinkTransport::GetInstance().GetEventHandler());
-        if (result != DH_SUCCESS) {
-            DHLOGE("init InputCollector error.");
-        }
+    if (result != DH_SUCCESS) {
+        DHLOGE("init InputCollector error.");
+    }
 
     return DH_SUCCESS;
 }
