@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -272,7 +272,8 @@ void DistributedInputNodeManager::SetPathForVirDev(const DhUniqueID &dhUniqueId,
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.begin();
     while (iter != virtualDeviceMap_.end()) {
-        DHLOGD("Check Virtual device, deviceId %s, dhid %s.", iter->first.first.c_str(), iter->first.second.c_str());
+        DHLOGD("Check Virtual device, deviceId %s, dhid %s.", GetAnonyString(iter->first.first).c_str(),
+            GetAnonyString(iter->first.second).c_str());
         if (iter->first == dhUniqueId) {
             DHLOGD("Found the virtual device, set path :%s", devicePath.c_str());
             iter->second->SetPath(devicePath);

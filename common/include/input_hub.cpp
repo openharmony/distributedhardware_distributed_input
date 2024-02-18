@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -265,7 +265,7 @@ void InputHub::DealNormalKeyEvent(Device *device, const RawEvent &event)
         if (IsCuror(device) && event.code == BTN_MOUSE &&
             !DInputSinkState::GetInstance().IsDhIdDown(event.descriptor)) {
             DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
-                event.descriptor.c_str());
+                GetAnonyString(event.descriptor).c_str());
             DInputSinkState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
         }
         DInputSinkState::GetInstance().RemoveKeyDownState(event);
@@ -360,8 +360,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
         std::lock_guard<std::mutex> deviceLock(devicesMutex_);
         for (auto it = closingDevices_.begin(); it != closingDevices_.end();) {
             std::unique_ptr<Device> device = std::move(*it);
-            DHLOGI("Reporting device closed: id=%s, name=%s\n",
-                device->path.c_str(), device->identifier.name.c_str());
+            DHLOGI("Reporting device closed: id=%s, name=%s", device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_REMOVED;
             event->deviceInfo = device->identifier;
             event += 1;
@@ -383,15 +382,14 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
         while (!openingDevices_.empty()) {
             std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
             openingDevices_.pop_back();
-            DHLOGI("Reporting device opened: id=%s, name=%s\n",
-                device->path.c_str(), device->identifier.name.c_str());
+            DHLOGI("Reporting device opened: id=%s, name=%s", device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_ADDED;
             event->deviceInfo = device->identifier;
             event += 1;
 
             auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device path %s exists, replaced. \n", device->path.c_str());
+                DHLOGI("Device path %s exists, replaced.", device->path.c_str());
             }
             if (capacity == 0) {
                 break;
@@ -448,8 +446,7 @@ void InputHub::GetDeviceHandler()
             if (eventItem.events & EPOLLIN) {
                 pendingINotify_ = true;
             } else {
-                DHLOGI(
-                    "Received unexpected epoll event 0x%08x for INotify.", eventItem.events);
+                DHLOGI("Received unexpected epoll event 0x%08x for INotify.", eventItem.events);
             }
             continue;
         }
@@ -761,7 +758,8 @@ int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
         DHLOGE("The device doesn't has EV_ABS type!");
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    DHLOGI("The device has abs info, devName: %s, dhId: %s!", identifier.name.c_str(), identifier.descriptor.c_str());
+    DHLOGI("The device has abs info, devName: %s, dhId: %s!",
+        identifier.name.c_str(), GetAnonyString(identifier.descriptor).c_str());
     for (uint32_t absType = 0; absType < ABS_CNT; absType++) {
         if (!libevdev_has_event_code(dev, EV_ABS, absType)) {
             DHLOGD("The device is not support absType: %d", absType);
@@ -1482,7 +1480,7 @@ void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
     };
     DInputSinkState::GetInstance().AddKeyDownState(event);
     DHLOGI("Find Pressed key: %d, device path: %s, dhId: %s", keyCode, dev->path.c_str(),
-        dev->identifier.descriptor.c_str());
+        GetAnonyString(dev->identifier.descriptor).c_str());
 }
 
 bool InputHub::IsLengthExceeds(const unsigned long *keyState, const unsigned long len, int keyIndex)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -99,7 +99,7 @@ DhIdState DInputSinkState::GetStateByDhid(const std::string &dhId)
 
 void DInputSinkState::SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event)
 {
-    DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %s", dhId.c_str());
+    DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %s", GetAnonyString(dhId).c_str());
     int32_t scanId = GetRandomInt32();
     RawEvent mscScanEv = { event.when, EV_MSC, MSC_SCAN, scanId, dhId, event.path };
     RawEvent btnMouseUpEv = { event.when, EV_KEY, BTN_MOUSE, KEY_UP_STATE, dhId, event.path };
@@ -136,13 +136,13 @@ void DInputSinkState::SimulateKeyDownEvents(const int32_t sessionId, const std::
     std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
     auto iter = keyDownStateMap_.find(dhId);
     if (iter == keyDownStateMap_.end()) {
-        DHLOGI("The shared Device not has down state key, dhId: %s", dhId.c_str());
+        DHLOGI("The shared Device not has down state key, dhId: %s", GetAnonyString(dhId).c_str());
         return;
     }
 
     for (const auto &event : iter->second) {
         DHLOGI("Simulate Key event for device path: %s, dhId: %s",
-            event.path.c_str(), event.descriptor.c_str());
+            event.path.c_str(), GetAnonyString(event.descriptor).c_str());
         SimulateKeyDownEvent(sessionId, dhId, event);
     }
 
@@ -165,7 +165,7 @@ void DInputSinkState::SimulateTouchPadEvents(const int32_t sessionId, const std:
         return;
     }
 
-    DHLOGI("SimulateTouchPadEvents dhId: %s, event size: %d", dhId.c_str(), events.size());
+    DHLOGI("SimulateTouchPadEvents dhId: %s, event size: %zu", GetAnonyString(dhId).c_str(), events.size());
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(sessionId, events);
 }
 
@@ -208,7 +208,7 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     auto iter = keyDownStateMap_.find(event.descriptor);
     if (iter == keyDownStateMap_.end()) {
         DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
-            event.descriptor.c_str(), event.type, event.code, event.value);
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         keyDownStateMap_[event.descriptor].push_back(event);
         return;
     }
@@ -218,7 +218,7 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     // If not find the cache key on pressing, save it
     if (evIter == keyDownStateMap_[event.descriptor].end()) {
         DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
-            event.descriptor.c_str(), event.type, event.code, event.value);
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         keyDownStateMap_[event.descriptor].push_back(event);
         return;
     }
@@ -226,7 +226,7 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     // it is already the last one, just return
     if (evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
         DHLOGI("Pressed key already last one, node id: %s, type: %d, key code: %d, value: %d",
-            event.descriptor.c_str(), event.type, event.code, event.value);
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         return;
     }
 
