@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,7 @@
 #include <linux/input.h>
 
 #include "dinput_log.h"
+#include "dinput_utils_tool.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -73,7 +74,7 @@ std::pair<bool, std::vector<RawEvent>> TouchPadEventFragmentMgr::DealSynEvent(co
                 allEvents.insert(allEvents.end(), fragEvents.begin(), fragEvents.end());
             }
             needSim = true;
-            DHLOGI("Find NOT Whole touchpad events need send back, dhId: %s", dhId.c_str());
+            DHLOGI("Find NOT Whole touchpad events need send back, dhId: %s", GetAnonyString(dhId).c_str());
         }
         fragments_[dhId].clear();
         fragments_[dhId].push_back({});
