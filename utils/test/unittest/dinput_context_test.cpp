@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -237,6 +237,13 @@ HWTEST_F(DInputContextTest, GetNodeDesc_001, testing::ext::TestSize.Level1)
     std::string parameters = "";
     std::string ret = GetNodeDesc(parameters);
     EXPECT_EQ(0, ret.size());
+}
+
+HWTEST_F(DInputContextTest, JointDhIds_001, testing::ext::TestSize.Level1)
+{
+    std::vector<std::string> dhids;
+    std::string ret = JointDhIds(dhids);
+    EXPECT_EQ("", ret);
 }
 
 } // namespace DistributedInput
