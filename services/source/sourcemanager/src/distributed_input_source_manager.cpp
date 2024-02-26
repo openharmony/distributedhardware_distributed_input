@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -1201,15 +1201,22 @@ void DistributedInputSourceManager::RunRelayPrepareCallback(const std::string &s
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_PREPARE_START, DINPUT_PREPARE_TASK);
     std::lock_guard<std::mutex> lock(prepareMutex_);
+    bool isCbRun = false;
+    sptr<IPrepareDInputCallback> cb = nullptr;
     for (auto iter = relayPreCallbacks_.begin(); iter != relayPreCallbacks_.end(); ++iter) {
         if (iter->srcId == srcId && iter->sinkId == sinkId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI");
-            iter->preCallback->OnResult(sinkId, status);
+            cb = iter->preCallback;
             relayPreCallbacks_.erase(iter);
-            return;
+            isCbRun = true;
+            break;
         }
     }
-    DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI relayPreCallbacks_ is null.");
+    if (isCbRun && cb != nullptr) {
+        cb->OnResult(sinkId, status);
+    } else {
+        DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI relayPreCallbacks_ is null.");
+    }
 }
 
 void DistributedInputSourceManager::RunRelayUnprepareCallback(const std::string &srcId, const std::string &sinkId,
@@ -1217,15 +1224,22 @@ void DistributedInputSourceManager::RunRelayUnprepareCallback(const std::string 
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_UNPREPARE_START, DINPUT_UNPREPARE_TASK);
     std::lock_guard<std::mutex> lock(prepareMutex_);
+    bool isCbRun = false;
+    sptr<IUnprepareDInputCallback> cb = nullptr;
     for (auto iter = relayUnpreCallbacks_.begin(); iter != relayUnpreCallbacks_.end(); ++iter) {
         if (iter->srcId == srcId && iter->sinkId == sinkId) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI");
-            iter->unpreCallback->OnResult(sinkId, status);
+            cb = iter->unpreCallback;
             relayUnpreCallbacks_.erase(iter);
-            return;
+            isCbRun = true;
+            break;
         }
     }
-    DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI relayUnpreCallbacks_ is null.");
+    if (isCbRun && cb != nullptr) {
+        cb->OnResult(sinkId, status);
+    } else {
+        DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI relayUnpreCallbacks_ is null.");
+    }
 }
 
 void DistributedInputSourceManager::RunUnprepareCallback(const std::string &devId, const int32_t &status)
@@ -1330,18 +1344,20 @@ void DistributedInputSourceManager::RunRelayStartDhidCallback(const std::string 
     DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI dhIds:%s, vec-size:%d",
         dhids.c_str(), dhidsVec.size());
     bool isCbRun = false;
-    for (std::vector<DInputClientStartDhidInfo>::iterator iter = relayStaDhidCallbacks_.begin();
-        iter != relayStaDhidCallbacks_.end(); ++iter) {
+    sptr<IStartStopDInputsCallback> cb = nullptr;
+    for (auto iter = relayStaDhidCallbacks_.begin(); iter != relayStaDhidCallbacks_.end(); ++iter) {
         if (iter->srcId != srcId || iter->sinkId != sinkId || !IsStringDataSame(iter->dhIds, dhidsVec)) {
             continue;
         }
         DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI call OnResultDhids");
-        iter->callback->OnResultDhids(sinkId, status);
+        cb = iter->callback;
         relayStaDhidCallbacks_.erase(iter);
         isCbRun = true;
         break;
     }
-    if (!isCbRun) {
+    if (isCbRun && cb != nullptr) {
+        cb->OnResultDhids(sinkId, status);
+    } else {
         DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI relayStaDhidCallbacks_ is null.");
     }
 }
@@ -1352,18 +1368,20 @@ void DistributedInputSourceManager::RunRelayStopDhidCallback(const std::string &
     std::vector<std::string> dhidsVec;
     SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
     bool isCbRun = false;
-    for (std::vector<DInputClientStopDhidInfo>::iterator iter = relayStpDhidCallbacks_.begin();
-        iter != relayStpDhidCallbacks_.end(); ++iter) {
+    sptr<IStartStopDInputsCallback> cb = nullptr;
+    for (auto iter = relayStpDhidCallbacks_.begin(); iter != relayStpDhidCallbacks_.end(); ++iter) {
         if (iter->srcId != srcId || iter->sinkId != sinkId || !IsStringDataSame(iter->dhIds, dhidsVec)) {
             continue;
         }
         DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STOPDHID_RESULT_MMI call OnResultDhids");
-        iter->callback->OnResultDhids(sinkId, status);
+        cb = iter->callback;
         relayStpDhidCallbacks_.erase(iter);
         isCbRun = true;
         break;
     }
-    if (!isCbRun) {
+    if (isCbRun && cb != nullptr) {
+        cb->OnResultDhids(sinkId, status);
+    } else {
         DHLOGE("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STOPDHID_RESULT_MMI relayStpDhidCallbacks_ is null.");
     }
 }
