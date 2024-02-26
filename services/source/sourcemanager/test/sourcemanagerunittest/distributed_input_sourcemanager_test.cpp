@@ -1479,6 +1479,22 @@ HWTEST_F(DistributedInputSourceManagerTest, RunRelayStartDhidCallback_01, testin
     EXPECT_EQ(1, sourceManager_->relayStaDhidCallbacks_.size());
 }
 
+HWTEST_F(DistributedInputSourceManagerTest, RunRelayStartDhidCallback_02, testing::ext::TestSize.Level1)
+{
+    std::string srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
+    std::string sinkId = "umkyu1b165e1be98151891erbe8r91ev";
+    int32_t status = 0;
+    std::string dhId = "input_slkdiek3kddkeojfe";
+    std::vector<std::string> dhIds;
+    dhIds.push_back(dhId);
+    sourceManager_->relayStaDhidCallbacks_.clear();
+    sptr<TestStartStopDInputsCb> cb = nullptr;
+    DistributedInputSourceManager::DInputClientStartDhidInfo startDhIdInfo {srcId, sinkId, dhIds, cb};
+    sourceManager_->relayStaDhidCallbacks_.push_back(startDhIdInfo);
+    sourceManager_->RunRelayStartDhidCallback(srcId, sinkId, status, dhId);
+    EXPECT_EQ(0, sourceManager_->relayStaDhidCallbacks_.size());
+}
+
 HWTEST_F(DistributedInputSourceManagerTest, RunRelayStopDhidCallback_01, testing::ext::TestSize.Level1)
 {
     std::string srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
@@ -1507,6 +1523,22 @@ HWTEST_F(DistributedInputSourceManagerTest, RunRelayStopDhidCallback_01, testing
     dhIds.push_back("input_48104809_test");
     sourceManager_->RunRelayStopDhidCallback(srcId, sinkId, status, dhId);
     EXPECT_EQ(1, sourceManager_->relayStpDhidCallbacks_.size());
+}
+
+HWTEST_F(DistributedInputSourceManagerTest, RunRelayStopDhidCallback_02, testing::ext::TestSize.Level1)
+{
+    std::string srcId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
+    std::string sinkId = "umkyu1b165e1be98151891erbe8r91ev";
+    int32_t status = 0;
+    std::string dhId = "input_slkdiek3kddkeojfe";
+    std::vector<std::string> dhIds;
+    dhIds.push_back(dhId);
+    sourceManager_->relayStpDhidCallbacks_.clear();
+    sptr<TestStartStopDInputsCb> cb = nullptr;
+    DistributedInputSourceManager::DInputClientStopDhidInfo stopDhIdInfo {srcId, sinkId, dhIds, cb};
+    sourceManager_->relayStpDhidCallbacks_.push_back(stopDhIdInfo);
+    sourceManager_->RunRelayStopDhidCallback(srcId, sinkId, status, dhId);
+    EXPECT_EQ(0, sourceManager_->relayStpDhidCallbacks_.size());
 }
 
 HWTEST_F(DistributedInputSourceManagerTest, RunRelayStartTypeCallback_01, testing::ext::TestSize.Level1)
