@@ -140,9 +140,10 @@ void InputHub::ScanAndRecordInputDevices()
             openingDevices_.pop_back();
             DHLOGI("Reporting device opened: path=%s, name=%s\n",
                 device->path.c_str(), device->identifier.name.c_str());
+            std::string devPath = device->path;
             auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device with this path %s exists, replaced. \n", device->path.c_str());
+                DHLOGI("Device with this path %s exists, replaced. \n", devPath.c_str());
             }
         }
     }
@@ -387,9 +388,10 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
             event->deviceInfo = device->identifier;
             event += 1;
 
+            std::string devPath = device->path;
             auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device path %s exists, replaced.", device->path.c_str());
+                DHLOGI("Device path %s exists, replaced.", devPath.c_str());
             }
             if (capacity == 0) {
                 break;
