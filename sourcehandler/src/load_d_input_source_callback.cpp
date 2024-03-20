@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,7 +27,7 @@ LoadDInputSourceCallback::LoadDInputSourceCallback(const std::string &params) : 
 void LoadDInputSourceCallback::OnLoadSystemAbilitySuccess(
     int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGI("load dinput SA success, systemAbilityId:%d, remoteObject result:%s",
+    DHLOGI("load dinput SA success, systemAbilityId:%{public}d, remoteObject result:%{public}s",
         systemAbilityId, (remoteObject != nullptr) ? "true" : "false");
     if (remoteObject == nullptr) {
         DHLOGE("remoteObject is nullptr");
@@ -38,7 +38,7 @@ void LoadDInputSourceCallback::OnLoadSystemAbilitySuccess(
 
 void LoadDInputSourceCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
-    DHLOGE("load dinput SA failed, systemAbilityId:%d", systemAbilityId);
+    DHLOGE("load dinput SA failed, systemAbilityId:%{public}d", systemAbilityId);
     HisyseventUtil::GetInstance().SysEventWriteFault(DINPUT_INIT_FAIL,
         "dinput source LoadSystemAbility call failed.");
 }

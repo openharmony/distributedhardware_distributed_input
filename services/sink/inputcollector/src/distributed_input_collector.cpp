@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -85,7 +85,7 @@ bool DistributedInputCollector::InitCollectEventsThread()
     collectThreadID_ = -1;
     int32_t ret = pthread_create(&collectThreadID_, &attr, CollectEventsThread, this);
     if (ret != 0) {
-        DHLOGE("DistributedInputCollector::InitCollectEventsThread create  thread failed:%d \n", ret);
+        DHLOGE("DistributedInputCollector::InitCollectEventsThread create  thread failed:%{public}d \n", ret);
         pthread_attr_destroy(&attr);
         collectThreadID_ = -1;
         isCollectingEvents_ = false;
@@ -187,14 +187,14 @@ void DistributedInputCollector::ReportDhIdSharingState(const AffectDhIds &dhIds)
     }
 
     for (auto const &id : dhIds.sharingDhIds) {
-        DHLOGI("Sharing DhId: %s", GetAnonyString(id).c_str());
+        DHLOGI("Sharing DhId: %{public}s", GetAnonyString(id).c_str());
         for (auto iter : sharingDhIdListeners_) {
             iter->OnSharing(id);
         }
     }
 
     for (auto const &id : dhIds.noSharingDhIds) {
-        DHLOGI("No Sharing DhId: %s", GetAnonyString(id).c_str());
+        DHLOGI("No Sharing DhId: %{public}s", GetAnonyString(id).c_str());
         for (auto iter : sharingDhIdListeners_) {
             iter->OnNoSharing(id);
         }

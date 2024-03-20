@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -61,7 +61,7 @@ bool VirtualDevice::CreateKey(const InputDevice &inputDevice)
     auto fun = [this](int32_t uiSet, const std::vector<uint32_t>& list) -> bool {
         for (uint32_t evt_type : list) {
             if (!DoIoctl(fd_, uiSet, evt_type)) {
-                DHLOGE("Error setting event type: %u", evt_type);
+                DHLOGE("Error setting event type: %{public}u", evt_type);
                 return false;
             }
         }
@@ -93,11 +93,12 @@ void VirtualDevice::SetABSInfo(struct uinput_user_dev &inputUserDev, const Input
     for (const auto item : inputDevice.absInfos) {
         int absCode = item.first;
         std::vector<int32_t> absInfo = item.second;
-        DHLOGI("SetABSInfo nodeName: %s, absCode: %d, absMin: %d, absMax: %d, absFuzz: %d, absFlat: %d",
-            inputDevice.name.c_str(), absCode, absInfo[ABS_MIN_POS], absInfo[ABS_MAX_POS], absInfo[ABS_FUZZ_POS],
-            absInfo[ABS_FLAT_POS]);
+        DHLOGI("SetABSInfo nodeName: %{public}s, absCode: %{public}d, absMin: %{public}d, absMax: %{public}d, "
+            "absFuzz: %{public}d, absFlat: %{public}d", inputDevice.name.c_str(), absCode, absInfo[ABS_MIN_POS],
+            absInfo[ABS_MAX_POS], absInfo[ABS_FUZZ_POS], absInfo[ABS_FLAT_POS]);
         if (absInfo[ABS_MAX_POS] < absInfo[ABS_MIN_POS]) {
-            DHLOGE("NodeName: %s, absCode: %d, attributes is invalid.", inputDevice.name.c_str(), absCode);
+            DHLOGE("NodeName: %{public}s, absCode: %{public}d, attributes is invalid.", inputDevice.name.c_str(),
+                absCode);
             continue;
         }
         inputUserDev.absmin[absCode] = absInfo[ABS_MIN_POS];
@@ -158,23 +159,23 @@ bool VirtualDevice::SetUp(const InputDevice &inputDevice, const std::string &dev
     }
     int ret = ioctl(fd_, UI_DEV_CREATE);
     if (ret < 0) {
-        DHLOGE("Unable to create input device, fd: %d, ret= %d", fd_, ret);
+        DHLOGE("Unable to create input device, fd: %{public}d, ret= %{public}d", fd_, ret);
         return false;
     }
-    DHLOGI("create fd %d", fd_);
+    DHLOGI("create fd %{public}d", fd_);
 
     char sysfsDeviceName[16] = {0};
     if (ioctl(fd_, UI_GET_SYSNAME(sizeof(sysfsDeviceName)), sysfsDeviceName) < 0) {
         DHLOGE("Unable to get input device name");
     }
-    DHLOGI("get input device name: %s, fd: %d", GetAnonyString(sysfsDeviceName).c_str(), fd_);
+    DHLOGI("get input device name: %{public}s, fd: %{public}d", GetAnonyString(sysfsDeviceName).c_str(), fd_);
     return true;
 }
 
 bool VirtualDevice::InjectInputEvent(const input_event &event)
 {
     if (write(fd_, &event, sizeof(event)) < static_cast<ssize_t>(sizeof(event))) {
-        DHLOGE("could not inject event, removed? (fd: %d", fd_);
+        DHLOGE("could not inject event, removed? (fd: %{public}d", fd_);
         return false;
     }
     RecordEventLog(event);
@@ -183,7 +184,7 @@ bool VirtualDevice::InjectInputEvent(const input_event &event)
 
 void VirtualDevice::SetNetWorkId(const std::string &netWorkId)
 {
-    DHLOGI("SetNetWorkId %s\n", GetAnonyString(netWorkId).c_str());
+    DHLOGI("SetNetWorkId %{public}s\n", GetAnonyString(netWorkId).c_str());
     netWorkId_ = netWorkId;
 }
 
@@ -224,8 +225,9 @@ void VirtualDevice::RecordEventLog(const input_event &event)
             eventType = "other type " + std::to_string(event.type);
             break;
     }
-    DHLOGD("4.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d, Sec: %ld, Sec1: %ld",
-        eventType.c_str(), event.code, event.value, event.input_event_sec, event.input_event_usec);
+    DHLOGD("4.E2E-Test Source write event into input driver, EventType: %{public}s, Code: %{public}d, "
+        "Value: %{public}d, Sec: %ld, Sec1: %ld", eventType.c_str(), event.code, event.value, event.input_event_sec,
+        event.input_event_usec);
 }
 
 int32_t VirtualDevice::GetDeviceFd()
