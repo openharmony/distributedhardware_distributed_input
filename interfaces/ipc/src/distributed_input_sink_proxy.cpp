@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -99,11 +99,12 @@ int32_t DistributedInputSinkProxy::NotifyStartDScreen(const SrcScreenInfo &remot
         DHLOGE("WriteInterfaceToken fail!");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
-    DHLOGI("DistributedInputSinkProxy the data: devId: %s, sourceWinId: %d, sourceWinWidth: %d, sourceWinHeight: %d, "
-        "sourcePhyId: %s, sourcePhyFd: %d, sourcePhyWidth: %d, sourcePhyHeight: %d",
-        GetAnonyString(remoteCtrlInfo.devId).c_str(), remoteCtrlInfo.sourceWinId, remoteCtrlInfo.sourceWinWidth,
-        remoteCtrlInfo.sourceWinHeight, GetAnonyString(remoteCtrlInfo.sourcePhyId).c_str(),
-        remoteCtrlInfo.sourcePhyFd, remoteCtrlInfo.sourcePhyWidth, remoteCtrlInfo.sourcePhyHeight);
+    DHLOGI("DinputSinkProxy the data: devId: %{public}s, sourceWinId: %{public}" PRIu64 ", sourceWinWidth: %{public}d, "
+        "sourceWinHeight: %{public}d, sourcePhyId: %{public}s, sourcePhyFd: %{public}d, sourcePhyWidth: %{public}d, "
+        "sourcePhyHeight: %{public}d", GetAnonyString(remoteCtrlInfo.devId).c_str(), remoteCtrlInfo.sourceWinId,
+        remoteCtrlInfo.sourceWinWidth, remoteCtrlInfo.sourceWinHeight,
+        GetAnonyString(remoteCtrlInfo.sourcePhyId).c_str(), remoteCtrlInfo.sourcePhyFd,
+        remoteCtrlInfo.sourcePhyWidth, remoteCtrlInfo.sourcePhyHeight);
     if (!data.WriteString(remoteCtrlInfo.devId) || !data.WriteInt32(remoteCtrlInfo.sessionId) ||
         !data.WriteString(remoteCtrlInfo.uuid) || !data.WriteUint64(remoteCtrlInfo.sourceWinId) ||
         !data.WriteUint32(remoteCtrlInfo.sourceWinWidth) || !data.WriteUint32(remoteCtrlInfo.sourceWinHeight) ||

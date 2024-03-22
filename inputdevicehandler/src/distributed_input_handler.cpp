@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -55,8 +55,8 @@ DistributedInputHandler::~DistributedInputHandler()
 
 void DistributedInputHandler::StructTransJson(const InputDevice &pBuf, std::string &strDescriptor)
 {
-    DHLOGI("[%s] %d, %d, %d, %d, %s.\n", (pBuf.name).c_str(), pBuf.bus, pBuf.vendor, pBuf.product, pBuf.version,
-        GetAnonyString(pBuf.descriptor).c_str());
+    DHLOGI("[%{public}s] %{public}d, %{public}d, %{public}d, %{public}d, %{public}s.\n", (pBuf.name).c_str(),
+        pBuf.bus, pBuf.vendor, pBuf.product, pBuf.version, GetAnonyString(pBuf.descriptor).c_str());
     nlohmann::json tmpJson;
     tmpJson[DEVICE_NAME] = pBuf.name;
     tmpJson[PHYSICAL_PATH] = pBuf.physicalPath;
@@ -82,7 +82,7 @@ void DistributedInputHandler::StructTransJson(const InputDevice &pBuf, std::stri
     std::ostringstream stream;
     stream << tmpJson.dump();
     strDescriptor = stream.str();
-    DHLOGI("Record InputDevice json info: %s", strDescriptor.c_str());
+    DHLOGI("Record InputDevice json info: %{public}s", strDescriptor.c_str());
     return;
 }
 
@@ -159,7 +159,7 @@ bool DistributedInputHandler::InitCollectEventsThread()
     collectThreadID_ = -1;
     int32_t ret = pthread_create(&collectThreadID_, &attr, CollectEventsThread, this);
     if (ret != 0) {
-        DHLOGE("DistributedInputHandler::InitCollectEventsThread create thread failed:%d \n", ret);
+        DHLOGE("DistributedInputHandler::InitCollectEventsThread create thread failed:%{public}d \n", ret);
         pthread_attr_destroy(&attr);
         collectThreadID_ = -1;
         isCollectingEvents_ = false;
@@ -189,7 +189,7 @@ void DistributedInputHandler::StartInputMonitorDeviceThread()
     while (isCollectingEvents_) {
         size_t count = inputHub_->StartCollectInputHandler(mEventBuffer, inputDeviceBufferSize);
         if (count > 0) {
-            DHLOGI("Count: %zu", count);
+            DHLOGI("Count: %{public}zu", count);
             for (size_t iCnt = 0; iCnt < count; iCnt++) {
                 NotifyHardWare(iCnt);
             }

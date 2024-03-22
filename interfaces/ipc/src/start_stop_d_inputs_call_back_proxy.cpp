@@ -55,7 +55,7 @@ void StartStopDInputsCallbackProxy::OnResultDhids(const std::string &devId, cons
     int32_t ret = remote->SendRequest(static_cast<uint32_t>(IStartStopDInputsCallback::Message::RESULT_STRING),
                                       data, reply, option);
     if (ret != 0) {
-        DHLOGE("OnResultDhids error, ret = %d", ret);
+        DHLOGE("OnResultDhids error, ret = %{public}d", ret);
         return;
     }
     DHLOGI("OnResultDhids success.");

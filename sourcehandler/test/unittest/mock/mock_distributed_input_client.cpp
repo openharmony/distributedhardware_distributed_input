@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -69,7 +69,7 @@ void DistributedInputClient::AddWhiteListInfosCb::OnResult(const std::string &de
         return;
     }
     size_t jsonSize = inputData.size();
-    DHLOGI("AddWhiteListInfosCb OnResult json size:%zu.\n", jsonSize);
+    DHLOGI("AddWhiteListInfosCb OnResult json size:%{public}zu.\n", jsonSize);
     TYPE_WHITE_LIST_VEC vecWhiteList = inputData;
     WhiteListUtil::GetInstance().SyncWhiteList(deviceId, vecWhiteList);
 }
