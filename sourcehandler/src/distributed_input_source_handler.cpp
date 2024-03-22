@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ int32_t DistributedInputSourceHandler::InitSource(const std::string &params)
         "dinput init source sa start.");
     int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, loadCallback);
     if (ret != ERR_OK) {
-        DHLOGE("Failed to Load systemAbility, systemAbilityId:%{public}d, ret code:%{public}d",
+        DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
             DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, ret);
         return ERR_DH_INPUT_SINK_HANDLER_INIT_SOURCE_SA_FAIL;
     }
@@ -116,13 +116,13 @@ void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilitySuccess(i
 {
     currSystemAbilityId = systemAbilityId;
     currRemoteObject = remoteObject;
-    DHLOGI("DistributedInputSourceHandler OnLoadSystemAbilitySuccess. systemAbilityId=%{public}d", systemAbilityId);
+    DHLOGI("DistributedInputSourceHandler OnLoadSystemAbilitySuccess. systemAbilityId=%d", systemAbilityId);
 }
 
 void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
     currSystemAbilityId = systemAbilityId;
-    DHLOGE("DistributedInputSourceHandler OnLoadSystemAbilityFail. systemAbilityId=%{public}d", systemAbilityId);
+    DHLOGE("DistributedInputSourceHandler OnLoadSystemAbilityFail. systemAbilityId=%d", systemAbilityId);
 }
 
 void DistributedInputSourceHandler::DInputSourceSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)

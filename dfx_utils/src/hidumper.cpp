@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ bool HiDumper::HiDump(const std::vector<std::string> &args, std::string &result)
     result.clear();
     int32_t argsSize = static_cast<int32_t>(args.size());
     for (int32_t i = 0; i < argsSize; i++) {
-        DHLOGI("HiDumper Dump args[%{public}d]: %{public}s.", i, args.at(i).c_str());
+        DHLOGI("HiDumper Dump args[%d]: %s.", i, args.at(i).c_str());
     }
     if (ProcessDump(args[0], result) != DH_SUCCESS) {
         return false;

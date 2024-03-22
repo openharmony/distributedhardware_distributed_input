@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -97,8 +97,8 @@ void DInputSourceManagerEventHandler::NotifyRegisterCallback(const AppExecFwk::I
             sourceManagerObj_->RemoveInputDeviceId(deviceId, dhId);
         }
     } else {
-        DHLOGW("ProcessEvent DINPUT_SOURCE_MANAGER_RIGISTER_MSG the, devId: %{public}s, dhId: %{public}s is bad data.",
-            GetAnonyString(deviceId).c_str(), GetAnonyString(dhId).c_str());
+        DHLOGW("ProcessEvent DINPUT_SOURCE_MANAGER_RIGISTER_MSG the "
+            "devId: %s, dhId: %s is bad data.", GetAnonyString(deviceId).c_str(), GetAnonyString(dhId).c_str());
     }
 
     sourceManagerObj_->RunRegisterCallback(deviceId, dhId,
@@ -178,7 +178,7 @@ void DInputSourceManagerEventHandler::NotifyStartCallback(const AppExecFwk::Inne
     std::string deviceId = innerMsg[INPUT_SOURCEMANAGER_KEY_DEVID];
     uint32_t inputTypes = innerMsg[INPUT_SOURCEMANAGER_KEY_ITP];
     bool result = innerMsg[INPUT_SOURCEMANAGER_KEY_RESULT];
-    DHLOGI("Start DInput Recv Callback ret: %{public}s, devId: %{public}s, inputTypes: %{public}d",
+    DHLOGI("Start DInput Recv Callback ret: %s, devId: %s, inputTypes: %d",
         result ? "true" : "false", GetAnonyString(deviceId).c_str(), inputTypes);
     if (result) {
         sourceManagerObj_->SetInputTypesMap(
@@ -205,7 +205,7 @@ void DInputSourceManagerEventHandler::NotifyStopCallback(const AppExecFwk::Inner
     uint32_t inputTypes = innerMsg[INPUT_SOURCEMANAGER_KEY_ITP];
     bool result = innerMsg[INPUT_SOURCEMANAGER_KEY_RESULT];
 
-    DHLOGI("Stop DInput Recv Callback ret: %{public}d, devId: %{public}s, inputTypes: %{public}d",
+    DHLOGI("Stop DInput Recv Callback ret: %B, devId: %s, inputTypes: %d",
         result, GetAnonyString(deviceId).c_str(), inputTypes);
     if (result && (sourceManagerObj_->GetInputTypesMap(deviceId) & inputTypes)) {
         sourceManagerObj_->SetInputTypesMap(
@@ -354,7 +354,7 @@ void DInputSourceManagerEventHandler::NotifyRelayPrepareRemoteInput(const AppExe
     bool result = innerMsg[INPUT_SOURCEMANAGER_KEY_RESULT];
     std::string object = innerMsg[INPUT_SOURCEMANAGER_KEY_WHITELIST];
     int32_t toSrcSessionId = innerMsg[INPUT_SOURCEMANAGER_KEY_SESSIONID];
-    DHLOGI("Device whitelist object: %{public}s", object.c_str());
+    DHLOGI("Device whitelist object: %s", object.c_str());
     std::string localNetworkId = GetLocalNetworkId();
     if (localNetworkId.empty()) {
         return;
@@ -482,7 +482,7 @@ void DInputSourceManagerEventHandler::ProcessEvent(const AppExecFwk::InnerEvent:
 {
     auto iter = eventFuncMap_.find(event->GetInnerEventId());
     if (iter == eventFuncMap_.end()) {
-        DHLOGE("Event Id %{public}d is undefined.", event->GetInnerEventId());
+        DHLOGE("Event Id %d is undefined.", event->GetInnerEventId());
         return;
     }
     SourceEventFunc &func = iter->second;

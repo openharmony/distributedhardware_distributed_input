@@ -146,7 +146,7 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("PrepareRemoteInput end, result:%{public}d", result);
+    DHLOGI("PrepareRemoteInput end, result:%d", result);
     return result;
 }
 
@@ -172,7 +172,7 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &dev
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGE("UnprepareRemoteInput end, result=%{public}d", result);
+    DHLOGE("UnprepareRemoteInput end, result=%d", result);
     return result;
 }
 
@@ -203,7 +203,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("source proxy StartRemoteInput end, result:%{public}d.", result);
+    DHLOGI("source proxy StartRemoteInput end, result:%d.", result);
     return result;
 }
 
@@ -268,7 +268,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, 
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("source proxy StartRemoteInput end, result:%{public}d.", result);
+    DHLOGI("source proxy StartRemoteInput end, result:%d.", result);
     return result;
 }
 
@@ -333,7 +333,7 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(const std::string &srcId
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("PrepareRemoteInput relay result:%{public}d", result);
+    DHLOGI("PrepareRemoteInput relay result:%d", result);
     return result;
 }
 
@@ -364,7 +364,7 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &src
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("UnprepareRemoteInput relay result:%{public}d", result);
+    DHLOGI("UnprepareRemoteInput relay result:%d", result);
     return result;
 }
 
@@ -402,7 +402,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &sinkId,
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("Source proxy StartRemoteInput dhid end, result:%{public}d.", result);
+    DHLOGI("Source proxy StartRemoteInput dhid end, result:%d.", result);
     return result;
 }
 
@@ -440,7 +440,7 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &sinkId, 
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("Source proxy StopRemoteInput dhid end, result:%{public}d.", result);
+    DHLOGI("Source proxy StopRemoteInput dhid end, result:%d.", result);
     return result;
 }
 
@@ -483,7 +483,7 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, 
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("Source proxy StartRemoteInput relay dhid end, result:%{public}d.", result);
+    DHLOGI("Source proxy StartRemoteInput relay dhid end, result:%d.", result);
     return result;
 }
 
@@ -526,7 +526,7 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, c
     if (ret) {
         result = reply.ReadInt32();
     }
-    DHLOGI("Source proxy StopRemoteInput relay dhid end, result:%{public}d.", result);
+    DHLOGI("Source proxy StopRemoteInput relay dhid end, result:%d.", result);
     return result;
 }
 
@@ -678,7 +678,7 @@ bool DistributedInputSourceProxy::SendRequest(const uint32_t code, MessageParcel
     MessageOption option(MessageOption::TF_SYNC);
     int32_t result = remote->SendRequest(static_cast<uint32_t>(code), data, reply, option);
     if (result != DH_SUCCESS) {
-        DHLOGE("DistributedInputSourceProxy SendRequest error, result:%{public}d.", result);
+        DHLOGE("DistributedInputSourceProxy SendRequest error, result:%d.", result);
         return false;
     }
     return true;

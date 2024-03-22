@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -64,7 +64,7 @@ void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t syste
             }
         }
     }
-    DHLOGI("sa %{public}d is removed.", systemAbilityId);
+    DHLOGI("sa %d is removed.", systemAbilityId);
 }
 
 void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
@@ -92,7 +92,7 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
                 DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME, AppExecFwk::EventQueue::Priority::IMMEDIATE);
         }
     }
-    DHLOGI("sa %{public}d is added.", systemAbilityId);
+    DHLOGI("sa %d is added.", systemAbilityId);
 }
 
 void DInputSAManager::Init()
@@ -107,22 +107,22 @@ void DInputSAManager::Init()
     }
 
     if (!isSubscribeSrcSAChangeListener.load()) {
-        DHLOGI("try subscribe source sa change listener, saId:%{public}d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
+        DHLOGI("try subscribe source sa change listener, sa id: %d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
         int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID,
             saListenerCallback);
         if (ret != DH_SUCCESS) {
-            DHLOGE("subscribe source sa change failed: %{public}d", ret);
+            DHLOGE("subscribe source sa change failed: %d", ret);
             return;
         }
         isSubscribeSrcSAChangeListener.store(true);
     }
 
     if (!isSubscribeSinkSAChangeListener.load()) {
-        DHLOGI("try subscribe sink sa change listener, saId:%{public}d", DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID);
+        DHLOGI("try subscribe sink sa change listener, sa id: %d", DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID);
         int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID,
             saListenerCallback);
         if (ret != DH_SUCCESS) {
-            DHLOGE("subscribe sink sa change failed: %{public}d", ret);
+            DHLOGE("subscribe sink sa change failed: %d", ret);
             return;
         }
         isSubscribeSinkSAChangeListener.store(true);
@@ -147,11 +147,11 @@ bool DInputSAManager::GetDInputSourceProxy()
                 return false;
             }
 
-            DHLOGI("try subscribe source sa change listener, saId:%{public}d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
+            DHLOGI("try subscribe source sa change listener, sa id: %d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
             int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID,
                 saListenerCallback);
             if (ret != DH_SUCCESS) {
-                DHLOGE("subscribe source sa change failed: %{public}d", ret);
+                DHLOGE("subscribe source sa change failed: %d", ret);
                 return false;
             }
             isSubscribeSrcSAChangeListener.store(true);
@@ -171,7 +171,7 @@ bool DInputSAManager::GetDInputSourceProxy()
             return false;
         }
 
-        DHLOGI("try get sa: %{public}d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
+        DHLOGI("try get sa: %d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
         sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(
             DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
         if (!remoteObject) {
@@ -218,11 +218,11 @@ bool DInputSAManager::GetDInputSinkProxy()
                 return false;
             }
 
-            DHLOGI("try subscribe sink sa change listener, sa id: %{public}d", DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID);
+            DHLOGI("try subscribe sink sa change listener, sa id: %d", DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID);
             int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID,
                 saListenerCallback);
             if (ret != DH_SUCCESS) {
-                DHLOGE("subscribe sink sa change failed: %{public}d", ret);
+                DHLOGE("subscribe sink sa change failed: %d", ret);
                 return false;
             }
             isSubscribeSinkSAChangeListener.store(true);
@@ -295,7 +295,7 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
             int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
             if (ret != DH_SUCCESS) {
                 result = ret;
-                DHLOGE("SA execute RegisterSimulationEventListener fail, ret = %{public}d", ret);
+                DHLOGE("SA execute RegisterSimulationEventListener fail, ret = %d", ret);
             }
         }
     }
@@ -310,7 +310,7 @@ int32_t DInputSAManager::RestoreRegisterListenerAndCallback()
             int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
             if (ret != DH_SUCCESS) {
                 result = ret;
-                DHLOGE("SA execute RegisterSessionStateCb fail, ret = %{public}d", ret);
+                DHLOGE("SA execute RegisterSessionStateCb fail, ret = %d", ret);
             }
         }
     }
