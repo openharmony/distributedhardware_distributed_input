@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,7 +54,7 @@ int32_t DistributedInputSinkHandler::InitSink(const std::string &params)
         "dinput sink LoadSystemAbility call");
     int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, loadCallback);
     if (ret != ERR_OK) {
-        DHLOGE("Failed to Load systemAbility, systemAbilityId:%{public}d, ret code:%{public}d",
+        DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, ret);
         return ERR_DH_INPUT_SINK_HANDLER_INIT_SINK_SA_FAIL;
     }
@@ -109,13 +109,13 @@ void DistributedInputSinkHandler::SALoadSinkCb::OnLoadSystemAbilitySuccess(int32
 {
     currSystemAbilityId = systemAbilityId;
     currRemoteObject = remoteObject;
-    DHLOGI("DistributedInputSinkHandler OnLoadSystemAbilitySuccess. systemAbilityId=%{public}d", systemAbilityId);
+    DHLOGI("DistributedInputSinkHandler OnLoadSystemAbilitySuccess. systemAbilityId=%d", systemAbilityId);
 }
 
 void DistributedInputSinkHandler::SALoadSinkCb::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
     currSystemAbilityId = systemAbilityId;
-    DHLOGE("DistributedInputSinkHandler OnLoadSystemAbilityFail. systemAbilityId=%{public}d", systemAbilityId);
+    DHLOGE("DistributedInputSinkHandler OnLoadSystemAbilityFail. systemAbilityId=%d", systemAbilityId);
 }
 
 void DistributedInputSinkHandler::DInputSinkSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -64,7 +64,7 @@ int32_t SimulationEventListenerProxy::OnSimulationEvent(uint32_t type, uint32_t 
     if (ret == DH_SUCCESS) {
         result = reply.ReadInt32();
     } else {
-        DHLOGE("SimulationEventListenerProxy SendRequest error:%{public}d", ret);
+        DHLOGE("SimulationEventListenerProxy SendRequest error:%d", ret);
     }
     return result;
 }

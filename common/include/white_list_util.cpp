@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -72,7 +72,7 @@ int32_t WhiteListUtil::Init()
     }
     std::ifstream inFile(path, std::ios::in | std::ios::binary);
     if (!inFile.is_open()) {
-        DHLOGE("WhiteListUtil Init error, file open fail path=%{public}s", path);
+        DHLOGE("WhiteListUtil Init error, file open fail path=%s", path);
         return ERR_DH_INPUT_WHILTELIST_INIT_FAIL;
     }
 
@@ -83,7 +83,7 @@ int32_t WhiteListUtil::Init()
     std::size_t lineNum = 0;
     while (getline(inFile, line)) {
         if ((++lineNum > MAX_LINE_NUM) || !IsValidLine(line)) {
-            DHLOGE("whitelist cfg file has too many lines or too complicated. lineNum is %{public}zu", lineNum);
+            DHLOGE("whitelist cfg file has too many lines or too complicated. lineNum is %d", lineNum);
             break;
         }
         vecKeyCode.clear();
@@ -117,15 +117,15 @@ int32_t WhiteListUtil::Init()
 bool WhiteListUtil::IsValidLine(const std::string &line) const
 {
     if (line.size() > MAX_CHAR_PER_LINE_NUM) {
-        DHLOGE("This line is too long, size is %{public}zu", line.size());
+        DHLOGE("This line is too long, size is %d", line.size());
         return false;
     }
     if (std::count(line.begin(), line.end(), SPLIT_COMMA[0]) > MAX_SPLIT_COMMA_NUM) {
-        DHLOGE("This line %{public}s has too many SPLIT_COMMA", line.c_str());
+        DHLOGE("This line %s has too many SPLIT_COMMA", line.c_str());
         return false;
     }
     if (std::count(line.begin(), line.end(), SPLIT_LINE[0]) > MAX_SPLIT_LINE_NUM) {
-        DHLOGE("This line %{public}s has too many SPLIT_LINE", line.c_str());
+        DHLOGE("This line %s has too many SPLIT_LINE", line.c_str());
         return false;
     }
     return true;
@@ -134,12 +134,12 @@ bool WhiteListUtil::IsValidLine(const std::string &line) const
 bool WhiteListUtil::CheckIsNumber(const std::string &str) const
 {
     if (str.empty() || str.size() > MAX_KEY_CODE_NUM) {
-        DHLOGE("KeyCode size %{public}zu, is zero or too long.", str.size());
+        DHLOGE("KeyCode size %d, is zero or too long.", str.size());
         return false;
     }
     for (char const &c : str) {
         if (std::isdigit(c) == 0) {
-            DHLOGE("Check KeyCode format fail, %{public}s.", str.c_str());
+            DHLOGE("Check KeyCode format fail, %s.", str.c_str());
             return false;
         }
     }
@@ -191,7 +191,7 @@ void WhiteListUtil::SplitCombinationKey(std::string &line, TYPE_KEY_CODE_VEC &ve
 
 int32_t WhiteListUtil::SyncWhiteList(const std::string &deviceId, const TYPE_WHITE_LIST_VEC &vecWhiteList)
 {
-    DHLOGI("deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("deviceId=%s", GetAnonyString(deviceId).c_str());
 
     std::lock_guard<std::mutex> lock(mutex_);
     mapDeviceWhiteList_[deviceId] = vecWhiteList;
@@ -252,7 +252,7 @@ void WhiteListUtil::GetAllComb(TYPE_COMBINATION_KEY_VEC vecs, WhiteListItemHash 
 
 int32_t WhiteListUtil::ClearWhiteList(const std::string &deviceId)
 {
-    DHLOGI("deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("deviceId=%s", GetAnonyString(deviceId).c_str());
 
     std::lock_guard<std::mutex> lock(mutex_);
     mapDeviceWhiteList_.erase(deviceId);
@@ -268,17 +268,17 @@ int32_t WhiteListUtil::ClearWhiteList(void)
 
 int32_t WhiteListUtil::GetWhiteList(const std::string &deviceId, TYPE_WHITE_LIST_VEC &vecWhiteList)
 {
-    DHLOGI("GetWhiteList start, deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("GetWhiteList start, deviceId=%s", GetAnonyString(deviceId).c_str());
 
     std::lock_guard<std::mutex> lock(mutex_);
     TYPE_DEVICE_WHITE_LIST_MAP::const_iterator iter = mapDeviceWhiteList_.find(deviceId);
     if (iter != mapDeviceWhiteList_.end()) {
         vecWhiteList = iter->second;
-        DHLOGI("GetWhiteList success, deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+        DHLOGI("GetWhiteList success, deviceId=%s", GetAnonyString(deviceId).c_str());
         return DH_SUCCESS;
     }
 
-    DHLOGI("GetWhiteList fail, deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("GetWhiteList fail, deviceId=%s", GetAnonyString(deviceId).c_str());
     return ERR_DH_INPUT_WHILTELIST_GET_WHILTELIST_FAIL;
 }
 
@@ -296,7 +296,7 @@ std::string WhiteListUtil::GetBusinessEventHash(const BusinessEvent &event)
 
 bool WhiteListUtil::IsNeedFilterOut(const std::string &deviceId, const BusinessEvent &event)
 {
-    DHLOGI("IsNeedFilterOut start, deviceId=%{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("IsNeedFilterOut start, deviceId=%s", GetAnonyString(deviceId).c_str());
 
     std::lock_guard<std::mutex> lock(mutex_);
     if (combKeysHashMap_.empty()) {
@@ -311,7 +311,7 @@ bool WhiteListUtil::IsNeedFilterOut(const std::string &deviceId, const BusinessE
     }
 
     std::string hash = GetBusinessEventHash(event);
-    DHLOGI("Searched business event hash: %{public}s", hash.c_str());
+    DHLOGI("Searched business event hash: %s", hash.c_str());
 
     return combKeysHashMap_[deviceId].find(hash) != combKeysHashMap_[deviceId].end();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,7 @@ void HisyseventUtil::SysEventWriteBehavior(std::string status, std::string msg)
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -45,7 +45,7 @@ void HisyseventUtil::SysEventWriteBehavior(std::string status, std::string devId
         "DEVID", GetAnonyString(devId),
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -59,7 +59,7 @@ void HisyseventUtil::SysEventWriteBehavior(std::string status, std::string devId
         "DHID", GetAnonyString(dhId),
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -71,7 +71,7 @@ void HisyseventUtil::SysEventWriteFault(std::string status, std::string msg)
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -85,7 +85,7 @@ void HisyseventUtil::SysEventWriteFault(std::string status, std::string devId, i
         "ERROR_CODE", errorCode,
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 
@@ -101,7 +101,7 @@ void HisyseventUtil::SysEventWriteFault(std::string status, std::string devId, s
         "ERROR_CODE", errorCode,
         "MSG", msg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%{public}d", res);
+        DHLOGE("Write HiSysEvent error, res:%d", res);
     }
 }
 } // namespace DistributedInput

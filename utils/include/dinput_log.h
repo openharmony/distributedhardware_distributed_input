@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,26 +16,29 @@
 #ifndef OHOS_DINPUT_LOG_H
 #define OHOS_DINPUT_LOG_H
 
-#include "hilog/log.h"
-#include <inttypes.h>
-
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-#undef LOG_TAG
-#define LOG_TAG "DINPUT"
+typedef enum {
+    DH_LOG_DEBUG,
+    DH_LOG_INFO,
+    DH_LOG_WARN,
+    DH_LOG_ERROR,
+} DHLogLevel;
 
-#define DHLOGD(fmt, ...) HILOG_DEBUG(LOG_CORE, \
-    "[%{public}s][%{public}s]:" fmt, DH_LOG_TAG, __FUNCTION__, ##__VA_ARGS__)
+void DHLog(DHLogLevel logLevel, const char *fmt, ...);
 
-#define DHLOGI(fmt, ...) HILOG_INFO(LOG_CORE, \
-    "[%{public}s][%{public}s]:" fmt, DH_LOG_TAG, __FUNCTION__, ##__VA_ARGS__)
+#define DHLOGD(fmt, ...) DHLog(DH_LOG_DEBUG, \
+    (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
 
-#define DHLOGW(fmt, ...) HILOG_WARN(LOG_CORE, \
-    "[%{public}s][%{public}s]:" fmt, DH_LOG_TAG, __FUNCTION__, ##__VA_ARGS__)
+#define DHLOGI(fmt, ...) DHLog(DH_LOG_INFO, \
+    (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
 
-#define DHLOGE(fmt, ...) HILOG_ERROR(LOG_CORE, \
-    "[%{public}s][%{public}s]:" fmt, DH_LOG_TAG, __FUNCTION__, ##__VA_ARGS__)
+#define DHLOGW(fmt, ...) DHLog(DH_LOG_WARN, \
+    (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
+
+#define DHLOGE(fmt, ...) DHLog(DH_LOG_ERROR, \
+    (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

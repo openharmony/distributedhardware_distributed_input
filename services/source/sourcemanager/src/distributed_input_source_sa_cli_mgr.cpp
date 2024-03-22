@@ -65,7 +65,7 @@ sptr<IDistributedSourceInput> DInputSourceSACliMgr::GetRemoteCli(const std::stri
         DHLOGE("DInputSourceSACliMgr::GetRemoteCli deviceId is empty");
         return nullptr;
     }
-    DHLOGI("DInputSourceSACliMgr::GetRemoteCli remote deviceid is %{public}s", GetAnonyString(deviceId).c_str());
+    DHLOGI("DInputSourceSACliMgr::GetRemoteCli remote deviceid is %s", GetAnonyString(deviceId).c_str());
     auto remoteCli = GetRemoteCliFromCache(deviceId);
     if (remoteCli != nullptr) {
         DHLOGD("VirtualHardwareManager::GetRemoteCli get from cache!");
@@ -80,7 +80,7 @@ sptr<IDistributedSourceInput> DInputSourceSACliMgr::GetRemoteCli(const std::stri
 
     auto object = samgr->CheckSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, deviceId);
     if (object == nullptr) {
-        DHLOGE("GetRemoteCli failed get remote Cli %{public}s", GetAnonyString(deviceId).c_str());
+        DHLOGE("GetRemoteCli failed get remote Cli %s", GetAnonyString(deviceId).c_str());
         return nullptr;
     }
 
@@ -101,11 +101,11 @@ sptr<IDistributedSourceInput> DInputSourceSACliMgr::GetRemoteCliFromCache(const 
 void DInputSourceSACliMgr::AddRemoteCli(const std::string &devId, sptr<IRemoteObject> object)
 {
     if (devId.empty() || (object == nullptr)) {
-        DHLOGW("DInputSourceSACliMgr::AddRemoteCli param error! devId=%{public}s", GetAnonyString(devId).c_str());
+        DHLOGW("DInputSourceSACliMgr::AddRemoteCli param error! devId=%s", GetAnonyString(devId).c_str());
         return;
     }
 
-    DHLOGI("DInputSourceSACliMgr::AddRemoteCli devId=%{public}s", GetAnonyString(devId).c_str());
+    DHLOGI("DInputSourceSACliMgr::AddRemoteCli devId=%s", GetAnonyString(devId).c_str());
     object->AddDeathRecipient(remoteCliDeathRcv);
 
     std::lock_guard<std::mutex> lock(remoteCliLock);
@@ -118,7 +118,7 @@ void DInputSourceSACliMgr::AddRemoteCli(const std::string &devId, sptr<IRemoteOb
 
 void DInputSourceSACliMgr::DeleteRemoteCli(const std::string &devId)
 {
-    DHLOGI("DInputSourceSACliMgr::DeleteRemoteCli devId=%{public}s", GetAnonyString(devId).c_str());
+    DHLOGI("DInputSourceSACliMgr::DeleteRemoteCli devId=%s", GetAnonyString(devId).c_str());
     std::lock_guard<std::mutex> lock(remoteCliLock);
     auto item = remoteCliMap.find(devId);
     if (item == remoteCliMap.end()) {
@@ -144,7 +144,7 @@ void DInputSourceSACliMgr::DeleteRemoteCli(const sptr<IRemoteObject> remote)
         return;
     }
 
-    DHLOGI("VirtualHardwareManager::DeleteRemoteCli remote.devId=%{public}s", GetAnonyString(iter->first).c_str());
+    DHLOGI("VirtualHardwareManager::DeleteRemoteCli remote.devId=%s", GetAnonyString(iter->first).c_str());
     if (iter->second != nullptr) {
         iter->second->AsObject()->RemoveDeathRecipient(remoteCliDeathRcv);
     }

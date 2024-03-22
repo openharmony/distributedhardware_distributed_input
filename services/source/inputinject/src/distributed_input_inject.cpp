@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,7 +49,7 @@ DistributedInputInject &DistributedInputInject::GetInstance()
 int32_t DistributedInputInject::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const std::string &parameters)
 {
-    DHLOGI("RegisterDistributedHardware called, deviceId: %{public}s,  dhId: %{public}s,  parameters: %{public}s",
+    DHLOGI("RegisterDistributedHardware called, deviceId: %s,  dhId: %s,  parameters: %s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
@@ -67,7 +67,7 @@ int32_t DistributedInputInject::RegisterDistributedHardware(const std::string &d
 
 int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId)
 {
-    DHLOGI("UnregisterDistributedHardware called, deviceId: %{public}s,  dhId: %{public}s",
+    DHLOGI("UnregisterDistributedHardware called, deviceId: %s,  dhId: %s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(inputNodeManagerMutex_);
     if (inputNodeManager_ == nullptr) {
@@ -85,8 +85,8 @@ int32_t DistributedInputInject::UnregisterDistributedHardware(const std::string 
 
 int32_t DistributedInputInject::StructTransJson(const InputDevice &pBuf, std::string &strDescriptor)
 {
-    DHLOGI("[%{public}s] %{public}d, %{public}d, %{public}d, %{public}d, %{public}s.\n", (pBuf.name).c_str(),
-        pBuf.bus, pBuf.vendor, pBuf.product, pBuf.version, GetAnonyString(pBuf.descriptor).c_str());
+    DHLOGI("[%s] %d, %d, %d, %d, %s.\n", (pBuf.name).c_str(), pBuf.bus, pBuf.vendor, pBuf.product, pBuf.version,
+        GetAnonyString(pBuf.descriptor).c_str());
     nlohmann::json tmpJson;
     tmpJson[DEVICE_NAME] = pBuf.name;
     tmpJson[PHYSICAL_PATH] = pBuf.physicalPath;

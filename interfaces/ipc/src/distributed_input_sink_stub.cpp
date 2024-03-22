@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -68,7 +68,7 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
     }
     auto iter = memberFuncMap_.find(code);
     if (iter == memberFuncMap_.end()) {
-        DHLOGE("invalid request code is %{public}d.", code);
+        DHLOGE("invalid request code is %d.", code);
         return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
     DistributedInputSinkFunc &func = iter->second;
@@ -84,7 +84,7 @@ int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &
     DHLOGI("DistributedInputSinkStub InitInner start");
     int32_t ret = Init();
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSinkStub write ret failed, ret = %{public}d", ret);
+        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     return ret;
@@ -98,7 +98,7 @@ int32_t DistributedInputSinkStub::ReleaseInner(MessageParcel &data, MessageParce
     }
     int32_t ret = Release();
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("DistributedInputSinkStub write ret failed, ret = %{public}d", ret);
+        DHLOGE("DistributedInputSinkStub write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     return ret;
@@ -117,10 +117,10 @@ int32_t DistributedInputSinkStub::NotifyStartDScreenInner(MessageParcel &data, M
     uint32_t sourcePhyFd = data.ReadUint32();
     uint32_t sourcePhyWidth = data.ReadUint32();
     uint32_t sourcePhyHeight = data.ReadUint32();
-    DHLOGI("OnRemoteRequest the data: devId: %{public}s, sourceWinId: %{public}" PRIu64 ", sourceWinWidth: %{public}d, "
-        "sourceWinHeight: %{public}d, sourcePhyId: %{public}s, sourcePhyFd: %{public}d, sourcePhyWidth: %{public}d, "
-        "sourcePhyHeight: %{public}d", GetAnonyString(devId).c_str(), sourceWinId, sourceWinWidth, sourceWinHeight,
-        GetAnonyString(sourcePhyId).c_str(), sourcePhyFd, sourcePhyWidth, sourcePhyHeight);
+    DHLOGI("OnRemoteRequest the data: devId: %s, sourceWinId: %d, sourceWinWidth: %d, sourceWinHeight: %d,"
+        "sourcePhyId: %s, sourcePhyFd: %d, sourcePhyWidth: %d, sourcePhyHeight: %d", GetAnonyString(devId).c_str(),
+        sourceWinId, sourceWinWidth, sourceWinHeight, GetAnonyString(sourcePhyId).c_str(), sourcePhyFd, sourcePhyWidth,
+        sourcePhyHeight);
     SrcScreenInfo srcScreenInfo = {
         .devId = devId,
         .sessionId = sessionId,
@@ -135,7 +135,7 @@ int32_t DistributedInputSinkStub::NotifyStartDScreenInner(MessageParcel &data, M
     };
     int32_t ret = NotifyStartDScreen(srcScreenInfo);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("write reply failed ret = %{public}d", ret);
+        DHLOGE("write reply failed ret = %d", ret);
         return ERR_DH_INPUT_RPC_REPLY_FAIL;
     }
     return ret;
@@ -145,10 +145,10 @@ int32_t DistributedInputSinkStub::NotifyStopDScreenInner(MessageParcel &data, Me
     MessageOption &option)
 {
     std::string srcScreenInfoKey = data.ReadString();
-    DHLOGI("OnRemoteRequest srcScreenInfoKey: %{public}s", GetAnonyString(srcScreenInfoKey).c_str());
+    DHLOGI("OnRemoteRequest srcScreenInfoKey: %s", GetAnonyString(srcScreenInfoKey).c_str());
     int ret = NotifyStopDScreen(srcScreenInfoKey);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("write version failed, ret = %{public}d", ret);
+        DHLOGE("write version failed, ret = %d", ret);
         return ERR_DH_INPUT_RPC_REPLY_FAIL;
     }
     return ret;
@@ -164,7 +164,7 @@ int32_t DistributedInputSinkStub::RegisterSharingDhIdListenerInner(MessageParcel
     }
     int32_t ret = RegisterSharingDhIdListener(listener);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("RegisterSharingDhIdListenerInner write ret failed, ret = %{public}d", ret);
+        DHLOGE("RegisterSharingDhIdListenerInner write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_SINK_STUB_REGISTER_SHARING_DHID_LISTENER_FAIL;
     }
 
@@ -182,7 +182,7 @@ int32_t DistributedInputSinkStub::RegisterGetSinkScreenInfosInner(MessageParcel 
     }
     int32_t ret = RegisterGetSinkScreenInfosCallback(callback);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("write ret failed, ret = %{public}d", ret);
+        DHLOGE("write ret failed, ret = %d", ret);
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     }
     return ret;

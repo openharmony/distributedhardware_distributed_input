@@ -57,10 +57,10 @@ int32_t DInputSinkState::Release()
 
 int32_t DInputSinkState::RecordDhIds(const std::vector<std::string> &dhIds, DhIdState state, const int32_t sessionId)
 {
-    DHLOGI("RecordDhIds dhIds size = %{public}zu", dhIds.size());
+    DHLOGI("RecordDhIds dhIds size = %zu", dhIds.size());
     std::lock_guard<std::mutex> mapLock(operationMutex_);
     for (const auto &dhid : dhIds) {
-        DHLOGD("add dhid : %{public}s, state : %{public}d.", GetAnonyString(dhid).c_str(), state);
+        DHLOGD("add dhid : %s, state : %d.", GetAnonyString(dhid).c_str(), state);
         dhIdStateMap_[dhid] = state;
     }
 
@@ -73,10 +73,10 @@ int32_t DInputSinkState::RecordDhIds(const std::vector<std::string> &dhIds, DhId
 
 int32_t DInputSinkState::RemoveDhIds(const std::vector<std::string> &dhIds)
 {
-    DHLOGI("RemoveDhIds dhIds size = %{public}zu", dhIds.size());
+    DHLOGI("RemoveDhIds dhIds size = %zu", dhIds.size());
     std::lock_guard<std::mutex> mapLock(operationMutex_);
     for (const auto &dhid : dhIds) {
-        DHLOGD("delete dhid : %{public}s", GetAnonyString(dhid).c_str());
+        DHLOGD("delete dhid : %s", GetAnonyString(dhid).c_str());
         dhIdStateMap_.erase(dhid);
     }
     return DH_SUCCESS;
@@ -91,7 +91,7 @@ DhIdState DInputSinkState::GetStateByDhid(const std::string &dhId)
 {
     std::lock_guard<std::mutex> mapLock(operationMutex_);
     if (dhIdStateMap_.find(dhId) == dhIdStateMap_.end()) {
-        DHLOGE("dhId : %{public}s not exist.", GetAnonyString(dhId).c_str());
+        DHLOGE("dhId : %s not exist.", GetAnonyString(dhId).c_str());
         return DhIdState::THROUGH_IN;
     }
     return dhIdStateMap_[dhId];
@@ -99,7 +99,7 @@ DhIdState DInputSinkState::GetStateByDhid(const std::string &dhId)
 
 void DInputSinkState::SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event)
 {
-    DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %{public}s", GetAnonyString(dhId).c_str());
+    DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %s", GetAnonyString(dhId).c_str());
     int32_t scanId = GetRandomInt32();
     RawEvent mscScanEv = { event.when, EV_MSC, MSC_SCAN, scanId, dhId, event.path };
     RawEvent btnMouseUpEv = { event.when, EV_KEY, BTN_MOUSE, KEY_UP_STATE, dhId, event.path };
@@ -111,13 +111,13 @@ void DInputSinkState::SimulateMouseBtnMouseUpState(const std::string &dhId, cons
 
 void DInputSinkState::SimulateTouchPadStateReset(const std::vector<RawEvent> &events)
 {
-    DHLOGI("SimulateTouchPadStateReset events size: %{public}zu", events.size());
+    DHLOGI("SimulateTouchPadStateReset events size: %d", events.size());
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(lastSessionId_, events);
 }
 
 void DInputSinkState::SimulateEventInjectToSrc(const int32_t sessionId, const std::vector<std::string> &dhIds)
 {
-    DHLOGI("SimulateEventInject enter, sessionId %{public}d, dhIds size %{public}zu", sessionId, dhIds.size());
+    DHLOGI("SimulateEventInject enter, sessionId %d, dhIds size %d", sessionId, dhIds.size());
     // mouse/keyboard/touchpad/touchscreen event send to remote device if these device pass through.
     if (sessionId == -1) {
         DHLOGE("SimulateEventInjectToSrc SessionId invalid");
@@ -136,12 +136,12 @@ void DInputSinkState::SimulateKeyDownEvents(const int32_t sessionId, const std::
     std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
     auto iter = keyDownStateMap_.find(dhId);
     if (iter == keyDownStateMap_.end()) {
-        DHLOGI("The shared Device not has down state key, dhId: %{public}s", GetAnonyString(dhId).c_str());
+        DHLOGI("The shared Device not has down state key, dhId: %s", GetAnonyString(dhId).c_str());
         return;
     }
 
     for (const auto &event : iter->second) {
-        DHLOGI("Simulate Key event for device path: %{public}s, dhId: %{public}s",
+        DHLOGI("Simulate Key event for device path: %s, dhId: %s",
             event.path.c_str(), GetAnonyString(event.descriptor).c_str());
         SimulateKeyDownEvent(sessionId, dhId, event);
     }
@@ -165,8 +165,7 @@ void DInputSinkState::SimulateTouchPadEvents(const int32_t sessionId, const std:
         return;
     }
 
-    DHLOGI("SimulateTouchPadEvents dhId: %{public}s, event size: %{public}zu", GetAnonyString(dhId).c_str(),
-        events.size());
+    DHLOGI("SimulateTouchPadEvents dhId: %s, event size: %zu", GetAnonyString(dhId).c_str(), events.size());
     DistributedInputSinkTransport::GetInstance().SendKeyStateNodeMsgBatch(sessionId, events);
 }
 
@@ -208,8 +207,8 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     std::lock_guard<std::mutex> mapLock(keyDownStateMapMtx_);
     auto iter = keyDownStateMap_.find(event.descriptor);
     if (iter == keyDownStateMap_.end()) {
-        DHLOGI("Find new pressed key, save it, node id: %{public}s, type: %{public}d, key code: %{public}d, "
-            "value: %{public}d", GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
+        DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         keyDownStateMap_[event.descriptor].push_back(event);
         return;
     }
@@ -218,16 +217,16 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
         keyDownStateMap_[event.descriptor].end(), event);
     // If not find the cache key on pressing, save it
     if (evIter == keyDownStateMap_[event.descriptor].end()) {
-        DHLOGI("Find new pressed key, save it, node id: %{public}s, type: %{public}d, key code: %{public}d, "
-            "value: %{public}d", GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
+        DHLOGI("Find new pressed key, save it, node id: %s, type: %d, key code: %d, value: %d",
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         keyDownStateMap_[event.descriptor].push_back(event);
         return;
     }
 
     // it is already the last one, just return
     if (evIter == (keyDownStateMap_[event.descriptor].end() - 1)) {
-        DHLOGI("Pressed key already last one, node id: %{public}s, type: %{public}d, key code: %{public}d, "
-            "value: %{public}d", GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
+        DHLOGI("Pressed key already last one, node id: %s, type: %d, key code: %d, value: %d",
+            GetAnonyString(event.descriptor).c_str(), event.type, event.code, event.value);
         return;
     }
 
@@ -235,8 +234,7 @@ void DInputSinkState::CheckAndSetLongPressedKeyOrder(struct RawEvent event)
     RawEvent backEv = *evIter;
     keyDownStateMap_[event.descriptor].erase(evIter);
     keyDownStateMap_[event.descriptor].push_back(backEv);
-    DHLOGI("Find long pressed key: %{public}d, move the cached pressed key: %{public}d to the last position",
-        event.code, backEv.code);
+    DHLOGI("Find long pressed key: %d, move the cached pressed key: %d to the last position", event.code, backEv.code);
 }
 
 void DInputSinkState::ClearDeviceStates()
