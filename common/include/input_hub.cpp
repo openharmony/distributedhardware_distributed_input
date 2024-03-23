@@ -61,7 +61,7 @@ int32_t InputHub::Initialize()
 {
     epollFd_ = epoll_create1(EPOLL_CLOEXEC);
     if (epollFd_ < 0) {
-        DHLOGE("Could not create epoll instance: %s", ConvertErrNo().c_str());
+        DHLOGE("Could not create epoll instance: %{public}s", ConvertErrNo().c_str());
         return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
     }
 
@@ -70,7 +70,7 @@ int32_t InputHub::Initialize()
         iNotifyFd_ = inotify_init();
         inputWd_ = inotify_add_watch(iNotifyFd_, DEVICE_PATH, IN_DELETE | IN_CREATE);
         if (inputWd_ < 0) {
-            DHLOGE("Could not register INotify for %s: %s", DEVICE_PATH, ConvertErrNo().c_str());
+            DHLOGE("Could not register INotify for %{public}s: %{public}s", DEVICE_PATH, ConvertErrNo().c_str());
             return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
         }
 
@@ -79,7 +79,7 @@ int32_t InputHub::Initialize()
         eventItem.data.fd = iNotifyFd_;
         int result = epoll_ctl(epollFd_, EPOLL_CTL_ADD, iNotifyFd_, &eventItem);
         if (result != 0) {
-            DHLOGE("Could not add INotify to epoll instance.  errno=%d", errno);
+            DHLOGE("Could not add INotify to epoll instance.  errno=%{public}d", errno);
             return ERR_DH_INPUT_HUB_EPOLL_INIT_FAIL;
         }
     } else {
@@ -138,12 +138,12 @@ void InputHub::ScanAndRecordInputDevices()
         while (!openingDevices_.empty()) {
             std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
             openingDevices_.pop_back();
-            DHLOGI("Reporting device opened: path=%s, name=%s\n",
+            DHLOGI("Reporting device opened: path=%{public}s, name=%{public}s\n",
                 device->path.c_str(), device->identifier.name.c_str());
             std::string devPath = device->path;
             auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device with this path %s exists, replaced. \n", devPath.c_str());
+                DHLOGI("Device with this path %{public}s exists, replaced. \n", devPath.c_str());
             }
         }
     }
@@ -190,12 +190,12 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
         size_t count = ReadInputEvent(readSize, *GetDeviceByFdLocked(eventItem.data.fd));
         Device* device = GetSupportDeviceByFd(eventItem.data.fd);
         if (!device) {
-            DHLOGE("Can not find device by fd: %d", eventItem.data.fd);
+            DHLOGE("Can not find device by fd: %{public}d", eventItem.data.fd);
             continue;
         }
         if (!sharedDHIds_[device->identifier.descriptor]) {
             RecordDeviceChangeStates(device, readBuffer, count);
-            DHLOGD("Not in sharing stat, device descriptor: %s",
+            DHLOGD("Not in sharing stat, device descriptor: %{public}s",
                 GetAnonyString(device->identifier.descriptor).c_str());
             continue;
         }
@@ -207,7 +207,7 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
                 break;
             }
         } else if (eventItem.events & EPOLLHUP) {
-            DHLOGI("Removing device %s due to epoll hang-up event.", device->identifier.name.c_str());
+            DHLOGI("Removing device %{public}s due to epoll hang-up event.", device->identifier.name.c_str());
             CloseDeviceLocked(*device);
         }
     }
@@ -265,7 +265,7 @@ void InputHub::DealNormalKeyEvent(Device *device, const RawEvent &event)
         // Deal mouse left keydown reset
         if (IsCuror(device) && event.code == BTN_MOUSE &&
             !DInputSinkState::GetInstance().IsDhIdDown(event.descriptor)) {
-            DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %s",
+            DHLOGI("Find mouse BTN_MOUSE UP state that not down effective at sink side, dhId: %{public}s",
                 GetAnonyString(event.descriptor).c_str());
             DInputSinkState::GetInstance().SimulateMouseBtnMouseUpState(event.descriptor, event);
         }
@@ -335,16 +335,15 @@ size_t InputHub::ReadInputEvent(int32_t readSize, Device &device)
     size_t count = 0;
     if (readSize == 0 || (readSize < 0 && errno == ENODEV)) {
         // Device was removed before INotify noticed.
-        DHLOGE("could not get event, removed? (fd: %d size: %d"
-            " errno: %d)\n",
+        DHLOGE("could not get event, removed? (fd: %{public}d size: %{public}d, errno: %{public}d)\n",
             device.fd, readSize, errno);
         CloseDeviceLocked(device);
     } else if (readSize < 0) {
         if (errno != EAGAIN && errno != EINTR) {
-            DHLOGW("could not get event (errno=%d)", errno);
+            DHLOGW("could not get event (errno=%{public}d)", errno);
         }
     } else if ((readSize % sizeof(struct input_event)) != 0) {
-        DHLOGW("could not get event (wrong size: %d)", readSize);
+        DHLOGW("could not get event (wrong size: %{public}d)", readSize);
     } else {
         count = size_t(readSize) / sizeof(struct input_event);
         return count;
@@ -361,7 +360,8 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
         std::lock_guard<std::mutex> deviceLock(devicesMutex_);
         for (auto it = closingDevices_.begin(); it != closingDevices_.end();) {
             std::unique_ptr<Device> device = std::move(*it);
-            DHLOGI("Reporting device closed: id=%s, name=%s", device->path.c_str(), device->identifier.name.c_str());
+            DHLOGI("Reporting device closed: id=%{public}s, name=%{public}s",
+                device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_REMOVED;
             event->deviceInfo = device->identifier;
             event += 1;
@@ -383,7 +383,8 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
         while (!openingDevices_.empty()) {
             std::unique_ptr<Device> device = std::move(*openingDevices_.rbegin());
             openingDevices_.pop_back();
-            DHLOGI("Reporting device opened: id=%s, name=%s", device->path.c_str(), device->identifier.name.c_str());
+            DHLOGI("Reporting device opened: id=%{public}s, name=%{public}s",
+                device->path.c_str(), device->identifier.name.c_str());
             event->type = DeviceType::DEVICE_ADDED;
             event->deviceInfo = device->identifier;
             event += 1;
@@ -391,7 +392,7 @@ size_t InputHub::DeviceIsExists(InputDeviceEvent *buffer, size_t bufferSize)
             std::string devPath = device->path;
             auto [dev_it, inserted] = devices_.insert_or_assign(device->path, std::move(device));
             if (!inserted) {
-                DHLOGI("Device path %s exists, replaced.", devPath.c_str());
+                DHLOGI("Device path %{public}s exists, replaced.", devPath.c_str());
             }
             if (capacity == 0) {
                 break;
@@ -456,11 +457,11 @@ void InputHub::GetDeviceHandler()
         if (eventItem.events & EPOLLHUP) {
             Device* device = GetDeviceByFdLocked(eventItem.data.fd);
             if (!device) {
-                DHLOGE("Received unexpected epoll event 0x%08x for unknown fd %d.",
+                DHLOGE("Received unexpected epoll event 0x%{public}08x for unknown fd %{public}d.",
                     eventItem.events, eventItem.data.fd);
                 continue;
             }
-            DHLOGI("Removing device %s due to epoll hang-up event.", device->identifier.name.c_str());
+            DHLOGI("Removing device %{public}s due to epoll hang-up event.", device->identifier.name.c_str());
             deviceChanged_ = true;
             CloseDeviceLocked(*device);
         }
@@ -484,7 +485,7 @@ int32_t InputHub::RefreshEpollItem(bool isSleep)
         // Sleep after errors to avoid locking up the system.
         // Hopefully the error is transient.
         if (errno != EINTR) {
-            DHLOGE("poll failed (errno=%d)\n", errno);
+            DHLOGE("poll failed (errno=%{public}d)\n", errno);
             usleep(SLEEP_TIME_US);
         }
     } else {
@@ -524,7 +525,7 @@ bool InputHub::IsDeviceRegistered(const std::string &devicePath)
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[deviceId, device] : devices_) {
         if (device->path == devicePath) {
-            DHLOGI("Device node already registered, node path: %s", device->path.c_str());
+            DHLOGI("Device node already registered, node path: %{public}s", device->path.c_str());
             return true; // device was already registered
         }
     }
@@ -538,10 +539,10 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     }
 
     std::lock_guard<std::mutex> my_lock(operationMutex_);
-    DHLOGD("Opening device start: %s", devicePath.c_str());
+    DHLOGD("Opening device start: %{public}s", devicePath.c_str());
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
-        DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
+        DHLOGE("The fd open failed, devicePath %{public}s.", devicePath.c_str());
         return ERR_DH_INPUT_HUB_OPEN_DEVICEPATH_FAIL;
     }
 
@@ -558,11 +559,11 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
 
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
-        DHLOGI("Opening device error: %s", devicePath.c_str());
+        DHLOGI("Opening device error: %{public}s", devicePath.c_str());
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
     }
 
-    DHLOGI("Opening device finish: %s", devicePath.c_str());
+    DHLOGI("Opening device finish: %{public}s", devicePath.c_str());
     return DH_SUCCESS;
 }
 
@@ -583,12 +584,12 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     // Get device name.
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device name for %s", ConvertErrNo().c_str());
+        DHLOGE("Could not get device name for %{public}s", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
         device->identifier.name = buffer;
     }
-    DHLOGD("QueryInputDeviceInfo deviceName: %s", buffer);
+    DHLOGD("QueryInputDeviceInfo deviceName: %{public}s", buffer);
     // If the device is already a virtual device, don't monitor it.
     if (device->identifier.name.find(VIRTUAL_DEVICE_NAME) != std::string::npos) {
         DHLOGE("this is a virtual driver, skip it.");
@@ -598,14 +599,14 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     // Get device driver version.
     int driverVersion;
     if (ioctl(fd, EVIOCGVERSION, &driverVersion)) {
-        DHLOGE("could not get driver version for %s\n", ConvertErrNo().c_str());
+        DHLOGE("could not get driver version for %{public}s\n", ConvertErrNo().c_str());
         RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     // Get device identifier.
     struct input_id inputId;
     if (ioctl(fd, EVIOCGID, &inputId)) {
-        DHLOGE("could not get device input id for %s\n", ConvertErrNo().c_str());
+        DHLOGE("could not get device input id for %{public}s\n", ConvertErrNo().c_str());
         RecordSkipDevicePath(device->path);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
@@ -615,14 +616,14 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
     device->identifier.version = inputId.version;
     // Get device physical physicalPath.
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("could not get physicalPath for %s\n", ConvertErrNo().c_str());
+        DHLOGE("could not get physicalPath for %{public}s\n", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
         device->identifier.physicalPath = buffer;
     }
     // Get device unique id.
     if (ioctl(fd, EVIOCGUNIQ(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("could not get idstring for %s\n", ConvertErrNo().c_str());
+        DHLOGE("could not get idstring for %{public}s\n", ConvertErrNo().c_str());
     } else {
         buffer[sizeof(buffer) - 1] = '\0';
         device->identifier.uniqueId = buffer;
@@ -634,7 +635,7 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
 
 void InputHub::QueryEventInfo(int fd, std::unique_ptr<Device> &device)
 {
-    DHLOGI("QueryEventInfo: devName: %s, dhId: %s!", device->identifier.name.c_str(),
+    DHLOGI("QueryEventInfo: devName: %{public}s, dhId: %{public}s!", device->identifier.name.c_str(),
         GetAnonyString(device->identifier.descriptor).c_str());
     struct libevdev *dev = GetLibEvDev(fd);
     if (dev == nullptr) {
@@ -671,7 +672,7 @@ void InputHub::GetMSCBits(int fd, std::unique_ptr<Device> &device)
 
     for (uint32_t msc = MSC_SERIAL; msc < MSC_MAX; ++msc) {
         if (TestBit(EV_MSC, device->evBitmask) && TestBit(msc, mscBitmask)) {
-            DHLOGI("Get MSC event: %d", msc);
+            DHLOGI("Get MSC event: %{public}d", msc);
             device->identifier.miscellaneous.push_back(msc);
         }
     }
@@ -683,7 +684,7 @@ void InputHub::GetLEDBits(int fd, std::unique_ptr<Device> &device)
     GetEventMask(fd, "led", EV_LED, sizeof(ledBitmask), ledBitmask);
     for (uint32_t led = LED_NUML; led < LED_MAX; ++led) {
         if (TestBit(EV_LED, device->evBitmask) && TestBit(led, ledBitmask)) {
-            DHLOGI("Get LED event: %d", led);
+            DHLOGI("Get LED event: %{public}d", led);
             device->identifier.leds.push_back(led);
         }
     }
@@ -696,7 +697,7 @@ void InputHub::GetSwitchBits(int fd, std::unique_ptr<Device> &device)
 
     for (uint32_t sw = SW_LID; sw < SW_MAX; ++sw) {
         if (TestBit(EV_SW, device->evBitmask) && TestBit(sw, switchBitmask)) {
-            DHLOGI("Get Switch event: %d", sw);
+            DHLOGI("Get Switch event: %{public}d", sw);
             device->identifier.switchs.push_back(sw);
         }
     }
@@ -709,7 +710,7 @@ void InputHub::GetRepeatBits(int fd, std::unique_ptr<Device> &device)
 
     for (uint32_t rep = REP_DELAY; rep < REP_MAX; ++rep) {
         if (TestBit(EV_REP, device->evBitmask) && TestBit(rep, repBitmask)) {
-            DHLOGI("Get Repeat event: %d", rep);
+            DHLOGI("Get Repeat event: %{public}d", rep);
             device->identifier.repeats.push_back(rep);
         }
     }
@@ -721,7 +722,7 @@ struct libevdev* InputHub::GetLibEvDev(int fd)
     int rc = 1;
     rc = libevdev_new_from_fd(fd, &dev);
     if (rc < 0) {
-        DHLOGE("Failed to init libevdev (%s)", strerror(-rc));
+        DHLOGE("Failed to init libevdev (%{public}s)", strerror(-rc));
         return nullptr;
     }
     return dev;
@@ -731,7 +732,7 @@ void InputHub::GetEventTypes(struct libevdev *dev, InputDevice &identifier)
 {
     for (uint32_t eventType = 0; eventType < EV_CNT; eventType++) {
         if (!libevdev_has_event_type(dev, eventType)) {
-            DHLOGD("The device is not support eventType: %d", eventType);
+            DHLOGD("The device is not support eventType: %{public}d", eventType);
             continue;
         }
         identifier.eventTypes.push_back(eventType);
@@ -746,7 +747,7 @@ int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
     }
     for (uint32_t eventKey = 0; eventKey < KEY_CNT; eventKey++) {
         if (!libevdev_has_event_code(dev, EV_KEY, eventKey)) {
-            DHLOGD("The device is not support eventKey: %d", eventKey);
+            DHLOGD("The device is not support eventKey: %{public}d", eventKey);
             continue;
         }
         identifier.eventKeys.push_back(eventKey);
@@ -760,11 +761,11 @@ int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
         DHLOGE("The device doesn't has EV_ABS type!");
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
-    DHLOGI("The device has abs info, devName: %s, dhId: %s!",
+    DHLOGI("The device has abs info, devName: %{public}s, dhId: %{public}s!",
         identifier.name.c_str(), GetAnonyString(identifier.descriptor).c_str());
     for (uint32_t absType = 0; absType < ABS_CNT; absType++) {
         if (!libevdev_has_event_code(dev, EV_ABS, absType)) {
-            DHLOGD("The device is not support absType: %d", absType);
+            DHLOGD("The device is not support absType: %{public}d", absType);
             continue;
         }
         identifier.absTypes.push_back(absType);
@@ -791,7 +792,7 @@ int32_t InputHub::GetRELTypes(struct libevdev *dev, InputDevice &identifier)
     }
     for (uint32_t code = 0; code < REL_CNT; code++) {
         if (!libevdev_has_event_code(dev, EV_REL, code)) {
-            DHLOGD("The device is not support rel code: %d", code);
+            DHLOGD("The device is not support rel code: %{public}d", code);
             continue;
         }
         identifier.relTypes.push_back(code);
@@ -803,7 +804,7 @@ void InputHub::GetProperties(struct libevdev *dev, InputDevice &identifier)
 {
     for (uint32_t prop = 0; prop < INPUT_PROP_CNT; prop++) {
         if (libevdev_has_property(dev, prop)) {
-            DHLOGI("QueryInputDeviceInfo rel prop: %d", prop);
+            DHLOGI("QueryInputDeviceInfo rel prop: %{public}d", prop);
             identifier.properties.push_back(prop);
         }
     }
@@ -843,7 +844,7 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
 
     // If the device isn't recognized as something we handle, don't monitor it.
     if (device->classes == 0) {
-        DHLOGI("Dropping device: name='%s'", device->identifier.name.c_str());
+        DHLOGI("Dropping device: name='%{public}s'", device->identifier.name.c_str());
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
     }
 
@@ -853,8 +854,8 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
 
     device->identifier.classes = device->classes;
 
-    DHLOGI("inputType=%d", inputTypes_.load());
-    DHLOGI("New device: fd=%d, name='%s', classes=0x%x", fd, device->identifier.name.c_str(),
+    DHLOGI("inputType=%{public}d", inputTypes_.load());
+    DHLOGI("New device: fd=%{public}d, name='%{public}s', classes=0x%{public}x", fd, device->identifier.name.c_str(),
         device->classes);
 
     AddDeviceLocked(std::move(device));
@@ -952,7 +953,7 @@ void InputHub::GenerateDescriptor(InputDevice &identifier) const
     }
 
     identifier.descriptor = DH_ID_PREFIX + Sha256(rawDescriptor);
-    DHLOGI("Created descriptor: raw=%s, cooked=%s", rawDescriptor.c_str(),
+    DHLOGI("Created descriptor: raw=%{public}s, cooked=%{public}s", rawDescriptor.c_str(),
         GetAnonyString(identifier.descriptor).c_str());
 }
 
@@ -960,7 +961,7 @@ int32_t InputHub::RegisterDeviceForEpollLocked(const Device &device)
 {
     int32_t result = RegisterFdForEpoll(device.fd);
     if (result != DH_SUCCESS) {
-        DHLOGE("Could not add input device fd to epoll for device, path: %s", device.path.c_str());
+        DHLOGE("Could not add input device fd to epoll for device, path: %{public}s", device.path.c_str());
         return result;
     }
     return result;
@@ -972,7 +973,7 @@ int32_t InputHub::RegisterFdForEpoll(int fd)
     eventItem.events = EPOLLIN | EPOLLWAKEUP;
     eventItem.data.fd = fd;
     if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, fd, &eventItem)) {
-        DHLOGE("Could not add fd to epoll instance: %s", ConvertErrNo().c_str());
+        DHLOGE("Could not add fd to epoll instance: %{public}s", ConvertErrNo().c_str());
         return -errno;
     }
     return DH_SUCCESS;
@@ -986,7 +987,7 @@ void InputHub::AddDeviceLocked(std::unique_ptr<Device> device)
 
 void InputHub::CloseDeviceLocked(Device &device)
 {
-    DHLOGI("Removed device: path=%s name=%s fd=%d classes=0x%x",
+    DHLOGI("Removed device: path=%{public}s name=%{public}s fd=%{public}d classes=0x%{public}x",
         device.path.c_str(), device.identifier.name.c_str(), device.fd, device.classes);
 
     UnregisterDeviceFromEpollLocked(device);
@@ -1000,7 +1001,7 @@ void InputHub::CloseDeviceLocked(Device &device)
 
 void InputHub::CloseDeviceForAllLocked(Device &device)
 {
-    DHLOGI("Removed device: path=%s name=%s fd=%d classes=0x%x",
+    DHLOGI("Removed device: path=%{public}s name=%{public}s fd=%{public}d classes=0x%{public}x",
         device.path.c_str(), device.identifier.name.c_str(), device.fd, device.classes);
 
     UnregisterDeviceFromEpollLocked(device);
@@ -1014,7 +1015,7 @@ int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device &device) const
     if (device.HasValidFd()) {
         int32_t result = UnregisterFdFromEpoll(device.fd);
         if (result != DH_SUCCESS) {
-            DHLOGE("Could not remove input device fd from epoll for device, path: %s", device.path.c_str());
+            DHLOGE("Could not remove input device fd from epoll for device, path: %{public}s", device.path.c_str());
             return result;
         }
     }
@@ -1024,7 +1025,7 @@ int32_t InputHub::UnregisterDeviceFromEpollLocked(const Device &device) const
 int32_t InputHub::UnregisterFdFromEpoll(int fd) const
 {
     if (epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, nullptr)) {
-        DHLOGE("Could not remove fd from epoll instance: %s", ConvertErrNo().c_str());
+        DHLOGE("Could not remove fd from epoll instance: %{public}s", ConvertErrNo().c_str());
         return ERR_DH_INPUT_HUB_UNREGISTER_FD_FAIL;
     }
     return DH_SUCCESS;
@@ -1036,13 +1037,13 @@ int32_t InputHub::ReadNotifyLocked()
     char eventBuf[512];
     struct inotify_event *event;
 
-    DHLOGI("readNotify nfd: %d\n", iNotifyFd_);
+    DHLOGI("readNotify nfd: %{public}d\n", iNotifyFd_);
     res = static_cast<size_t>(read(iNotifyFd_, eventBuf, sizeof(eventBuf)));
     if (res < sizeof(*event)) {
         if (errno == EINTR) {
             return DH_SUCCESS;
         }
-        DHLOGE("could not get event, %s\n", ConvertErrNo().c_str());
+        DHLOGE("could not get event, %{public}s\n", ConvertErrNo().c_str());
         return ERR_DH_INPUT_HUB_GET_EVENT_FAIL;
     }
 
@@ -1068,7 +1069,7 @@ void InputHub::JudgeDeviceOpenOrClose(const inotify_event &event)
             if (event.mask & IN_CREATE) {
                 OpenInputDeviceLocked(filename);
             } else {
-                DHLOGI("Removing device '%s' due to inotify event\n", filename.c_str());
+                DHLOGI("Removing device '%{public}s' due to inotify event\n", filename.c_str());
                 CloseDeviceByPathLocked(filename);
             }
         } else {
@@ -1084,7 +1085,7 @@ void InputHub::CloseDeviceByPathLocked(const std::string &devicePath)
         CloseDeviceLocked(*device);
         return;
     }
-    DHLOGI("Remove device: %s not found, device may already have been removed.", devicePath.c_str());
+    DHLOGI("Remove device: %{public}s not found, device may already have been removed.", devicePath.c_str());
 }
 
 void InputHub::CloseAllDevicesLocked()
@@ -1178,7 +1179,8 @@ AffectDhIds InputHub::SetSupportInputType(bool enabled, const uint32_t &inputTyp
     for (const auto &[id, device] : devices_) {
         if (device->classes & inputTypes_) {
             device->isShare = enabled;
-            DHLOGW("ByType dhid:%s, isshare:%d", GetAnonyString(device->identifier.descriptor).c_str(), enabled);
+            DHLOGW("ByType dhid:%{public}s, isshare:%{public}d",
+                GetAnonyString(device->identifier.descriptor).c_str(), enabled);
             SaveAffectDhId(enabled, device->identifier.descriptor, affDhIds);
         }
     }
@@ -1192,15 +1194,16 @@ AffectDhIds InputHub::SetSharingDevices(bool enabled, std::vector<std::string> d
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     DHLOGI("SetSharingDevices start");
     for (auto dhId : dhIds) {
-        DHLOGI("SetSharingDevices dhId: %s, size: %d, enabled: %d", GetAnonyString(dhId).c_str(), devices_.size(),
-            enabled);
+        DHLOGI("SetSharingDevices dhId: %{public}s, size: %{public}zu, enabled: %{public}d",
+            GetAnonyString(dhId).c_str(), devices_.size(), enabled);
         sharedDHIds_[dhId] = enabled;
         for (const auto &[id, device] : devices_) {
-            DHLOGI("deviceName %s ,dhId: %s ", device->identifier.name.c_str(),
+            DHLOGI("deviceName %{public}s ,dhId: %{public}s ", device->identifier.name.c_str(),
                 GetAnonyString(device->identifier.descriptor).c_str());
             if (device->identifier.descriptor == dhId) {
                 device->isShare = enabled;
-                DHLOGW("dhid:%s, isshare:%d", GetAnonyString(device->identifier.descriptor).c_str(), enabled);
+                DHLOGW("dhid:%{public}s, isshare:%{public}d",
+                    GetAnonyString(device->identifier.descriptor).c_str(), enabled);
                 SaveAffectDhId(enabled, device->identifier.descriptor, affDhIds);
                 break;
             }
@@ -1216,7 +1219,7 @@ std::vector<std::string> InputHub::GetSharingDevices()
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[id, device] : devices_) {
         if (device->isShare) {
-            DHLOGI("Find sharing dhid: %s", GetAnonyString(device->identifier.descriptor).c_str());
+            DHLOGI("Find sharing dhid: %{public}s", GetAnonyString(device->identifier.descriptor).c_str());
             sharingDevices.push_back(device->identifier.descriptor);
         }
     }
@@ -1226,7 +1229,7 @@ std::vector<std::string> InputHub::GetSharingDevices()
 void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,
     std::string &sharedMouseDhId)
 {
-    DHLOGI("GetSharedMousePathByDhId: devices_.size:%d,", devices_.size());
+    DHLOGI("GetSharedMousePathByDhId: devices_.size:%{public}zu,", devices_.size());
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
@@ -1234,8 +1237,8 @@ void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, s
                 DHLOGE("device is nullptr");
                 continue;
             }
-            DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
-                   device->isShare, device->classes);
+            DHLOGI("descriptor:%{public}s, isShare[%{public}d], type[%{public}d]",
+                GetAnonyString(device->identifier.descriptor).c_str(), device->isShare, device->classes);
             if ((device->identifier.descriptor == dhId) && ((device->classes & INPUT_DEVICE_CLASS_CURSOR) != 0 ||
                 (device->classes & INPUT_DEVICE_CLASS_TOUCH) != 0 ||
                 ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0 && IsTouchPad(device->identifier)))) {
@@ -1250,7 +1253,7 @@ void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, s
 void InputHub::GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
     std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds)
 {
-    DHLOGI("GetSharedKeyboardPathsByDhIds: devices_.size:%d,", devices_.size());
+    DHLOGI("GetSharedKeyboardPathsByDhIds: devices_.size:%{public}zu,", devices_.size());
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
@@ -1258,8 +1261,8 @@ void InputHub::GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhI
                 DHLOGE("device is nullptr");
                 continue;
             }
-            DHLOGI("descriptor:%s, isShare[%d], type[%d]", GetAnonyString(device->identifier.descriptor).c_str(),
-                   device->isShare, device->classes);
+            DHLOGI("descriptor:%{public}s, isShare[%{public}d], type[%{public}d]",
+                GetAnonyString(device->identifier.descriptor).c_str(), device->isShare, device->classes);
             if ((device->identifier.descriptor == dhId) &&
                 ((device->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
                 sharedKeyboardDhIds.push_back(dhId);
@@ -1309,7 +1312,7 @@ bool InputHub::IsAllDevicesStoped()
 {
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
     for (const auto &[dhId, isShared] : sharedDHIds_) {
-        DHLOGI("the dhId: %s, isShared: %d", GetAnonyString(dhId).c_str(), isShared);
+        DHLOGI("the dhId: %{public}s, isShared: %{public}d", GetAnonyString(dhId).c_str(), isShared);
         if (isShared) {
             return false;
         }
@@ -1319,16 +1322,16 @@ bool InputHub::IsAllDevicesStoped()
 
 void InputHub::RecordDeviceLog(const std::string &devicePath, const InputDevice &identifier)
 {
-    DHLOGI("add device: %s\n", devicePath.c_str());
-    DHLOGI("  bus:        %04x\n"
-           "  vendor      %04x\n"
-           "  product     %04x\n"
-           "  version     %04x\n",
+    DHLOGI("add device: %{public}s\n", devicePath.c_str());
+    DHLOGI("  bus:        %{public}04x\n"
+           "  vendor      %{public}04x\n"
+           "  product     %{public}04x\n"
+           "  version     %{public}04x\n",
         identifier.bus, identifier.vendor, identifier.product, identifier.version);
-    DHLOGI("  name:       \"%s\"\n", identifier.name.c_str());
-    DHLOGI("  physicalPath:   \"%s\"\n", identifier.physicalPath.c_str());
-    DHLOGI("  unique id:  \"%s\"\n", identifier.uniqueId.c_str());
-    DHLOGI("  descriptor: \"%s\"\n", GetAnonyString(identifier.descriptor).c_str());
+    DHLOGI("  name:       \"%{public}s\"\n", identifier.name.c_str());
+    DHLOGI("  physicalPath:   \"%{public}s\"\n", identifier.physicalPath.c_str());
+    DHLOGI("  unique id:  \"%{public}s\"\n", identifier.uniqueId.c_str());
+    DHLOGI("  descriptor: \"%{public}s\"\n", GetAnonyString(identifier.descriptor).c_str());
 }
 
 void InputHub::RecordChangeEventLog(const RawEvent &event)
@@ -1351,9 +1354,9 @@ void InputHub::RecordChangeEventLog(const RawEvent &event)
             eventType = "other type " + std::to_string(event.type);
             break;
     }
-    DHLOGI("0.E2E-Test Sink collect change event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
-        "When:%" PRId64 "", eventType.c_str(), event.code, event.value, event.path.c_str(),
-        GetAnonyString(event.descriptor).c_str(), event.when);
+    DHLOGI("0.E2E-Test Sink collect change event, EventType: %{public}s, Code: %{public}d, Value: %{public}d, "
+        "Path: %{public}s, descriptor: %{public}s, When: %{public}" PRId64 "", eventType.c_str(), event.code,
+        event.value, event.path.c_str(), GetAnonyString(event.descriptor).c_str(), event.when);
 }
 
 void InputHub::RecordEventLog(const RawEvent *event)
@@ -1376,9 +1379,9 @@ void InputHub::RecordEventLog(const RawEvent *event)
             eventType = "other type " + std::to_string(event->type);
             break;
     }
-    DHLOGD("1.E2E-Test Sink collect event, EventType: %s, Code: %d, Value: %d, Path: %s, descriptor: %s,"
-        "When:%" PRId64 "", eventType.c_str(), event->code, event->value, event->path.c_str(),
-        GetAnonyString(event->descriptor).c_str(), event->when);
+    DHLOGD("1.E2E-Test Sink collect event, EventType: %{public}s, Code: %{public}d, Value: %{public}d, "
+        "Path: %{public}s, descriptor: %{public}s, When: %{public}" PRId64 "", eventType.c_str(), event->code,
+        event->value, event->path.c_str(), GetAnonyString(event->descriptor).c_str(), event->when);
 }
 
 void InputHub::HandleTouchScreenEvent(struct input_event readBuffer[], const size_t count,
@@ -1462,7 +1465,7 @@ std::vector<InputHub::Device*> InputHub::CollectTargetDevices()
             ((dev.second->classes & INPUT_DEVICE_CLASS_TOUCH_MT) != 0) ||
             ((dev.second->classes & INPUT_DEVICE_CLASS_CURSOR) != 0) ||
             ((dev.second->classes & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
-            DHLOGI("Find target devs need check stat, path: %s, name: %s",
+            DHLOGI("Find target devs need check stat, path: %{public}s, name: %{public}s",
                 dev.first.c_str(), dev.second->identifier.name.c_str());
             tarVec.push_back(dev.second.get());
         }
@@ -1481,14 +1484,14 @@ void InputHub::SavePressedKeyState(const InputHub::Device *dev, int32_t keyCode)
         .path = dev->path
     };
     DInputSinkState::GetInstance().AddKeyDownState(event);
-    DHLOGI("Find Pressed key: %d, device path: %s, dhId: %s", keyCode, dev->path.c_str(),
+    DHLOGI("Find Pressed key: %{public}d, device path: %{public}s, dhId: %{public}s", keyCode, dev->path.c_str(),
         GetAnonyString(dev->identifier.descriptor).c_str());
 }
 
 bool InputHub::IsLengthExceeds(const unsigned long *keyState, const unsigned long len, int keyIndex)
 {
     if (len < (keyIndex / LONG_BITS) + 1) {
-        DHLOGE("Length exceeds for key index: %d", keyIndex);
+        DHLOGE("Length exceeds for key index: %{public}d", keyIndex);
         return true;
     }
     return false;
@@ -1558,7 +1561,7 @@ void InputHub::CheckTargetDevicesState(std::vector<InputHub::Device*> targetDevi
             // Query all key state
             int rc = ioctl(dev->fd, EVIOCGKEY(sizeof(keyState)), keyState);
             if (rc < 0) {
-                DHLOGE("read all key state failed, rc=%d", rc);
+                DHLOGE("read all key state failed, rc=%{public}d", rc);
                 count += 1;
                 std::this_thread::sleep_for(std::chrono::milliseconds(READ_SLEEP_TIME_MS));
                 continue;
@@ -1574,7 +1577,7 @@ void InputHub::RecordDeviceStates()
     DHLOGI("Start Record keys states");
     ScanAndRecordInputDevices();
     std::vector<InputHub::Device*> tarDevices = CollectTargetDevices();
-    DHLOGI("Check target states device num: %d", tarDevices.size());
+    DHLOGI("Check target states device num: %{public}zu", tarDevices.size());
     CheckTargetDevicesState(tarDevices);
     DHLOGI("Finish Record Keys states");
 }
@@ -1596,7 +1599,7 @@ InputHub::Device::Device(int fd, const std::string &path)
     : next(nullptr), fd(fd), path(path), identifier({}), classes(0), enabled(false),
       isShare(false), isVirtual(fd < 0) {
     // Figure out the kinds of events the device reports.
-    DHLOGI("Ctor Device for get event mask, fd: %d, path: %s", fd, path.c_str());
+    DHLOGI("Ctor Device for get event mask, fd: %{public}d, path: %{public}s", fd, path.c_str());
     ioctl(fd, EVIOCGBIT(0, sizeof(evBitmask)), evBitmask);
     ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBitmask)), keyBitmask);
     ioctl(fd, EVIOCGBIT(EV_ABS, sizeof(absBitmask)), absBitmask);
@@ -1621,12 +1624,12 @@ int32_t InputHub::Device::Enable()
     char canonicalPath[PATH_MAX + 1] = {0x00};
 
     if (path.length() == 0 || path.length() > PATH_MAX || realpath(path.c_str(), canonicalPath) == nullptr) {
-        DHLOGE("path check fail, error path: %s", path.c_str());
+        DHLOGE("path check fail, error path: %{public}s", path.c_str());
         return ERR_DH_INPUT_HUB_DEVICE_ENABLE_FAIL;
     }
     fd = open(canonicalPath, O_RDWR | O_CLOEXEC | O_NONBLOCK);
     if (fd < 0) {
-        DHLOGE("could not open %s, %s\n", path.c_str(), ConvertErrNo().c_str());
+        DHLOGE("could not open %{public}s, %{public}s\n", path.c_str(), ConvertErrNo().c_str());
         return ERR_DH_INPUT_HUB_DEVICE_ENABLE_FAIL;
     }
     enabled = true;

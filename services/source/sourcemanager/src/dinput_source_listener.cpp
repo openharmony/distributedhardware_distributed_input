@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -51,8 +51,8 @@ DInputSourceListener::~DInputSourceListener()
 void DInputSourceListener::OnResponseRegisterDistributedHardware(
     const std::string deviceId, const std::string dhId, bool result)
 {
-    DHLOGI("OnResponseRegisterDistributedHardware called, deviceId: %s, "
-        "result: %s.", GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
+    DHLOGI("OnResponseRegisterDistributedHardware called, deviceId: %{public}s, "
+        "result: %{public}s.", GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("OnResponseRegisterDistributedHardware sourceManagerObj is null.");
         return;
@@ -78,7 +78,7 @@ void DInputSourceListener::OnResponseRegisterDistributedHardware(
 void DInputSourceListener::OnResponsePrepareRemoteInput(const std::string deviceId,
     bool result, const std::string &object)
 {
-    DHLOGI("OnResponsePrepareRemoteInput called, deviceId: %s, result: %s.",
+    DHLOGI("OnResponsePrepareRemoteInput called, deviceId: %{public}s, result: %{public}s.",
         GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
@@ -104,8 +104,8 @@ void DInputSourceListener::OnResponsePrepareRemoteInput(const std::string device
 
 void DInputSourceListener::OnResponseUnprepareRemoteInput(const std::string deviceId, bool result)
 {
-    DHLOGI("OnResponseUnprepareRemoteInput called, deviceId: %s, "
-        "result: %s.", GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
+    DHLOGI("OnResponseUnprepareRemoteInput called, deviceId: %{public}s, "
+        "result: %{public}s.", GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("OnResponseUnprepareRemoteInput sourceManagerObj is null.");
@@ -131,7 +131,8 @@ void DInputSourceListener::OnResponseUnprepareRemoteInput(const std::string devi
 void DInputSourceListener::OnResponseRelayPrepareRemoteInput(int32_t toSrcSessionId,
     const std::string &deviceId, bool result, const std::string &object)
 {
-    DHLOGI("OnResponseRelayPrepareRemoteInput deviceId: %s, result: %d.", GetAnonyString(deviceId).c_str(), result);
+    DHLOGI("OnResponseRelayPrepareRemoteInput deviceId: %{public}s, result: %{public}d.",
+        GetAnonyString(deviceId).c_str(), result);
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -156,7 +157,8 @@ void DInputSourceListener::OnResponseRelayPrepareRemoteInput(int32_t toSrcSessio
 void DInputSourceListener::OnResponseRelayUnprepareRemoteInput(int32_t toSrcSessionId,
     const std::string &deviceId, bool result)
 {
-    DHLOGI("OnResponseRelayUnprepareRemoteInput deviceId: %s, result: %d.", GetAnonyString(deviceId).c_str(), result);
+    DHLOGI("OnResponseRelayUnprepareRemoteInput deviceId: %{public}s, result: %{public}d.",
+        GetAnonyString(deviceId).c_str(), result);
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -180,7 +182,7 @@ void DInputSourceListener::OnResponseRelayUnprepareRemoteInput(int32_t toSrcSess
 void DInputSourceListener::OnResponseStartRemoteInput(
     const std::string deviceId, const uint32_t inputTypes, bool result)
 {
-    DHLOGI("OnResponseStartRemoteInput called, deviceId: %s, inputTypes: %d, result: %s.",
+    DHLOGI("OnResponseStartRemoteInput called, deviceId: %{public}s, inputTypes: %{public}d, result: %{public}s.",
         GetAnonyString(deviceId).c_str(), inputTypes, result ? "success" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
@@ -210,7 +212,7 @@ void DInputSourceListener::OnResponseStartRemoteInput(
 
 void DInputSourceListener::OnResponseStopRemoteInput(const std::string deviceId, const uint32_t inputTypes, bool result)
 {
-    DHLOGI("OnResponseStopRemoteInput called, deviceId: %s, inputTypes: %d, result: %s.",
+    DHLOGI("OnResponseStopRemoteInput called, deviceId: %{public}s, inputTypes: %{public}d, result: %{public}s.",
         GetAnonyString(deviceId).c_str(), inputTypes, result ? "true" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
@@ -238,7 +240,7 @@ void DInputSourceListener::OnResponseStopRemoteInput(const std::string deviceId,
 void DInputSourceListener::OnResponseStartRemoteInputDhid(
     const std::string deviceId, const std::string &dhids, bool result)
 {
-    DHLOGI("OnResponseStartRemoteInputDhid called, deviceId: %s, result: %s.",
+    DHLOGI("OnResponseStartRemoteInputDhid called, deviceId: %{public}s, result: %{public}s.",
         GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
@@ -272,7 +274,7 @@ void DInputSourceListener::OnResponseStartRemoteInputDhid(
 void DInputSourceListener::OnResponseStopRemoteInputDhid(
     const std::string deviceId, const std::string &dhids, bool result)
 {
-    DHLOGI("OnResponseStopRemoteInputDhid called, deviceId: %s, result: %s.",
+    DHLOGI("OnResponseStopRemoteInputDhid called, deviceId: %{public}s, result: %{public}s.",
         GetAnonyString(deviceId).c_str(), result ? "success" : "failed");
 
     if (sourceManagerObj_ == nullptr) {
@@ -300,7 +302,7 @@ void DInputSourceListener::OnResponseStopRemoteInputDhid(
 void DInputSourceListener::OnResponseKeyState(const std::string deviceId,
     const std::string &dhid, const uint32_t type, const uint32_t code, const uint32_t value)
 {
-    DHLOGI("OnResponseKeyState called, deviceId: %s, dhid: %s.", GetAnonyString(deviceId).c_str(),
+    DHLOGI("OnResponseKeyState called, deviceId: %{public}s, dhid: %{public}s.", GetAnonyString(deviceId).c_str(),
         GetAnonyString(dhid).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
@@ -328,7 +330,7 @@ void DInputSourceListener::OnResponseKeyState(const std::string deviceId,
 
 void DInputSourceListener::OnResponseKeyStateBatch(const std::string deviceId, const std::string &event)
 {
-    DHLOGI("OnResponseKeyStateBatch events, deviceId: %s.", GetAnonyString(deviceId).c_str());
+    DHLOGI("OnResponseKeyStateBatch events, deviceId: %{public}s.", GetAnonyString(deviceId).c_str());
     OnReceivedEventRemoteInput(deviceId, event);
 }
 
@@ -346,7 +348,7 @@ void DInputSourceListener::OnReceivedEventRemoteInput(const std::string deviceId
     }
 
     size_t jsonSize = inputData.size();
-    DHLOGD("OnReceivedEventRemoteInput called, deviceId: %s, json size:%zu.",
+    DHLOGD("OnReceivedEventRemoteInput called, deviceId: %{public}s, json size:%{public}zu.",
         GetAnonyString(deviceId).c_str(), jsonSize);
 
     std::vector<RawEvent> mEventBuffer(jsonSize);
@@ -376,7 +378,8 @@ void DInputSourceListener::OnReceivedEventRemoteInput(const std::string deviceId
 void DInputSourceListener::OnReceiveRelayPrepareResult(int32_t status,
     const std::string &srcId, const std::string &sinkId)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -400,7 +403,8 @@ void DInputSourceListener::OnReceiveRelayPrepareResult(int32_t status,
 void DInputSourceListener::OnReceiveRelayUnprepareResult(int32_t status,
     const std::string &srcId, const std::string &sinkId)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -424,7 +428,8 @@ void DInputSourceListener::OnReceiveRelayUnprepareResult(int32_t status,
 void DInputSourceListener::OnReceiveRelayStartDhidResult(int32_t status,
     const std::string &srcId, const std::string &sinkId, const std::string &dhids)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -449,7 +454,8 @@ void DInputSourceListener::OnReceiveRelayStartDhidResult(int32_t status,
 void DInputSourceListener::OnReceiveRelayStopDhidResult(int32_t status,
     const std::string &srcId, const std::string &sinkId, const std::string &dhids)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -474,7 +480,8 @@ void DInputSourceListener::OnReceiveRelayStopDhidResult(int32_t status,
 void DInputSourceListener::OnReceiveRelayStartTypeResult(int32_t status,
     const std::string &srcId, const std::string &sinkId, uint32_t inputTypes)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -499,7 +506,8 @@ void DInputSourceListener::OnReceiveRelayStartTypeResult(int32_t status,
 void DInputSourceListener::OnReceiveRelayStopTypeResult(int32_t status,
     const std::string &srcId, const std::string &sinkId, uint32_t inputTypes)
 {
-    DHLOGI("status:%d, srcId: %s, sinkId: %s.", status, GetAnonyString(srcId).c_str(), GetAnonyString(sinkId).c_str());
+    DHLOGI("status:%{public}d, srcId: %{public}s, sinkId: %{public}s.", status, GetAnonyString(srcId).c_str(),
+        GetAnonyString(sinkId).c_str());
     if (sourceManagerObj_ == nullptr) {
         DHLOGE("sourceManagerObj is null.");
         return;
@@ -539,8 +547,8 @@ void DInputSourceListener::RecordEventLog(int64_t when, int32_t type, int32_t co
             eventType = "other type";
             break;
     }
-    DHLOGD("3.E2E-Test Source softBus receive event, EventType: %s, Code: %d, Value: %d, Path: %s, When: %" PRId64 "",
-        eventType.c_str(), code, value, path.c_str(), when);
+    DHLOGD("3.E2E-Test Source softBus receive event, EventType: %{public}s, Code: %{public}d, Value: %{public}d, "
+        "Path: %{public}s, When: %{public}" PRId64 "", eventType.c_str(), code, value, path.c_str(), when);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

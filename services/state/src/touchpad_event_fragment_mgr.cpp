@@ -74,7 +74,7 @@ std::pair<bool, std::vector<RawEvent>> TouchPadEventFragmentMgr::DealSynEvent(co
                 allEvents.insert(allEvents.end(), fragEvents.begin(), fragEvents.end());
             }
             needSim = true;
-            DHLOGI("Find NOT Whole touchpad events need send back, dhId: %s", GetAnonyString(dhId).c_str());
+            DHLOGI("Find NOT Whole touchpad events need send back, dhId: %{public}s", GetAnonyString(dhId).c_str());
         }
         fragments_[dhId].clear();
         fragments_[dhId].push_back({});

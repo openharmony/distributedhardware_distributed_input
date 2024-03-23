@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -537,7 +537,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSimulationEventListener(Messag
     }
     int32_t ret = RegisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleRegisterSimulationEventListener write ret failed, ret = %d", ret);
+        DHLOGE("HandleRegisterSimulationEventListener write ret failed, ret = %{public}d", ret);
         return ERR_DH_INPUT_SOURCE_STUB_REGISTER_SIMULATION_EVENT_LISTENER_FAIL;
     }
 
@@ -553,7 +553,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSimulationEventListener(Mess
     }
     int32_t ret = UnregisterSimulationEventListener(callback);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnregisterSimulationEventListener write ret failed, ret = %d", ret);
+        DHLOGE("HandleUnregisterSimulationEventListener write ret failed, ret = %{public}d", ret);
         return ERR_DH_INPUT_SOURCE_STUB_UNREGISTER_SIMULATION_EVENT_LISTENER_FAIL;
     }
 
@@ -573,7 +573,7 @@ int32_t DistributedInputSourceStub::HandleRegisterSessionStateCb(MessageParcel &
     }
     int32_t ret = RegisterSessionStateCb(callback);
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleRegisterSessionStateCb write ret failed, ret = %d", ret);
+        DHLOGE("HandleRegisterSessionStateCb write ret failed, ret = %{public}d", ret);
         return ERR_DH_INPUT_SRC_STUB_REGISTER_SESSION_STATE_FAIL;
     }
 
@@ -588,7 +588,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
     }
     int32_t ret = UnregisterSessionStateCb();
     if (!reply.WriteInt32(ret)) {
-        DHLOGE("HandleUnregisterSessionStateCb write ret failed, ret = %d", ret);
+        DHLOGE("HandleUnregisterSessionStateCb write ret failed, ret = %{public}d", ret);
         return ERR_DH_INPUT_SRC_STUB_UNREGISTER_SESSION_STATE_FAIL;
     }
 
@@ -598,7 +598,7 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
 int32_t DistributedInputSourceStub::OnRemoteRequest(
     uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
-    DHLOGI("OnRemoteRequest code: %u.", code);
+    DHLOGI("OnRemoteRequest code: %{public}u.", code);
     if (data.ReadInterfaceToken() != GetDescriptor()) {
         DHLOGE("DistributedInputSourceStub read token valid failed");
         return ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;

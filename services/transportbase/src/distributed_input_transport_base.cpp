@@ -74,7 +74,7 @@ void OnMessage(int32_t socket, const void *data, uint32_t dataLen)
     (void)socket;
     (void)data;
     (void)dataLen;
-    DHLOGI("socket: %d, dataLen:%d", socket, dataLen);
+    DHLOGI("socket: %{public}d, dataLen:%{public}d", socket, dataLen);
 }
 
 void OnStream(int32_t socket, const StreamData *data, const StreamData *ext,
@@ -84,20 +84,20 @@ void OnStream(int32_t socket, const StreamData *data, const StreamData *ext,
     (void)data;
     (void)ext;
     (void)param;
-    DHLOGI("socket: %d", socket);
+    DHLOGI("socket: %{public}d", socket);
 }
 
 void OnFile(int32_t socket, FileEvent *event)
 {
     (void)event;
-    DHLOGI("socket: %d", socket);
+    DHLOGI("socket: %{public}d", socket);
 }
 
 void OnQos(int32_t socket, QoSEvent eventId, const QosTV *qos, uint32_t qosCount)
 {
-    DHLOGI("OnQos, socket: %d, QoSEvent: %d, qosCount: %u", socket, (int32_t)eventId, qosCount);
+    DHLOGI("OnQos, socket: %{public}d, QoSEvent: %{public}d, qosCount: %{public}u", socket, (int32_t)eventId, qosCount);
     for (uint32_t idx = 0; idx < qosCount; idx++) {
-        DHLOGI("QosTV: type: %d, value: %d", (int32_t)qos[idx].qos, qos[idx].value);
+        DHLOGI("QosTV: type: %{public}d, value: %{public}d", (int32_t)qos[idx].qos, qos[idx].value);
     }
 }
 
@@ -121,18 +121,18 @@ int32_t DistributedInputTransportBase::Init()
     }
     int32_t socket = CreateServerSocket();
     if (socket < DH_SUCCESS) {
-        DHLOGE("CreateServerSocket failed, ret: %d", socket);
+        DHLOGE("CreateServerSocket failed, ret: %{public}d", socket);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_INIT_FAIL;
     }
 
     int32_t ret = Listen(socket, g_qosInfo, g_QosTV_Param_Index, &iSocketListener);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Socket Listen failed, error code %d.", ret);
+        DHLOGE("Socket Listen failed, error code %{public}d.", ret);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_INIT_FAIL;
     }
     isSessSerCreateFlag_.store(true);
     localServerSocket_ = socket;
-    DHLOGI("Finish Init DSoftBus Server Socket, socket: %d", socket);
+    DHLOGI("Finish Init DSoftBus Server Socket, socket: %{public}d", socket);
     return DH_SUCCESS;
 }
 
@@ -147,7 +147,7 @@ int32_t DistributedInputTransportBase::CreateServerSocket()
     }
     std::string networkId = localNode->networkId;
     localSessionName_ = SESSION_NAME + networkId.substr(0, INTERCEPT_STRING_LENGTH);
-    DHLOGI("CreateServerSocket local networkId is %s, local socketName: %s",
+    DHLOGI("CreateServerSocket local networkId is %{public}s, local socketName: %{public}s",
         GetAnonyString(networkId).c_str(), localSessionName_.c_str());
     SocketInfo info = {
         .name = const_cast<char*>(localSessionName_.c_str()),
@@ -155,7 +155,7 @@ int32_t DistributedInputTransportBase::CreateServerSocket()
         .dataType = DATA_TYPE_BYTES
     };
     int32_t socket = Socket(info);
-    DHLOGI("CreateServerSocket Finish, socket: %d", socket);
+    DHLOGI("CreateServerSocket Finish, socket: %{public}d", socket);
     return socket;
 }
 
@@ -164,7 +164,8 @@ void DistributedInputTransportBase::Release()
     std::unique_lock<std::mutex> sessionLock(operationMutex_);
     auto iter = remoteDevSessionMap_.begin();
     for (; iter != remoteDevSessionMap_.end(); ++iter) {
-        DHLOGI("Shutdown client socket: %d to remote dev: %s", iter->second, GetAnonyString(iter->first).c_str());
+        DHLOGI("Shutdown client socket: %{public}d to remote dev: %{public}s", iter->second,
+            GetAnonyString(iter->first).c_str());
         Shutdown(iter->second);
     }
 
@@ -173,7 +174,7 @@ void DistributedInputTransportBase::Release()
         if (!isSessSerCreateFlag_.load()) {
             DHLOGI("DSoftBus Server Socket already remove success.");
         } else {
-            DHLOGI("Shutdown DSoftBus Server Socket, socket: %d", localServerSocket_.load());
+            DHLOGI("Shutdown DSoftBus Server Socket, socket: %{public}d", localServerSocket_.load());
             Shutdown(localServerSocket_.load());
             localServerSocket_ = -1;
             isSessSerCreateFlag_.store(false);
@@ -189,7 +190,7 @@ int32_t DistributedInputTransportBase::CheckDeviceSessionState(const std::string
     if (remoteDevSessionMap_.find(remoteDevId) == remoteDevSessionMap_.end()) {
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_DEVICE_SESSION_STATE;
     }
-    DHLOGI("CheckDeviceSessionState has opened, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
+    DHLOGI("CheckDeviceSessionState has opened, remoteDevId: %{public}s", GetAnonyString(remoteDevId).c_str());
     return DH_SUCCESS;
 }
 
@@ -206,7 +207,7 @@ std::string DistributedInputTransportBase::GetDevIdBySessionId(int32_t sessionId
 
 int32_t DistributedInputTransportBase::CreateClientSocket(const std::string &remoteDevId)
 {
-    DHLOGI("CreateClientSocket start, peerNetworkId: %s", GetAnonyString(remoteDevId).c_str());
+    DHLOGI("CreateClientSocket start, peerNetworkId: %{public}s", GetAnonyString(remoteDevId).c_str());
     std::string localSesionName = localSessionName_ + "_" + std::to_string(GetCurrentTimeUs());
     std::string peerSessionName = SESSION_NAME + remoteDevId.substr(0, INTERCEPT_STRING_LENGTH);
     SocketInfo info = {
@@ -217,7 +218,7 @@ int32_t DistributedInputTransportBase::CreateClientSocket(const std::string &rem
         .dataType = DATA_TYPE_BYTES
     };
     int32_t socket = Socket(info);
-    DHLOGI("Bind Socket server, socket: %d, localSessionName: %s, peerSessionName: %s",
+    DHLOGI("Bind Socket server, socket: %{public}d, localSessionName: %{public}s, peerSessionName: %{public}s",
         socket, localSesionName.c_str(), peerSessionName.c_str());
     return socket;
 }
@@ -226,19 +227,20 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
 {
     int32_t ret = CheckDeviceSessionState(remoteDevId);
     if (ret == DH_SUCCESS) {
-        DHLOGE("Softbus session has already opened, deviceId: %s", GetAnonyString(remoteDevId).c_str());
+        DHLOGE("Softbus session has already opened, deviceId: %{public}s", GetAnonyString(remoteDevId).c_str());
         return DH_SUCCESS;
     }
 
     int socket = CreateClientSocket(remoteDevId);
     if (socket < DH_SUCCESS) {
-        DHLOGE("StartSession failed, ret: %d", socket);
+        DHLOGE("StartSession failed, ret: %{public}d", socket);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL;
     }
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
     ret = Bind(socket, g_qosInfo, g_QosTV_Param_Index, &iSocketListener);
     if (ret < DH_SUCCESS) {
-        DHLOGE("OpenSession fail, remoteDevId: %s, socket: %d", GetAnonyString(remoteDevId).c_str(), socket);
+        DHLOGE("OpenSession fail, remoteDevId: %{public}s, socket: %{public}d", GetAnonyString(remoteDevId).c_str(),
+            socket);
         FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
         Shutdown(socket);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL;
@@ -247,7 +249,8 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
     std::string peerSessionName = SESSION_NAME + remoteDevId.substr(0, INTERCEPT_STRING_LENGTH);
     HiDumper::GetInstance().CreateSessionInfo(remoteDevId, socket, localSessionName_, peerSessionName,
         SessionStatus::OPENED);
-    DHLOGI("OpenSession success, remoteDevId:%s, sessionId: %d", GetAnonyString(remoteDevId).c_str(), socket);
+    DHLOGI("OpenSession success, remoteDevId:%{public}s, sessionId: %{public}d", GetAnonyString(remoteDevId).c_str(),
+        socket);
     sessionId_ = socket;
 
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DInputContext::GetInstance().GetDHFwkKit();
@@ -292,12 +295,12 @@ void DistributedInputTransportBase::StopSession(const std::string &remoteDevId)
 {
     std::unique_lock<std::mutex> sessionLock(operationMutex_);
     if (remoteDevSessionMap_.count(remoteDevId) == 0) {
-        DHLOGE("remoteDevSessionMap not find remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
+        DHLOGE("remoteDevSessionMap not find remoteDevId: %{public}s", GetAnonyString(remoteDevId).c_str());
         return;
     }
     int32_t sessionId = remoteDevSessionMap_[remoteDevId];
 
-    DHLOGI("RemoteDevId: %s, sessionId: %d", GetAnonyString(remoteDevId).c_str(), sessionId);
+    DHLOGI("RemoteDevId: %{public}s, sessionId: %{public}d", GetAnonyString(remoteDevId).c_str(), sessionId);
     HiDumper::GetInstance().SetSessionStatus(remoteDevId, SessionStatus::CLOSING);
     Shutdown(sessionId);
     remoteDevSessionMap_.erase(remoteDevId);
@@ -378,8 +381,8 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, const 
 {
     std::string peerDevId;
     peerDevId.assign(info.networkId);
-    DHLOGI("OnSessionOpened, socket: %d, peerSocketName: %s, peerNetworkId: %s, peerPkgName: %s",
-        sessionId, info.name, GetAnonyString(peerDevId).c_str(), info.pkgName);
+    DHLOGI("OnSessionOpened, socket: %{public}d, peerSocketName: %{public}s, peerNetworkId: %{public}s, "
+        "peerPkgName: %{public}s", sessionId, info.name, GetAnonyString(peerDevId).c_str(), info.pkgName);
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
 
     {
@@ -399,9 +402,9 @@ int32_t DistributedInputTransportBase::OnSessionOpened(int32_t sessionId, const 
 
 void DistributedInputTransportBase::OnSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
-    DHLOGI("OnSessionClosed, socket: %d, reason: %d", sessionId, (int32_t)reason);
+    DHLOGI("OnSessionClosed, socket: %{public}d, reason: %{public}d", sessionId, (int32_t)reason);
     std::string deviceId = GetDevIdBySessionId(sessionId);
-    DHLOGI("OnSessionClosed notify session closed, sessionId: %d, peer deviceId:%s",
+    DHLOGI("OnSessionClosed notify session closed, sessionId: %{public}d, peer deviceId:%{public}s",
         sessionId, GetAnonyString(deviceId).c_str());
     RunSessionStateCallback(deviceId, SESSION_STATUS_CLOSED);
 
@@ -522,7 +525,7 @@ void DistributedInputTransportBase::HandleSession(int32_t sessionId, const std::
 int32_t DistributedInputTransportBase::SendMsg(int32_t sessionId, std::string &message)
 {
     if (message.size() > MSG_MAX_SIZE) {
-        DHLOGE("SendMessage error: message.size() > MSG_MAX_SIZE, msg size: %d", message.size());
+        DHLOGE("SendMessage error: message.size() > MSG_MAX_SIZE, msg size: %{public}zu", message.size());
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE;
     }
     uint8_t *buf = reinterpret_cast<uint8_t *>(calloc((MSG_MAX_SIZE), sizeof(uint8_t)));
@@ -548,7 +551,7 @@ int32_t DistributedInputTransportBase::GetSessionIdByDevId(const std::string &sr
     if (it != remoteDevSessionMap_.end()) {
         return it->second;
     }
-    DHLOGE("get session id failed, srcId = %s", GetAnonyString(srcId).c_str());
+    DHLOGE("get session id failed, srcId = %{public}s", GetAnonyString(srcId).c_str());
     return ERR_DH_INPUT_SERVER_SINK_TRANSPORT_GET_SESSIONID_FAIL;
 }
 } // namespace DistributedInput
