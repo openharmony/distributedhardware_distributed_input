@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,13 +33,14 @@ DInputContext::~DInputContext()
 
 std::string DInputContext::GetScreenInfoKey(const std::string &devId, const uint64_t sourceWinId)
 {
-    DHLOGI("GetScreenInfoKey screenInfoKey: %s, sourceWinId: %d", GetAnonyString(devId).c_str(), sourceWinId);
+    DHLOGI("GetScreenInfoKey screenInfoKey: %{public}s, sourceWinId: %{public}" PRIu64 "",
+        GetAnonyString(devId).c_str(), sourceWinId);
     return devId + RESOURCE_SEPARATOR + std::to_string(sourceWinId);
 }
 
 int32_t DInputContext::RemoveSinkScreenInfo(const std::string &screenInfoKey)
 {
-    DHLOGI("RemoveSinkScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("RemoveSinkScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     std::lock_guard<std::mutex> lock(sinkMapMutex_);
     sinkScreenInfoMap_.erase(screenInfoKey);
     return DH_SUCCESS;
@@ -47,7 +48,7 @@ int32_t DInputContext::RemoveSinkScreenInfo(const std::string &screenInfoKey)
 
 int32_t DInputContext::UpdateSinkScreenInfo(const std::string &screenInfoKey, const SinkScreenInfo &sinkScreenInfo)
 {
-    DHLOGI("UpdateSinkScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("UpdateSinkScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     std::lock_guard<std::mutex> lock(sinkMapMutex_);
     if (sinkScreenInfoMap_.count(screenInfoKey) <= 0) {
         DHLOGE("source window id not exist");
@@ -65,7 +66,7 @@ int32_t DInputContext::UpdateSinkScreenInfo(const std::string &screenInfoKey, co
 
 SinkScreenInfo DInputContext::GetSinkScreenInfo(const std::string &screenInfoKey)
 {
-    DHLOGI("GetSinkScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("GetSinkScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     std::lock_guard<std::mutex> lock(sinkMapMutex_);
     if (sinkScreenInfoMap_.count(screenInfoKey) <= 0) {
         DHLOGE("screenInfoKey not exist");
@@ -84,7 +85,7 @@ const std::unordered_map<std::string, SinkScreenInfo> &DInputContext::GetAllSink
 
 int32_t DInputContext::RemoveSrcScreenInfo(const std::string &screenInfoKey)
 {
-    DHLOGI("RemoveSrcScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("RemoveSrcScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     std::lock_guard<std::mutex> lock(srcMapMutex_);
     srcScreenInfoMap_.erase(screenInfoKey);
     return DH_SUCCESS;
@@ -93,7 +94,7 @@ int32_t DInputContext::RemoveSrcScreenInfo(const std::string &screenInfoKey)
 int32_t DInputContext::UpdateSrcScreenInfo(const std::string &screenInfoKey, const SrcScreenInfo &srcScreenInfo)
 {
     std::lock_guard<std::mutex> lock(srcMapMutex_);
-    DHLOGI("UpdateSrcScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("UpdateSrcScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     if (srcScreenInfoMap_.count(screenInfoKey) <= 0) {
         DHLOGE("source window id not exist");
         return ERR_DH_INPUT_CONTEXT_KEY_NOT_EXIST;
@@ -105,7 +106,7 @@ int32_t DInputContext::UpdateSrcScreenInfo(const std::string &screenInfoKey, con
 
 SrcScreenInfo DInputContext::GetSrcScreenInfo(const std::string &screenInfoKey)
 {
-    DHLOGI("GetSrcScreenInfo screenInfoKey: %s", GetAnonyString(screenInfoKey).c_str());
+    DHLOGI("GetSrcScreenInfo screenInfoKey: %{public}s", GetAnonyString(screenInfoKey).c_str());
     std::lock_guard<std::mutex> lock(srcMapMutex_);
     if (srcScreenInfoMap_.count(screenInfoKey) <= 0) {
         DHLOGE("source window id not exist");
@@ -154,8 +155,8 @@ int32_t DInputContext::CalculateTransformInfo(SinkScreenInfo &sinkScreenInfo)
     transformInfo.coeffHeight = static_cast<double>(sinkScreenInfo.srcScreenInfo.sourcePhyHeight /
         static_cast<double>(transformInfo.sinkProjPhyHeight));
 
-    DHLOGI("CalculateTransformInfo sinkWinPhyX = %d, sinkWinPhyY = %d, sinkProjPhyWidth = %d, " +
-        "sinkProjPhyHeight = %d, coeffWidth = %f, coeffHeight = %f", transformInfo.sinkWinPhyX,
+    DHLOGI("CalculateTransformInfo sinkWinPhyX = %{public}d, sinkWinPhyY = %{public}d, sinkProjPhyWidth = %{public}d, "
+        "sinkProjPhyHeight = %{public}d, coeffWidth = %{public}f, coeffHeight = %{public}f", transformInfo.sinkWinPhyX,
         transformInfo.sinkWinPhyY, transformInfo.sinkProjPhyWidth, transformInfo.sinkProjPhyHeight,
         transformInfo.coeffWidth, transformInfo.coeffHeight);
     sinkScreenInfo.transformInfo = transformInfo;

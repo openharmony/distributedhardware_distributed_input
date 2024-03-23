@@ -126,7 +126,7 @@ int32_t DistributedInputSinkTransport::RespPrepareRemoteInput(
     const int32_t sessionId, std::string &smsg)
 {
     if (sessionId > 0) {
-        DHLOGI("RespPrepareRemoteInput sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
+        DHLOGI("RespPrepareRemoteInput sessionId: %{public}d, smsg:%{public}s.", sessionId, SetAnonyId(smsg).c_str());
         int32_t ret = SendMessage(sessionId, smsg);
         if (ret != DH_SUCCESS) {
             DHLOGE("RespPrepareRemoteInput error, SendMessage fail.");
@@ -142,7 +142,7 @@ int32_t DistributedInputSinkTransport::RespPrepareRemoteInput(
 int32_t DistributedInputSinkTransport::RespUnprepareRemoteInput(const int32_t sessionId, std::string &smsg)
 {
     if (sessionId > 0) {
-        DHLOGI("RespUnprepareRemoteInput sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
+        DHLOGI("RespUnprepareRemoteInput sessionId: %{public}d, smsg:%{public}s.", sessionId, SetAnonyId(smsg).c_str());
         int32_t ret = SendMessage(sessionId, smsg);
         if (ret != DH_SUCCESS) {
             DHLOGE("RespUnprepareRemoteInput error, SendMessage fail.");
@@ -158,7 +158,7 @@ int32_t DistributedInputSinkTransport::RespUnprepareRemoteInput(const int32_t se
 int32_t DistributedInputSinkTransport::RespStartRemoteInput(const int32_t sessionId, std::string &smsg)
 {
     if (sessionId > 0) {
-        DHLOGI("RespStartRemoteInput sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
+        DHLOGI("RespStartRemoteInput sessionId: %{public}d, smsg:%{public}s.", sessionId, SetAnonyId(smsg).c_str());
         int32_t ret = SendMessage(sessionId, smsg);
         if (ret != DH_SUCCESS) {
             DHLOGE("RespStartRemoteInput error, SendMessage fail.");
@@ -174,7 +174,7 @@ int32_t DistributedInputSinkTransport::RespStartRemoteInput(const int32_t sessio
 int32_t DistributedInputSinkTransport::RespStopRemoteInput(const int32_t sessionId, std::string &smsg)
 {
     if (sessionId > 0) {
-        DHLOGI("RespStopRemoteInput sessionId: %d, smsg:%s.", sessionId, SetAnonyId(smsg).c_str());
+        DHLOGI("RespStopRemoteInput sessionId: %{public}d, smsg:%{public}s.", sessionId, SetAnonyId(smsg).c_str());
         int32_t ret = SendMessage(sessionId, smsg);
         if (ret != DH_SUCCESS) {
             DHLOGE("RespStopRemoteInput error, SendMessage fail.");
@@ -210,7 +210,7 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsg(const int32_t sessionId,
         DHLOGE("SendKeyStateNodeMsg error, sessionId <= 0.");
         return;
     }
-    DHLOGI("SendKeyStateNodeMsg sessionId: %d, btnCode: %u.", sessionId, btnCode);
+    DHLOGI("SendKeyStateNodeMsg sessionId: %{public}d, btnCode: %{public}u.", sessionId, btnCode);
     nlohmann::json jsonStr;
     jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_KEY_STATE;
     jsonStr[DINPUT_SOFTBUS_KEY_KEYSTATE_DHID] = dhId;
@@ -232,7 +232,7 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessi
         DHLOGE("SendKeyStateNodeMsgBatch error, sessionId <= 0.");
         return;
     }
-    DHLOGI("SendKeyStateNodeMsgBatch sessionId: %d, event size: %d ", sessionId, events.size());
+    DHLOGI("SendKeyStateNodeMsgBatch sessionId: %{public}d, event size: %{public}zu ", sessionId, events.size());
 
     int32_t cnt = 0;
     std::vector<struct RawEvent> eventBatch;
@@ -302,7 +302,7 @@ void DistributedInputSinkTransport::RecordEventLog(const std::string &dhId, int3
             break;
     }
 
-    DHLOGD("2.E2E-Test Sink softBus send, EventType: %s, Code: %d, Value: %d, dhId: %s",
+    DHLOGD("2.E2E-Test Sink softBus send, EventType: %{public}s, Code: %{public}d, Value: %{public}d, dhId: %{public}s",
         eventType.c_str(), code, value, GetAnonyString(dhId).c_str());
 }
 
@@ -332,7 +332,7 @@ void DistributedInputSinkTransport::NotifyPrepareRemoteInput(int32_t sessionId, 
         return;
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnPrepareRemoteInput(sessionId, deviceId);
 }
@@ -344,7 +344,7 @@ void DistributedInputSinkTransport::NotifyUnprepareRemoteInput(int32_t sessionId
         return;
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
-    DHLOGI("OnBytesReceived cmdType TRANS_SOURCE_MSG_UNPREPARE deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType TRANS_SOURCE_MSG_UNPREPARE deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnUnprepareRemoteInput(sessionId);
 }
@@ -358,7 +358,7 @@ void DistributedInputSinkTransport::NotifyStartRemoteInput(int32_t sessionId, co
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
-    DHLOGI("OnBytesRecei,ved cmdType is TRANS_SOURCE_MSG_START_TYPE deviceId:%s inputTypes:%d .",
+    DHLOGI("OnBytesRecei,ved cmdType is TRANS_SOURCE_MSG_START_TYPE deviceId:%{public}s inputTypes:%{public}d .",
         GetAnonyString(deviceId).c_str(), inputTypes);
     callback_->OnStartRemoteInput(sessionId, inputTypes);
 }
@@ -372,7 +372,8 @@ void DistributedInputSinkTransport::NotifyStopRemoteInput(int32_t sessionId, con
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE deviceId:%s.", GetAnonyString(deviceId).c_str());
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE deviceId:%{public}s.",
+        GetAnonyString(deviceId).c_str());
     callback_->OnStopRemoteInput(sessionId, inputTypes);
 }
 
@@ -399,7 +400,7 @@ void DistributedInputSinkTransport::NotifyStartRemoteInputDhid(int32_t sessionId
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     std::string strTmp = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID deviceId:%s .",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID deviceId:%{public}s .",
            GetAnonyString(deviceId).c_str());
     callback_->OnStartRemoteInputDhid(sessionId, strTmp);
 }
@@ -413,7 +414,7 @@ void DistributedInputSinkTransport::NotifyStopRemoteInputDhid(int32_t sessionId,
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     std::string strTmp = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
-    DHLOGE("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID deviceId:%s.",
+    DHLOGE("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID deviceId:%{public}s.",
            GetAnonyString(deviceId).c_str());
     callback_->OnStopRemoteInputDhid(sessionId, strTmp);
 }
@@ -427,7 +428,7 @@ void DistributedInputSinkTransport::NotifyRelayPrepareRemoteInput(int32_t sessio
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayPrepareRemoteInput(toSrcSessionId, sessionId, deviceId);
 }
@@ -441,7 +442,7 @@ void DistributedInputSinkTransport::NotifyRelayUnprepareRemoteInput(int32_t sess
     }
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_UNPREPARE_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_UNPREPARE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayUnprepareRemoteInput(toSrcSessionId, sessionId, deviceId);
 }
@@ -457,7 +458,7 @@ void DistributedInputSinkTransport::NotifyRelayStartDhidRemoteInput(int32_t sess
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     std::string dhids = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayStartDhidRemoteInput(toSrcSessionId, sessionId, deviceId, dhids);
 }
@@ -473,7 +474,7 @@ void DistributedInputSinkTransport::NotifyRelayStopDhidRemoteInput(int32_t sessi
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     std::string dhids = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayStopDhidRemoteInput(toSrcSessionId, sessionId, deviceId, dhids);
 }
@@ -489,7 +490,7 @@ void DistributedInputSinkTransport::NotifyRelayStartTypeRemoteInput(int32_t sess
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_TYPE_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_TYPE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayStartTypeRemoteInput(toSrcSessionId, sessionId, deviceId, inputTypes);
 }
@@ -505,7 +506,7 @@ void DistributedInputSinkTransport::NotifyRelayStopTypeRemoteInput(int32_t sessi
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
-    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE_FOR_REL deviceId:%s.",
+    DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
     callback_->OnRelayStopTypeRemoteInput(toSrcSessionId, sessionId, deviceId, inputTypes);
 }
@@ -546,7 +547,7 @@ void DistributedInputSinkTransport::RegRespFunMap()
 void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::string &message)
 {
     if (callback_ == nullptr) {
-        DHLOGE("OnBytesReceived the callback_ is null, the message:%s abort.", SetAnonyId(message).c_str());
+        DHLOGE("OnBytesReceived the callback_ is null, the message:%{public}s abort.", SetAnonyId(message).c_str());
         return;
     }
 
@@ -562,7 +563,7 @@ void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::str
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
     auto iter = memberFuncMap_.find(cmdType);
     if (iter == memberFuncMap_.end()) {
-        DHLOGE("OnBytesReceived cmdType %u is undefined.", cmdType);
+        DHLOGE("OnBytesReceived cmdType %{public}u is undefined.", cmdType);
         return;
     }
     SinkTransportFunc &func = iter->second;
@@ -601,8 +602,8 @@ void DistributedInputSinkTransport::DInputSinkEventHandler::RecordEventLog(
         int32_t code = event[INPUT_KEY_CODE];
         int32_t value = event[INPUT_KEY_VALUE];
         std::string path = event[INPUT_KEY_PATH];
-        DHLOGD("2.E2E-Test Sink softBus send, EventType: %s, Code: %d, Value: %d, Path: %s, When: %" PRId64 "",
-            eventType.c_str(), code, value, path.c_str(), when);
+        DHLOGD("2.E2E-Test Sink softBus send, EventType: %{public}s, Code: %{public}d, Value: %{public}d, "
+            "Path: %{public}s, When: %{public}" PRId64 "", eventType.c_str(), code, value, path.c_str(), when);
     }
 }
 } // namespace DistributedInput
