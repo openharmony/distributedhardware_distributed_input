@@ -33,12 +33,11 @@ ohos_unittest("distributed_input_sourcetrans_test") {
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${service_common}/include",
-    "//third_party/json/include",
     "${services_source_path}/inputinject/include",
     "${services_source_path}/transport/include",
     "${services_source_path}/sourcemanager/include",
@@ -87,6 +86,7 @@ ohos_unittest("distributed_input_sourcetrans_test") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hitrace:hitrace_meter",
+    "json:nlohmann_json_static",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

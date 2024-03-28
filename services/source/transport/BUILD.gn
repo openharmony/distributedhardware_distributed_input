@@ -29,10 +29,9 @@ ohos_shared_library("libdinput_source_trans") {
     "${av_transport_path}/common/include",
     "include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
-    "//third_party/json/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
     "${dfx_utils_path}/include",
@@ -63,6 +62,7 @@ ohos_shared_library("libdinput_source_trans") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hitrace:hitrace_meter",
+    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
   ]
 

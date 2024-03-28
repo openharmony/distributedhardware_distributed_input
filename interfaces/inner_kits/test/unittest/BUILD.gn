@@ -28,7 +28,6 @@ ohos_unittest("distributed_input_inner_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",
@@ -36,12 +35,9 @@ ohos_unittest("distributed_input_inner_test") {
     "${distributedinput_path}/services/include",
     "${frameworks_path}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "//third_party/json/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${frameworks_path}/include",
   ]
 
@@ -102,8 +98,13 @@ ohos_unittest("distributed_input_inner_test") {
   external_deps = [
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

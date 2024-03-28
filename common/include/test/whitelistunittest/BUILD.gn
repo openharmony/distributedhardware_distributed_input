@@ -33,10 +33,9 @@ ohos_unittest("distributed_input_white_list_test") {
     "${services_sink_path}/transport/include",
     "${frameworks_path}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${service_common}/include",
-    "//third_party/json/include",
     "${utils_path}/include",
   ]
 
@@ -67,6 +66,7 @@ ohos_unittest("distributed_input_white_list_test") {
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

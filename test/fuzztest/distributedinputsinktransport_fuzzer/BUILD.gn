@@ -29,11 +29,10 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${service_common}/include",
-    "//third_party/json/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
   ]
@@ -64,6 +63,7 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "eventhandler:libeventhandler",
     "hicollie:libhicollie",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
   ]
 

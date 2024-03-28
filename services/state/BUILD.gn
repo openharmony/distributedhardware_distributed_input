@@ -35,7 +35,7 @@ ohos_shared_library("libdinput_sink_state") {
     "${services_source_path}/inputinject/include",
     "${services_sink_path}/transport/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/utils/include",
   ]
 
   sources = [

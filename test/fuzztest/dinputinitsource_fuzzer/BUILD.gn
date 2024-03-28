@@ -36,9 +36,8 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
     "${distributedinput_path}/inputdevicehandler/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "//third_party/json/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
@@ -64,6 +63,7 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
   ]
 

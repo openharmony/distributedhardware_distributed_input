@@ -28,17 +28,13 @@ ohos_unittest("distributed_input_handler_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${services_state_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${service_common}/include",
     "${frameworks_path}/include",
     "${utils_path}/include",
-    "//third_party/json/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${distributedinput_path}/inputdevicehandler/include",
   ]
 
@@ -65,14 +61,19 @@ ohos_unittest("distributed_input_handler_test") {
   deps = [
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_shared",
   ]
 
   external_deps = [
     "c_utils:utils",
     "dsoftbus:softbus_client",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
+    "openssl:libcrypto_shared",
     "samgr:samgr_proxy",
   ]
 

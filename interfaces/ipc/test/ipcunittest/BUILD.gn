@@ -28,19 +28,15 @@ ohos_unittest("distributed_input_ipc_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",
     "${ipc_path}/src",
     "${utils_path}/include",
-    "//third_party/json/include",
   ]
 
   sources = [
@@ -107,10 +103,14 @@ ohos_unittest("distributed_input_ipc_test") {
     "access_token:libtokenid_sdk",
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]

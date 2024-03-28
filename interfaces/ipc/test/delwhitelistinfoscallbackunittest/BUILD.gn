@@ -30,8 +30,8 @@ ohos_unittest("del_white_list_infos_callbackl_test") {
   include_dirs = [
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
+    "${common_path}/log/include",
+    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${innerkits_path}/include",
@@ -39,7 +39,6 @@ ohos_unittest("del_white_list_infos_callbackl_test") {
     "${ipc_path}/include",
     "${ipc_path}/src",
     "${utils_path}/include",
-    "//third_party/json/include",
   ]
 
   sources = [
@@ -73,6 +72,7 @@ ohos_unittest("del_white_list_infos_callbackl_test") {
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]

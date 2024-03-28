@@ -27,13 +27,11 @@ ohos_shared_library("libdinput_utils") {
   branch_protector_ret = "pac_ret"
   include_dirs = [
     "${av_transport_path}/common/include",
-    "${fwk_common_path}/utils/include",
-    "${fwk_common_path}/log/include",
-    "//third_party/json/include",
+    "${common_path}/utils/include",
+    "${common_path}/log/include",
     "${utils_path}/include",
     "${common_path}/include",
     "${service_common}/include",
-    "//third_party/json/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${dfx_utils_path}/include",
@@ -52,8 +50,6 @@ ohos_shared_library("libdinput_utils") {
     "LOG_DOMAIN=0xD004120",
   ]
 
-  deps = [ "//third_party/openssl:libcrypto_shared" ]
-
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
@@ -61,6 +57,8 @@ ohos_shared_library("libdinput_utils") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
+    "openssl:libcrypto_shared",
     "samgr:samgr_proxy",
   ]
 
