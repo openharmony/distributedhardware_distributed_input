@@ -55,15 +55,15 @@ ohos_shared_library("libdinput_handler") {
 
   external_deps = [
     "c_utils:utils",
-    "dsoftbus:softbus_client",
-    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributed_av_receiver",
-    "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "dsoftbus:softbus_client",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
-    "safwk:system_ability_fwk",
     "openssl:libcrypto_shared",
+    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 

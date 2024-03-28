@@ -85,8 +85,8 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
-    "safwk:system_ability_fwk",
     "openssl:libcrypto_shared",
+    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 

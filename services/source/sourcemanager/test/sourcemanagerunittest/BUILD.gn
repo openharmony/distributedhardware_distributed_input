@@ -130,8 +130,8 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
-    "safwk:system_ability_fwk",
     "openssl:libcrypto_shared",
+    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 

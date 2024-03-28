@@ -65,16 +65,16 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
 
   external_deps = [
     "c_utils:utils",
-    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributed_av_receiver",
-    "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
-    "openssl:libcrypto_shared"
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
