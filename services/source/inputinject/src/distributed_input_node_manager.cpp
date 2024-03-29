@@ -154,7 +154,7 @@ void DistributedInputNodeManager::ParseInputDeviceEvents(const nlohmann::json &i
 
 void DistributedInputNodeManager::ScanSinkInputDevices(const std::string &devId, const std::string &dhId)
 {
-    DHLOGI("ScanSinkInputDevices enter, deviceId: %s, dhId: %s.",
+    DHLOGI("ScanSinkInputDevices enter, deviceId: %{public}s, dhId: %{public}s.",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::vector<std::string> vecInputDevPath;
     ScanInputDevicesPath(DEVICE_PATH, vecInputDevPath);
@@ -172,7 +172,7 @@ void DistributedInputNodeManager::DInputNodeManagerEventHandler::ProcessEvent(
     DHLOGI("ProcessEvent enter.");
     auto iter = eventFuncMap_.find(event->GetInnerEventId());
     if (iter == eventFuncMap_.end()) {
-        DHLOGE("Event Id %d is undefined.", event->GetInnerEventId());
+        DHLOGE("Event Id %{public}d is undefined.", event->GetInnerEventId());
         return;
     }
     nodeMgrFunc &func = iter->second;
@@ -224,15 +224,15 @@ bool DistributedInputNodeManager::IsVirtualDev(int fd)
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     std::string deviceName;
     if (ioctl(fd, EVIOCGNAME(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device name for %s.", ConvertErrNo().c_str());
+        DHLOGE("Could not get device name for %{public}s.", ConvertErrNo().c_str());
         return false;
     }
     buffer[sizeof(buffer) - 1] = '\0';
     deviceName = buffer;
 
-    DHLOGD("IsVirtualDev deviceName: %s", buffer);
+    DHLOGD("IsVirtualDev deviceName: %{public}s", buffer);
     if (deviceName.find(VIRTUAL_DEVICE_NAME) == std::string::npos) {
-        DHLOGD("This is not a virtual device, fd %d, deviceName: %s.", fd, deviceName.c_str());
+        DHLOGD("This is not a virtual device, fd %{public}d, deviceName: %{public}s.", fd, deviceName.c_str());
         return false;
     }
     return true;
@@ -242,13 +242,13 @@ bool DistributedInputNodeManager::GetDevDhUniqueIdByFd(int fd, DhUniqueID &dhUnq
 {
     char buffer[INPUT_EVENT_BUFFER_SIZE] = {0};
     if (ioctl(fd, EVIOCGPHYS(sizeof(buffer) - 1), &buffer) < 1) {
-        DHLOGE("Could not get device physicalPath for %s.", ConvertErrNo().c_str());
+        DHLOGE("Could not get device physicalPath for %{public}s.", ConvertErrNo().c_str());
         return false;
     }
     buffer[sizeof(buffer) - 1] = '\0';
     physicalPath = buffer;
 
-    DHLOGD("GetDevDhUniqueIdByFd physicalPath %s.", physicalPath.c_str());
+    DHLOGD("GetDevDhUniqueIdByFd physicalPath %{public}s.", physicalPath.c_str());
     std::vector<std::string> phyPathVec;
     SplitStringToVector(physicalPath, VIR_NODE_SPLIT_CHAR, phyPathVec);
     if (phyPathVec.size() != VIR_NODE_PHY_LEN) {
@@ -263,7 +263,8 @@ bool DistributedInputNodeManager::GetDevDhUniqueIdByFd(int fd, DhUniqueID &dhUnq
     }
     dhUnqueId.first = devId;
     dhUnqueId.second = dhId;
-    DHLOGD("Device deviceid: %s, dhId %s.", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
+    DHLOGD("Device deviceid: %{public}s, dhId %{public}s.", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
     return true;
 }
 
@@ -272,10 +273,10 @@ void DistributedInputNodeManager::SetPathForVirDev(const DhUniqueID &dhUniqueId,
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto iter = virtualDeviceMap_.begin();
     while (iter != virtualDeviceMap_.end()) {
-        DHLOGD("Check Virtual device, deviceId %s, dhid %s.", GetAnonyString(iter->first.first).c_str(),
+        DHLOGD("Check Virtual device, deviceId %{public}s, dhid %{public}s.", GetAnonyString(iter->first.first).c_str(),
             GetAnonyString(iter->first.second).c_str());
         if (iter->first == dhUniqueId) {
-            DHLOGD("Found the virtual device, set path :%s", devicePath.c_str());
+            DHLOGD("Found the virtual device, set path :%{public}s", devicePath.c_str());
             iter->second->SetPath(devicePath);
             break;
         }
@@ -286,27 +287,27 @@ void DistributedInputNodeManager::SetPathForVirDev(const DhUniqueID &dhUniqueId,
 bool DistributedInputNodeManager::MatchAndSavePhysicalPath(const std::string &devicePath,
     const std::string &devId, const std::string &dhId)
 {
-    DHLOGI("Opening input device path: %s", devicePath.c_str());
+    DHLOGI("Opening input device path: %{public}s", devicePath.c_str());
     DhUniqueID curDhUniqueId;
     std::string physicalPath;
     int fd = OpenInputDeviceFdByPath(devicePath);
     if (fd == UN_INIT_FD_VALUE) {
-        DHLOGE("The fd open failed, devicePath %s.", devicePath.c_str());
+        DHLOGE("The fd open failed, devicePath %{public}s.", devicePath.c_str());
         return false;
     }
     if (!IsVirtualDev(fd)) {
-        DHLOGE("The dev not virtual, devicePath %s.", devicePath.c_str());
+        DHLOGE("The dev not virtual, devicePath %{public}s.", devicePath.c_str());
         CloseFd(fd);
         return false;
     }
     if (!GetDevDhUniqueIdByFd(fd, curDhUniqueId, physicalPath)) {
-        DHLOGE("Get unique id failed, device path %s.", devicePath.c_str());
+        DHLOGE("Get unique id failed, device path %{public}s.", devicePath.c_str());
         CloseFd(fd);
         return false;
     }
 
-    DHLOGD("This opening node deviceId: %s, dhId: %s, to match node deviceId: %s, dhId: %s",
-        GetAnonyString(curDhUniqueId.first).c_str(), GetAnonyString(curDhUniqueId.second).c_str(),
+    DHLOGD("This opening node deviceId: %{public}s, dhId: %{public}s, to match node deviceId: %{public}s, "
+        "dhId: %{public}s", GetAnonyString(curDhUniqueId.first).c_str(), GetAnonyString(curDhUniqueId.second).c_str(),
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
 
     if (curDhUniqueId.first != devId || curDhUniqueId.second != dhId) {
@@ -333,8 +334,9 @@ void DistributedInputNodeManager::GetVirtualKeyboardPaths(const std::vector<DhUn
             }
             if ((iter->first == dhUniqueId) &&
                 ((iter->second->GetClasses() & INPUT_DEVICE_CLASS_KEYBOARD) != 0)) {
-                DHLOGI("Found vir keyboard path %s, deviceId %s, dhid %s", iter->second->GetPath().c_str(),
-                    GetAnonyString(dhUniqueId.first).c_str(), GetAnonyString(dhUniqueId.second).c_str());
+                DHLOGI("Found vir keyboard path %{public}s, deviceId %{public}s, dhid %{public}s",
+                    iter->second->GetPath().c_str(), GetAnonyString(dhUniqueId.first).c_str(),
+                    GetAnonyString(dhUniqueId.second).c_str());
                 virKeyboardPaths.push_back(iter->second->GetPath());
             }
             iter++;
@@ -364,17 +366,17 @@ int32_t DistributedInputNodeManager::CreateVirtualTouchScreenNode(const std::str
     std::unique_lock<std::mutex> my_lock(operationMutex_);
     std::unique_ptr<VirtualDevice> device;
     LocalAbsInfo info = DInputContext::GetInstance().GetLocalTouchScreenInfo().localAbsInfo;
-    DHLOGI("CreateVirtualTouchScreenNode start, dhId: %s, sourcePhyWidth: %d, sourcePhyHeight: %d",
+    DHLOGI("CreateVirtualTouchScreenNode, dhId: %{public}s, sourcePhyWidth: %{public}d, sourcePhyHeight: %{public}d",
         GetAnonyString(dhId).c_str(), sourcePhyWidth, sourcePhyHeight);
     device = std::make_unique<VirtualDevice>(info.deviceInfo);
     if (!device->SetUp(info.deviceInfo, devId, dhId)) {
-        DHLOGE("Virtual touch Screen setUp fail, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+        DHLOGE("Virtual touch Screen setUp fail, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str());
         return ERR_DH_INPUT_SERVER_SOURCE_CREATE_HANDLE_FAIL;
     }
     virtualTouchScreenFd_ = device->GetDeviceFd();
     AddDeviceLocked(devId, dhId, std::move(device));
-    DHLOGI("CreateVirtualTouchScreenNode end, dhId: %s", GetAnonyString(dhId).c_str());
+    DHLOGI("CreateVirtualTouchScreenNode end, dhId: %{public}s", GetAnonyString(dhId).c_str());
     return DH_SUCCESS;
 }
 
@@ -391,31 +393,31 @@ int32_t DistributedInputNodeManager::GetVirtualTouchScreenFd()
 void DistributedInputNodeManager::AddDeviceLocked(const std::string &networkId, const std::string &dhId,
     std::unique_ptr<VirtualDevice> device)
 {
-    DHLOGI("AddDeviceLocked deviceId=%s, dhId=%s",
+    DHLOGI("AddDeviceLocked deviceId=%{public}s, dhId=%{public}s",
         GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     auto [dev_it, inserted] = virtualDeviceMap_.insert_or_assign(
         {networkId, dhId}, std::move(device));
     if (!inserted) {
-        DHLOGI("Device exists, deviceId=%s, dhId=%s, replaced. \n",
+        DHLOGI("Device exists, deviceId=%{public}s, dhId=%{public}s, replaced. \n",
             GetAnonyString(networkId).c_str(), GetAnonyString(dhId).c_str());
     }
 }
 
 int32_t DistributedInputNodeManager::CloseDeviceLocked(const std::string &devId, const std::string &dhId)
 {
-    DHLOGI("CloseDeviceLocked called, deviceId=%s, dhId=%s",
+    DHLOGI("CloseDeviceLocked called, deviceId=%{public}s, dhId=%{public}s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(virtualDeviceMapMutex_);
     DhUniqueID dhUniqueId = {devId, dhId};
     std::map<DhUniqueID, std::unique_ptr<VirtualDevice>>::iterator iter = virtualDeviceMap_.find(dhUniqueId);
     if (iter != virtualDeviceMap_.end()) {
-        DHLOGI("CloseDeviceLocked called success, deviceId=%s, dhId=%s",
+        DHLOGI("CloseDeviceLocked called success, deviceId=%{public}s, dhId=%{public}s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
         virtualDeviceMap_.erase(iter);
         return DH_SUCCESS;
     }
-    DHLOGE("CloseDeviceLocked called failure, deviceId=%s, dhId=%s",
+    DHLOGE("CloseDeviceLocked called failure, deviceId=%{public}s, dhId=%{public}s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     return ERR_DH_INPUT_SERVER_SOURCE_CLOSE_DEVICE_FAIL;
 }
@@ -521,9 +523,9 @@ void DistributedInputNodeManager::ProcessInjectEvent(const EventBatch &events)
             .code = rawEvent.code,
             .value = rawEvent.value
         };
-        DHLOGI("InjectEvent deviceId: %s, dhId: %s, eventType: %d, eventCode: %d, eventValue: %d, when: " PRId64"",
-            GetAnonyString(deviceId).c_str(), GetAnonyString(dhId).c_str(),
-            event.type, event.code, event.value, rawEvent.when);
+        DHLOGI("InjectEvent deviceId: %{public}s, dhId: %{public}s, eventType: %{public}d, eventCode: %{public}d, "
+            "eventValue: %{public}d, when: %{public}" PRId64"", GetAnonyString(deviceId).c_str(),
+            GetAnonyString(dhId).c_str(), event.type, event.code, event.value, rawEvent.when);
         VirtualDevice* device = nullptr;
         if (GetDevice(deviceId, dhId, device) < 0) {
             DHLOGE("could not find the device");

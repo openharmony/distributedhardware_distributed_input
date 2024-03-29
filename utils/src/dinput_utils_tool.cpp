@@ -61,7 +61,7 @@ DevInfo GetLocalDeviceInfo()
     auto info = std::make_unique<NodeBasicInfo>();
     auto ret = GetLocalNodeDeviceInfo(DINPUT_PKG_NAME.c_str(), info.get());
     if (ret != 0) {
-        DHLOGE("GetLocalNodeDeviceInfo failed, errCode = %d", ret);
+        DHLOGE("GetLocalNodeDeviceInfo failed, errCode = %{public}d", ret);
         return devInfo;
     }
 
@@ -78,7 +78,7 @@ std::string GetLocalNetworkId()
     if (localNetworkId.empty()) {
         DHLOGE("local networkId is empty!");
     }
-    DHLOGI("GetLocalNetworkId, device local networkId is %s", GetAnonyString(localNetworkId).c_str());
+    DHLOGI("GetLocalNetworkId, device local networkId is %{public}s", GetAnonyString(localNetworkId).c_str());
     return localNetworkId;
 }
 
@@ -299,12 +299,12 @@ int OpenInputDeviceFdByPath(const std::string &devicePath)
     char canonicalDevicePath[PATH_MAX] = {0x00};
     if (devicePath.length() == 0 || devicePath.length() >= PATH_MAX ||
         realpath(devicePath.c_str(), canonicalDevicePath) == nullptr) {
-        DHLOGE("path check fail, error path: %s", devicePath.c_str());
+        DHLOGE("path check fail, error path: %{public}s", devicePath.c_str());
         return -1;
     }
     struct stat s;
     if ((stat(canonicalDevicePath, &s) == 0) && (s.st_mode & S_IFDIR)) {
-        DHLOGI("path: %s is a dir.", devicePath.c_str());
+        DHLOGI("path: %{public}s is a dir.", devicePath.c_str());
         return -1;
     }
     int fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC);
@@ -313,10 +313,11 @@ int OpenInputDeviceFdByPath(const std::string &devicePath)
         ++count;
         usleep(SLEEP_TIME_US);
         fd = open(canonicalDevicePath, O_RDWR | O_CLOEXEC);
-        DHLOGE("could not open the path: %s, errno: %s; retry: %d", devicePath.c_str(), ConvertErrNo().c_str(), count);
+        DHLOGE("could not open the path: %{public}s, errno: %{public}s; retry: %{public}d", devicePath.c_str(),
+            ConvertErrNo().c_str(), count);
     }
     if (count >= MAX_RETRY_COUNT) {
-        DHLOGE("could not open the path: %s, errno: %s.", devicePath.c_str(), ConvertErrNo().c_str());
+        DHLOGE("could not open the path: %{public}s, errno: %{public}s.", devicePath.c_str(), ConvertErrNo().c_str());
         CloseFd(fd);
         return -1;
     }
@@ -368,14 +369,14 @@ void RecordEventLog(const input_event &event)
             eventType = "other type " + std::to_string(event.type);
             break;
     }
-    DHLOGD("5.E2E-Test Source write event into input driver, EventType: %s, Code: %d, Value: %d",
-        eventType.c_str(), event.code, event.value);
+    DHLOGD("5.E2E-Test Source write event into input driver, EventType: %{public}s, Code: %{public}d, "
+        "Value: %{public}d", eventType.c_str(), event.code, event.value);
 }
 
 void WriteEventToDevice(const int fd, const input_event &event)
 {
     if (write(fd, &event, sizeof(event)) < static_cast<ssize_t>(sizeof(event))) {
-        DHLOGE("could not inject event, fd: %d", fd);
+        DHLOGE("could not inject event, fd: %{public}d", fd);
         return;
     }
     RecordEventLog(event);
@@ -385,23 +386,23 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
 {
     unsigned long keyState[NLONGS(KEY_CNT)] = { 0 };
     for (const auto &path : nodePaths) {
-        DHLOGI("Check and reset key state, path: %s", path.c_str());
+        DHLOGI("Check and reset key state, path: %{public}s", path.c_str());
         std::vector<uint32_t> pressedKeys;
         int fd = OpenInputDeviceFdByPath(path);
         if (fd == -1) {
-            DHLOGE("Open virtual keyboard node failed, path: %s", path.c_str());
+            DHLOGE("Open virtual keyboard node failed, path: %{public}s", path.c_str());
             continue;
         }
 
         int rc = ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState);
         if (rc < 0) {
-            DHLOGE("Read all key state failed, rc: %d, path: %s", rc, path.c_str());
+            DHLOGE("Read all key state failed, rc: %{public}d, path: %{public}s", rc, path.c_str());
             continue;
         }
 
         for (int32_t keyIndex = 0; keyIndex < KEY_MAX; keyIndex++) {
             if (BitIsSet(keyState, keyIndex)) {
-                DHLOGI("key index: %d pressed.", keyIndex);
+                DHLOGI("key index: %{public}d pressed.", keyIndex);
                 pressedKeys.push_back(keyIndex);
             }
         }

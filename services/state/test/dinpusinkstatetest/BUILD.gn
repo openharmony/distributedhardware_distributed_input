@@ -51,7 +51,11 @@ ohos_unittest("dinput_sink_state_test") {
     "//third_party/libevdev:libevdev",
   ]
 
-    external_deps = [ "distributed_hardware_fwk:distributedhardwareutils" ]
+  external_deps = [
+    "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "hilog:libhilog",
+  ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
 }
