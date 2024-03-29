@@ -29,8 +29,6 @@ ohos_shared_library("libdinput_source_trans") {
     "${av_transport_path}/common/include",
     "include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
@@ -59,6 +57,7 @@ ohos_shared_library("libdinput_source_trans") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hitrace:hitrace_meter",

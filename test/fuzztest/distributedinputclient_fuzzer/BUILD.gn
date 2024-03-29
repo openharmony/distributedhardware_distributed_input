@@ -38,8 +38,6 @@ ohos_fuzztest("DistributedInputClientFuzzTest") {
     "${distributedinput_path}/services/state/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
@@ -62,6 +60,7 @@ ohos_fuzztest("DistributedInputClientFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",

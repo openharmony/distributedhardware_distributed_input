@@ -31,8 +31,6 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "${services_sink_path}/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${frameworks_path}/include",
     "${service_common}/include",
     "${dfx_utils_path}/include",

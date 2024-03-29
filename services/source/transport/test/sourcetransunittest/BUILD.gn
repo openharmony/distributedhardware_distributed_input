@@ -33,8 +33,6 @@ ohos_unittest("distributed_input_sourcetrans_test") {
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${service_common}/include",
@@ -83,6 +81,7 @@ ohos_unittest("distributed_input_sourcetrans_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hitrace:hitrace_meter",

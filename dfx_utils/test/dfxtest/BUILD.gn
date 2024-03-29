@@ -30,9 +30,6 @@ ohos_unittest("distributed_input_dfx_test") {
   include_dirs = [
     "include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
-
     "${frameworks_path}/include",
     "${dfx_utils_path}/include",
     "${service_common}/include",
@@ -64,6 +61,7 @@ ohos_unittest("distributed_input_dfx_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",

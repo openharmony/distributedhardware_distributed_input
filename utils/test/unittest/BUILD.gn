@@ -29,8 +29,6 @@ ohos_unittest("distributed_input_utils_test") {
 
   include_dirs = [
     "${av_transport_path}/common/include",
-    "${common_path}/utils/include",
-    "${common_path}/log/include",
     "${utils_path}/include",
     "${utils_path}/test/unittest",
     "${common_path}/include",
@@ -68,6 +66,7 @@ ohos_unittest("distributed_input_utils_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "hilog:libhilog",
     "hisysevent:libhisysevent",

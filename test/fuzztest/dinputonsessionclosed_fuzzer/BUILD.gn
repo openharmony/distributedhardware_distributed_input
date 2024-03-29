@@ -28,8 +28,6 @@ ohos_fuzztest("DinputOnSessionClosedFuzzTest") {
     "${services_source_path}/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
@@ -59,6 +57,7 @@ ohos_fuzztest("DinputOnSessionClosedFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",

@@ -32,8 +32,6 @@ ohos_unittest("distributed_input_inner_sinkcollector_test") {
     "${common_path}/include",
     "${services_state_path}/include",
     "${frameworks_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${utils_path}/include",
   ]
 

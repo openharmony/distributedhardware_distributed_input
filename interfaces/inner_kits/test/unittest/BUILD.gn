@@ -35,8 +35,6 @@ ohos_unittest("distributed_input_inner_test") {
     "${distributedinput_path}/services/include",
     "${frameworks_path}/include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${utils_path}/include",
     "${frameworks_path}/include",
   ]

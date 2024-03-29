@@ -44,8 +44,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${frameworks_path}/include",
     "${common_path}/include",
     "${services_state_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${service_common}/include",
     "${services_sink_path}/inputcollector/include",
     "${dfx_utils_path}/include",

@@ -30,8 +30,6 @@ ohos_unittest("distributed_input_handler_test") {
   include_dirs = [
     "${common_path}/include",
     "${services_state_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${service_common}/include",
     "${frameworks_path}/include",
     "${utils_path}/include",

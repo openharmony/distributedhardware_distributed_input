@@ -28,7 +28,6 @@ ohos_unittest("dinput_sink_state_test") {
 
   include_dirs = [
     "${common_path}/include",
-    "${common_path}/utils/include",
     "${services_state_path}/include",
   ]
 
@@ -51,6 +50,8 @@ ohos_unittest("dinput_sink_state_test") {
     "${services_state_path}:libdinput_sink_state",
     "//third_party/libevdev:libevdev",
   ]
+
+    external_deps = [ "distributed_hardware_fwk:distributedhardwareutils" ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
 }

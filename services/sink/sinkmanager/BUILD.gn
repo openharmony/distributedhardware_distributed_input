@@ -33,8 +33,6 @@ ohos_shared_library("libdinput_sink") {
     "${ipc_path}/include",
     "${ipc_path}/src",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${service_common}/include",
     "${services_sink_path}/transport/include",
     "${services_sink_path}/inputcollector/include",

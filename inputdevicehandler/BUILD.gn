@@ -29,8 +29,6 @@ ohos_shared_library("libdinput_handler") {
     "include",
     "${common_path}/include",
     "${services_state_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${service_common}/include",
     "${frameworks_path}/include",
     "${utils_path}/include",

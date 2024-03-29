@@ -18,8 +18,6 @@ config("input_sdk_public_config") {
   include_dirs = [
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",

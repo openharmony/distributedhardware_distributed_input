@@ -35,7 +35,6 @@ ohos_shared_library("libdinput_sink_state") {
     "${services_source_path}/inputinject/include",
     "${services_sink_path}/transport/include",
     "${frameworks_path}/include",
-    "${common_path}/utils/include",
   ]
 
   sources = [
@@ -59,6 +58,7 @@ ohos_shared_library("libdinput_sink_state") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",

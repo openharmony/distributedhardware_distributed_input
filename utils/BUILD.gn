@@ -27,8 +27,6 @@ ohos_shared_library("libdinput_utils") {
   branch_protector_ret = "pac_ret"
   include_dirs = [
     "${av_transport_path}/common/include",
-    "${common_path}/utils/include",
-    "${common_path}/log/include",
     "${utils_path}/include",
     "${common_path}/include",
     "${service_common}/include",
@@ -52,6 +50,7 @@ ohos_shared_library("libdinput_utils") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hilog:libhilog",

@@ -35,8 +35,6 @@ ohos_shared_library("libdinput_source_handler") {
     "${frameworks_path}/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${dfx_utils_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
@@ -65,6 +63,7 @@ ohos_shared_library("libdinput_source_handler") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "eventhandler:libeventhandler",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",

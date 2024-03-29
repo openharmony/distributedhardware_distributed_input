@@ -36,8 +36,6 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "${common_path}/include",
     "${services_state_path}/include",
     "${frameworks_path}/include",
-    "${common_path}/log/include",
-    "${common_path}/utils/include",
     "${service_common}/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
@@ -81,6 +79,7 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "ipc:ipc_core",
