@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -68,6 +68,7 @@ std::string GetString(const std::vector<std::string> &vec);
 int32_t GetRandomInt32();
 std::string JointDhIds(const std::vector<std::string> &dhids);
 std::vector<std::string> SplitDhIdString(const std::string &dhIdsString);
+int32_t GenRandInt(int32_t randMin, int32_t randMax);
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

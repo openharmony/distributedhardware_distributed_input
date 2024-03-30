@@ -16,6 +16,7 @@
 #include "virtual_device.h"
 
 #include <securec.h>
+#include <unistd.h>
 
 #include "constants_dinput.h"
 #include "dinput_log.h"
@@ -30,6 +31,7 @@ namespace {
     constexpr uint32_t ABS_MAX_POS = 2;
     constexpr uint32_t ABS_FUZZ_POS = 3;
     constexpr uint32_t ABS_FLAT_POS = 4;
+    constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
 }
 VirtualDevice::VirtualDevice(const InputDevice &event) : deviceName_(event.name), busType_(event.bus),
     vendorId_(event.vendor), productId_(event.product), version_(event.version), classes_(event.classes)
@@ -163,7 +165,7 @@ bool VirtualDevice::SetUp(const InputDevice &inputDevice, const std::string &dev
         return false;
     }
     DHLOGI("create fd %{public}d", fd_);
-
+    usleep(SLEEP_TIME_US);
     char sysfsDeviceName[16] = {0};
     if (ioctl(fd_, UI_GET_SYSNAME(sizeof(sysfsDeviceName)), sysfsDeviceName) < 0) {
         DHLOGE("Unable to get input device name");
