@@ -28,8 +28,6 @@ ohos_shared_library("libdinput_dfx_utils") {
   include_dirs = [
     "include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
     "${frameworks_path}/include",
     "${dfx_utils_path}/include",
     "${service_common}/include",
@@ -51,6 +49,7 @@ ohos_shared_library("libdinput_dfx_utils") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",

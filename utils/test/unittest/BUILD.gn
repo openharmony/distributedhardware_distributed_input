@@ -29,15 +29,12 @@ ohos_unittest("distributed_input_utils_test") {
 
   include_dirs = [
     "${av_transport_path}/common/include",
-    "${fwk_common_path}/utils/include",
-    "${fwk_common_path}/log/include",
     "${utils_path}/include",
     "${utils_path}/test/unittest",
     "${common_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${frameworks_path}/include",
-    "//third_party/json/include",
     "${common_path}/test/mock",
     "${service_common}/include",
   ]
@@ -64,17 +61,17 @@ ohos_unittest("distributed_input_utils_test") {
     "LOG_DOMAIN=0xD004120",
   ]
 
-  deps = [
-    "${utils_path}:libdinput_utils",
-    "//third_party/openssl:libcrypto_shared",
-  ]
+  deps = [ "${utils_path}:libdinput_utils" ]
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
+    "openssl:libcrypto_shared",
     "samgr:samgr_proxy",
   ]
 

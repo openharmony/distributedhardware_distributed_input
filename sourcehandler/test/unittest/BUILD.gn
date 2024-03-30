@@ -37,9 +37,6 @@ ohos_unittest("distributed_input_source_handler_test") {
     "${frameworks_path}/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "//third_party/json/include",
     "${dfx_utils_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
@@ -78,10 +75,12 @@ ohos_unittest("distributed_input_source_handler_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
   ]
 

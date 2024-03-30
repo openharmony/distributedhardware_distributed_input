@@ -36,9 +36,6 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
     "${distributedinput_path}/inputdevicehandler/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "//third_party/json/include",
     "${utils_path}/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
@@ -62,9 +59,11 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
   ]
 
   defines = [

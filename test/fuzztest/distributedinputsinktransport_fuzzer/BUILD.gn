@@ -29,11 +29,8 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/include",
     "${service_common}/include",
-    "//third_party/json/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
   ]
@@ -59,12 +56,14 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
   ]
 

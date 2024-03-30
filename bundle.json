@@ -31,6 +31,7 @@
                 "eventhandler",
                 "hilog",
                 "ipc",
+                "json",
                 "safwk",
                 "samgr",
                 "dsoftbus",
@@ -41,13 +42,10 @@
                 "hisysevent",
                 "hitrace",
                 "graphic_surface",
-                "window_manager"
-            ],
-            "third_party": [
-                "jsoncpp",
-                "libevdev",
+                "window_manager",
                 "openssl"
-            ]
+            ],
+            "third_party": [ "libevdev" ]
         },
         "build": {
             "sub_component": [

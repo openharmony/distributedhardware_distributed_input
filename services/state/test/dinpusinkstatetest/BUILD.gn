@@ -28,7 +28,6 @@ ohos_unittest("dinput_sink_state_test") {
 
   include_dirs = [
     "${common_path}/include",
-    "${fwk_common_path}/utils/include",
     "${services_state_path}/include",
   ]
 
@@ -54,6 +53,7 @@ ohos_unittest("dinput_sink_state_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
   ]
 

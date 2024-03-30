@@ -34,7 +34,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
   }
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",
@@ -45,15 +44,10 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${frameworks_path}/include",
     "${common_path}/include",
     "${services_state_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
     "${service_common}/include",
-    "//third_party/json/include",
     "${services_sink_path}/inputcollector/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${common_path}/test/mock",
     "${services_sink_path}/sinkmanager/test/sinkmanagerunittest/mock/",
     "${distributedinput_path}/services/state/include",
@@ -97,7 +91,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${services_sink_path}/transport:libdinput_sink_trans",
     "${utils_path}:libdinput_utils",
     "//third_party/libevdev:libevdev",
-    "//third_party/openssl:libcrypto_shared",
   ]
 
   external_deps = [
@@ -106,6 +99,9 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "access_token:libtoken_setproc",
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
@@ -113,6 +109,8 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "hicollie:libhicollie",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
+    "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "window_manager:libdm",

@@ -13,7 +13,6 @@
 
 import("//build/ohos.gni")
 import("//build/ohos/sa_profile/sa_profile.gni")
-import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 
 ohos_sa_profile("distributed_input_source_sa_profile") {
   sources = [ "4809.json" ]

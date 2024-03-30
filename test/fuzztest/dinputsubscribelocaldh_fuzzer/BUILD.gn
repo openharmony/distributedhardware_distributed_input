@@ -34,9 +34,6 @@ ohos_fuzztest("DinputSubscribeLocalDhFuzzTest") {
     "${distributedinput_path}/inputdevicehandler/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${fwk_common_path}/log/include",
-    "${fwk_common_path}/utils/include",
-    "//third_party/json/include",
     "${fwk_interfaces_path}/include",
     "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
@@ -59,10 +56,12 @@ ohos_fuzztest("DinputSubscribeLocalDhFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
   ]
 
