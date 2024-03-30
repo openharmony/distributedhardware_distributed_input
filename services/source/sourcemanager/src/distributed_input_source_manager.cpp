@@ -20,6 +20,7 @@
 #include "nlohmann/json.hpp"
 #include "system_ability_definition.h"
 #include "string_ex.h"
+#include <unistd.h>
 
 #include "distributed_hardware_fwk_kit.h"
 #include "ipublisher_listener.h"
@@ -44,6 +45,11 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    constexpr int32_t RAND_NUM_MIN = 0;
+    constexpr int32_t RAND_NUM_MAX = 20;
+    constexpr int32_t SLEEP_TIME_US = 1000;
+}
 REGISTER_SYSTEM_ABILITY_BY_ID(DistributedInputSourceManager, DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID, true);
 
 DistributedInputSourceManager::DistributedInputSourceManager(int32_t saId, bool runOnCreate)
@@ -265,6 +271,9 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     }
     DHLOGI("RegisterDistributedHardware called, deviceId: %{public}s, dhId: %{public}s, parameters: %{public}s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
+    int32_t randNumber = GenRandInt(RAND_NUM_MIN, RAND_NUM_MAX);
+    usleep(randNumber * SLEEP_TIME_US);
+
     std::lock_guard<std::mutex> lock(regDisHardwareMutex_);
     DInputClientRegistInfo info {devId, dhId, callback};
     regCallbacks_.push_back(info);
