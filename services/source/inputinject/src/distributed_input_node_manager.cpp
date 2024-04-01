@@ -31,6 +31,10 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    constexpr int32_t RETRY_MAX_TIMES = 3;
+    constexpr uint32_t SLEEP_TIME_US = 10 * 1000;
+}
 DistributedInputNodeManager::DistributedInputNodeManager() : isInjectThreadCreated_(false),
     isInjectThreadRunning_(false), virtualTouchScreenFd_(UN_INIT_FD_VALUE)
 {
@@ -354,6 +358,14 @@ int32_t DistributedInputNodeManager::CreateHandle(const InputDevice &inputDevice
 
     if (!virtualDevice->SetUp(inputDevice, devId, dhId)) {
         DHLOGE("could not create new virtual device\n");
+        for (int32_t i = 0; i < RETRY_MAX_TIMES; ++i) {
+            if (virtualDevice->SetUp(inputDevice, devId, dhId)) {
+                DHLOGI("Create new virtual success");
+                AddDeviceLocked(devId, inputDevice.descriptor, std::move(virtualDevice));
+                return DH_SUCCESS;
+            }
+            usleep(SLEEP_TIME_US);
+        }
         return ERR_DH_INPUT_SERVER_SOURCE_CREATE_HANDLE_FAIL;
     }
     AddDeviceLocked(devId, inputDevice.descriptor, std::move(virtualDevice));
