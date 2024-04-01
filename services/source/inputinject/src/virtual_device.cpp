@@ -169,6 +169,8 @@ bool VirtualDevice::SetUp(const InputDevice &inputDevice, const std::string &dev
     char sysfsDeviceName[16] = {0};
     if (ioctl(fd_, UI_GET_SYSNAME(sizeof(sysfsDeviceName)), sysfsDeviceName) < 0) {
         DHLOGE("Unable to get input device name");
+        CloseFd(fd_);
+        return false;
     }
     DHLOGI("get input device name: %{public}s, fd: %{public}d", GetAnonyString(sysfsDeviceName).c_str(), fd_);
     return true;
