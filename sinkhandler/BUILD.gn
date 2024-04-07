@@ -37,8 +37,6 @@ ohos_shared_library("libdinput_sink_handler") {
     "${common_path}/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
   ]
 
   sources = [
@@ -61,6 +59,7 @@ ohos_shared_library("libdinput_sink_handler") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
