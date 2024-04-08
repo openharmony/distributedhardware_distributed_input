@@ -26,12 +26,9 @@ ohos_shared_library("libdinput_utils") {
   }
   branch_protector_ret = "pac_ret"
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${utils_path}/include",
     "${common_path}/include",
     "${service_common}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${dfx_utils_path}/include",
     "${frameworks_path}/include",
   ]
@@ -49,6 +46,8 @@ ohos_shared_library("libdinput_utils") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
