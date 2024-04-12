@@ -619,9 +619,9 @@ int32_t DistributedInputSinkManager::Init()
         DHLOGE("dhFwkKit obtain fail!");
         return ERR_DH_INPUT_SERVER_SINK_MANAGER_INIT_FAIL;
     }
-    projectWindowListener_ = new ProjectWindowListener(this);
+    projectWindowListener_ = sptr<ProjectWindowListener>(new ProjectWindowListener(this));
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, projectWindowListener_);
-    pluginStartListener_ = new PluginStartListener();
+    pluginStartListener_ = sptr<PluginStartListener>(new PluginStartListener());
     dhFwkKit->RegisterPublisherListener(DHTopic::TOPIC_PHY_DEV_PLUGIN, pluginStartListener_);
     DistributedInputCollector::GetInstance().PreInit();
 
