@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,7 +37,7 @@ namespace DistributedInput {
 void DistributedInputSinkManagerTest::SetUp()
 {
     sinkManager_ = new DistributedInputSinkManager(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, true);
-    sinkManager_->projectWindowListener_ = new DistributedInputSinkManager::ProjectWindowListener(sinkManager_);
+    sinkManager_->Init();
     uint64_t tokenId;
     const char *perms[2];
     perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
@@ -59,10 +59,6 @@ void DistributedInputSinkManagerTest::SetUp()
 
 void DistributedInputSinkManagerTest::TearDown()
 {
-    if (sinkManager_ != nullptr) {
-        delete sinkManager_;
-        sinkManager_ = nullptr;
-    }
 }
 
 void DistributedInputSinkManagerTest::SetUpTestCase()
@@ -162,13 +158,15 @@ HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_02,
 
 HWTEST_F(DistributedInputSinkManagerTest, OnMessage_01, testing::ext::TestSize.Level1)
 {
-    int32_t ret = sinkManager_->Init();
+    int32_t fd = 1;
+    std::vector<std::u16string> args;
+    int32_t ret = sinkManager_->Dump(fd, args);
     sinkManager_->OnStart();
     sinkManager_->OnStop();
     std::string message = "";
     sinkManager_->projectWindowListener_->OnMessage(DHTopic::TOPIC_START_DSCREEN, message);
     sinkManager_->projectWindowListener_->OnMessage(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, message);
-    EXPECT_EQ(DH_SUCCESS, ret);
+    EXPECT_EQ(ERR_DH_INPUT_HIDUMP_DUMP_PROCESS_FAIL, ret);
 }
 
 HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_01, testing::ext::TestSize.Level1)
@@ -258,12 +256,10 @@ HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_04, testing::ext::TestSiz
 
 HWTEST_F(DistributedInputSinkManagerTest, UpdateSinkScreenInfoCache_01, testing::ext::TestSize.Level1)
 {
-    int32_t ret = sinkManager_->Init();
-    EXPECT_EQ(DH_SUCCESS, ret);
     std::string srcDevId = "umkyu1b165e1be98151891erbe8r91ev";
     uint64_t srcWinId = 1;
     SinkScreenInfo sinkScreenInfoTmp {2, 1860, 980, 200, 200};
-    ret = sinkManager_->projectWindowListener_->UpdateSinkScreenInfoCache(srcDevId, srcWinId, sinkScreenInfoTmp);
+    auto ret = sinkManager_->projectWindowListener_->UpdateSinkScreenInfoCache(srcDevId, srcWinId, sinkScreenInfoTmp);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
