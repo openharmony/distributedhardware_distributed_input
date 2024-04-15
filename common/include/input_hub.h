@@ -240,6 +240,7 @@ private:
     std::atomic<bool> isStartCollectEvent_;
     std::atomic<bool> isStartCollectHandler_;
     std::unordered_map<std::string, bool> sharedDHIds_;
+    std::unordered_map<std::string, int32_t> logCountMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

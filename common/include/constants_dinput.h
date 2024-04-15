@@ -223,6 +223,8 @@ namespace DistributedInput {
 
     constexpr int32_t SINK_SCREEN_INFO_SIZE = 4;
 
+    constexpr int32_t MAX_LOG_TIMES = 20;
+
     enum class EHandlerMsgType {
         DINPUT_SINK_EVENT_HANDLER_MSG = 1,
         DINPUT_SOURCE_EVENT_HANDLER_MSG = 2

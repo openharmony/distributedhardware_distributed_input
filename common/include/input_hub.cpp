@@ -559,7 +559,10 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
 
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
-        DHLOGI("Opening device error: %{public}s", devicePath.c_str());
+        if (logCountMap_.count(device->identifier.descriptor) == 0 ||
+            logCountMap_[device->identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGI("Opening device error: %{public}s", devicePath.c_str());
+        }
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
     }
 
@@ -635,11 +638,21 @@ int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
 
 void InputHub::QueryEventInfo(int fd, std::unique_ptr<Device> &device)
 {
-    DHLOGI("QueryEventInfo: devName: %{public}s, dhId: %{public}s!", device->identifier.name.c_str(),
-        GetAnonyString(device->identifier.descriptor).c_str());
+    if (device == nullptr) {
+        DHLOGE("device is nullptr!");
+        return;
+    }
+    if (logCountMap_.count(device->identifier.descriptor) == 0 ||
+        logCountMap_[device->identifier.descriptor] <= MAX_LOG_TIMES) {
+        DHLOGI("QueryEventInfo: devName: %{public}s, dhId: %{public}s!", device->identifier.name.c_str(),
+            GetAnonyString(device->identifier.descriptor).c_str());
+    }
     struct libevdev *dev = GetLibEvDev(fd);
     if (dev == nullptr) {
-        DHLOGE("dev is nullptr");
+        if (logCountMap_.count(device->identifier.descriptor) == 0 ||
+            logCountMap_[device->identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGE("dev is nullptr");
+        }
         return;
     }
     GetEventTypes(dev, device->identifier);
@@ -742,7 +755,10 @@ void InputHub::GetEventTypes(struct libevdev *dev, InputDevice &identifier)
 int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_KEY)) {
-        DHLOGE("The device doesn't has EV_KEY type!");
+        if (logCountMap_.count(identifier.descriptor) == 0 ||
+            logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGE("The device doesn't has EV_KEY type!");
+        }
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     for (uint32_t eventKey = 0; eventKey < KEY_CNT; eventKey++) {
@@ -758,7 +774,10 @@ int32_t InputHub::GetEventKeys(struct libevdev *dev, InputDevice &identifier)
 int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_ABS)) {
-        DHLOGE("The device doesn't has EV_ABS type!");
+        if (logCountMap_.count(identifier.descriptor) == 0 ||
+            logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGE("The device doesn't has EV_ABS type!");
+        }
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     DHLOGI("The device has abs info, devName: %{public}s, dhId: %{public}s!",
@@ -787,7 +806,10 @@ int32_t InputHub::GetABSInfo(struct libevdev *dev, InputDevice &identifier)
 int32_t InputHub::GetRELTypes(struct libevdev *dev, InputDevice &identifier)
 {
     if (!libevdev_has_event_type(dev, EV_REL)) {
-        DHLOGE("The device doesn't has EV_REL type!");
+        if (logCountMap_.count(identifier.descriptor) == 0 ||
+            logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGE("The device doesn't has EV_REL type!");
+        }
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     for (uint32_t code = 0; code < REL_CNT; code++) {
@@ -844,7 +866,10 @@ int32_t InputHub::MakeDevice(int fd, std::unique_ptr<Device> device)
 
     // If the device isn't recognized as something we handle, don't monitor it.
     if (device->classes == 0) {
-        DHLOGI("Dropping device: name='%{public}s'", device->identifier.name.c_str());
+        if (logCountMap_.count(device->identifier.descriptor) == 0 ||
+            logCountMap_[device->identifier.descriptor] <= MAX_LOG_TIMES) {
+            DHLOGI("Dropping device: name='%{public}s'", device->identifier.name.c_str());
+        }
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
     }
 
@@ -953,8 +978,11 @@ void InputHub::GenerateDescriptor(InputDevice &identifier) const
     }
 
     identifier.descriptor = DH_ID_PREFIX + Sha256(rawDescriptor);
-    DHLOGI("Created descriptor: raw=%{public}s, cooked=%{public}s", rawDescriptor.c_str(),
-        GetAnonyString(identifier.descriptor).c_str());
+    if (logCountMap_.count(identifier.descriptor) == 0 || logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+        DHLOGI("Created descriptor: raw=%{public}s, cooked=%{public}s", rawDescriptor.c_str(),
+            GetAnonyString(identifier.descriptor).c_str());
+    }
+    logCountMap_[identifier.descriptor]++;
 }
 
 int32_t InputHub::RegisterDeviceForEpollLocked(const Device &device)
@@ -1322,16 +1350,18 @@ bool InputHub::IsAllDevicesStoped()
 
 void InputHub::RecordDeviceLog(const std::string &devicePath, const InputDevice &identifier)
 {
-    DHLOGI("add device: %{public}s\n", devicePath.c_str());
-    DHLOGI("  bus:        %{public}04x\n"
-           "  vendor      %{public}04x\n"
-           "  product     %{public}04x\n"
-           "  version     %{public}04x\n",
-        identifier.bus, identifier.vendor, identifier.product, identifier.version);
-    DHLOGI("  name:       \"%{public}s\"\n", identifier.name.c_str());
-    DHLOGI("  physicalPath:   \"%{public}s\"\n", identifier.physicalPath.c_str());
-    DHLOGI("  unique id:  \"%{public}s\"\n", identifier.uniqueId.c_str());
-    DHLOGI("  descriptor: \"%{public}s\"\n", GetAnonyString(identifier.descriptor).c_str());
+    if (logCountMap_.count(identifier.descriptor) == 0 || logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+        DHLOGI("add device: %{public}s\n", devicePath.c_str());
+        DHLOGI("  bus:        %{public}04x\n"
+               "  vendor      %{public}04x\n"
+               "  product     %{public}04x\n"
+               "  version     %{public}04x\n",
+               identifier.bus, identifier.vendor, identifier.product, identifier.version);
+        DHLOGI("  name:       \"%{public}s\"\n", identifier.name.c_str());
+        DHLOGI("  physicalPath:   \"%{public}s\"\n", identifier.physicalPath.c_str());
+        DHLOGI("  unique id:  \"%{public}s\"\n", identifier.uniqueId.c_str());
+        DHLOGI("  descriptor: \"%{public}s\"\n", GetAnonyString(identifier.descriptor).c_str());
+    }
 }
 
 void InputHub::RecordChangeEventLog(const RawEvent &event)
