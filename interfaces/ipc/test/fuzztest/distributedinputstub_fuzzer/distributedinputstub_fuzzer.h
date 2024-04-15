@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef TEST_AVTRANSCALLBACKNOTIFY_FUZZER_H
-#define TEST_AVTRANSCALLBACKNOTIFY_FUZZER_H
+#ifndef DISTRIBUTEDINPUTSTUB_FUZZER_H
+#define DISTRIBUTEDINPUTSTUB_FUZZER_H
 
 #define FUZZ_PROJECT_NAME "distributedinputstub_fuzzer.cpp"
 
