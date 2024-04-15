@@ -14,7 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import("../../../distributedinput.gni")
+import("../../../../../distributedinput.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DistributedInputStubFuzzTest") {
