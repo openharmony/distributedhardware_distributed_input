@@ -798,7 +798,7 @@ void StartStopResultCallbackStubFuzzTest(const uint8_t *data, size_t size)
         std::string value(reinterpret_cast<const char*>(data), size);
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
-    } else if(code == (uint32_t)DistributedInput::IStartStopResultCallback::Message::RESULT_STOP) {
+    } else if (code == (uint32_t)DistributedInput::IStartStopResultCallback::Message::RESULT_STOP) {
         int32_t fd = *(reinterpret_cast<const int32_t*>(data));
         int32_t len = *(reinterpret_cast<const int32_t*>(data));
         std::string name(reinterpret_cast<const char*>(data), size);
