@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,16 +24,22 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+namespace {
+    const int32_t PERMISSION_ENABLE_INDEX = 0;
+    const int32_t PERMISSION_DATASYNC_INDEX = 1;
+    const int32_t PERMISSION_ACCESS_INDEX = 2;
+    const int32_t PERMISSION_NUMS = 3;
+}
 void AddWhiteListInfosCallbackTest::SetUp()
 {
     uint64_t tokenId;
-    const char *perms[3];
-    perms[0] = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
-    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
-    perms[2] = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
+    const char *perms[PERMISSION_NUMS];
+    perms[PERMISSION_ENABLE_INDEX] = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    perms[PERMISSION_DATASYNC_INDEX] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
+    perms[PERMISSION_ACCESS_INDEX] = "ohos.permission.ACCESS_DISTRIBUTED_HARDWARE";
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
-        .permsNum = 3,
+        .permsNum = PERMISSION_NUMS,
         .aclsNum = 0,
         .dcaps = NULL,
         .perms = perms,

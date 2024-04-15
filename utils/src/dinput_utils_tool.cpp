@@ -127,7 +127,9 @@ std::string SetAnonyId(const std::string &message)
             dhidStr = dhidStr.substr(pos + 1, dhidStr.size());
             pos = dhidStr.find(".");
         }
-        jsonObj[DINPUT_SOFTBUS_KEY_VECTOR_DHID] = anonyDhidStr.substr(0, anonyDhidStr.length() - 1);
+        if (anonyDhidStr.length() >= 1) {
+            jsonObj[DINPUT_SOFTBUS_KEY_VECTOR_DHID] = anonyDhidStr.substr(0, anonyDhidStr.length() - 1);
+        }
     }
     if (IsString(jsonObj, DINPUT_SOFTBUS_KEY_SRC_DEV_ID)) {
         jsonObj[DINPUT_SOFTBUS_KEY_SRC_DEV_ID] = GetAnonyString(jsonObj[DINPUT_SOFTBUS_KEY_SRC_DEV_ID]);
@@ -232,6 +234,10 @@ std::string GetAnonyInt32(const int32_t value)
         return nullString;
     }
     size_t length = strlen(tempBuffer);
+    if (length < 1) {
+        DHLOGE("tempBuffer length error.");
+        return "";
+    }
     for (size_t i = 1; i <= length - 1; i++) {
         tempBuffer[i] = '*';
     }
@@ -430,6 +436,10 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
 std::string GetString(const std::vector<std::string> &vec)
 {
     std::string retStr = "[";
+    if (vec.size() < 1) {
+        DHLOGE("vec size error.");
+        return "";
+    }
     for (uint32_t i = 0; i < vec.size(); i++) {
         if (i != (vec.size() - 1)) {
             retStr += vec[i] + ", ";
