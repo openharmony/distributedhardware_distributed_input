@@ -554,7 +554,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     GenerateDescriptor(device->identifier);
-
+    logCountMap_[device->identifier.descriptor]++;
     RecordDeviceLog(devicePath, device->identifier);
 
     if (MakeDevice(fd, std::move(device)) < 0) {
@@ -978,11 +978,10 @@ void InputHub::GenerateDescriptor(InputDevice &identifier) const
     }
 
     identifier.descriptor = DH_ID_PREFIX + Sha256(rawDescriptor);
-    if (logCountMap_.count(identifier.descriptor) == 0 || logCountMap_[identifier.descriptor] <= MAX_LOG_TIMES) {
+    if (logCountMap_.count(identifier.descriptor) == 0 || logCountMap_.at(identifier.descriptor) <= MAX_LOG_TIMES) {
         DHLOGI("Created descriptor: raw=%{public}s, cooked=%{public}s", rawDescriptor.c_str(),
             GetAnonyString(identifier.descriptor).c_str());
     }
-    logCountMap_[identifier.descriptor]++;
 }
 
 int32_t InputHub::RegisterDeviceForEpollLocked(const Device &device)
