@@ -14,7 +14,5 @@
 group("fuzztest") {
   testonly = true
 
-  deps = [
-    "distributedinputstub_fuzzer:fuzztest",
-  ]
+  deps = [ "distributedinputstub_fuzzer:fuzztest" ]
 }
