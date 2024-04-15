@@ -93,6 +93,7 @@
                 "//foundation/distributedhardware/distributed_input/utils/test:test",
                 "//foundation/distributedhardware/distributed_input/dfx_utils/test:test",
                 "//foundation/distributedhardware/distributed_input/interfaces/ipc/test:test",
+                "//foundation/distributedhardware/distributed_input/interfaces/ipc/test/fuzztest:fuzztest",
                 "//foundation/distributedhardware/distributed_input/inputdevicehandler/test:test",
                 "//foundation/distributedhardware/distributed_input/services/state/test:test"
             ]
