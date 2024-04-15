@@ -52,6 +52,8 @@ ohos_fuzztest("DistributedInputStubFuzzTest") {
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
+    "-Dprivate=public",
+    "-Dprotected=public",
   ]
   sources = [
     "${common_path}/include/input_hub.cpp",
