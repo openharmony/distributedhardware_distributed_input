@@ -206,6 +206,7 @@ private:
 
     void RecordSkipDevicePath(std::string path);
     bool IsSkipDevicePath(const std::string &path);
+    bool IsNeedPrintLog(const std::string& dhId) const;
 
 private:
     int epollFd_;
