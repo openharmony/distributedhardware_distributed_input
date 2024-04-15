@@ -18,8 +18,6 @@
 
 #define FUZZ_PROJECT_NAME "distributedinputstub_fuzzer.cpp"
 
-#endif
-
 #define private public
 #define protected public
 #include "constants_dinput.h"
@@ -28,7 +26,6 @@
 #include "distributed_input_source_stub.h"
 #undef private
 #undef protected
-
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -96,3 +93,4 @@ public:
 };
 } // namespace DistributedHardware
 } // namespace OHOS
+#endif
