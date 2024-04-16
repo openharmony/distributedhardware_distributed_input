@@ -92,7 +92,7 @@ bool VirtualDevice::CreateKey(const InputDevice &inputDevice)
 void VirtualDevice::SetABSInfo(struct uinput_user_dev &inputUserDev, const InputDevice &inputDevice)
 {
     DHLOGI("SetABSInfo!");
-    for (const auto item : inputDevice.absInfos) {
+    for (auto item : inputDevice.absInfos) {
         int absCode = item.first;
         std::vector<int32_t> absInfo = item.second;
         DHLOGI("SetABSInfo nodeName: %{public}s, absCode: %{public}d, absMin: %{public}d, absMax: %{public}d, "

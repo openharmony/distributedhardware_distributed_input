@@ -123,8 +123,8 @@ int32_t DistributedInputSinkStub::NotifyStartDScreenInner(MessageParcel &data, M
         GetAnonyString(sourcePhyId).c_str(), sourcePhyFd, sourcePhyWidth, sourcePhyHeight);
     SrcScreenInfo srcScreenInfo = {
         .devId = devId,
-        .sessionId = sessionId,
         .uuid = uuid,
+        .sessionId = sessionId,
         .sourceWinId = sourceWinId,
         .sourceWinWidth = sourceWinWidth,
         .sourceWinHeight = sourceWinHeight,

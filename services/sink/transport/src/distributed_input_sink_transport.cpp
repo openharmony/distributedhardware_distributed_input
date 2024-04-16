@@ -253,7 +253,7 @@ void DistributedInputSinkTransport::SendKeyStateNodeMsgBatch(const int32_t sessi
 
 void DistributedInputSinkTransport::DoSendMsgBatch(const int32_t sessionId, const std::vector<struct RawEvent> &events)
 {
-    int64_t currentTimeNs = GetCurrentTimeUs() * 1000LL;
+    int64_t currentTimeNs = static_cast<int64_t>(GetCurrentTimeUs()) * 1000LL;
     std::shared_ptr<nlohmann::json> eventsJsonArr = std::make_shared<nlohmann::json>();
     for (const auto &ev : events) {
         nlohmann::json tmpJson;
@@ -582,6 +582,12 @@ void DistributedInputSinkTransport::DInputSinkEventHandler::RecordEventLog(
 {
     for (nlohmann::json::const_iterator iter = events->cbegin(); iter != events->cend(); ++iter) {
         nlohmann::json event = *iter;
+        if (!IsInt32(event, INPUT_KEY_TYPE) || !IsInt64(event, INPUT_KEY_WHEN) ||
+            !IsUInt32(event, INPUT_KEY_CODE) || !IsInt32(event, INPUT_KEY_VALUE) ||
+            !IsString(event, INPUT_KEY_PATH)) {
+            DHLOGE("The key is invaild.");
+            continue;
+        }
         std::string eventType = "";
         int32_t evType = event[INPUT_KEY_TYPE];
         switch (evType) {

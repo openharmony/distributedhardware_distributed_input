@@ -302,6 +302,9 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
 size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
     const size_t count)
 {
+    if (capacity < 1) {
+        return 0;
+    }
     std::vector<bool> needFilted(capacity, false);
     bool isTouchEvent = false;
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
@@ -915,8 +918,8 @@ int32_t InputHub::QueryLocalTouchScreenInfo(int fd, std::unique_ptr<Device> &dev
 
 std::string InputHub::StringPrintf(const char *format, ...) const
 {
-    static const int kSpaceLength = 1024;
-    char space[kSpaceLength];
+    static const int spaceLength = 1024;
+    char space[spaceLength] = {0};
 
     va_list ap;
     va_start(ap, format);
