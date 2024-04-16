@@ -555,7 +555,8 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     GenerateDescriptor(device->identifier);
-    if (logCountMap_[device->identifier.descriptor] >= INT32_MAX - 1) {
+    if (logCountMap_.count(device->identifier.descriptor) != 0 && logCountMap_[device->identifier.descriptor] >=
+        INT32_MAX - 1) {
         logCountMap_[device->identifier.descriptor] = 0;
     }
     logCountMap_[device->identifier.descriptor]++;
