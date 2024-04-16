@@ -109,7 +109,7 @@ int32_t InputHub::Release()
     }
 
     sharedDHIds_.clear();
-    logCountMap_.clear();
+    logTimesMap_.clear();
     return DH_SUCCESS;
 }
 
@@ -555,11 +555,7 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     GenerateDescriptor(device->identifier);
-    if (logCountMap_.count(device->identifier.descriptor) != 0 && logCountMap_[device->identifier.descriptor] >=
-        INT32_MAX - 1) {
-        logCountMap_[device->identifier.descriptor] = 0;
-    }
-    logCountMap_[device->identifier.descriptor]++;
+    IncreaseLogTimes(device->identifier.descriptor);
     RecordDeviceLog(devicePath, device->identifier);
 
     if (MakeDevice(fd, std::move(device)) < 0) {
@@ -586,9 +582,18 @@ bool InputHub::IsSkipDevicePath(const std::string &path)
     return skipDevicePaths_.find(path) != skipDevicePaths_.end();
 }
 
+void InputHub::IncreaseLogTimes(const std::string& dhId)
+{
+    if (logTimesMap_.count(dhId) != 0 && logTimesMap_[dhId] >= INT32_MAX - 1) {
+        logTimesMap_[dhId] = 0;
+    } else {
+        logTimesMap_[dhId]++;
+    }
+}
+
 bool InputHub::IsNeedPrintLog(const std::string& dhId) const
 {
-    return logCountMap_.count(dhId) == 0 || logCountMap_.at(dhId) <= MAX_LOG_TIMES;
+    return logTimesMap_.count(dhId) == 0 || logTimesMap_.at(dhId) <= MAX_LOG_TIMES;
 }
 
 int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
