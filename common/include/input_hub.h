@@ -206,6 +206,8 @@ private:
 
     void RecordSkipDevicePath(std::string path);
     bool IsSkipDevicePath(const std::string &path);
+    void IncreaseLogTimes(const std::string& dhId);
+    bool IsNeedPrintLog(const std::string& dhId) const;
 
 private:
     int epollFd_;
@@ -240,6 +242,7 @@ private:
     std::atomic<bool> isStartCollectEvent_;
     std::atomic<bool> isStartCollectHandler_;
     std::unordered_map<std::string, bool> sharedDHIds_;
+    std::unordered_map<std::string, int32_t> logTimesMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
