@@ -584,7 +584,7 @@ bool InputHub::IsSkipDevicePath(const std::string &path)
 
 void InputHub::IncreaseLogTimes(const std::string& dhId)
 {
-    if (logTimesMap_.count(dhId) != 0 && logTimesMap_[dhId] >= INT32_MAX - 1) {
+    if (logTimesMap_.find(dhId) != logTimesMap_.end() && logTimesMap_[dhId] >= INT32_MAX - 1) {
         logTimesMap_[dhId] = 0;
     } else {
         logTimesMap_[dhId]++;
@@ -593,7 +593,7 @@ void InputHub::IncreaseLogTimes(const std::string& dhId)
 
 bool InputHub::IsNeedPrintLog(const std::string& dhId) const
 {
-    return logTimesMap_.count(dhId) == 0 || logTimesMap_.at(dhId) <= MAX_LOG_TIMES;
+    return logTimesMap_.find(dhId) == logTimesMap_.end() || logTimesMap_.at(dhId) <= MAX_LOG_TIMES;
 }
 
 int32_t InputHub::QueryInputDeviceInfo(int fd, std::unique_ptr<Device> &device)
