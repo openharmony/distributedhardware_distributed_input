@@ -42,6 +42,7 @@ namespace DistributedInput {
 namespace {
 const uint32_t SLEEP_TIME_US = 100 * 1000;
 const std::string MOUSE_NODE_KEY = "mouse";
+const uint32_t SPACELENGTH = 1024;
 }
 
 InputHub::InputHub(bool isPluginMonitor) : epollFd_(-1), iNotifyFd_(-1), inputWd_(-1),
@@ -303,9 +304,6 @@ void InputHub::RecordDeviceChangeStates(Device *device, struct input_event readB
 size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device, struct input_event readBuffer[],
     const size_t count)
 {
-    if (capacity < 1) {
-        return 0;
-    }
     std::vector<bool> needFilted(capacity, false);
     bool isTouchEvent = false;
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH_MT) || (device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
@@ -330,6 +328,9 @@ size_t InputHub::CollectEvent(RawEvent *buffer, size_t &capacity, Device *device
         RecordEventLog(event);
         event += 1;
         capacity -= 1;
+        if (capacity == 0) {
+            break;
+        }
     }
     return event - buffer;
 }
@@ -951,9 +952,7 @@ int32_t InputHub::QueryLocalTouchScreenInfo(int fd, std::unique_ptr<Device> &dev
 
 std::string InputHub::StringPrintf(const char *format, ...) const
 {
-    static const int spaceLength = 1024;
-    char space[spaceLength] = {0};
-
+    char space[SPACELENGTH] = {0};
     va_list ap;
     va_start(ap, format);
     std::string result;

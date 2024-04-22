@@ -33,7 +33,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-std::shared_ptr<DistributedInputClient> DistributedInputClient::instance(new DistributedInputClient());
+std::shared_ptr<DistributedInputClient> DistributedInputClient::instance = std::make_shared<DistributedInputClient>();
 DistributedInputClient::DistributedInputClient() : isAddWhiteListCbReg(false), isDelWhiteListCbReg(false),
     isNodeMonitorCbReg(false), isSimulationEventCbReg(false), isSharingDhIdsReg(false), isGetSinkScreenInfosCbReg(false)
 {
