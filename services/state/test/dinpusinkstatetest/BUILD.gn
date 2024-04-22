@@ -46,15 +46,13 @@ ohos_unittest("dinput_sink_state_test") {
     "LOG_DOMAIN=0xD004120",
   ]
 
-  deps = [
-    "${services_state_path}:libdinput_sink_state",
-    "//third_party/libevdev:libevdev",
-  ]
+  deps = [ "${services_state_path}:libdinput_sink_state" ]
 
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
+    "libevdev:libevdev",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

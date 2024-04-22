@@ -32,6 +32,7 @@
                 "hilog",
                 "ipc",
                 "json",
+                "libevdev",
                 "safwk",
                 "samgr",
                 "dsoftbus",
@@ -44,8 +45,7 @@
                 "graphic_surface",
                 "window_manager",
                 "openssl"
-            ],
-            "third_party": [ "libevdev" ]
+            ]
         },
         "build": {
             "sub_component": [

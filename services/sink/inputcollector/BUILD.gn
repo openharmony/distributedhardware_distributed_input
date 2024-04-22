@@ -47,7 +47,6 @@ ohos_shared_library("libdinput_collector") {
   deps = [
     "${services_state_path}:libdinput_sink_state",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -60,6 +59,7 @@ ohos_shared_library("libdinput_collector") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",

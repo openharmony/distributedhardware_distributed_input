@@ -87,10 +87,7 @@ ohos_shared_library("libdinput_sdk") {
     "${ipc_path}/src/unregister_d_input_call_back_stub.cpp",
   ]
 
-  deps = [
-    "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
-  ]
+  deps = [ "${utils_path}:libdinput_utils" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -107,6 +104,7 @@ ohos_shared_library("libdinput_sdk") {
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]

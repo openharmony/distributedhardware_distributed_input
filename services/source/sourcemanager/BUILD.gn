@@ -99,7 +99,6 @@ ohos_shared_library("libdinput_source") {
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/transport:libdinput_source_trans",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -119,6 +118,7 @@ ohos_shared_library("libdinput_source") {
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]

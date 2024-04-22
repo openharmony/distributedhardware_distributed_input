@@ -63,7 +63,6 @@ ohos_shared_library("libdinput_sink") {
     "${services_sink_path}/inputcollector:libdinput_collector",
     "${services_sink_path}/transport:libdinput_sink_trans",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -81,6 +80,7 @@ ohos_shared_library("libdinput_sink") {
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "window_manager:libdm",

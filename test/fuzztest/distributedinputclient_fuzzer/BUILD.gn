@@ -53,10 +53,7 @@ ohos_fuzztest("DistributedInputClientFuzzTest") {
 
   sources = [ "distributed_input_client_fuzzer.cpp" ]
 
-  deps = [
-    "${distributedinput_path}/sourcehandler:libdinput_source_handler",
-    "//third_party/libevdev:libevdev",
-  ]
+  deps = [ "${distributedinput_path}/sourcehandler:libdinput_source_handler" ]
 
   external_deps = [
     "c_utils:utils",
@@ -66,6 +63,7 @@ ohos_fuzztest("DistributedInputClientFuzzTest") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
   ]
 

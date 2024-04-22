@@ -106,7 +106,6 @@ ohos_unittest("distributed_input_client_test") {
     "${services_source_path}/inputinject:libdinput_inject",
     "${services_source_path}/sourcemanager:libdinput_source",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -124,6 +123,7 @@ ohos_unittest("distributed_input_client_test") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "window_manager:libdm",

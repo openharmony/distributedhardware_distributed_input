@@ -112,7 +112,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${innerkits_path}:libdinput_sdk",
     "${services_source_path}/transport:libdinput_source_trans",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -130,6 +129,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
