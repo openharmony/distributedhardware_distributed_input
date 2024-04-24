@@ -451,11 +451,11 @@ std::string GetString(const std::vector<std::string> &vec)
     return retStr;
 }
 
-int32_t GetRandomInt32()
+int32_t GetRandomInt32(int32_t randMin, int32_t randMax)
 {
     std::default_random_engine engine(time(nullptr));
 
-    std::uniform_int_distribution<int> distribution(0, INT32_MAX);
+    std::uniform_int_distribution<int> distribution(randMin, randMax);
     return distribution(engine);
 }
 
@@ -473,14 +473,6 @@ std::vector<std::string> SplitDhIdString(const std::string &dhIdsString)
     std::vector<std::string> dhIdsVec;
     SplitStringToVector(dhIdsString, DHID_SPLIT, dhIdsVec);
     return dhIdsVec;
-}
-
-int32_t GenRandInt(int32_t randMin, int32_t randMax)
-{
-    std::random_device randDevice;
-    std::mt19937 genRand(randDevice());
-    std::uniform_int_distribution<int> disRand(randMin, randMax);
-    return disRand(genRand);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
