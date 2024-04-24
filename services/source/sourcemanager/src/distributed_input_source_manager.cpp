@@ -271,7 +271,7 @@ int32_t DistributedInputSourceManager::RegisterDistributedHardware(const std::st
     }
     DHLOGI("RegisterDistributedHardware called, deviceId: %{public}s, dhId: %{public}s, parameters: %{public}s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
-    int32_t randNumber = GenRandInt(RAND_NUM_MIN, RAND_NUM_MAX);
+    int32_t randNumber = GetRandomInt32(RAND_NUM_MIN, RAND_NUM_MAX);
     usleep(randNumber * US_PER_MS);
 
     std::lock_guard<std::mutex> lock(regDisHardwareMutex_);

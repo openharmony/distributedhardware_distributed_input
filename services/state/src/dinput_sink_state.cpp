@@ -100,7 +100,7 @@ DhIdState DInputSinkState::GetStateByDhid(const std::string &dhId)
 void DInputSinkState::SimulateMouseBtnMouseUpState(const std::string &dhId, const struct RawEvent &event)
 {
     DHLOGI("Sinmulate Mouse BTN_MOUSE UP state to source, dhId: %{public}s", GetAnonyString(dhId).c_str());
-    int32_t scanId = GetRandomInt32();
+    int32_t scanId = GetRandomInt32(0, INT32_MAX);
     RawEvent mscScanEv = { event.when, EV_MSC, MSC_SCAN, scanId, dhId, event.path };
     RawEvent btnMouseUpEv = { event.when, EV_KEY, BTN_MOUSE, KEY_UP_STATE, dhId, event.path };
     RawEvent sycReportEv = { event.when, EV_SYN, SYN_REPORT, 0x0, dhId, event.path };
