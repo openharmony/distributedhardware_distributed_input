@@ -111,6 +111,24 @@ int32_t DistributedInputSourceHandler::ConfigDistributedHardware(const std::stri
     return DH_SUCCESS;
 }
 
+void DistributedInputSourceHandler::RegisterBusinessStateListener(std::shared_ptr<BusinessStateListener> listener)
+{
+    (void)listener;
+}
+
+void DistributedInputSourceHandler::UnRegisterBusinessStateListener()
+{
+}
+
+void DistributedInputSourceHandler::RegisterDataSyncTriggerListener(std::shared_ptr<DataSyncTriggerListener> listener)
+{
+    (void)listener;
+}
+
+void DistributedInputSourceHandler::UnRegisterDataSyncTriggerListener()
+{
+}
+
 void DistributedInputSourceHandler::SALoadSourceCb::OnLoadSystemAbilitySuccess(int32_t systemAbilityId,
     const OHOS::sptr<IRemoteObject> &remoteObject)
 {

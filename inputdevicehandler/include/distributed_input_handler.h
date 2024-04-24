@@ -41,6 +41,7 @@ class DistributedInputHandler : public IHardwareHandler {
 DECLARE_SINGLE_INSTANCE_BASE(DistributedInputHandler);
 public:
     API_EXPORT int32_t Initialize() override;
+    API_EXPORT virtual std::vector<DHItem> QueryMeta() override;
     API_EXPORT virtual std::vector<DHItem> Query() override;
     API_EXPORT virtual std::map<std::string, std::string> QueryExtraInfo() override;
     API_EXPORT bool IsSupportPlugin() override;
