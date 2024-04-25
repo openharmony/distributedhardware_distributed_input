@@ -111,12 +111,12 @@ int32_t DistributedInputSourceHandler::ConfigDistributedHardware(const std::stri
     return DH_SUCCESS;
 }
 
-void DistributedInputSourceHandler::RegisterBusinessStateListener(std::shared_ptr<BusinessStateListener> listener)
+void DistributedInputSourceHandler::RegisterDistributedHardwareStateListener(std::shared_ptr<BusinessStateListener> listener)
 {
     (void)listener;
 }
 
-void DistributedInputSourceHandler::UnRegisterBusinessStateListener()
+void DistributedInputSourceHandler::UnregisterDistributedHardwareStateListener()
 {
 }
 
@@ -125,7 +125,7 @@ void DistributedInputSourceHandler::RegisterDataSyncTriggerListener(std::shared_
     (void)listener;
 }
 
-void DistributedInputSourceHandler::UnRegisterDataSyncTriggerListener()
+void DistributedInputSourceHandler::UnregisterDataSyncTriggerListener()
 {
 }
 
