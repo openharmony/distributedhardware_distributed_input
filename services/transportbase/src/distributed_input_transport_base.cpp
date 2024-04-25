@@ -369,11 +369,13 @@ void DistributedInputTransportBase::RunSessionStateCallback(const std::string &r
 
 int32_t DistributedInputTransportBase::CountSession(const std::string &remoteDevId)
 {
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
     return remoteDevSessionMap_.count(remoteDevId);
 }
 
 void DistributedInputTransportBase::EraseSessionId(const std::string &remoteDevId)
 {
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
     remoteDevSessionMap_.erase(remoteDevId);
 }
 
