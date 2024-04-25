@@ -110,6 +110,11 @@ void DistributedInputHandler::FindDevicesInfoByDhId(
     }
 }
 
+std::vector<DHItem> DistributedInputHandler::QueryMeta()
+{
+    return {};
+}
+
 std::vector<DHItem> DistributedInputHandler::Query()
 {
     std::vector<DHItem> retInfos;
