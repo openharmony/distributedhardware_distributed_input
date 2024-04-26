@@ -695,6 +695,7 @@ int32_t DistributedInputSinkManager::RegisterGetSinkScreenInfosCallback(
 
 uint32_t DistributedInputSinkManager::GetSinkScreenInfosCbackSize()
 {
+    std::lock_guard<std::mutex> lock(mutex_);
     return getSinkScreenInfosCallbacks_.size();
 }
 
@@ -948,6 +949,7 @@ void DistributedInputSinkManager::CallBackScreenInfoChange()
     }
     nlohmann::json screenMsg(transInfos);
     std::string str = screenMsg.dump();
+    std::lock_guard<std::mutex> lock(mutex_);
     for (const auto &iter : getSinkScreenInfosCallbacks_) {
         iter->OnResult(str);
     }

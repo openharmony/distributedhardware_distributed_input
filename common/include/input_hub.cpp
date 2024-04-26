@@ -1266,8 +1266,8 @@ std::vector<std::string> InputHub::GetSharingDevices()
 void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, std::string &sharedMousePath,
     std::string &sharedMouseDhId)
 {
-    DHLOGI("GetSharedMousePathByDhId: devices_.size:%{public}zu,", devices_.size());
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    DHLOGI("GetSharedMousePathByDhId: devices_.size:%{public}zu,", devices_.size());
     for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
             if (device == nullptr) {
@@ -1290,8 +1290,8 @@ void InputHub::GetSharedMousePathByDhId(const std::vector<std::string> &dhIds, s
 void InputHub::GetSharedKeyboardPathsByDhIds(const std::vector<std::string> &dhIds,
     std::vector<std::string> &sharedKeyboardPaths, std::vector<std::string> &sharedKeyboardDhIds)
 {
-    DHLOGI("GetSharedKeyboardPathsByDhIds: devices_.size:%{public}zu,", devices_.size());
     std::lock_guard<std::mutex> deviceLock(devicesMutex_);
+    DHLOGI("GetSharedKeyboardPathsByDhIds: devices_.size:%{public}zu,", devices_.size());
     for (const auto &dhId : dhIds) {
         for (const auto &[id, device] : devices_) {
             if (device == nullptr) {

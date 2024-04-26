@@ -369,11 +369,13 @@ void DistributedInputTransportBase::RunSessionStateCallback(const std::string &r
 
 int32_t DistributedInputTransportBase::CountSession(const std::string &remoteDevId)
 {
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
     return remoteDevSessionMap_.count(remoteDevId);
 }
 
 void DistributedInputTransportBase::EraseSessionId(const std::string &remoteDevId)
 {
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
     remoteDevSessionMap_.erase(remoteDevId);
 }
 
@@ -547,6 +549,7 @@ int32_t DistributedInputTransportBase::SendMsg(int32_t sessionId, std::string &m
 
 int32_t DistributedInputTransportBase::GetSessionIdByDevId(const std::string &srcId)
 {
+    std::unique_lock<std::mutex> sessionLock(operationMutex_);
     std::map<std::string, int32_t>::iterator it = remoteDevSessionMap_.find(srcId);
     if (it != remoteDevSessionMap_.end()) {
         return it->second;
