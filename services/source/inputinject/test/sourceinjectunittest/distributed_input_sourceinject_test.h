@@ -42,9 +42,9 @@ public:
     public:
         TestInputNodeListener() = default;
         virtual ~TestInputNodeListener() = default;
-        void OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId, const std::string sinkNodeId,
-            const std::string sinkNodeDesc);
-        void OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId, const std::string sinkNodeId);
+        void OnNodeOnLine(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId,
+            const std::string &sinkNodeDesc);
+        void OnNodeOffLine(const std::string &srcDevId, const std::string &sinkDevId, const std::string &sinkNodeId);
     };
 
     class TestRegisterSessionStateCallbackStub :

@@ -101,7 +101,7 @@ void DistributedInputClient::GetSinkScreenInfosCb::OnResult(const std::string &s
     }
 }
 
-int32_t DistributedInputClient::SharingDhIdListenerCb::OnSharing(std::string dhId)
+int32_t DistributedInputClient::SharingDhIdListenerCb::OnSharing(const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().sharingDhIdsMtx_);
     DHLOGI("Add Sharing Local dhId: %{public}s", GetAnonyString(dhId).c_str());
@@ -109,7 +109,7 @@ int32_t DistributedInputClient::SharingDhIdListenerCb::OnSharing(std::string dhI
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputClient::SharingDhIdListenerCb::OnNoSharing(std::string dhId)
+int32_t DistributedInputClient::SharingDhIdListenerCb::OnNoSharing(const std::string &dhId)
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().sharingDhIdsMtx_);
     DHLOGI("Remove No Sharing Local dhId: %{public}s", GetAnonyString(dhId).c_str());

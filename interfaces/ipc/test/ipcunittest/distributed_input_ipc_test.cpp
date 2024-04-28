@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,8 +41,8 @@ void DistributedInputIpcTest::TearDownTestCase()
 {
 }
 
-void DistributedInputIpcTest::TestInputNodeListener::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void DistributedInputIpcTest::TestInputNodeListener::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     (void)srcDevId;
     (void)sinkDevId;
@@ -51,8 +51,8 @@ void DistributedInputIpcTest::TestInputNodeListener::OnNodeOnLine(const std::str
     return;
 }
 
-void DistributedInputIpcTest::TestInputNodeListener::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void DistributedInputIpcTest::TestInputNodeListener::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     (void)srcDevId;
     (void)sinkDevId;

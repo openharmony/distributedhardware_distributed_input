@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,11 +30,11 @@ public:
     explicit InputNodeListenerProxy(const sptr<IRemoteObject> &object);
     ~InputNodeListenerProxy() override;
 
-    void OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId, const std::string sinkNodeDesc) override;
+    void OnNodeOnLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId, const std::string &sinkNodeDesc) override;
 
-    void OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId) override;
+    void OnNodeOffLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId) override;
 
 private:
     static inline BrokerDelegator<InputNodeListenerProxy> delegator_;

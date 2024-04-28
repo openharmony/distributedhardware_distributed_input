@@ -31,7 +31,7 @@ SharingDhIdListenerProxy::SharingDhIdListenerProxy(const sptr<IRemoteObject> &ob
 
 SharingDhIdListenerProxy::~SharingDhIdListenerProxy() {}
 
-int32_t SharingDhIdListenerProxy::OnSharing(std::string dhId)
+int32_t SharingDhIdListenerProxy::OnSharing(const std::string &dhId)
 {
     int32_t result = ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     sptr<IRemoteObject> remote = Remote();
@@ -62,7 +62,7 @@ int32_t SharingDhIdListenerProxy::OnSharing(std::string dhId)
     return result;
 }
 
-int32_t SharingDhIdListenerProxy::OnNoSharing(std::string dhId)
+int32_t SharingDhIdListenerProxy::OnNoSharing(const std::string &dhId)
 {
     int32_t result = ERR_DH_INPUT_IPC_WRITE_TOKEN_VALID_FAIL;
     sptr<IRemoteObject> remote = Remote();

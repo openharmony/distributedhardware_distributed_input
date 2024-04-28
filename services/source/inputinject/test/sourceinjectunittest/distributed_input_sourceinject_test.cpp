@@ -51,8 +51,8 @@ void DistributedInputSourceInjectTest::TearDownTestCase()
 {
 }
 
-void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     (void)srcDevId;
     (void)sinkDevId;
@@ -60,8 +60,8 @@ void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOnLine(const
     (void)sinkNodeDesc;
 }
 
-void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void DistributedInputSourceInjectTest::TestInputNodeListener::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     (void)srcDevId;
     (void)sinkDevId;

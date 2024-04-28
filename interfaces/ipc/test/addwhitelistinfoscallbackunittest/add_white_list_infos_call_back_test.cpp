@@ -76,8 +76,8 @@ void AddWhiteListInfosCallbackTest::TestGetSinkScreenInfosCallbackStub::OnResult
     strJson_ = strJson;
 }
 
-void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     srcDevId_ = srcDevId;
     sinkDevId_ = sinkDevId;
@@ -85,8 +85,8 @@ void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOnLine(cons
     sinkNodeDesc_ = sinkNodeDesc;
 }
 
-void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void AddWhiteListInfosCallbackTest::TestInputNodeListenerStub::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     srcDevId_ = srcDevId;
     sinkDevId_ = sinkDevId;
@@ -108,13 +108,13 @@ void AddWhiteListInfosCallbackTest::TestRegisterDInputCallbackStub::OnResult(con
     status_ = status;
 }
 
-int32_t AddWhiteListInfosCallbackTest::TestSharingDhIdListenerStub::OnSharing(std::string dhId)
+int32_t AddWhiteListInfosCallbackTest::TestSharingDhIdListenerStub::OnSharing(const std::string &dhId)
 {
     dhId_ = dhId;
     return DH_SUCCESS;
 }
 
-int32_t AddWhiteListInfosCallbackTest::TestSharingDhIdListenerStub::OnNoSharing(std::string dhId)
+int32_t AddWhiteListInfosCallbackTest::TestSharingDhIdListenerStub::OnNoSharing(const std::string &dhId)
 {
     dhId_ = dhId;
     return DH_SUCCESS;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -85,8 +85,8 @@ void DistributedInputInnerTest::TestStartStopDInputCallback::OnResultDhids(
     return;
 }
 
-void DistributedInputInnerTest::TestInputNodeListener::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void DistributedInputInnerTest::TestInputNodeListener::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     (void)srcDevId;
     (void)sinkDevId;
@@ -95,8 +95,8 @@ void DistributedInputInnerTest::TestInputNodeListener::OnNodeOnLine(const std::s
     return;
 }
 
-void DistributedInputInnerTest::TestInputNodeListener::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void DistributedInputInnerTest::TestInputNodeListener::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     (void)srcDevId;
     (void)sinkDevId;

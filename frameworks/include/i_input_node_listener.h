@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,11 +25,11 @@ namespace DistributedHardware {
 namespace DistributedInput {
 class InputNodeListener : public IRemoteBroker {
 public:
-    virtual void OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId, const std::string sinkNodeDesc) = 0;
+    virtual void OnNodeOnLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId, const std::string &sinkNodeDesc) = 0;
 
-    virtual void OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId) = 0;
+    virtual void OnNodeOffLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId) = 0;
 
     enum class Message { RESULT_ON, RESULT_OFF };
 

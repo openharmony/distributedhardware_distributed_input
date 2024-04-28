@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,8 +30,8 @@ public:
     explicit SharingDhIdListenerProxy(const sptr<IRemoteObject> &object);
     ~SharingDhIdListenerProxy() override;
 
-    int32_t OnSharing(std::string dhId) override;
-    int32_t OnNoSharing(std::string dhId) override;
+    int32_t OnSharing(const std::string &dhId) override;
+    int32_t OnNoSharing(const std::string &dhId) override;
 
 private:
     static inline BrokerDelegator<SharingDhIdListenerProxy> delegator_;
