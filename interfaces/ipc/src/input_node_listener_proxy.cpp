@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,8 +30,8 @@ InputNodeListenerProxy::InputNodeListenerProxy(const sptr<IRemoteObject> &object
 
 InputNodeListenerProxy::~InputNodeListenerProxy() {}
 
-void InputNodeListenerProxy::OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId,
-    const std::string sinkNodeId, const std::string sinkNodeDesc)
+void InputNodeListenerProxy::OnNodeOnLine(const std::string &srcDevId, const std::string &sinkDevId,
+    const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
@@ -68,8 +68,8 @@ void InputNodeListenerProxy::OnNodeOnLine(const std::string srcDevId, const std:
     }
 }
 
-void InputNodeListenerProxy::OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId,
-    const std::string sinkNodeId)
+void InputNodeListenerProxy::OnNodeOffLine(const std::string &srcDevId, const std::string &sinkDevId,
+    const std::string &sinkNodeId)
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {

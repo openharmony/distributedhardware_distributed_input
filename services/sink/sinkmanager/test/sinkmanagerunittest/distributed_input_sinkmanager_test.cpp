@@ -74,13 +74,13 @@ void DistributedInputSinkManagerTest::TestGetSinkScreenInfosCb::OnResult(const s
     (void)strJson;
 }
 
-int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnSharing(std::string dhId)
+int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnSharing(const std::string &dhId)
 {
     (void)dhId;
     return DH_SUCCESS;
 }
 
-int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnNoSharing(std::string dhId)
+int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnNoSharing(const std::string &dhId)
 {
     (void)dhId;
     return DH_SUCCESS;

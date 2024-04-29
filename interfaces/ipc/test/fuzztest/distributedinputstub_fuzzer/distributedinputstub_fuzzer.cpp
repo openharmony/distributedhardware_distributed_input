@@ -456,15 +456,22 @@ void GetSinkScreenInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
 
 class MyInputNodeListenerStub : public DistributedInput::InputNodeListenerStub {
 public:
-    void OnNodeOnLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId, const std::string sinkNodeDesc) override
+    void OnNodeOnLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId, const std::string &sinkNodeDesc) override
     {
+        (void)srcDevId;
+        (void)sinkDevId;
+        (void)sinkNodeId;
+        (void)sinkNodeDesc;
         return;
     }
 
-    void OnNodeOffLine(const std::string srcDevId, const std::string sinkDevId,
-        const std::string sinkNodeId) override
+    void OnNodeOffLine(const std::string &srcDevId, const std::string &sinkDevId,
+        const std::string &sinkNodeId) override
     {
+        (void)srcDevId;
+        (void)sinkDevId;
+        (void)sinkNodeId;
         return;
     }
 };
@@ -615,13 +622,15 @@ void RegisterSessionStateCallbackStubFuzzTest(const uint8_t *data, size_t size)
 
 class MySharingDhIdListenerStub : public DistributedInput::SharingDhIdListenerStub {
 public:
-    int32_t OnSharing(std::string dhId) override
+    int32_t OnSharing(const std::string &dhId) override
     {
+        (void)dhId;
         return 0;
     }
 
-    int32_t OnNoSharing(std::string dhId) override
+    int32_t OnNoSharing(const std::string &dhId) override
     {
+        (void)dhId;
         return 0;
     }
 };

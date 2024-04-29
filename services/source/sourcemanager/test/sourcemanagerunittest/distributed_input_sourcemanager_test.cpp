@@ -164,8 +164,8 @@ void DistributedInputSourceManagerTest::TestStartStopResultCb::OnStop(const std:
     return;
 }
 
-void DistributedInputSourceManagerTest::TestInputNodeListenerCb::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void DistributedInputSourceManagerTest::TestInputNodeListenerCb::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     (void)srcDevId;
     (void)sinkDevId;
@@ -174,8 +174,8 @@ void DistributedInputSourceManagerTest::TestInputNodeListenerCb::OnNodeOnLine(co
     return;
 }
 
-void DistributedInputSourceManagerTest::TestInputNodeListenerCb::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void DistributedInputSourceManagerTest::TestInputNodeListenerCb::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     (void)srcDevId;
     (void)sinkDevId;

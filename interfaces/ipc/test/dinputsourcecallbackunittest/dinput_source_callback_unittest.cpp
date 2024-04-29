@@ -338,8 +338,8 @@ void DInputSourceCallBackTest::TestDelWhiteListInfosCallBack::OnResult(
     return;
 }
 
-void DInputSourceCallBackTest::TestDInputNodeListenerCallBack::OnNodeOnLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId, const std::string sinkNodeDesc)
+void DInputSourceCallBackTest::TestDInputNodeListenerCallBack::OnNodeOnLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId, const std::string &sinkNodeDesc)
 {
     (void)srcDevId;
     (void)sinkDevId;
@@ -348,8 +348,8 @@ void DInputSourceCallBackTest::TestDInputNodeListenerCallBack::OnNodeOnLine(cons
     return;
 }
 
-void DInputSourceCallBackTest::TestDInputNodeListenerCallBack::OnNodeOffLine(const std::string srcDevId,
-    const std::string sinkDevId, const std::string sinkNodeId)
+void DInputSourceCallBackTest::TestDInputNodeListenerCallBack::OnNodeOffLine(const std::string &srcDevId,
+    const std::string &sinkDevId, const std::string &sinkNodeId)
 {
     (void)srcDevId;
     (void)sinkDevId;

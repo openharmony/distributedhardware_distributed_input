@@ -150,8 +150,8 @@ public:
     public:
         SharingDhIdListenerCb() = default;
         ~SharingDhIdListenerCb() override = default;
-        int32_t OnSharing(std::string dhId) override;
-        int32_t OnNoSharing(std::string dhId) override;
+        int32_t OnSharing(const std::string &dhId) override;
+        int32_t OnNoSharing(const std::string &dhId) override;
     };
 
     class GetSinkScreenInfosCb : public OHOS::DistributedHardware::DistributedInput::GetSinkScreenInfosCallbackStub {

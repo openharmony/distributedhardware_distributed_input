@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,8 +25,8 @@ namespace DistributedHardware {
 namespace DistributedInput {
 class ISharingDhIdListener : public IRemoteBroker {
 public:
-    virtual int32_t OnSharing(std::string dhId) = 0;
-    virtual int32_t OnNoSharing(std::string dhId) = 0;
+    virtual int32_t OnSharing(const std::string &dhId) = 0;
+    virtual int32_t OnNoSharing(const std::string &dhId) = 0;
 
     enum class Message {
         SHARING,
