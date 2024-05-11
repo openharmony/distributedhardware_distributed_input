@@ -50,7 +50,6 @@ ohos_shared_library("libdinput_sink_trans") {
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -66,6 +65,7 @@ ohos_shared_library("libdinput_sink_trans") {
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]

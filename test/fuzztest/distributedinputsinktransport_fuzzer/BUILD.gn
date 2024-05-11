@@ -51,7 +51,6 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -64,6 +63,7 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
   ]
 

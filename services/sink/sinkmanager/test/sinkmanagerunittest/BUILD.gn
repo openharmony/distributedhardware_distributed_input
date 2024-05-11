@@ -90,7 +90,6 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${services_sink_path}/transport:libdinput_sink_trans",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -110,6 +109,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",

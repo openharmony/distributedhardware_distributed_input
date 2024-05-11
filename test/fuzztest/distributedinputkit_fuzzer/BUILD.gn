@@ -52,10 +52,7 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
 
   sources = [ "distributed_input_kit_fuzzer.cpp" ]
 
-  deps = [
-    "${distributedinput_path}/interfaces/inner_kits:libdinput_sdk",
-    "//third_party/libevdev:libevdev",
-  ]
+  deps = [ "${distributedinput_path}/interfaces/inner_kits:libdinput_sdk" ]
 
   external_deps = [
     "c_utils:utils",
@@ -64,6 +61,7 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
   ]
 
   defines = [

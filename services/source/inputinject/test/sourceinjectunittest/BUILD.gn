@@ -74,7 +74,6 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${innerkits_path}:libdinput_sdk",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -85,6 +84,7 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "openssl:libcrypto_shared",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",

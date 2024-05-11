@@ -51,10 +51,7 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
 
   sources = [ "dinputinitsource_fuzzer.cpp" ]
 
-  deps = [
-    "${distributedinput_path}/sourcehandler:libdinput_source_handler",
-    "//third_party/libevdev:libevdev",
-  ]
+  deps = [ "${distributedinput_path}/sourcehandler:libdinput_source_handler" ]
 
   external_deps = [
     "c_utils:utils",
@@ -64,6 +61,7 @@ ohos_fuzztest("DinputInitSourceFuzzTest") {
     "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
   ]
 

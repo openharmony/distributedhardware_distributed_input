@@ -55,7 +55,6 @@ ohos_fuzztest("DistributedInputTransportBaseFuzzTest") {
     "${distributedinput_path}/services/transportbase:libdinput_trans_base",
     "${services_source_path}/inputinject:libdinput_inject",
     "${utils_path}:libdinput_utils",
-    "//third_party/libevdev:libevdev",
   ]
 
   external_deps = [
@@ -68,6 +67,7 @@ ohos_fuzztest("DistributedInputTransportBaseFuzzTest") {
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
+    "libevdev:libevdev",
     "safwk:system_ability_fwk",
   ]
 
