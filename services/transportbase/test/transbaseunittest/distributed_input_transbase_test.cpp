@@ -33,14 +33,6 @@ namespace {
 }
 void DistributedInputTransbaseTest::SetUp()
 {
-    sourceTransport_ = new DistributedInputSourceTransport();
-    statusSourceListener_ =
-        std::make_shared<DistributedInputSourceTransport::DInputTransbaseSourceListener>(sourceTransport_);
-    DistributedInputTransportBase::GetInstance().RegisterSrcHandleSessionCallback(statusSourceListener_);
-
-    sinkTransport_ = new DistributedInputSinkTransport();
-    statusSinkListener_ = std::make_shared<DistributedInputSinkTransport::DInputTransbaseSinkListener>(sinkTransport_);
-    DistributedInputTransportBase::GetInstance().RegisterSinkHandleSessionCallback(statusSinkListener_);
 }
 
 void DistributedInputTransbaseTest::TearDown()

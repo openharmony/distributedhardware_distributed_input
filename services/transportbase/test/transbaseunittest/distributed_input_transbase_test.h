@@ -48,12 +48,6 @@ public:
         virtual ~TestRegisterSessionStateCallbackStub() = default;
         void OnResult(const std::string &devId, const uint32_t status);
     };
-
-private:
-    DistributedInputSourceTransport* sourceTransport_;
-    std::shared_ptr<DistributedInputSourceTransport::DInputTransbaseSourceListener> statusSourceListener_;
-    DistributedInputSinkTransport* sinkTransport_;
-    std::shared_ptr<DistributedInputSinkTransport::DInputTransbaseSinkListener> statusSinkListener_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -695,7 +695,6 @@ int32_t DistributedInputSinkManager::RegisterGetSinkScreenInfosCallback(
 
 uint32_t DistributedInputSinkManager::GetSinkScreenInfosCbackSize()
 {
-    std::lock_guard<std::mutex> lock(mutex_);
     return getSinkScreenInfosCallbacks_.size();
 }
 
