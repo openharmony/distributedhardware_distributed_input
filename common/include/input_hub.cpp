@@ -561,10 +561,10 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     GenerateDescriptor(device->identifier);
     IncreaseLogTimes(device->identifier.descriptor);
     RecordDeviceLog(devicePath, device->identifier);
-
+    std::string descriptor = device->identifier.descriptor;
     if (MakeDevice(fd, std::move(device)) < 0) {
         CloseFd(fd);
-        if (IsNeedPrintLog(device->identifier.descriptor)) {
+        if (IsNeedPrintLog(descriptor)) {
             DHLOGI("Opening device error: %{public}s", devicePath.c_str());
         }
         return ERR_DH_INPUT_HUB_MAKE_DEVICE_FAIL;
