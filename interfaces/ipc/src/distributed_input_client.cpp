@@ -181,6 +181,7 @@ void DistributedInputClient::CheckSharingDhIdsCallback()
         DHLOGE("CheckWhiteListCallback client get source proxy fail");
         return;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
     if (!isSharingDhIdsReg) {
         sptr<ISharingDhIdListener> listener(new (std::nothrow) SharingDhIdListenerCb());
         int32_t ret =
@@ -201,6 +202,7 @@ void DistributedInputClient::CheckWhiteListCallback()
         DHLOGE("CheckWhiteListCallback client get source proxy fail");
         return;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     if (!isAddWhiteListCbReg) {
         sptr<AddWhiteListInfosCb> addCallback(new (std::nothrow) AddWhiteListInfosCb());
         int32_t ret =
@@ -233,6 +235,7 @@ void DistributedInputClient::CheckKeyStateCallback()
         DHLOGE("CheckKeyStateCallback client get source proxy fail");
         return;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     if (!isSimulationEventCbReg && regSimulationEventListener_ != nullptr) {
         DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(regSimulationEventListener_);
         isSimulationEventCbReg = true;
@@ -245,6 +248,7 @@ void DistributedInputClient::CheckSinkScreenInfoCallback()
         DHLOGE("get sink proxy fail");
         return;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
     if (!isGetSinkScreenInfosCbReg) {
         sptr<GetSinkScreenInfosCb> callback(new (std::nothrow) GetSinkScreenInfosCb());
         int32_t ret =
@@ -264,6 +268,7 @@ int32_t DistributedInputClient::InitSource()
     if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->Init();
 }
 
@@ -272,6 +277,7 @@ int32_t DistributedInputClient::InitSink()
     if (!DInputSAManager::GetInstance().GetDInputSinkProxy()) {
         return ERR_DH_INPUT_CLIENT_GET_SINK_PROXY_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
     return DInputSAManager::GetInstance().dInputSinkProxy_->Init();
 }
 
@@ -293,6 +299,7 @@ int32_t DistributedInputClient::ReleaseSource()
         addWhiteListCallbacks_.clear();
         delWhiteListCallbacks_.clear();
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->Release();
 }
 
@@ -309,6 +316,7 @@ int32_t DistributedInputClient::ReleaseSink()
         sharingDhIdListeners_.clear();
     }
     WhiteListUtil::GetInstance().ClearWhiteList();
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
     return DInputSAManager::GetInstance().dInputSinkProxy_->Release();
 }
 
@@ -334,7 +342,7 @@ int32_t DistributedInputClient::RegisterDistributedHardware(const std::string &d
         DHardWareFwkRegistInfo info {devId, dhId, callback};
         dHardWareFwkRstInfos.push_back(info);
     }
-
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterDistributedHardware(devId, dhId, parameters,
         new(std::nothrow) RegisterDInputCb());
 }
@@ -361,7 +369,7 @@ int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string 
         DHardWareFwkUnRegistInfo info {devId, dhId, callback};
         dHardWareFwkUnRstInfos.push_back(info);
     }
-
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterDistributedHardware(devId, dhId,
         new(std::nothrow) UnregisterDInputCb());
 }
@@ -376,6 +384,7 @@ int32_t DistributedInputClient::PrepareRemoteInput(const std::string &deviceId, 
     if (!DInputCheckParam::GetInstance().CheckParam(deviceId, callback)) {
         return ERR_DH_INPUT_CLIENT_PREPARE_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->PrepareRemoteInput(deviceId, callback);
 }
 
@@ -390,6 +399,7 @@ int32_t DistributedInputClient::UnprepareRemoteInput(const std::string &deviceId
     if (!DInputCheckParam::GetInstance().CheckParam(deviceId, callback)) {
         return ERR_DH_INPUT_CLIENT_UNPREPARE_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnprepareRemoteInput(deviceId, callback);
 }
 
@@ -405,6 +415,7 @@ int32_t DistributedInputClient::StartRemoteInput(
     if (!DInputCheckParam::GetInstance().CheckParam(deviceId, inputTypes, callback)) {
         return ERR_DH_INPUT_CLIENT_START_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StartRemoteInput(deviceId, inputTypes, callback);
 }
 
@@ -420,6 +431,7 @@ int32_t DistributedInputClient::StopRemoteInput(const std::string &deviceId, con
     if (!DInputCheckParam::GetInstance().CheckParam(deviceId, inputTypes, callback)) {
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StopRemoteInput(deviceId, inputTypes, callback);
 }
 
@@ -436,6 +448,7 @@ int32_t DistributedInputClient::StartRemoteInput(const std::string &srcId, const
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, inputTypes, callback)) {
         return ERR_DH_INPUT_CLIENT_START_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StartRemoteInput(srcId, sinkId, inputTypes, callback);
 }
 
@@ -451,6 +464,7 @@ int32_t DistributedInputClient::StopRemoteInput(const std::string &srcId, const 
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, inputTypes, callback)) {
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StopRemoteInput(srcId, sinkId, inputTypes, callback);
 }
 
@@ -466,6 +480,7 @@ int32_t DistributedInputClient::PrepareRemoteInput(const std::string &srcId, con
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, callback)) {
         return ERR_DH_INPUT_CLIENT_PREPARE_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->PrepareRemoteInput(srcId, sinkId, callback);
 }
 
@@ -481,6 +496,7 @@ int32_t DistributedInputClient::UnprepareRemoteInput(const std::string &srcId, c
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, callback)) {
         return ERR_DH_INPUT_CLIENT_UNPREPARE_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnprepareRemoteInput(srcId, sinkId, callback);
 }
 
@@ -495,6 +511,7 @@ int32_t DistributedInputClient::StartRemoteInput(const std::string &sinkId, cons
     if (!DInputCheckParam::GetInstance().CheckParam(sinkId, dhIds, callback)) {
         return ERR_DH_INPUT_CLIENT_START_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StartRemoteInput(sinkId, dhIds, callback);
 }
 
@@ -509,6 +526,7 @@ int32_t DistributedInputClient::StopRemoteInput(const std::string &sinkId, const
     if (!DInputCheckParam::GetInstance().CheckParam(sinkId, dhIds, callback)) {
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StopRemoteInput(sinkId, dhIds, callback);
 }
 
@@ -524,6 +542,7 @@ int32_t DistributedInputClient::StartRemoteInput(const std::string &srcId, const
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, dhIds, callback)) {
         return ERR_DH_INPUT_CLIENT_START_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StartRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
@@ -539,6 +558,7 @@ int32_t DistributedInputClient::StopRemoteInput(const std::string &srcId, const 
     if (!DInputCheckParam::GetInstance().CheckParam(srcId, sinkId, dhIds, callback)) {
         return ERR_DH_INPUT_CLIENT_STOP_FAIL;
     }
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->StopRemoteInput(srcId, sinkId, dhIds, callback);
 }
 
@@ -589,7 +609,7 @@ int32_t DistributedInputClient::RegisterSimulationEventListener(sptr<ISimulation
         regSimulationEventListener_ = listener;
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
-
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
     if (ret == DH_SUCCESS) {
         isSimulationEventCbReg = true;
@@ -613,7 +633,7 @@ int32_t DistributedInputClient::UnregisterSimulationEventListener(sptr<ISimulati
         DHLOGE("UnregisterSimulationEventListener proxy error, client fail");
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
-
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSimulationEventListener(listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("UnregisterSimulationEventListener Failed, ret = %{public}d", ret);
@@ -762,6 +782,7 @@ int32_t DistributedInputClient::RegisterSessionStateCb(sptr<ISessionStateCallbac
         return ERR_DH_INPUT_CLIENT_REGISTER_SESSION_STATE_FAIL;
     }
     DInputSAManager::GetInstance().AddSessionStateCbToCache(callback);
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSessionStateCb(callback);
 }
 
@@ -772,6 +793,7 @@ int32_t DistributedInputClient::UnregisterSessionStateCb()
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
     DInputSAManager::GetInstance().RemoveSessionStateCbFromCache();
+    std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterSessionStateCb();
 }
 } // namespace DistributedInput
