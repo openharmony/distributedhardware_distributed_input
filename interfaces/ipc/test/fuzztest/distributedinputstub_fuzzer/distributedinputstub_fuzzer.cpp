@@ -389,7 +389,6 @@ void DistributedInputSourceStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::DistributedInputSourceStub> distributedInputSourceStub(new (std::nothrow)
         DInputSourceCallBackStubFuzz());
-    distributedInputSourceStub->RegRespFunMap();
     distributedInputSourceStub->HasEnableDHPermission();
     distributedInputSourceStub->HasAccessDHPermission();
     distributedInputSourceStub->HandleInitDistributedHardware(reply);

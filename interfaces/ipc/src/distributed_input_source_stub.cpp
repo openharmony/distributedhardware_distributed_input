@@ -27,56 +27,10 @@ namespace DistributedHardware {
 namespace DistributedInput {
 DistributedInputSourceStub::DistributedInputSourceStub()
 {
-    RegRespFunMap();
 }
 
 DistributedInputSourceStub::~DistributedInputSourceStub()
 {
-    memberFuncMap_.clear();
-}
-
-void DistributedInputSourceStub::RegRespFunMap()
-{
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleRegisterDistributedHardware;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleUnregisterDistributedHardware;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandlePrepareRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleUnprepareRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::START_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStartRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStopRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStartRelayTypeRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_TYPE_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStopRelayTypeRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_RELAY_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandlePrepareRelayRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_RELAY_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleUnprepareRelayRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::START_DHID_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStartDhidRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_DHID_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStopDhidRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_DHID_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStartRelayDhidRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_DHID_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleStopRelayDhidRemoteInput;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleRegisterAddWhiteListCallback;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT)] =
-        &DistributedInputSourceStub::HandleRegisterDelWhiteListCallback;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SIMULATION_EVENT_LISTENER)] =
-        &DistributedInputSourceStub::HandleRegisterSimulationEventListener;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SIMULATION_EVENT_LISTENER)] =
-        &DistributedInputSourceStub::HandleUnregisterSimulationEventListener;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SESSION_STATE_CB)] =
-        &DistributedInputSourceStub::HandleRegisterSessionStateCb;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SESSION_STATE_CB)] =
-        &DistributedInputSourceStub::HandleUnregisterSessionStateCb;
 }
 
 bool DistributedInputSourceStub::HasEnableDHPermission()
@@ -595,6 +549,32 @@ int32_t DistributedInputSourceStub::HandleUnregisterSessionStateCb(MessageParcel
     return DH_SUCCESS;
 }
 
+int32_t DistributedInputSourceStub::HandleRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
+    MessageOption &option)
+{
+    switch (code) {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_DHID_REMOTE_INPUT):
+            return HandleStartRelayDhidRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_DHID_REMOTE_INPUT):
+            return HandleStopRelayDhidRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_ADD_WHITE_LIST_CB_REMOTE_INPUT):
+            return HandleRegisterAddWhiteListCallback(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_DEL_WHITE_LIST_CB_REMOTE_INPUT):
+            return HandleRegisterDelWhiteListCallback(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SIMULATION_EVENT_LISTENER):
+            return HandleRegisterSimulationEventListener(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SIMULATION_EVENT_LISTENER):
+            return HandleUnregisterSimulationEventListener(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_SESSION_STATE_CB):
+            return HandleRegisterSessionStateCb(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_SESSION_STATE_CB):
+            return HandleUnregisterSessionStateCb(data, reply);
+        default:
+            DHLOGE("invalid request code is %{public}u.", code);
+            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+    }
+}
+
 int32_t DistributedInputSourceStub::OnRemoteRequest(
     uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option)
 {
@@ -610,18 +590,38 @@ int32_t DistributedInputSourceStub::OnRemoteRequest(
     if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT)) {
         DHLOGI("Receive UnRegister DInput cmd");
     }
-    if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::INIT)) {
-        return HandleInitDistributedHardware(reply);
-    } else if (code == static_cast<uint32_t>(IDInputSourceInterfaceCode::RELEASE)) {
-        return HandleReleaseDistributedHardware(reply);
-    } else {
-        auto iter = memberFuncMap_.find(code);
-        if (iter != memberFuncMap_.end()) {
-            const DistributedInputSourceFunc &func = iter->second;
-            return (this->*func)(data, reply);
-        }
+    switch (code) {
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::INIT):
+            return HandleInitDistributedHardware(reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::RELEASE):
+            return HandleReleaseDistributedHardware(reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::REGISTER_REMOTE_INPUT):
+            return HandleRegisterDistributedHardware(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNREGISTER_REMOTE_INPUT):
+            return HandleUnregisterDistributedHardware(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_REMOTE_INPUT):
+            return HandlePrepareRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_REMOTE_INPUT):
+            return HandleUnprepareRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_REMOTE_INPUT):
+            return HandleStartRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_REMOTE_INPUT):
+            return HandleStopRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_RELAY_TYPE_REMOTE_INPUT):
+            return HandleStartRelayTypeRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_RELAY_TYPE_REMOTE_INPUT):
+            return HandleStopRelayTypeRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::PREPARE_RELAY_REMOTE_INPUT):
+            return HandlePrepareRelayRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::UNPREPARE_RELAY_REMOTE_INPUT):
+            return HandleUnprepareRelayRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::START_DHID_REMOTE_INPUT):
+            return HandleStartDhidRemoteInput(data, reply);
+        case static_cast<uint32_t>(IDInputSourceInterfaceCode::STOP_DHID_REMOTE_INPUT):
+            return HandleStopDhidRemoteInput(data, reply);
+        default:
+            return HandleRemoteRequest(code, data, reply, option);
     }
-    return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware

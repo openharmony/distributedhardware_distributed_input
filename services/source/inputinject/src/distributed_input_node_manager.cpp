@@ -455,7 +455,7 @@ void DistributedInputNodeManager::StartInjectThread()
     DHLOGI("InjectThread does not created");
     isInjectThreadCreated_.store(true);
     isInjectThreadRunning_.store(true);
-    eventInjectThread_ = std::thread(&DistributedInputNodeManager::InjectEvent, this);
+    eventInjectThread_ = std::thread([this]() { this->InjectEvent(); });
 }
 
 void DistributedInputNodeManager::StopInjectThread()

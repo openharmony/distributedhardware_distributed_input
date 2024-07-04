@@ -37,39 +37,11 @@ DInputSourceManagerEventHandler::DInputSourceManagerEventHandler(
     const std::shared_ptr<AppExecFwk::EventRunner> &runner, DistributedInputSourceManager *manager)
     : AppExecFwk::EventHandler(runner)
 {
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RIGISTER_MSG] = &DInputSourceManagerEventHandler::NotifyRegisterCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_UNRIGISTER_MSG] = &DInputSourceManagerEventHandler::NotifyUnregisterCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_PREPARE_MSG] = &DInputSourceManagerEventHandler::NotifyPrepareCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_UNPREPARE_MSG] = &DInputSourceManagerEventHandler::NotifyUnprepareCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_START_MSG] = &DInputSourceManagerEventHandler::NotifyStartCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_STOP_MSG] = &DInputSourceManagerEventHandler::NotifyStopCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_START_DHID_MSG] = &DInputSourceManagerEventHandler::NotifyStartDhidCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_STOP_DHID_MSG] = &DInputSourceManagerEventHandler::NotifyStopDhidCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_KEY_STATE_MSG] = &DInputSourceManagerEventHandler::NotifyKeyStateCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_STARTSERVER_MSG] = &DInputSourceManagerEventHandler::NotifyStartServerCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_TO_ORIGIN] =
-        &DInputSourceManagerEventHandler::NotifyRelayPrepareRemoteInput;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_TO_ORIGIN] =
-        &DInputSourceManagerEventHandler::NotifyRelayUnprepareRemoteInput;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayPrepareCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayUnprepareCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayStartDhidCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_STOPDHID_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayStopDhidCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_STARTTYPE_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayStartTypeCallback;
-    eventFuncMap_[DINPUT_SOURCE_MANAGER_RELAY_STOPTYPE_RESULT_MMI] =
-        &DInputSourceManagerEventHandler::NotifyRelayStopTypeCallback;
-
     sourceManagerObj_ = manager;
 }
 
 DInputSourceManagerEventHandler::~DInputSourceManagerEventHandler()
 {
-    eventFuncMap_.clear();
     sourceManagerObj_ = nullptr;
 }
 
@@ -478,15 +450,74 @@ void DInputSourceManagerEventHandler::NotifyRelayStopTypeCallback(const AppExecF
     sourceManagerObj_->RunRelayStopTypeCallback(srcId, sinkId, status, inputTypes);
 }
 
+void DInputSourceManagerEventHandler::ProcessEventInner(const AppExecFwk::InnerEvent::Pointer &event)
+{
+    switch (event->GetInnerEventId()) {
+        case DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_TO_ORIGIN:
+            NotifyRelayUnprepareRemoteInput(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_MMI:
+            NotifyRelayPrepareCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_UNPREPARE_RESULT_MMI:
+            NotifyRelayUnprepareCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI:
+            NotifyRelayStartDhidCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_STOPDHID_RESULT_MMI:
+            NotifyRelayStopDhidCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_STARTTYPE_RESULT_MMI:
+            NotifyRelayStartTypeCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_STOPTYPE_RESULT_MMI:
+            NotifyRelayStopTypeCallback(event);
+            break;
+        default:
+            DHLOGE("Event Id %{public}d is undefined.", event->GetInnerEventId());
+    }
+}
+
 void DInputSourceManagerEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
-    auto iter = eventFuncMap_.find(event->GetInnerEventId());
-    if (iter == eventFuncMap_.end()) {
-        DHLOGE("Event Id %{public}d is undefined.", event->GetInnerEventId());
-        return;
+    switch (event->GetInnerEventId()) {
+        case DINPUT_SOURCE_MANAGER_RIGISTER_MSG:
+            NotifyRegisterCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_UNRIGISTER_MSG:
+            NotifyUnregisterCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_PREPARE_MSG:
+            NotifyPrepareCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_UNPREPARE_MSG:
+            NotifyUnprepareCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_START_MSG:
+            NotifyStartCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_STOP_MSG:
+            NotifyStopCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_START_DHID_MSG:
+            NotifyStartDhidCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_STOP_DHID_MSG:
+            NotifyStopDhidCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_KEY_STATE_MSG:
+            NotifyKeyStateCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_STARTSERVER_MSG:
+            NotifyStartServerCallback(event);
+            break;
+        case DINPUT_SOURCE_MANAGER_RELAY_PREPARE_RESULT_TO_ORIGIN:
+            NotifyRelayPrepareRemoteInput(event);
+            break;
+        default:
+            ProcessEventInner(event);
     }
-    SourceEventFunc &func = iter->second;
-    (this->*func)(event);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
