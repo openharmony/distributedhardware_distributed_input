@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -64,10 +64,8 @@ private:
     void NotifyRelayStopTypeCallback(const AppExecFwk::InnerEvent::Pointer &event);
     void NotifyRelayPrepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event);
     void NotifyRelayUnprepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event);
+    void ProcessEventInner(const AppExecFwk::InnerEvent::Pointer &event);
 
-    using SourceEventFunc = void (DInputSourceManagerEventHandler::*)(
-        const AppExecFwk::InnerEvent::Pointer &event);
-    std::map<int32_t, SourceEventFunc> eventFuncMap_;
     DistributedInputSourceManager *sourceManagerObj_;
 };
 } // namespace DistributedInput

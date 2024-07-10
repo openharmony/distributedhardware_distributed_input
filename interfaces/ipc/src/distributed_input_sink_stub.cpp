@@ -30,24 +30,11 @@ namespace DistributedInput {
 DistributedInputSinkStub::DistributedInputSinkStub()
 {
     DHLOGI("DistributedInputSinkStub ctor!");
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::INIT)] =
-        &DistributedInputSinkStub::InitInner;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::RELEASE)] =
-        &DistributedInputSinkStub::ReleaseInner;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_START_DSCREEN)] =
-        &DistributedInputSinkStub::NotifyStartDScreenInner;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_STOP_DSCREEN)] =
-        &DistributedInputSinkStub::NotifyStopDScreenInner;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::REGISTER_SHARING_DHID_LISTENER)] =
-        &DistributedInputSinkStub::RegisterSharingDhIdListenerInner;
-    memberFuncMap_[static_cast<uint32_t>(IDInputSinkInterfaceCode::GET_SINK_SCREEN_INFOS)] =
-        &DistributedInputSinkStub::RegisterGetSinkScreenInfosInner;
 }
 
 DistributedInputSinkStub::~DistributedInputSinkStub()
 {
     DHLOGI("DistributedInputSinkStub dtor!");
-    memberFuncMap_.clear();
 }
 
 bool DistributedInputSinkStub::HasEnableDHPermission()
@@ -66,13 +53,23 @@ int32_t DistributedInputSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &
         DHLOGE("DistributedInputSinkStub read token valid failed");
         return ERR_DH_INPUT_IPC_READ_TOKEN_VALID_FAIL;
     }
-    auto iter = memberFuncMap_.find(code);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("invalid request code is %{public}d.", code);
-        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+    switch (code) {
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::INIT):
+            return InitInner(data, reply, option);
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::RELEASE):
+            return ReleaseInner(data, reply, option);
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_START_DSCREEN):
+            return NotifyStartDScreenInner(data, reply, option);
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::NOTIFY_STOP_DSCREEN):
+            return NotifyStopDScreenInner(data, reply, option);
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::REGISTER_SHARING_DHID_LISTENER):
+            return RegisterSharingDhIdListenerInner(data, reply, option);
+        case static_cast<uint32_t>(IDInputSinkInterfaceCode::GET_SINK_SCREEN_INFOS):
+            return RegisterGetSinkScreenInfosInner(data, reply, option);
+        default:
+            DHLOGE("invalid request code is %{public}u.", code);
+            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
-    DistributedInputSinkFunc &func = iter->second;
-    return (this->*func)(data, reply, option);
 }
 
 int32_t DistributedInputSinkStub::InitInner(MessageParcel &data, MessageParcel &reply, MessageOption &option)

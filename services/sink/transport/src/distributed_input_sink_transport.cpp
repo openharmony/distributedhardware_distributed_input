@@ -106,7 +106,6 @@ int32_t DistributedInputSinkTransport::Init()
 
     statuslistener_ = std::make_shared<DInputTransbaseSinkListener>(this);
     DistributedInputTransportBase::GetInstance().RegisterSinkHandleSessionCallback(statuslistener_);
-    RegRespFunMap();
     return DH_SUCCESS;
 }
 
@@ -522,26 +521,31 @@ void DistributedInputSinkTransport::DInputTransbaseSinkListener::HandleSessionDa
     DistributedInputSinkTransport::GetInstance().HandleData(sessionId, message);
 }
 
-void DistributedInputSinkTransport::RegRespFunMap()
+void DistributedInputSinkTransport::HandleEventInner(int32_t sessionId, const nlohmann::json &recMsg)
 {
-    memberFuncMap_[TRANS_SOURCE_MSG_PREPARE] = &DistributedInputSinkTransport::NotifyPrepareRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_UNPREPARE] = &DistributedInputSinkTransport::NotifyUnprepareRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_START_TYPE] = &DistributedInputSinkTransport::NotifyStartRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_STOP_TYPE] = &DistributedInputSinkTransport::NotifyStopRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_LATENCY] = &DistributedInputSinkTransport::NotifyLatency;
-    memberFuncMap_[TRANS_SOURCE_MSG_START_DHID] = &DistributedInputSinkTransport::NotifyStartRemoteInputDhid;
-    memberFuncMap_[TRANS_SOURCE_MSG_STOP_DHID] = &DistributedInputSinkTransport::NotifyStopRemoteInputDhid;
-    memberFuncMap_[TRANS_SOURCE_MSG_PREPARE_FOR_REL] = &DistributedInputSinkTransport::NotifyRelayPrepareRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_UNPREPARE_FOR_REL] =
-        &DistributedInputSinkTransport::NotifyRelayUnprepareRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_START_DHID_FOR_REL] =
-        &DistributedInputSinkTransport::NotifyRelayStartDhidRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_STOP_DHID_FOR_REL] =
-        &DistributedInputSinkTransport::NotifyRelayStopDhidRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_START_TYPE_FOR_REL] =
-        &DistributedInputSinkTransport::NotifyRelayStartTypeRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_MSG_STOP_TYPE_FOR_REL] =
-        &DistributedInputSinkTransport::NotifyRelayStopTypeRemoteInput;
+    uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
+    switch (cmdType) {
+        case TRANS_SOURCE_MSG_PREPARE_FOR_REL:
+            NotifyRelayPrepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_UNPREPARE_FOR_REL:
+            NotifyRelayUnprepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_START_DHID_FOR_REL:
+            NotifyRelayStartDhidRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_STOP_DHID_FOR_REL:
+            NotifyRelayStopDhidRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_START_TYPE_FOR_REL:
+            NotifyRelayStartTypeRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_STOP_TYPE_FOR_REL:
+            NotifyRelayStopTypeRemoteInput(sessionId, recMsg);
+            break;
+        default:
+            DHLOGE("OnBytesReceived cmdType %{public}u is undefined.", cmdType);
+    }
 }
 
 void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::string &message)
@@ -561,13 +565,31 @@ void DistributedInputSinkTransport::HandleData(int32_t sessionId, const std::str
         return;
     }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
-    auto iter = memberFuncMap_.find(cmdType);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("OnBytesReceived cmdType %{public}u is undefined.", cmdType);
-        return;
+    switch (cmdType) {
+        case TRANS_SOURCE_MSG_PREPARE:
+            NotifyPrepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_UNPREPARE:
+            NotifyUnprepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_START_TYPE:
+            NotifyStartRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_STOP_TYPE:
+            NotifyStopRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_LATENCY:
+            NotifyLatency(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_START_DHID:
+            NotifyStartRemoteInputDhid(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_MSG_STOP_DHID:
+            NotifyStopRemoteInputDhid(sessionId, recMsg);
+            break;
+        default:
+            HandleEventInner(sessionId, recMsg);
     }
-    SinkTransportFunc &func = iter->second;
-    (this->*func)(sessionId, recMsg);
 }
 
 void DistributedInputSinkTransport::CloseAllSession()

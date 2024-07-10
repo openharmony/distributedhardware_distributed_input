@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -77,7 +77,7 @@ public:
 private:
     int32_t SendMessage(int32_t sessionId, std::string &message);
     void HandleData(int32_t sessionId, const std::string &message);
-    void RegRespFunMap();
+    void HandleEventInner(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyPrepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyUnprepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyStartRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
@@ -102,10 +102,6 @@ private:
     std::shared_ptr<DistributedInputSinkTransport::DInputSinkEventHandler> eventHandler_;
     std::shared_ptr<DistributedInputSinkTransport::DInputTransbaseSinkListener> statuslistener_;
     std::shared_ptr<DInputSinkTransCallback> callback_;
-
-    using SinkTransportFunc = void (DistributedInputSinkTransport::*)(int32_t sessionId,
-        const nlohmann::json &recMsg);
-    std::map<int32_t, SinkTransportFunc> memberFuncMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

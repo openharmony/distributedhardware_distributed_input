@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -91,6 +91,8 @@ public:
 private:
     int32_t SendMessage(int32_t sessionId, std::string &message);
     void HandleData(int32_t sessionId, const std::string &message);
+    void HandleEventFirst(int32_t sessionId, const nlohmann::json &recMsg);
+    void HandleEventSecond(int32_t sessionId, const nlohmann::json &recMsg);
     void SessionClosed();
     void NotifyResponsePrepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
     void NotifyResponseUnprepareRemoteInput(int32_t sessionId, const nlohmann::json &recMsg);
@@ -135,8 +137,6 @@ private:
     void ReceiveRelayStopTypeResult(int32_t sessionId, const nlohmann::json &recMsg);
 
     void CalculateLatency(int32_t sessionId, const nlohmann::json &recMsg);
-    void RegRespFunMap();
-
     void ResetKeyboardKeyState(const std::string &deviceId, const std::vector<std::string> &dhids);
 private:
     std::mutex operationMutex_;
@@ -155,10 +155,6 @@ private:
     std::string eachLatencyDetails_ = "";
     std::atomic<int32_t> injectThreadNum = 0;
     std::atomic<int32_t> latencyThreadNum = 0;
-
-    using SourceTransportFunc = void (DistributedInputSourceTransport::*)(int32_t sessionId,
-        const nlohmann::json &recMsg);
-    std::map<int32_t, SourceTransportFunc> memberFuncMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware

@@ -65,57 +65,7 @@ int32_t DistributedInputSourceTransport::Init()
 
     statuslistener_ = std::make_shared<DInputTransbaseSourceListener>(this);
     DistributedInputTransportBase::GetInstance().RegisterSrcHandleSessionCallback(statuslistener_);
-    RegRespFunMap();
     return DH_SUCCESS;
-}
-
-void DistributedInputSourceTransport::RegRespFunMap()
-{
-    memberFuncMap_[TRANS_SINK_MSG_ONPREPARE] = &DistributedInputSourceTransport::NotifyResponsePrepareRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ONUNPREPARE] = &DistributedInputSourceTransport::NotifyResponseUnprepareRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ONSTART] = &DistributedInputSourceTransport::NotifyResponseStartRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ONSTOP] = &DistributedInputSourceTransport::NotifyResponseStopRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_BODY_DATA] = &DistributedInputSourceTransport::NotifyReceivedEventRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_LATENCY] = &DistributedInputSourceTransport::CalculateLatency;
-    memberFuncMap_[TRANS_SINK_MSG_DHID_ONSTART] = &DistributedInputSourceTransport::NotifyResponseStartRemoteInputDhid;
-    memberFuncMap_[TRANS_SINK_MSG_DHID_ONSTOP] = &DistributedInputSourceTransport::NotifyResponseStopRemoteInputDhid;
-    memberFuncMap_[TRANS_SINK_MSG_KEY_STATE] = &DistributedInputSourceTransport::NotifyResponseKeyState;
-    memberFuncMap_[TRANS_SINK_MSG_KEY_STATE_BATCH] = &DistributedInputSourceTransport::NotifyResponseKeyStateBatch;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_PREPARE] = &DistributedInputSourceTransport::ReceiveSrcTSrcRelayPrepare;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_PREPARE] =
-        &DistributedInputSourceTransport::NotifyResponseRelayPrepareRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_UNPREPARE] =
-        &DistributedInputSourceTransport::NotifyResponseRelayUnprepareRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_UNPREPARE] =
-        &DistributedInputSourceTransport::ReceiveSrcTSrcRelayUnprepare;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_PREPARE_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayPrepareResult;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_UNPREPARE_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayUnprepareResult;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_START_DHID] =
-        &DistributedInputSourceTransport::ReceiveSrcTSrcRelayStartDhid;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_STOP_DHID] =
-        &DistributedInputSourceTransport::ReceiveSrcTSrcRelayStopDhid;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_STARTDHID] =
-        &DistributedInputSourceTransport::NotifyResponseRelayStartDhidRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_STOPDHID] =
-        &DistributedInputSourceTransport::NotifyResponseRelayStopDhidRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_START_DHID_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayStartDhidResult;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_STOP_DHID_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayStopDhidResult;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_START_TYPE] =
-        &DistributedInputSourceTransport::ReceiveSrcTSrcRelayStartType;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_STOP_TYPE] =
-        &DistributedInputSourceTransport::ReceiveSrcTSrcRelayStopType;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_STARTTYPE] =
-        &DistributedInputSourceTransport::NotifyResponseRelayStartTypeRemoteInput;
-    memberFuncMap_[TRANS_SINK_MSG_ON_RELAY_STOPTYPE] =
-        &DistributedInputSourceTransport::NotifyResponseRelayStopTypeRemoteInput;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_START_TYPE_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayStartTypeResult;
-    memberFuncMap_[TRANS_SOURCE_TO_SOURCE_MSG_STOP_TYPE_RESULT] =
-        &DistributedInputSourceTransport::ReceiveRelayStopTypeResult;
 }
 
 void DistributedInputSourceTransport::Release()
@@ -685,7 +635,7 @@ void DistributedInputSourceTransport::StartLatencyThread(const std::string &devi
 {
     DHLOGI("start");
     isLatencyThreadRunning_.store(true);
-    latencyThread_ = std::thread(&DistributedInputSourceTransport::StartLatencyCount, this, deviceId);
+    latencyThread_ = std::thread([this, deviceId]() { this->StartLatencyCount(deviceId); });
     DHLOGI("end");
 }
 
@@ -1489,6 +1439,81 @@ void DistributedInputSourceTransport::ReceiveRelayStopTypeResult(int32_t session
     callback_->OnReceiveRelayStopTypeResult(status, srcId, sinkId, inputTypes);
 }
 
+void DistributedInputSourceTransport::HandleEventSecond(int32_t sessionId, const nlohmann::json &recMsg)
+{
+    uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
+    switch (cmdType) {
+        case TRANS_SOURCE_TO_SOURCE_MSG_START_TYPE:
+            ReceiveSrcTSrcRelayStartType(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_STOP_TYPE:
+            ReceiveSrcTSrcRelayStopType(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_STARTTYPE:
+            NotifyResponseRelayStartTypeRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_STOPTYPE:
+            NotifyResponseRelayStopTypeRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_START_TYPE_RESULT:
+            ReceiveRelayStartTypeResult(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_STOP_TYPE_RESULT:
+            ReceiveRelayStopTypeResult(sessionId, recMsg);
+            break;
+        default:
+            DHLOGE("OnBytesReceived cmdType %{public}u is undefined.", cmdType);
+    }
+}
+
+void DistributedInputSourceTransport::HandleEventFirst(int32_t sessionId, const nlohmann::json &recMsg)
+{
+    uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
+    switch (cmdType) {
+        case TRANS_SINK_MSG_KEY_STATE_BATCH:
+            NotifyResponseKeyStateBatch(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_PREPARE:
+            ReceiveSrcTSrcRelayPrepare(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_PREPARE:
+            NotifyResponseRelayPrepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_UNPREPARE:
+            NotifyResponseRelayUnprepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_UNPREPARE:
+            ReceiveSrcTSrcRelayUnprepare(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_PREPARE_RESULT:
+            ReceiveRelayPrepareResult(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_UNPREPARE_RESULT:
+            ReceiveRelayUnprepareResult(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_START_DHID:
+            ReceiveSrcTSrcRelayStartDhid(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_STOP_DHID:
+            ReceiveSrcTSrcRelayStopDhid(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_STARTDHID:
+            NotifyResponseRelayStartDhidRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ON_RELAY_STOPDHID:
+            NotifyResponseRelayStopDhidRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_START_DHID_RESULT:
+            ReceiveRelayStartDhidResult(sessionId, recMsg);
+            break;
+        case TRANS_SOURCE_TO_SOURCE_MSG_STOP_DHID_RESULT:
+            ReceiveRelayStopDhidResult(sessionId, recMsg);
+            break;
+        default:
+            HandleEventSecond(sessionId, recMsg);
+    }
+}
+
 void DistributedInputSourceTransport::DInputTransbaseSourceListener::HandleSessionData(int32_t sessionId,
     const std::string &message)
 {
@@ -1501,7 +1526,6 @@ void DistributedInputSourceTransport::HandleData(int32_t sessionId, const std::s
         DHLOGE("OnBytesReceived the callback_ is null, the message:%{public}s abort.", SetAnonyId(message).c_str());
         return;
     }
-
     nlohmann::json recMsg = nlohmann::json::parse(message, nullptr, false);
     if (recMsg.is_discarded()) {
         DHLOGE("recMsg parse failed!");
@@ -1512,15 +1536,38 @@ void DistributedInputSourceTransport::HandleData(int32_t sessionId, const std::s
         return;
     }
     uint32_t cmdType = recMsg[DINPUT_SOFTBUS_KEY_CMD_TYPE];
-    auto iter = memberFuncMap_.find(cmdType);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("OnBytesReceived cmdType %{public}u is undefined.", cmdType);
-        return;
+    switch (cmdType) {
+        case TRANS_SINK_MSG_ONPREPARE:
+            NotifyResponsePrepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ONUNPREPARE:
+            NotifyResponseUnprepareRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ONSTART:
+            NotifyResponseStartRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_ONSTOP:
+            NotifyResponseStopRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_BODY_DATA:
+            NotifyReceivedEventRemoteInput(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_LATENCY:
+            CalculateLatency(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_DHID_ONSTART:
+            NotifyResponseStartRemoteInputDhid(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_DHID_ONSTOP:
+            NotifyResponseStopRemoteInputDhid(sessionId, recMsg);
+            break;
+        case TRANS_SINK_MSG_KEY_STATE:
+            NotifyResponseKeyState(sessionId, recMsg);
+            break;
+        default:
+            HandleEventFirst(sessionId, recMsg);
     }
-    SourceTransportFunc &func = iter->second;
-    (this->*func)(sessionId, recMsg);
 }
-
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

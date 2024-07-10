@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,6 @@ public:
     DistributedInputSourceStub();
     ~DistributedInputSourceStub() override;
 
-    void RegRespFunMap();
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option) override;
 
 private:
@@ -60,13 +59,11 @@ private:
     int32_t HandleUnregisterSessionStateCb(MessageParcel &data, MessageParcel &reply);
     bool HasEnableDHPermission();
     bool HasAccessDHPermission();
+    int32_t HandleRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply, MessageOption &option);
     DISALLOW_COPY_AND_MOVE(DistributedInputSourceStub);
 private:
     std::atomic<bool> sourceManagerInitFlag_ {false};
     std::mutex operatorMutex_;
-    using DistributedInputSourceFunc = int32_t (DistributedInputSourceStub::*)(MessageParcel &data,
-        MessageParcel &reply);
-    std::map<uint32_t, DistributedInputSourceFunc> memberFuncMap_;
 };
 } // namespace DistributedInput
 } // namespace DistributedHardware
