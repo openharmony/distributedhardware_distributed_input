@@ -64,6 +64,7 @@ ohos_shared_library("libdinput_sink_state") {
     "hilog:libhilog",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "libevdev:libevdev",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",

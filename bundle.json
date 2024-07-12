@@ -44,7 +44,8 @@
                 "hitrace",
                 "graphic_surface",
                 "window_manager",
-                "openssl"
+                "openssl",
+                "graphic_2d"
             ]
         },
         "build": {
