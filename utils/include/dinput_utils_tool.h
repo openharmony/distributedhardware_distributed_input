@@ -51,7 +51,7 @@ std::string GetNodeDesc(std::string parameters);
 std::string GetAnonyString(const std::string &value);
 std::string GetAnonyInt32(const int32_t value);
 std::string Sha256(const std::string &string);
-void CloseFd(int fd);
+void CloseFd(int &fd);
 int BitIsSet(const unsigned long *array, int bit);
 void SplitStringToVector(const std::string &str, const char split, std::vector<std::string> &vecStr);
 int OpenInputDeviceFdByPath(const std::string &devicePath);
