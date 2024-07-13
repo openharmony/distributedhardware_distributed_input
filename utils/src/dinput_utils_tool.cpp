@@ -268,7 +268,7 @@ std::string Sha256(const std::string &in)
     return reinterpret_cast<char*>(out);
 }
 
-void CloseFd(int fd)
+void CloseFd(int &fd)
 {
     if (fd < 0) {
         DHLOGE("No fd need to beclosed.");
@@ -403,6 +403,7 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
         int rc = ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState);
         if (rc < 0) {
             DHLOGE("Read all key state failed, rc: %{public}d, path: %{public}s", rc, path.c_str());
+            CloseFd(fd);
             continue;
         }
 
@@ -414,6 +415,7 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
         }
 
         if (pressedKeys.empty()) {
+            CloseFd(fd);
             continue;
         }
 
@@ -430,6 +432,7 @@ void ResetVirtualDevicePressedKeys(const std::vector<std::string> &nodePaths)
             event.code = 0;
             WriteEventToDevice(fd, event);
         }
+        CloseFd(fd);
     }
 }
 
