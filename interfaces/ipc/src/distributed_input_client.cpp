@@ -58,7 +58,7 @@ void DistributedInputClient::RegisterDInputCb::OnResult(
         DistributedInputClient::GetInstance().dHardWareFwkRstInfos.begin();
         iter != DistributedInputClient::GetInstance().dHardWareFwkRstInfos.end();
         ++iter) {
-        if (iter->devId == devId && iter->dhId == dhId) {
+        if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
             iter->callback->OnRegisterResult(devId, dhId, status, "");
             DistributedInputClient::GetInstance().dHardWareFwkRstInfos.erase(iter);
             return;
@@ -74,7 +74,7 @@ void DistributedInputClient::UnregisterDInputCb::OnResult(
         DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.begin();
         iter != DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.end();
         ++iter) {
-        if (iter->devId == devId && iter->dhId == dhId) {
+        if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
             iter->callback->OnUnregisterResult(devId, dhId, status, "");
             DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.erase(iter);
             return;
@@ -125,6 +125,10 @@ DistributedInputClient::DInputClientEventHandler::DInputClientEventHandler(
 
 void DistributedInputClient::DInputClientEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("Event is nullptr");
+        return;
+    }
     uint32_t eventId = event->GetInnerEventId();
     DHLOGI("DInputClientEventHandler ProcessEvent start eventId:%{public}d.", eventId);
     if (eventId == DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG) {

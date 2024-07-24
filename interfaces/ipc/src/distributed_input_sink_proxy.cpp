@@ -147,6 +147,10 @@ int32_t DistributedInputSinkProxy::NotifyStopDScreen(const std::string &srcScree
 
 int32_t DistributedInputSinkProxy::RegisterSharingDhIdListener(sptr<ISharingDhIdListener> sharingDhIdListener)
 {
+    if (sharingDhIdListener == nullptr) {
+        DHLOGE("sharingDhIdListener is nullptr");
+        return ERR_DH_INPUT_SINK_PROXY_DH_LISTENER_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("RegisterSharingDhIdListener write token valid failed");
