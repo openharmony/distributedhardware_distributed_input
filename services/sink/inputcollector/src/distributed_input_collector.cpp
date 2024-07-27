@@ -56,6 +56,10 @@ DistributedInputCollector &DistributedInputCollector::GetInstance()
 void DistributedInputCollector::PreInit()
 {
     DHLOGI("PreInit for record local device infos");
+    if (inputHub_ == nullptr) {
+        DHLOGE("inputHub_ not initialized");
+        return;
+    }
     inputHub_->RecordDeviceStates();
 }
 
@@ -101,6 +105,10 @@ void *DistributedInputCollector::CollectEventsThread(void *param)
         DHLOGE("CollectEventsThread setname failed.");
     }
     DistributedInputCollector *pThis = reinterpret_cast<DistributedInputCollector *>(param);
+    if (pThis == nullptr) {
+        DHLOGE("pThis is null.");
+        return nullptr;
+    }
     pThis->StartCollectEventsThread();
     DHLOGW("DistributedInputCollector::CollectEventsThread exist!");
     return nullptr;

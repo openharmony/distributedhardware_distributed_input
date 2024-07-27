@@ -434,6 +434,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent01, testing::ext::TestSize.Leve
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
     AppExecFwk::InnerEvent::Pointer event =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG, 4809);
+    ASSERT_NE(nullptr, event);
     eventHandler.ProcessEvent(event);
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG);
 }
@@ -444,6 +445,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent02, testing::ext::TestSize.Leve
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
     AppExecFwk::InnerEvent::Pointer event =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG, 4809);
+    ASSERT_NE(nullptr, event);
     eventHandler.ProcessEvent(event);
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG);
 }
@@ -454,6 +456,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent03, testing::ext::TestSize.Leve
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
     AppExecFwk::InnerEvent::Pointer event =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CLEAR_SOURCE_CALLBACK_REGISTER_MSG, 4809);
+    ASSERT_NE(nullptr, event);
     eventHandler.ProcessEvent(event);
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CLEAR_SOURCE_CALLBACK_REGISTER_MSG);
 }
@@ -464,6 +467,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent04, testing::ext::TestSize.Leve
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
     AppExecFwk::InnerEvent::Pointer event =
                 AppExecFwk::InnerEvent::Get(DINPUT_CLIENT_CLEAR_SINK_CALLBACK_REGISTER_MSG, 4809);
+    ASSERT_NE(nullptr, event);
     eventHandler.ProcessEvent(event);
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CLEAR_SINK_CALLBACK_REGISTER_MSG);
 }

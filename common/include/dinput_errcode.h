@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -176,6 +176,9 @@ namespace DistributedInput {
     constexpr int32_t ERR_DH_INPUT_SRC_ENABLE_PERMISSION_CHECK_FAIL = -67061;
     constexpr int32_t ERR_DH_INPUT_SRC_ACCESS_PERMISSION_CHECK_FAIL = -67062;
     constexpr int32_t ERR_DH_INPUT_SINK_ENABLE_PERMISSION_CHECK_FAIL = -67063;
+    constexpr int32_t ERR_DH_INPUT_SINK_PROXY_DH_LISTENER_IS_NULL = -67064;
+    constexpr int32_t ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL = -67065;
+    constexpr int32_t ERR_DH_INPUT_SRC_PROXY_EVENT_LISTENER_IS_NULL = -67066;
 
     // Hidump Helper error code
     constexpr int32_t ERR_DH_INPUT_HIDUMP_INVALID_ARGS = -68000;

@@ -37,7 +37,10 @@ namespace DistributedInput {
 void DistributedInputSinkManagerTest::SetUp()
 {
     sinkManager_ = new DistributedInputSinkManager(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID, true);
-    sinkManager_->Init();
+    if (sinkManager_ != nullptr) {
+        sinkManager_->Init();
+    }
+
     uint64_t tokenId;
     const char *perms[2];
     perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
@@ -88,18 +91,21 @@ int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnNoSharin
 
 HWTEST_F(DistributedInputSinkManagerTest, InitAuto, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     bool ret = sinkManager_->InitAuto();
     EXPECT_EQ(true, ret);
 }
 
 HWTEST_F(DistributedInputSinkManagerTest, Init, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     int32_t ret = sinkManager_->Init();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 HWTEST_F(DistributedInputSinkManagerTest, Release, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     MockProcess::MockDinputProcess("dinput");
     int32_t ret = sinkManager_->Release();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -107,6 +113,7 @@ HWTEST_F(DistributedInputSinkManagerTest, Release, testing::ext::TestSize.Level0
 
 HWTEST_F(DistributedInputSinkManagerTest, GetStartTransFlag, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     DInputServerType flag = DInputServerType::SINK_SERVER_TYPE;
     sinkManager_->SetStartTransFlag(flag);
     DInputServerType retFlag = sinkManager_->GetStartTransFlag();
@@ -115,6 +122,7 @@ HWTEST_F(DistributedInputSinkManagerTest, GetStartTransFlag, testing::ext::TestS
 
 HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     uint32_t inputTypes = static_cast<uint32_t>(DInputDeviceType::MOUSE);
     sinkManager_->SetInputTypes(inputTypes);
     uint32_t retType = sinkManager_->GetInputTypes();
@@ -123,6 +131,7 @@ HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.
 
 HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     int32_t sessionId = 1;
     std::vector<std::string> stopDhIds;
     std::vector<std::string> stopIndeedDhIds;
@@ -138,12 +147,14 @@ HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestS
 
 HWTEST_F(DistributedInputSinkManagerTest, GetSinkScreenInfosCbackSize01, testing::ext::TestSize.Level0)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     uint32_t ret = sinkManager_->GetSinkScreenInfosCbackSize();
     EXPECT_EQ(0, ret);
 }
 
 HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     sptr<TestGetSinkScreenInfosCb> callback(new TestGetSinkScreenInfosCb());
     int32_t ret = sinkManager_->RegisterGetSinkScreenInfosCallback(callback);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -151,6 +162,7 @@ HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_01,
 
 HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_02, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     sptr<TestGetSinkScreenInfosCb> callback = nullptr;
     int32_t ret = sinkManager_->RegisterGetSinkScreenInfosCallback(callback);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -158,6 +170,7 @@ HWTEST_F(DistributedInputSinkManagerTest, RegisterGetSinkScreenInfosCallback_02,
 
 HWTEST_F(DistributedInputSinkManagerTest, OnMessage_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     int32_t fd = 1;
     std::vector<std::u16string> args;
     int32_t ret = sinkManager_->Dump(fd, args);
@@ -171,6 +184,7 @@ HWTEST_F(DistributedInputSinkManagerTest, OnMessage_01, testing::ext::TestSize.L
 
 HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     std::string message = "";
     std::string srcDeviceId = "";
     uint64_t srcWinId = 0;
@@ -181,6 +195,7 @@ HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_01, testing::ext::TestSiz
 
 HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_02, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     std::string srcDevId = "umkyu1b165e1be98151891erbe8r91ev";
     uint64_t srcWinId = 1;
     uint64_t sinkShowWinId = 1;
@@ -204,6 +219,7 @@ HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_02, testing::ext::TestSiz
 
 HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_04, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     std::string srcDevId = "umkyu1b165e1be98151891erbe8r91ev";
     SinkScreenInfo sinkScreenInfo;
     uint64_t srcWinId = 1;
@@ -256,6 +272,8 @@ HWTEST_F(DistributedInputSinkManagerTest, ParseMessage_04, testing::ext::TestSiz
 
 HWTEST_F(DistributedInputSinkManagerTest, UpdateSinkScreenInfoCache_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
+    ASSERT_NE(nullptr, sinkManager_->projectWindowListener_);
     std::string srcDevId = "umkyu1b165e1be98151891erbe8r91ev";
     uint64_t srcWinId = 1;
     SinkScreenInfo sinkScreenInfoTmp {2, 1860, 980, 200, 200};
@@ -265,6 +283,7 @@ HWTEST_F(DistributedInputSinkManagerTest, UpdateSinkScreenInfoCache_01, testing:
 
 HWTEST_F(DistributedInputSinkManagerTest, NotifyStopDScreen_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     std::string srcScreenInfoKey  = "";
     int32_t ret = sinkManager_->NotifyStopDScreen(srcScreenInfoKey);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SINK_SCREEN_INFO_IS_EMPTY, ret);
@@ -272,6 +291,7 @@ HWTEST_F(DistributedInputSinkManagerTest, NotifyStopDScreen_01, testing::ext::Te
 
 HWTEST_F(DistributedInputSinkManagerTest, NotifyStopDScreen_02, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     std::string srcScreenInfoKey  = "srcScreenInfoKey_test";
     int32_t ret = sinkManager_->NotifyStopDScreen(srcScreenInfoKey);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -279,6 +299,7 @@ HWTEST_F(DistributedInputSinkManagerTest, NotifyStopDScreen_02, testing::ext::Te
 
 HWTEST_F(DistributedInputSinkManagerTest, RegisterSharingDhIdListener_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     sptr<TestSharingDhIdListenerStub> sharingDhIdListener = new TestSharingDhIdListenerStub();
     int32_t ret = sinkManager_->RegisterSharingDhIdListener(sharingDhIdListener);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -286,6 +307,7 @@ HWTEST_F(DistributedInputSinkManagerTest, RegisterSharingDhIdListener_01, testin
 
 HWTEST_F(DistributedInputSinkManagerTest, Dump_01, testing::ext::TestSize.Level1)
 {
+    ASSERT_NE(nullptr, sinkManager_);
     int32_t fd = 1;
     std::vector<std::u16string> args;
     int32_t ret = sinkManager_->Dump(fd, args);

@@ -67,6 +67,9 @@ void AddWhiteListInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::AddWhiteListInfosCallbackStub> addWhiteListInfos(new (std::nothrow)
         MyAddWhiteListInfosCallbackStub());
+    if (addWhiteListInfos == nullptr) {
+        return;
+    }
     addWhiteListInfos->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -104,6 +107,9 @@ void DelWhiteListInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::DelWhiteListInfosCallbackStub> delWhiteListInfos(new (std::nothrow)
         MyDelWhiteListInfosCallbackStub());
+    if (delWhiteListInfos == nullptr) {
+        return;
+    }
     delWhiteListInfos->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -164,6 +170,9 @@ void DistributedInputSinkStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::DistributedInputSinkStub> distributedInputSinkStub(new (std::nothrow)
         DistributedInputSinkStubFuzz());
+    if (distributedInputSinkStub == nullptr) {
+        return;
+    }
     distributedInputSinkStub->HasEnableDHPermission();
     distributedInputSinkStub->OnRemoteRequest(code, pdata, reply, option);
     distributedInputSinkStub->InitInner(pdata, reply, option);
@@ -389,6 +398,9 @@ void DistributedInputSourceStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::DistributedInputSourceStub> distributedInputSourceStub(new (std::nothrow)
         DInputSourceCallBackStubFuzz());
+    if (distributedInputSourceStub == nullptr) {
+        return;
+    }
     distributedInputSourceStub->HasEnableDHPermission();
     distributedInputSourceStub->HasAccessDHPermission();
     distributedInputSourceStub->HandleInitDistributedHardware(reply);
@@ -450,6 +462,9 @@ void GetSinkScreenInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::GetSinkScreenInfosCallbackStub> getSinkScreenInfosCbStub(new (std::nothrow)
         MyGetSinkScreenInfosCallbackStub());
+    if (getSinkScreenInfosCbStub == nullptr) {
+        return;
+    }
     getSinkScreenInfosCbStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -508,6 +523,9 @@ void InputNodeListenerStubFuzzTest(const uint8_t *data, size_t size)
 
     sptr<DistributedInput::InputNodeListenerStub> inputNodeListenerStub(new (std::nothrow)
         MyInputNodeListenerStub());
+    if (inputNodeListenerStub == nullptr) {
+        return;
+    }
     inputNodeListenerStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -544,6 +562,9 @@ void PrepareDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::PrepareDInputCallbackStub> prepareDInputCallbackStub(new (std::nothrow)
         MyPrepareDInputCallbackStub());
+    if (prepareDInputCallbackStub == nullptr) {
+        return;
+    }
     prepareDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -580,6 +601,9 @@ void RegisterDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::RegisterDInputCallbackStub> registerDInputCallbackStub(new (std::nothrow)
         MyRegisterDInputCallbackStub());
+    if (registerDInputCallbackStub == nullptr) {
+        return;
+    }
     registerDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -616,6 +640,9 @@ void RegisterSessionStateCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::RegisterSessionStateCallbackStub> registerSessionStateCbkStub(new (std::nothrow)
         MyRegisterSessionStateCallbackStub());
+    if (registerSessionStateCbkStub == nullptr) {
+        return;
+    }
     registerSessionStateCbkStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -666,6 +693,9 @@ void SharingDhIdListenerStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::SharingDhIdListenerStub> sharingDhIdListenerStub(new (std::nothrow)
         MySharingDhIdListenerStub());
+    if (sharingDhIdListenerStub == nullptr) {
+        return;
+    }
     sharingDhIdListenerStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -702,6 +732,9 @@ void SimulationEventListenerStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::SimulationEventListenerStub> simulationEventListenerStub(new (std::nothrow)
         MySimulationEventListenerStub());
+    if (simulationEventListenerStub == nullptr) {
+        return;
+    }
     simulationEventListenerStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -738,6 +771,9 @@ void StartDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::StartDInputCallbackStub> startDInputCallbackStub(new (std::nothrow)
         MyStartDInputCallbackStub());
+    if (startDInputCallbackStub == nullptr) {
+        return;
+    }
     startDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -774,6 +810,9 @@ void StartStopDInputsCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::StartStopDInputsCallbackStub> startStopDInputsCallbackStub(new (std::nothrow)
         MyStartStopDInputsCallbackStub());
+    if (startStopDInputsCallbackStub == nullptr) {
+        return;
+    }
     startStopDInputsCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -823,6 +862,9 @@ void StartStopResultCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::StartStopResultCallbackStub> startStopResultCallbackStub(new (std::nothrow)
         MyStartStopResultCallbackStub());
+    if (startStopResultCallbackStub == nullptr) {
+        return;
+    }
     startStopResultCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -859,6 +901,9 @@ void StopDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::StopDInputCallbackStub> stopDInputCallbackStub(new (std::nothrow)
         MyStopDInputCallbackStub());
+    if (stopDInputCallbackStub == nullptr) {
+        return;
+    }
     stopDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -895,6 +940,9 @@ void UnprepareDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::UnprepareDInputCallbackStub> unprepareDInputCallbackStub(new (std::nothrow)
         MyUnprepareDInputCallbackStub());
+    if (unprepareDInputCallbackStub == nullptr) {
+        return;
+    }
     unprepareDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 
@@ -931,6 +979,9 @@ void UnregisterDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     }
     sptr<DistributedInput::UnregisterDInputCallbackStub> unregisterDInputCallbackStub(new (std::nothrow)
         MyUnregisterDInputCallbackStub());
+    if (unregisterDInputCallbackStub == nullptr) {
+        return;
+    }
     unregisterDInputCallbackStub->OnRemoteRequest(code, pdata, reply, option);
 }
 } // namespace DistributedHardware

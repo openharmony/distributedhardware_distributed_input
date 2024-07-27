@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -42,6 +42,7 @@ void DelWhiteListInfosCallbackTest::TestDelWhiteListInfosCallbackStub::OnResult(
 HWTEST_F(DelWhiteListInfosCallbackTest, DelWhiteListInfosCallback01, testing::ext::TestSize.Level1)
 {
     sptr<IRemoteObject> callBackStubPtr(new TestDelWhiteListInfosCallbackStub());
+    ASSERT_NE(nullptr, callBackStubPtr);
     DelWhiteListInfosCallbackProxy callBackProxy(callBackStubPtr);
     std::string deviceId = "deviceId0";
     callBackProxy.OnResult(deviceId);

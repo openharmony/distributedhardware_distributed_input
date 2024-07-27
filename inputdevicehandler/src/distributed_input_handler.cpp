@@ -180,6 +180,10 @@ void *DistributedInputHandler::CollectEventsThread(void *param)
         DHLOGE("CollectEventsThread setname failed.");
     }
     DistributedInputHandler *pThis = reinterpret_cast<DistributedInputHandler *>(param);
+    if (pThis == nullptr) {
+        DHLOGE("pThis is null.");
+        return nullptr;
+    }
     pThis->StartInputMonitorDeviceThread();
     DHLOGI("DistributedInputHandler::CollectEventsThread exist!");
     return nullptr;
@@ -229,6 +233,10 @@ void DistributedInputHandler::NotifyHardWare(int iCnt)
 
 void DistributedInputHandler::StopInputMonitorDeviceThread()
 {
+    if (inputHub_ == nullptr) {
+        DHLOGE("inputHub_ not initialized");
+        return;
+    }
     isCollectingEvents_ = false;
     isStartCollectEventThread = false;
     inputHub_->StopCollectInputHandler();

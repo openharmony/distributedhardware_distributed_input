@@ -71,6 +71,10 @@ DistributedInputSinkTransport &DistributedInputSinkTransport::GetInstance()
 
 void DistributedInputSinkTransport::DInputSinkEventHandler::ProcessEvent(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is nullptr.");
+        return;
+    }
     EHandlerMsgType eventId = static_cast<EHandlerMsgType>(event->GetInnerEventId());
     switch (eventId) {
         case EHandlerMsgType::DINPUT_SINK_EVENT_HANDLER_MSG: {
@@ -333,6 +337,10 @@ void DistributedInputSinkTransport::NotifyPrepareRemoteInput(int32_t sessionId, 
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnPrepareRemoteInput(sessionId, deviceId);
 }
 
@@ -345,6 +353,10 @@ void DistributedInputSinkTransport::NotifyUnprepareRemoteInput(int32_t sessionId
     std::string deviceId = recMsg[DINPUT_SOFTBUS_KEY_DEVICE_ID];
     DHLOGI("OnBytesReceived cmdType TRANS_SOURCE_MSG_UNPREPARE deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnUnprepareRemoteInput(sessionId);
 }
 
@@ -359,6 +371,10 @@ void DistributedInputSinkTransport::NotifyStartRemoteInput(int32_t sessionId, co
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
     DHLOGI("OnBytesRecei,ved cmdType is TRANS_SOURCE_MSG_START_TYPE deviceId:%{public}s inputTypes:%{public}d .",
         GetAnonyString(deviceId).c_str(), inputTypes);
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnStartRemoteInput(sessionId, inputTypes);
 }
 
@@ -373,6 +389,10 @@ void DistributedInputSinkTransport::NotifyStopRemoteInput(int32_t sessionId, con
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnStopRemoteInput(sessionId, inputTypes);
 }
 
@@ -401,6 +421,10 @@ void DistributedInputSinkTransport::NotifyStartRemoteInputDhid(int32_t sessionId
     std::string strTmp = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID deviceId:%{public}s .",
            GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnStartRemoteInputDhid(sessionId, strTmp);
 }
 
@@ -415,6 +439,10 @@ void DistributedInputSinkTransport::NotifyStopRemoteInputDhid(int32_t sessionId,
     std::string strTmp = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
     DHLOGE("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID deviceId:%{public}s.",
            GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnStopRemoteInputDhid(sessionId, strTmp);
 }
 
@@ -429,6 +457,10 @@ void DistributedInputSinkTransport::NotifyRelayPrepareRemoteInput(int32_t sessio
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_PREPARE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayPrepareRemoteInput(toSrcSessionId, sessionId, deviceId);
 }
 
@@ -443,6 +475,10 @@ void DistributedInputSinkTransport::NotifyRelayUnprepareRemoteInput(int32_t sess
     int32_t toSrcSessionId = recMsg[DINPUT_SOFTBUS_KEY_SESSION_ID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_UNPREPARE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayUnprepareRemoteInput(toSrcSessionId, sessionId, deviceId);
 }
 
@@ -459,6 +495,10 @@ void DistributedInputSinkTransport::NotifyRelayStartDhidRemoteInput(int32_t sess
     std::string dhids = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_DHID_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayStartDhidRemoteInput(toSrcSessionId, sessionId, deviceId, dhids);
 }
 
@@ -475,6 +515,10 @@ void DistributedInputSinkTransport::NotifyRelayStopDhidRemoteInput(int32_t sessi
     std::string dhids = recMsg[DINPUT_SOFTBUS_KEY_VECTOR_DHID];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_DHID_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayStopDhidRemoteInput(toSrcSessionId, sessionId, deviceId, dhids);
 }
 
@@ -491,6 +535,10 @@ void DistributedInputSinkTransport::NotifyRelayStartTypeRemoteInput(int32_t sess
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_START_TYPE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayStartTypeRemoteInput(toSrcSessionId, sessionId, deviceId, inputTypes);
 }
 
@@ -507,6 +555,10 @@ void DistributedInputSinkTransport::NotifyRelayStopTypeRemoteInput(int32_t sessi
     uint32_t inputTypes = recMsg[DINPUT_SOFTBUS_KEY_INPUT_TYPE];
     DHLOGI("OnBytesReceived cmdType is TRANS_SOURCE_MSG_STOP_TYPE_FOR_REL deviceId:%{public}s.",
         GetAnonyString(deviceId).c_str());
+    if (callback_ == nullptr) {
+        DHLOGE("callback_ is nullptr.");
+        return;
+    }
     callback_->OnRelayStopTypeRemoteInput(toSrcSessionId, sessionId, deviceId, inputTypes);
 }
 

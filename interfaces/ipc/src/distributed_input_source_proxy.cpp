@@ -97,6 +97,10 @@ int32_t DistributedInputSourceProxy::RegisterDistributedHardware(const std::stri
 int32_t DistributedInputSourceProxy::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     sptr<IUnregisterDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -126,6 +130,10 @@ int32_t DistributedInputSourceProxy::UnregisterDistributedHardware(const std::st
 int32_t DistributedInputSourceProxy::PrepareRemoteInput(
     const std::string &deviceId, sptr<IPrepareDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -153,6 +161,10 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(
 int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &deviceId,
     sptr<IUnprepareDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -179,6 +191,10 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &dev
 int32_t DistributedInputSourceProxy::StartRemoteInput(
     const std::string &deviceId, const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     DHLOGI("source proxy StartRemoteInput start");
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
@@ -210,6 +226,10 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(
 int32_t DistributedInputSourceProxy::StopRemoteInput(
     const std::string &deviceId, const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -239,6 +259,10 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(
 int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, const std::string &sinkId,
     const uint32_t &inputTypes, sptr<IStartDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     DHLOGI("source proxy StartRemoteInput start");
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
@@ -275,6 +299,10 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, 
 int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, const std::string &sinkId,
     const uint32_t &inputTypes, sptr<IStopDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -309,6 +337,10 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, c
 int32_t DistributedInputSourceProxy::PrepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IPrepareDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -340,6 +372,10 @@ int32_t DistributedInputSourceProxy::PrepareRemoteInput(const std::string &srcId
 int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &srcId, const std::string &sinkId,
     sptr<IUnprepareDInputCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -371,6 +407,10 @@ int32_t DistributedInputSourceProxy::UnprepareRemoteInput(const std::string &src
 int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &sinkId, const std::vector<std::string> &dhIds,
     sptr<IStartStopDInputsCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -409,6 +449,10 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &sinkId,
 int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &sinkId, const std::vector<std::string> &dhIds,
     sptr<IStartStopDInputsCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -447,6 +491,10 @@ int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &sinkId, 
 int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy relay dhid write token valid failed");
@@ -490,6 +538,10 @@ int32_t DistributedInputSourceProxy::StartRemoteInput(const std::string &srcId, 
 int32_t DistributedInputSourceProxy::StopRemoteInput(const std::string &srcId, const std::string &sinkId,
     const std::vector<std::string> &dhIds, sptr<IStartStopDInputsCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("DistributedInputSourceProxy write token valid failed");
@@ -583,6 +635,10 @@ int32_t DistributedInputSourceProxy::RegisterDelWhiteListCallback(sptr<IDelWhite
 
 int32_t DistributedInputSourceProxy::RegisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
+    if (listener == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_EVENT_LISTENER_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("RegisterSimulationEventListener write token valid failed");
@@ -606,6 +662,10 @@ int32_t DistributedInputSourceProxy::RegisterSimulationEventListener(sptr<ISimul
 
 int32_t DistributedInputSourceProxy::UnregisterSimulationEventListener(sptr<ISimulationEventListener> listener)
 {
+    if (listener == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_EVENT_LISTENER_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("UnregisterSimulationEventListener write token valid failed");
@@ -629,6 +689,10 @@ int32_t DistributedInputSourceProxy::UnregisterSimulationEventListener(sptr<ISim
 
 int32_t DistributedInputSourceProxy::RegisterSessionStateCb(sptr<ISessionStateCallback> callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("callback is nullptr");
+        return ERR_DH_INPUT_SRC_PROXY_CALLBACK_IS_NULL;
+    }
     MessageParcel data;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
         DHLOGE("RegisterSessionStateCb write token valid failed");
