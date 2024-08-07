@@ -1087,14 +1087,12 @@ int32_t InputHub::ReadNotifyLocked()
     {
         size_t eventSize = 0;
         size_t eventPos = 0;
-        while (res >= sizeof(*event)) {
-            if (eventPos < static_cast<size_t>(EVENT_BUFFER_MAX)) {
-                event = reinterpret_cast<struct inotify_event *>(eventBuf + eventPos);
-                JudgeDeviceOpenOrClose(*event);
-                eventSize = sizeof(*event) + event->len;
-                res -= eventSize;
-                eventPos += eventSize;
-            }
+        while (res >= sizeof(*event) && eventPos < static_cast<size_t>(EVENT_BUFFER_MAX)) {
+            event = reinterpret_cast<struct inotify_event *>(eventBuf + eventPos);
+            JudgeDeviceOpenOrClose(*event);
+            eventSize = sizeof(*event) + event->len;
+            res -= eventSize;
+            eventPos += eventSize;
         }
     }
     return DH_SUCCESS;
