@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -64,14 +64,14 @@ HWTEST_F(DInputHandlerTest, FindDevicesInfoByType_001, testing::ext::TestSize.Le
     dInputHandler.StartInputMonitorDeviceThread();
 
     InputDevice inputDevice;
-    dInputHandler.mEventBuffer[0].type = DeviceType::DEVICE_ADDED;
-    dInputHandler.mEventBuffer[0].deviceInfo = inputDevice;
+    dInputHandler.mEventBuffer_[0].type = DeviceType::DEVICE_ADDED;
+    dInputHandler.mEventBuffer_[0].deviceInfo = inputDevice;
     dInputHandler.NotifyHardWare(0);
-    dInputHandler.mEventBuffer[1].type = DeviceType::DEVICE_REMOVED;
-    dInputHandler.mEventBuffer[1].deviceInfo = inputDevice;
+    dInputHandler.mEventBuffer_[1].type = DeviceType::DEVICE_REMOVED;
+    dInputHandler.mEventBuffer_[1].deviceInfo = inputDevice;
     dInputHandler.NotifyHardWare(1);
-    dInputHandler.mEventBuffer[2].type = DeviceType::FINISHED_DEVICE_SCAN;
-    dInputHandler.mEventBuffer[2].deviceInfo = inputDevice;
+    dInputHandler.mEventBuffer_[2].type = DeviceType::FINISHED_DEVICE_SCAN;
+    dInputHandler.mEventBuffer_[2].deviceInfo = inputDevice;
     dInputHandler.NotifyHardWare(2);
     std::map<std::string, std::string> ret = dInputHandler.QueryExtraInfo();
     EXPECT_EQ(0, ret.size());

@@ -47,7 +47,15 @@ DInputSourceManagerEventHandler::~DInputSourceManagerEventHandler()
 
 void DInputSourceManagerEventHandler::NotifyRegisterCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -79,7 +87,15 @@ void DInputSourceManagerEventHandler::NotifyRegisterCallback(const AppExecFwk::I
 
 void DInputSourceManagerEventHandler::NotifyUnregisterCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -100,7 +116,15 @@ void DInputSourceManagerEventHandler::NotifyUnregisterCallback(const AppExecFwk:
 
 void DInputSourceManagerEventHandler::NotifyPrepareCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -119,7 +143,15 @@ void DInputSourceManagerEventHandler::NotifyPrepareCallback(const AppExecFwk::In
 
 void DInputSourceManagerEventHandler::NotifyUnprepareCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -138,7 +170,15 @@ void DInputSourceManagerEventHandler::NotifyUnprepareCallback(const AppExecFwk::
 
 void DInputSourceManagerEventHandler::NotifyStartCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -164,7 +204,15 @@ void DInputSourceManagerEventHandler::NotifyStartCallback(const AppExecFwk::Inne
 
 void DInputSourceManagerEventHandler::NotifyStopCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -201,7 +249,15 @@ void DInputSourceManagerEventHandler::NotifyStopCallback(const AppExecFwk::Inner
 
 void DInputSourceManagerEventHandler::NotifyStartDhidCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -220,7 +276,15 @@ void DInputSourceManagerEventHandler::NotifyStartDhidCallback(const AppExecFwk::
 
 void DInputSourceManagerEventHandler::NotifyStopDhidCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -239,7 +303,15 @@ void DInputSourceManagerEventHandler::NotifyStopDhidCallback(const AppExecFwk::I
 
 void DInputSourceManagerEventHandler::NotifyKeyStateCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -261,7 +333,15 @@ void DInputSourceManagerEventHandler::NotifyKeyStateCallback(const AppExecFwk::I
 
 void DInputSourceManagerEventHandler::NotifyStartServerCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_RESULT)) {
@@ -276,7 +356,15 @@ void DInputSourceManagerEventHandler::NotifyStartServerCallback(const AppExecFwk
 
 void DInputSourceManagerEventHandler::NotifyRelayPrepareCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
@@ -294,7 +382,15 @@ void DInputSourceManagerEventHandler::NotifyRelayPrepareCallback(const AppExecFw
 
 void DInputSourceManagerEventHandler::NotifyRelayUnprepareCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
@@ -312,7 +408,15 @@ void DInputSourceManagerEventHandler::NotifyRelayUnprepareCallback(const AppExec
 
 void DInputSourceManagerEventHandler::NotifyRelayPrepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -344,7 +448,15 @@ void DInputSourceManagerEventHandler::NotifyRelayPrepareRemoteInput(const AppExe
 
 void DInputSourceManagerEventHandler::NotifyRelayUnprepareRemoteInput(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsString(innerMsg, INPUT_SOURCEMANAGER_KEY_DEVID) ||
@@ -372,7 +484,15 @@ void DInputSourceManagerEventHandler::NotifyRelayUnprepareRemoteInput(const AppE
 
 void DInputSourceManagerEventHandler::NotifyRelayStartDhidCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
@@ -392,7 +512,15 @@ void DInputSourceManagerEventHandler::NotifyRelayStartDhidCallback(const AppExec
 
 void DInputSourceManagerEventHandler::NotifyRelayStopDhidCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
@@ -412,7 +540,15 @@ void DInputSourceManagerEventHandler::NotifyRelayStopDhidCallback(const AppExecF
 
 void DInputSourceManagerEventHandler::NotifyRelayStartTypeCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
@@ -432,7 +568,15 @@ void DInputSourceManagerEventHandler::NotifyRelayStartTypeCallback(const AppExec
 
 void DInputSourceManagerEventHandler::NotifyRelayStopTypeCallback(const AppExecFwk::InnerEvent::Pointer &event)
 {
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     nlohmann::json::iterator it = dataMsg->begin();
     nlohmann::json innerMsg = *it;
     if (!IsInt32(innerMsg, INPUT_SOURCEMANAGER_KEY_VALUE) ||
