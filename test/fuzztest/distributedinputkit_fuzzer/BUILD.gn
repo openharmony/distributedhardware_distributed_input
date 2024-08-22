@@ -25,7 +25,6 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
       "${distributedinput_path}/test/fuzztest/distributedinputkit_fuzzer"
 
   include_dirs = [
-    "include",
     "${distributedinput_path}/interfaces/inner_kits/include",
     "${distributedinput_path}/interfaces/ipc/include",
     "${distributedinput_path}/services/source/sourcemanager/include",
@@ -37,8 +36,6 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
     "${service_common}/include",
     "${common_path}/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
     "${distributedinput_path}/services/state/include",
   ]
@@ -57,6 +54,7 @@ ohos_fuzztest("DistributedInputKitFuzzTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "ipc:ipc_core",
