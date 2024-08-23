@@ -42,7 +42,7 @@ namespace DistributedHardware {
 namespace DistributedInput {
 IMPLEMENT_SINGLE_INSTANCE(DistributedInputHandler);
 DistributedInputHandler::DistributedInputHandler()
-    : collectThreadID_(-1), isCollectingEvents_(false), isStartCollectEventThread(false)
+    : collectThreadID_(-1), isCollectingEvents_(false), isStartCollectEventThread_(false)
 {
     inputHub_ = std::make_unique<InputHub>(true);
     this->m_listener = nullptr;
@@ -88,9 +88,9 @@ void DistributedInputHandler::StructTransJson(const InputDevice &pBuf, std::stri
 
 int32_t DistributedInputHandler::Initialize()
 {
-    if (!isStartCollectEventThread) {
+    if (!isStartCollectEventThread_) {
         InitCollectEventsThread();
-        isStartCollectEventThread = true;
+        isStartCollectEventThread_ = true;
     }
     return DH_SUCCESS;
 }
@@ -196,7 +196,7 @@ void DistributedInputHandler::StartInputMonitorDeviceThread()
         return;
     }
     while (isCollectingEvents_) {
-        size_t count = inputHub_->StartCollectInputHandler(mEventBuffer, inputDeviceBufferSize);
+        size_t count = inputHub_->StartCollectInputHandler(mEventBuffer_, inputDeviceBufferSize_);
         if (count > 0) {
             DHLOGI("Count: %{public}zu", count);
             for (size_t iCnt = 0; iCnt < count; iCnt++) {
@@ -212,18 +212,18 @@ void DistributedInputHandler::StartInputMonitorDeviceThread()
 
 void DistributedInputHandler::NotifyHardWare(int iCnt)
 {
-    switch (mEventBuffer[iCnt].type) {
+    switch (mEventBuffer_[iCnt].type) {
         case DeviceType::DEVICE_ADDED:
             if (this->m_listener != nullptr) {
                 std::string hdInfo;
-                StructTransJson(mEventBuffer[iCnt].deviceInfo, hdInfo);
+                StructTransJson(mEventBuffer_[iCnt].deviceInfo, hdInfo);
                 std::string subtype = "input";
-                this->m_listener->PluginHardware(mEventBuffer[iCnt].deviceInfo.descriptor, hdInfo, subtype);
+                this->m_listener->PluginHardware(mEventBuffer_[iCnt].deviceInfo.descriptor, hdInfo, subtype);
             }
             break;
         case DeviceType::DEVICE_REMOVED:
             if (this->m_listener != nullptr) {
-                this->m_listener->UnPluginHardware(mEventBuffer[iCnt].deviceInfo.descriptor);
+                this->m_listener->UnPluginHardware(mEventBuffer_[iCnt].deviceInfo.descriptor);
             }
             break;
         default:
@@ -238,7 +238,7 @@ void DistributedInputHandler::StopInputMonitorDeviceThread()
         return;
     }
     isCollectingEvents_ = false;
-    isStartCollectEventThread = false;
+    isStartCollectEventThread_ = false;
     inputHub_->StopCollectInputHandler();
     if (collectThreadID_ != (pthread_t)(-1)) {
         DHLOGI("DistributedInputHandler::Wait collect thread exit");

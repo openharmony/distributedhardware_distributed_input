@@ -79,6 +79,10 @@ void DistributedInputSinkTransport::DInputSinkEventHandler::ProcessEvent(const A
     switch (eventId) {
         case EHandlerMsgType::DINPUT_SINK_EVENT_HANDLER_MSG: {
             std::shared_ptr<nlohmann::json> innerMsg = event->GetSharedObject<nlohmann::json>();
+            if (innerMsg == nullptr) {
+                DHLOGE("innerMsg is null.");
+                break;
+            }
             nlohmann::json jsonStr;
             jsonStr[DINPUT_SOFTBUS_KEY_CMD_TYPE] = TRANS_SINK_MSG_BODY_DATA;
             jsonStr[DINPUT_SOFTBUS_KEY_INPUT_DATA] = innerMsg->dump();

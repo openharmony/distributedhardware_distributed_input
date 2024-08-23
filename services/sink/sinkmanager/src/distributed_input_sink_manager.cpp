@@ -393,6 +393,10 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStartDhidRemoteInpu
 void DistributedInputSinkManager::DInputSinkListener::OnRelayStopDhidRemoteInput(const int32_t &toSrcSessionId,
     const int32_t &toSinkSessionId, const std::string &deviceId, const std::string &strDhids)
 {
+    if (sinkManagerObj_ == nullptr) {
+        DHLOGE("sinkManagerObj is null.");
+        return;
+    }
     DHLOGI("onRelayStopDhidRemoteInput called, toSinkSessionId: %{public}d", toSinkSessionId);
     std::vector<std::string> stopIndeedDhIds;
     std::vector<std::string> stopOnCmdDhIds;
@@ -421,10 +425,6 @@ void DistributedInputSinkManager::DInputSinkListener::OnRelayStopDhidRemoteInput
     bool isAllClosed = DistributedInputCollector::GetInstance().IsAllDevicesStoped();
     if (!isAllClosed) {
         DHLOGE("Not all devices are stopped.");
-        return;
-    }
-    if (sinkManagerObj_ == nullptr) {
-        DHLOGE("sinkManagerObj is null.");
         return;
     }
     DistributedInputSinkSwitch::GetInstance().StopAllSwitch();
@@ -865,6 +865,10 @@ int32_t DistributedInputSinkManager::ProjectWindowListener::ParseMessage(const s
 int32_t DistributedInputSinkManager::ProjectWindowListener::UpdateSinkScreenInfoCache(const std::string &srcDevId,
     const uint64_t srcWinId, const SinkScreenInfo &sinkScreenInfoTmp)
 {
+    if (sinkManagerObj_ == nullptr) {
+        DHLOGE("sinkManagerObj is null.");
+        return ERR_DH_INPUT_SERVER_SINK_MANAGER_IS_NULL;
+    }
     std::string srcScreenInfoKey = DInputContext::GetInstance().GetScreenInfoKey(srcDevId, srcWinId);
     SinkScreenInfo sinkScreenInfo = DInputContext::GetInstance().GetSinkScreenInfo(srcScreenInfoKey);
     sinkScreenInfo.sinkShowWinId = sinkScreenInfoTmp.sinkShowWinId;
@@ -885,7 +889,7 @@ int32_t DistributedInputSinkManager::ProjectWindowListener::UpdateSinkScreenInfo
         sinkScreenInfo.sinkPhyWidth, sinkScreenInfo.sinkPhyHeight);
     int32_t ret = DInputContext::GetInstance().UpdateSinkScreenInfo(srcScreenInfoKey, sinkScreenInfo);
     std::lock_guard<std::mutex> lock(sinkManagerObj_->mutex_);
-    if ((ret == DH_SUCCESS) && (sinkManagerObj_!= nullptr) && (sinkManagerObj_->GetSinkScreenInfosCbackSize() > 0)) {
+    if ((ret == DH_SUCCESS) && (sinkManagerObj_->GetSinkScreenInfosCbackSize() > 0)) {
         sinkManagerObj_->CallBackScreenInfoChange();
     }
     return ret;

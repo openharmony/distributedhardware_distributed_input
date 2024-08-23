@@ -179,7 +179,7 @@ private:
 private:
     static std::shared_ptr<DistributedInputClient> instance;
 
-    DInputServerType serverType = DInputServerType::NULL_SERVER_TYPE;
+    DInputServerType serverType_ = DInputServerType::NULL_SERVER_TYPE;
     DInputDeviceType inputTypes_ = DInputDeviceType::NONE;
 
     std::set<sptr<AddWhiteListInfosCb>> addWhiteListCallbacks_;
@@ -193,12 +193,12 @@ private:
 
     std::shared_ptr<DistributedInputClient::DInputClientEventHandler> eventHandler_;
 
-    std::atomic<bool> isAddWhiteListCbReg;
-    std::atomic<bool> isDelWhiteListCbReg;
-    std::atomic<bool> isNodeMonitorCbReg;
-    std::atomic<bool> isSimulationEventCbReg;
-    std::atomic<bool> isSharingDhIdsReg;
-    std::atomic<bool> isGetSinkScreenInfosCbReg;
+    std::atomic<bool> isAddWhiteListCbReg_;
+    std::atomic<bool> isDelWhiteListCbReg_;
+    std::atomic<bool> isNodeMonitorCbReg_;
+    std::atomic<bool> isSimulationEventCbReg_;
+    std::atomic<bool> isSharingDhIdsReg_;
+    std::atomic<bool> isGetSinkScreenInfosCbReg_;
 
     struct DHardWareFwkRegistInfo {
         std::string devId;
@@ -212,9 +212,9 @@ private:
         std::shared_ptr<UnregisterCallback> callback = nullptr;
     };
 
-    std::vector<DHardWareFwkRegistInfo> dHardWareFwkRstInfos;
-    std::vector<DHardWareFwkUnRegistInfo> dHardWareFwkUnRstInfos;
-    std::vector<TransformInfo> screenTransInfos;
+    std::vector<DHardWareFwkRegistInfo> dHardWareFwkRstInfos_;
+    std::vector<DHardWareFwkUnRegistInfo> dHardWareFwkUnRstInfos_;
+    std::vector<TransformInfo> screenTransInfos_;
     std::mutex operationMutex_;
 
     std::mutex sharingDhIdsMtx_;
