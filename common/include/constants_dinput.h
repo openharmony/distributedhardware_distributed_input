@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,6 +48,7 @@ namespace DistributedInput {
     const uint32_t SCREEN_MSG_MAX = 40 * 1024 * 1024;
     const uint32_t AUTH_SESSION_SIDE_SERVER = 0;
     const uint32_t IPC_VECTOR_MAX_SIZE = 32;
+    const uint32_t EVENT_BUFFER_MAX = 512;
 
     /*
      * Device Type definitions

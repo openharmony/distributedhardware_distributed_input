@@ -1071,7 +1071,7 @@ int32_t InputHub::UnregisterFdFromEpoll(int fd) const
 int32_t InputHub::ReadNotifyLocked()
 {
     size_t res;
-    char eventBuf[512];
+    char eventBuf[EVENT_BUFFER_MAX] = {0};
     struct inotify_event *event;
 
     DHLOGI("readNotify nfd: %{public}d\n", iNotifyFd_);
@@ -1087,7 +1087,7 @@ int32_t InputHub::ReadNotifyLocked()
     {
         size_t eventSize = 0;
         size_t eventPos = 0;
-        while (res >= sizeof(*event)) {
+        while (res >= sizeof(*event) && eventPos < static_cast<size_t>(EVENT_BUFFER_MAX)) {
             event = reinterpret_cast<struct inotify_event *>(eventBuf + eventPos);
             JudgeDeviceOpenOrClose(*event);
             eventSize = sizeof(*event) + event->len;
