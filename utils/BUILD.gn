@@ -44,13 +44,6 @@ ohos_shared_library("libdinput_utils") {
     "LOG_DOMAIN=0xD004120",
   ]
 
-  cflags = [
-    "-O2",
-    "-D_FORTIFY_SOURCE=2",
-  ]
-
-  cflags_cc = cflags
-
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_receiver",
