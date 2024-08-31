@@ -189,7 +189,12 @@ size_t InputHub::GetEvents(RawEvent *buffer, size_t bufferSize)
         }
         struct input_event readBuffer[bufferSize];
         int32_t readSize = read(eventItem.data.fd, readBuffer, sizeof(struct input_event) * capacity);
-        size_t count = ReadInputEvent(readSize, *GetDeviceByFdLocked(eventItem.data.fd));
+        Device* deviceByFd = GetDeviceByFdLocked(eventItem.data.fd);
+        if (!deviceByFd) {
+            DHLOGE("Find device by fd: %{public}d failed", eventItem.data.fd);
+            continue;
+        }
+        size_t count = ReadInputEvent(readSize, *deviceByFd);
         Device* device = GetSupportDeviceByFd(eventItem.data.fd);
         if (!device) {
             DHLOGE("Can not find device by fd: %{public}d", eventItem.data.fd);
