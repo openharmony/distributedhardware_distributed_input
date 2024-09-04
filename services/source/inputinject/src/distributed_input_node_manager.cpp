@@ -203,6 +203,10 @@ void DistributedInputNodeManager::DInputNodeManagerEventHandler::ScanAllNode(
 {
     DHLOGI("ScanAllNode enter.");
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
+    if (dataMsg == nullptr) {
+        DHLOGE("dataMsg is null.");
+        return;
+    }
     auto it = dataMsg->begin();
     nlohmann::json innerMsg = *(it);
     std::string devId = innerMsg[INPUT_NODE_DEVID];
