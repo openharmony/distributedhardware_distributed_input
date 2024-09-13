@@ -49,6 +49,12 @@ ohos_shared_library("libdinput_sink_state") {
     "LOG_DOMAIN=0xD004120",
   ]
 
+  cflags = [
+    "-fstack-protector-strong",
+    "-D_FORTIFY_SOURCE=2",
+    "-O2",
+  ]
+
   deps = [
     "${dfx_utils_path}:libdinput_dfx_utils",
     "${services_sink_path}/transport:libdinput_sink_trans",
@@ -70,7 +76,12 @@ ohos_shared_library("libdinput_sink_state") {
     "samgr:samgr_proxy",
   ]
 
-  cflags_cc = [ "-DHILOG_ENABLE" ]
+  cflags_cc = [
+    "-DHILOG_ENABLE",
+    "-fstack-protector-strong",
+    "-D_FORTIFY_SOURCE=2",
+    "-O2",
+  ]
 
   subsystem_name = "distributedhardware"
 
