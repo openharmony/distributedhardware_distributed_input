@@ -17,8 +17,6 @@
 
 #include <algorithm>
 #include <cstring>
-#include <fstream>
-#include <sstream>
 
 #include "config_policy_utils.h"
 
@@ -60,19 +58,34 @@ WhiteListUtil &WhiteListUtil::GetInstance(void)
     return instance;
 }
 
-int32_t WhiteListUtil::Init()
+bool WhiteListUtil::GetWhiteListCfgFile(std::ifstream &ifs)
 {
     char buf[MAX_PATH_LEN] = {0};
     char path[PATH_MAX + 1] = {0x00};
     char *whiteListFilePath = GetOneCfgFile(WHITELIST_FILE_PATH, buf, MAX_PATH_LEN);
+    if (whiteListFilePath == nullptr) {
+        DHLOGE("whiteListFilePath is null.");
+        return false;
+    }
+
     if (strlen(whiteListFilePath) == 0 || strlen(whiteListFilePath) > PATH_MAX ||
         realpath(whiteListFilePath, path) == nullptr) {
         DHLOGE("File connicailization failed.");
-        return ERR_DH_INPUT_WHILTELIST_INIT_FAIL;
+        return false;
     }
-    std::ifstream inFile(path, std::ios::in | std::ios::binary);
-    if (!inFile.is_open()) {
+
+    ifs.open(path, std::ios::in | std::ios::binary);
+    if (!ifs.is_open()) {
         DHLOGE("WhiteListUtil Init error, file open fail path=%{public}s", path);
+        return false;
+    }
+    return true;
+}
+
+int32_t WhiteListUtil::Init()
+{
+    std::ifstream ifs;
+    if (!GetWhiteListCfgFile(ifs)) {
         return ERR_DH_INPUT_WHILTELIST_INIT_FAIL;
     }
 
@@ -81,7 +94,7 @@ int32_t WhiteListUtil::Init()
     TYPE_WHITE_LIST_VEC vecWhiteList;
     std::string line;
     std::size_t lineNum = 0;
-    while (getline(inFile, line)) {
+    while (getline(ifs, line)) {
         if ((++lineNum > MAX_LINE_NUM) || !IsValidLine(line)) {
             DHLOGE("whitelist cfg file has too many lines or too complicated. lineNum is %{public}zu", lineNum);
             break;
@@ -106,7 +119,7 @@ int32_t WhiteListUtil::Init()
             vecCombinationKey.clear();
         }
     }
-    inFile.close();
+    ifs.close();
     std::string localNetworkId = GetLocalDeviceInfo().networkId;
     if (!localNetworkId.empty()) {
         SyncWhiteList(localNetworkId, vecWhiteList);
