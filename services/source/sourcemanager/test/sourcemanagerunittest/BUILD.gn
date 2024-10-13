@@ -27,7 +27,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${innerkits_path}/include",
     "${innerkits_path}/ipc/include",
     "${innerkits_path}/src",
@@ -43,8 +42,6 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "${services_source_path}/transport/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${common_path}/test/mock",
     "${distributedinput_path}/services/transportbase/include",
     "${distributedinput_path}/utils/include",
@@ -120,6 +117,7 @@ ohos_unittest("distributed_input_sourcemanager_test") {
     "access_token:libtoken_setproc",
     "access_token:libtokenid_sdk",
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",

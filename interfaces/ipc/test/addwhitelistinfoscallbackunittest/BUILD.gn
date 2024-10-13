@@ -30,8 +30,6 @@ ohos_unittest("add_white_list_infos_callbackl_test") {
   include_dirs = [
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${innerkits_path}/include",
     "${innerkits_path}/src",
     "${ipc_path}/include",

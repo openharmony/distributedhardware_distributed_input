@@ -24,7 +24,6 @@ ohos_fuzztest("DinputInitSinkFuzzTest") {
       "${distributedinput_path}/test/fuzztest/dinputinitsink_fuzzer"
 
   include_dirs = [
-    "include",
     "${distributedinput_path}/interfaces/inner_kits/include",
     "${distributedinput_path}/interfaces/ipc/include",
     "${distributedinput_path}/services/source/sourcemanager/include",
@@ -34,8 +33,6 @@ ohos_fuzztest("DinputInitSinkFuzzTest") {
     "${distributedinput_path}/inputdevicehandler/include",
     "${service_common}/include",
     "${common_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
     "${utils_path}/include",
   ]
@@ -54,6 +51,7 @@ ohos_fuzztest("DinputInitSinkFuzzTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",

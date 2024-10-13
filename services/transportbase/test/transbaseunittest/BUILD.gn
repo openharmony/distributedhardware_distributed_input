@@ -28,12 +28,10 @@ ohos_unittest("distributed_input_transbase_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${distributedinput_path}/services/source/transport/include",
     "${distributedinput_path}/services/sink/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
-    "${fwk_interfaces_path}/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
     "${dfx_utils_path}/include",
@@ -78,6 +76,7 @@ ohos_unittest("distributed_input_transbase_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",

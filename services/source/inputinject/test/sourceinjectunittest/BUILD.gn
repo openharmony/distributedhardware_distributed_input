@@ -28,7 +28,6 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
   module_out_path = module_out_path
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${innerkits_path}/include",
     "${ipc_path}/include",
     "${services_source_path}/inputinject/include",
@@ -39,8 +38,6 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "${service_common}/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${distributedinput_path}/inputdevicehandler/include",
     "${common_path}/test/mock",
   ]
@@ -78,7 +75,9 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
