@@ -25,9 +25,7 @@ ohos_fuzztest("DistributedInputStubFuzzTest") {
   include_dirs = [
     "${innerkits_path}/include",
     "${innerkits_path}/ipc/include",
-    "${innerkits_path}/src",
     "${ipc_path}/include",
-    "${ipc_path}/src",
     "${services_source_path}/sourcemanager/include",
     "${frameworks_path}/include",
     "${distributedinput_path}/inputdevicehandler/include",

@@ -34,8 +34,9 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 std::shared_ptr<DistributedInputClient> DistributedInputClient::instance = std::make_shared<DistributedInputClient>();
-DistributedInputClient::DistributedInputClient() : isAddWhiteListCbReg(false), isDelWhiteListCbReg(false),
-    isNodeMonitorCbReg(false), isSimulationEventCbReg(false), isSharingDhIdsReg(false), isGetSinkScreenInfosCbReg(false)
+DistributedInputClient::DistributedInputClient() : isAddWhiteListCbReg_(false), isDelWhiteListCbReg_(false),
+    isNodeMonitorCbReg_(false), isSimulationEventCbReg_(false), isSharingDhIdsReg_(false),
+    isGetSinkScreenInfosCbReg_(false)
 {
     DHLOGI("DistributedInputClient init start");
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
@@ -55,12 +56,12 @@ void DistributedInputClient::RegisterDInputCb::OnResult(
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
     for (std::vector<DHardWareFwkRegistInfo>::iterator iter =
-        DistributedInputClient::GetInstance().dHardWareFwkRstInfos.begin();
-        iter != DistributedInputClient::GetInstance().dHardWareFwkRstInfos.end();
+        DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.begin();
+        iter != DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.end();
         ++iter) {
         if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
             iter->callback->OnRegisterResult(devId, dhId, status, "");
-            DistributedInputClient::GetInstance().dHardWareFwkRstInfos.erase(iter);
+            DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.erase(iter);
             return;
         }
     }
@@ -71,12 +72,12 @@ void DistributedInputClient::UnregisterDInputCb::OnResult(
 {
     std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
     for (std::vector<DHardWareFwkUnRegistInfo>::iterator iter =
-        DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.begin();
-        iter != DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.end();
+        DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.begin();
+        iter != DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.end();
         ++iter) {
         if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
             iter->callback->OnUnregisterResult(devId, dhId, status, "");
-            DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos.erase(iter);
+            DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.erase(iter);
             return;
         }
     }
@@ -147,26 +148,26 @@ void DistributedInputClient::DInputClientEventHandler::ProcessEvent(const AppExe
 
     if (eventId == DINPUT_CLIENT_CLEAR_SOURCE_CALLBACK_REGISTER_MSG) {
         DHLOGI("Source SA exit, clear callback flag");
-        DistributedInputClient::GetInstance().isAddWhiteListCbReg = false;
-        DistributedInputClient::GetInstance().isDelWhiteListCbReg = false;
-        DistributedInputClient::GetInstance().isNodeMonitorCbReg = false;
-        DistributedInputClient::GetInstance().isSimulationEventCbReg = false;
+        DistributedInputClient::GetInstance().isAddWhiteListCbReg_.store(false);
+        DistributedInputClient::GetInstance().isDelWhiteListCbReg_.store(false);
+        DistributedInputClient::GetInstance().isNodeMonitorCbReg_.store(false);
+        DistributedInputClient::GetInstance().isSimulationEventCbReg_.store(false);
         return;
     }
 
     if (eventId == DINPUT_CLIENT_CLEAR_SINK_CALLBACK_REGISTER_MSG) {
         DHLOGI("Sink SA exit, clear callback flag");
-        DistributedInputClient::GetInstance().isSharingDhIdsReg = false;
+        DistributedInputClient::GetInstance().isSharingDhIdsReg_.store(false);
         return;
     }
 }
 
 void DistributedInputClient::CheckSourceRegisterCallback()
 {
-    DHLOGI("CheckSourceRegisterCallback called, isAddWhiteListCbReg[%{public}d], isDelWhiteListCbReg[%{public}d], "
-        "isNodeMonitorCbReg[%{public}d], isSimulationEventCbReg[%{public}d]",
-        isAddWhiteListCbReg.load(), isDelWhiteListCbReg.load(), isNodeMonitorCbReg.load(),
-        isSimulationEventCbReg.load());
+    DHLOGI("CheckSourceRegisterCallback called, isAddWhiteListCbReg_[%{public}d], isDelWhiteListCbReg_[%{public}d], "
+        "isNodeMonitorCbReg_[%{public}d], isSimulationEventCbReg_[%{public}d]",
+        isAddWhiteListCbReg_.load(), isDelWhiteListCbReg_.load(), isNodeMonitorCbReg_.load(),
+        isSimulationEventCbReg_.load());
 
     CheckWhiteListCallback();
     CheckKeyStateCallback();
@@ -174,7 +175,7 @@ void DistributedInputClient::CheckSourceRegisterCallback()
 
 void DistributedInputClient::CheckSinkRegisterCallback()
 {
-    DHLOGI("CheckSinkRegisterCallback called, isSharingDhIdsReg[%{public}d]", isSharingDhIdsReg.load());
+    DHLOGI("CheckSinkRegisterCallback called, isSharingDhIdsReg_[%{public}d]", isSharingDhIdsReg_.load());
     CheckSharingDhIdsCallback();
     CheckSinkScreenInfoCallback();
 }
@@ -186,12 +187,12 @@ void DistributedInputClient::CheckSharingDhIdsCallback()
         return;
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
-    if (!isSharingDhIdsReg) {
+    if (!isSharingDhIdsReg_.load()) {
         sptr<ISharingDhIdListener> listener(new (std::nothrow) SharingDhIdListenerCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSinkProxy_->RegisterSharingDhIdListener(listener);
         if (ret == DH_SUCCESS) {
-            isSharingDhIdsReg = true;
+            isSharingDhIdsReg_.store(true);
             std::lock_guard<std::mutex> lock(operationMutex_);
             sharingDhIdListeners_.insert(listener);
         } else {
@@ -207,24 +208,24 @@ void DistributedInputClient::CheckWhiteListCallback()
         return;
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
-    if (!isAddWhiteListCbReg) {
+    if (!isAddWhiteListCbReg_.load()) {
         sptr<AddWhiteListInfosCb> addCallback(new (std::nothrow) AddWhiteListInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSourceProxy_->RegisterAddWhiteListCallback(addCallback);
         if (ret == DH_SUCCESS) {
-            isAddWhiteListCbReg = true;
+            isAddWhiteListCbReg_.store(true);
             std::lock_guard<std::mutex> lock(operationMutex_);
             addWhiteListCallbacks_.insert(addCallback);
         } else {
             DHLOGE("CheckWhiteListCallback client RegisterAddWhiteListCallback fail");
         }
     }
-    if (!isDelWhiteListCbReg) {
+    if (!isDelWhiteListCbReg_.load()) {
         sptr<DelWhiteListInfosCb> delCallback(new (std::nothrow) DelWhiteListInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSourceProxy_->RegisterDelWhiteListCallback(delCallback);
         if (ret == DH_SUCCESS) {
-            isDelWhiteListCbReg = true;
+            isDelWhiteListCbReg_.store(true);
             std::lock_guard<std::mutex> lock(operationMutex_);
             delWhiteListCallbacks_.insert(delCallback);
         } else {
@@ -240,9 +241,9 @@ void DistributedInputClient::CheckKeyStateCallback()
         return;
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
-    if (!isSimulationEventCbReg && regSimulationEventListener_ != nullptr) {
+    if (!isSimulationEventCbReg_.load() && regSimulationEventListener_ != nullptr) {
         DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(regSimulationEventListener_);
-        isSimulationEventCbReg = true;
+        isSimulationEventCbReg_.store(true);
     }
 }
 
@@ -253,12 +254,12 @@ void DistributedInputClient::CheckSinkScreenInfoCallback()
         return;
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
-    if (!isGetSinkScreenInfosCbReg) {
+    if (!isGetSinkScreenInfosCbReg_.load()) {
         sptr<GetSinkScreenInfosCb> callback(new (std::nothrow) GetSinkScreenInfosCb());
         int32_t ret =
             DInputSAManager::GetInstance().dInputSinkProxy_->RegisterGetSinkScreenInfosCallback(callback);
         if (ret == DH_SUCCESS) {
-            isGetSinkScreenInfosCbReg = true;
+            isGetSinkScreenInfosCbReg_.store(true);
             std::lock_guard<std::mutex> lock(operationMutex_);
             getSinkScreenInfosCallbacks_.insert(callback);
         } else {
@@ -291,7 +292,7 @@ int32_t DistributedInputClient::ReleaseSource()
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
 
-    serverType = DInputServerType::NULL_SERVER_TYPE;
+    serverType_ = DInputServerType::NULL_SERVER_TYPE;
     inputTypes_ = DInputDeviceType::NONE;
     regNodeListener_ = nullptr;
     unregNodeListener_ = nullptr;
@@ -312,7 +313,7 @@ int32_t DistributedInputClient::ReleaseSink()
     if (!DInputSAManager::GetInstance().GetDInputSinkProxy()) {
         return ERR_DH_INPUT_CLIENT_GET_SINK_PROXY_FAIL;
     }
-    serverType = DInputServerType::NULL_SERVER_TYPE;
+    serverType_ = DInputServerType::NULL_SERVER_TYPE;
     inputTypes_ = DInputDeviceType::NONE;
     {
         std::lock_guard<std::mutex> lock(operationMutex_);
@@ -338,13 +339,13 @@ int32_t DistributedInputClient::RegisterDistributedHardware(const std::string &d
     }
     {
         std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
-        for (auto iter : dHardWareFwkRstInfos) {
+        for (auto iter : dHardWareFwkRstInfos_) {
             if (iter.devId == devId && iter.dhId == dhId) {
                 return ERR_DH_INPUT_CLIENT_REGISTER_FAIL;
             }
         }
         DHardWareFwkRegistInfo info {devId, dhId, callback};
-        dHardWareFwkRstInfos.push_back(info);
+        dHardWareFwkRstInfos_.push_back(info);
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->RegisterDistributedHardware(devId, dhId, parameters,
@@ -365,13 +366,13 @@ int32_t DistributedInputClient::UnregisterDistributedHardware(const std::string 
     }
     {
         std::lock_guard<std::mutex> lock(DistributedInputClient::GetInstance().operationMutex_);
-        for (auto iter : dHardWareFwkUnRstInfos) {
+        for (auto iter : dHardWareFwkUnRstInfos_) {
             if (iter.devId == devId && iter.dhId == dhId) {
                 return ERR_DH_INPUT_CLIENT_UNREGISTER_FAIL;
             }
         }
         DHardWareFwkUnRegistInfo info {devId, dhId, callback};
-        dHardWareFwkUnRstInfos.push_back(info);
+        dHardWareFwkUnRstInfos_.push_back(info);
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     return DInputSAManager::GetInstance().dInputSourceProxy_->UnregisterDistributedHardware(devId, dhId,
@@ -579,7 +580,7 @@ bool DistributedInputClient::IsNeedFilterOut(const std::string &deviceId, const 
 bool DistributedInputClient::IsTouchEventNeedFilterOut(const TouchScreenEvent &event)
 {
     std::lock_guard<std::mutex> lock(operationMutex_);
-    for (const auto &info : screenTransInfos) {
+    for (const auto &info : screenTransInfos_) {
         DHLOGI("sinkProjPhyWidth: %{public}d sinkProjPhyHeight: %{public}d", info.sinkProjPhyWidth,
             info.sinkProjPhyHeight);
         if ((event.absX >= info.sinkWinPhyX) && (event.absX <= (info.sinkWinPhyX + info.sinkProjPhyWidth))
@@ -609,17 +610,17 @@ int32_t DistributedInputClient::RegisterSimulationEventListener(sptr<ISimulation
     }
     if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
         DHLOGE("RegisterSimulationEventListener proxy error, client fail");
-        isSimulationEventCbReg = false;
+        isSimulationEventCbReg_.store(false);
         regSimulationEventListener_ = listener;
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
     }
     std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
     int32_t ret = DInputSAManager::GetInstance().dInputSourceProxy_->RegisterSimulationEventListener(listener);
     if (ret == DH_SUCCESS) {
-        isSimulationEventCbReg = true;
+        isSimulationEventCbReg_.store(true);
         DInputSAManager::GetInstance().AddSimEventListenerToCache(listener);
     } else {
-        isSimulationEventCbReg = false;
+        isSimulationEventCbReg_.store(false);
         regSimulationEventListener_ = listener;
         DHLOGE("RegisterSimulationEventListener Failed, ret = %{public}d", ret);
     }
@@ -693,7 +694,7 @@ void DistributedInputClient::DelWhiteListInfos(const std::string &deviceId) cons
 void DistributedInputClient::UpdateSinkScreenInfos(const std::string &strJson)
 {
     std::lock_guard<std::mutex> lock(operationMutex_);
-    screenTransInfos.clear();
+    screenTransInfos_.clear();
     nlohmann::json inputData = nlohmann::json::parse(strJson, nullptr, false);
     if (inputData.is_discarded()) {
         DHLOGE("InputData parse failed!");
@@ -712,8 +713,8 @@ void DistributedInputClient::UpdateSinkScreenInfos(const std::string &strJson)
             continue;
         }
         TransformInfo tmp{info[0], info[1], info[2], info[3]};
-        screenTransInfos.emplace_back(tmp);
-        DHLOGI("screenTransInfos size %{public}zu", screenTransInfos.size());
+        screenTransInfos_.emplace_back(tmp);
+        DHLOGI("screenTransInfos_ size %{public}zu", screenTransInfos_.size());
     }
 }
 

@@ -202,6 +202,10 @@ void DistributedInputNodeManager::DInputNodeManagerEventHandler::ScanAllNode(
     const AppExecFwk::InnerEvent::Pointer &event)
 {
     DHLOGI("ScanAllNode enter.");
+    if (event == nullptr) {
+        DHLOGE("event is null.");
+        return;
+    }
     std::shared_ptr<nlohmann::json> dataMsg = event->GetSharedObject<nlohmann::json>();
     if (dataMsg == nullptr) {
         DHLOGE("dataMsg is null.");

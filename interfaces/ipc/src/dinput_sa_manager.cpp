@@ -30,7 +30,7 @@ const uint32_t DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME = 100; // million seconds
 void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
     if (systemAbilityId == DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID) {
-        DInputSAManager::GetInstance().dInputSourceSAOnline.store(false);
+        DInputSAManager::GetInstance().dInputSourceSAOnline_.store(false);
         {
             std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
             DInputSAManager::GetInstance().dInputSourceProxy_ = nullptr;
@@ -48,7 +48,7 @@ void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t syste
     }
 
     if (systemAbilityId == DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID) {
-        DInputSAManager::GetInstance().dInputSinkSAOnline.store(false);
+        DInputSAManager::GetInstance().dInputSinkSAOnline_.store(false);
         {
             std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
             DInputSAManager::GetInstance().dInputSinkProxy_ = nullptr;
@@ -70,7 +70,7 @@ void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t syste
 void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
     if (systemAbilityId == DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID) {
-        DInputSAManager::GetInstance().dInputSourceSAOnline.store(true);
+        DInputSAManager::GetInstance().dInputSourceSAOnline_.store(true);
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().handlerMutex_);
         if (DInputSAManager::GetInstance().eventHandler_ != nullptr) {
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG");
@@ -82,7 +82,7 @@ void DInputSAManager::SystemAbilityListener::OnAddSystemAbility(int32_t systemAb
     }
 
     if (systemAbilityId == DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID) {
-        DInputSAManager::GetInstance().dInputSinkSAOnline.store(true);
+        DInputSAManager::GetInstance().dInputSinkSAOnline_.store(true);
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().handlerMutex_);
         if (DInputSAManager::GetInstance().eventHandler_ != nullptr) {
             DHLOGI("SendEvent DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG");
@@ -106,7 +106,7 @@ void DInputSAManager::Init()
         return;
     }
 
-    if (!isSubscribeSrcSAChangeListener.load()) {
+    if (!isSubscribeSrcSAChangeListener_.load()) {
         DHLOGI("try subscribe source sa change listener, saId:%{public}d", DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID);
         int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SOURCE_SA_ID,
             saListenerCallback);
@@ -114,10 +114,10 @@ void DInputSAManager::Init()
             DHLOGE("subscribe source sa change failed: %{public}d", ret);
             return;
         }
-        isSubscribeSrcSAChangeListener.store(true);
+        isSubscribeSrcSAChangeListener_.store(true);
     }
 
-    if (!isSubscribeSinkSAChangeListener.load()) {
+    if (!isSubscribeSinkSAChangeListener_.load()) {
         DHLOGI("try subscribe sink sa change listener, saId:%{public}d", DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID);
         int32_t ret = systemAbilityManager->SubscribeSystemAbility(DISTRIBUTED_HARDWARE_INPUT_SINK_SA_ID,
             saListenerCallback);
@@ -125,7 +125,7 @@ void DInputSAManager::Init()
             DHLOGE("subscribe sink sa change failed: %{public}d", ret);
             return;
         }
-        isSubscribeSinkSAChangeListener.store(true);
+        isSubscribeSinkSAChangeListener_.store(true);
     }
 }
 
@@ -137,9 +137,9 @@ void DInputSAManager::RegisterEventHandler(std::shared_ptr<AppExecFwk::EventHand
 
 bool DInputSAManager::GetDInputSourceProxy()
 {
-    if (!isSubscribeSrcSAChangeListener.load()) {
+    if (!isSubscribeSrcSAChangeListener_.load()) {
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
-        if (!isSubscribeSrcSAChangeListener.load()) {
+        if (!isSubscribeSrcSAChangeListener_.load()) {
             sptr<ISystemAbilityManager> systemAbilityManager =
                 SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
             if (!systemAbilityManager) {
@@ -154,11 +154,11 @@ bool DInputSAManager::GetDInputSourceProxy()
                 DHLOGE("subscribe source sa change failed: %{public}d", ret);
                 return false;
             }
-            isSubscribeSrcSAChangeListener.store(true);
+            isSubscribeSrcSAChangeListener_.store(true);
         }
     }
 
-    if (dInputSourceSAOnline.load() && !dInputSourceProxy_) {
+    if (dInputSourceSAOnline_.load() && !dInputSourceProxy_) {
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sourceMutex_);
         if (dInputSourceProxy_ != nullptr) {
             DHLOGI("dinput source proxy has already got.");
@@ -208,9 +208,9 @@ bool DInputSAManager::SetDInputSourceProxy(const sptr<IRemoteObject> &remoteObje
 
 bool DInputSAManager::GetDInputSinkProxy()
 {
-    if (!isSubscribeSinkSAChangeListener.load()) {
+    if (!isSubscribeSinkSAChangeListener_.load()) {
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
-        if (!isSubscribeSinkSAChangeListener.load()) {
+        if (!isSubscribeSinkSAChangeListener_.load()) {
             sptr<ISystemAbilityManager> systemAbilityManager =
                 SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
             if (!systemAbilityManager) {
@@ -225,11 +225,11 @@ bool DInputSAManager::GetDInputSinkProxy()
                 DHLOGE("subscribe sink sa change failed: %{public}d", ret);
                 return false;
             }
-            isSubscribeSinkSAChangeListener.store(true);
+            isSubscribeSinkSAChangeListener_.store(true);
         }
     }
 
-    if (dInputSinkSAOnline.load() && !dInputSinkProxy_) {
+    if (dInputSinkSAOnline_.load() && !dInputSinkProxy_) {
         std::lock_guard<std::mutex> lock(DInputSAManager::GetInstance().sinkMutex_);
         if (dInputSinkProxy_ != nullptr) {
             DHLOGI("dinput sink proxy has already got.");

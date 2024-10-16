@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -71,10 +71,10 @@ private:
     ~DInputSAManager() = default;
 
 public:
-    std::atomic<bool> dInputSourceSAOnline = false;
-    std::atomic<bool> dInputSinkSAOnline = false;
-    std::atomic<bool> isSubscribeSrcSAChangeListener = false;
-    std::atomic<bool> isSubscribeSinkSAChangeListener = false;
+    std::atomic<bool> dInputSourceSAOnline_ = false;
+    std::atomic<bool> dInputSinkSAOnline_ = false;
+    std::atomic<bool> isSubscribeSrcSAChangeListener_ = false;
+    std::atomic<bool> isSubscribeSinkSAChangeListener_ = false;
     std::mutex sinkMutex_;
     std::mutex sourceMutex_;
     std::mutex handlerMutex_;

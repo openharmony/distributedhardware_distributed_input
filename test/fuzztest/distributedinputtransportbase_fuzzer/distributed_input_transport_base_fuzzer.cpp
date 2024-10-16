@@ -31,7 +31,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void StartSessionFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
