@@ -38,8 +38,6 @@ ohos_unittest("distributed_input_sink_handler_test") {
     "${service_common}/include",
     "${common_path}/include",
     "${dfx_utils_path}/include",
-    "${fwk_interfaces_path}/include",
-    "${fwk_interfaces_path}/include/ipc",
     "${services_source_path}/inputinject/include",
     "${utils_path}/include",
   ]
@@ -74,6 +72,7 @@ ohos_unittest("distributed_input_sink_handler_test") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "hisysevent:libhisysevent",

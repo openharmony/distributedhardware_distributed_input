@@ -24,11 +24,9 @@ ohos_fuzztest("DinputOnSessionClosedFuzzTest") {
       "${distributedinput_path}/test/fuzztest/dinputonsessionclosed_fuzzer"
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${services_source_path}/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
-    "${fwk_interfaces_path}/include",
     "${service_common}/include",
     "${services_source_path}/inputinject/include",
     "${services_source_path}/transport/include",
@@ -56,6 +54,7 @@ ohos_fuzztest("DinputOnSessionClosedFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",

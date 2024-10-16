@@ -24,12 +24,10 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
   fuzz_config_file = "${distributedinput_path}/test/fuzztest/distributedinputsinktransport_fuzzer"
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${services_sink_path}/transport/include",
     "${distributedinput_path}/services/transportbase/include",
     "${common_path}/include",
     "${frameworks_path}/include",
-    "${fwk_interfaces_path}/include",
     "${service_common}/include",
     "${dfx_utils_path}/include",
     "${utils_path}/include",
@@ -55,6 +53,7 @@ ohos_fuzztest("DistributedInputSinkTransportFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
