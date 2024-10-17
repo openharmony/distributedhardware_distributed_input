@@ -550,6 +550,7 @@ int32_t DistributedInputSourceManager::StartRemoteInput(
     }
 
     DHLOGI("Start called, deviceId: %{public}s, inputTypes: %{public}d", GetAnonyString(deviceId).c_str(), inputTypes);
+    std::lock_guard<std::mutex> startlock(startMutex_);
     for (auto iter : staCallbacks_) {
         if (iter.devId == deviceId && iter.inputTypes == inputTypes) {
             callback->OnResult(deviceId, inputTypes, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL);
@@ -594,6 +595,7 @@ int32_t DistributedInputSourceManager::StopRemoteInput(
     }
 
     DHLOGI("Stop called, deviceId: %{public}s, inputTypes: %{public}d", GetAnonyString(deviceId).c_str(), inputTypes);
+    std::lock_guard<std::mutex> stoplock(stopMutex_);
     for (auto iter : stpCallbacks_) {
         if (iter.devId == deviceId && iter.inputTypes == inputTypes) {
             callback->OnResult(deviceId, inputTypes, ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL);
@@ -648,7 +650,7 @@ int32_t DistributedInputSourceManager::StartRemoteInput(const std::string &srcId
     if (srcId != localNetworkId) {
         return RelayStartRemoteInputByType(srcId, sinkId, inputTypes, callback);
     }
-
+    std::lock_guard<std::mutex> startlock(startMutex_);
     DInputClientStartInfo info {sinkId, inputTypes, callback};
     staCallbacks_.push_back(info);
     DeviceMap_[sinkId] = DINPUT_SOURCE_SWITCH_OFF; // when sink device start success,set DINPUT_SOURCE_SWITCH_ON
@@ -692,7 +694,7 @@ int32_t DistributedInputSourceManager::StopRemoteInput(const std::string &srcId,
     if (srcId != localNetworkId) {
         return RelayStopRemoteInputByType(srcId, sinkId, inputTypes, callback);
     }
-
+    std::lock_guard<std::mutex> stoplock(stopMutex_);
     DInputClientStopInfo info {sinkId, inputTypes, callback};
     stpCallbacks_.push_back(info);
     int32_t ret = DistributedInputSourceTransport::GetInstance().StopRemoteInput(sinkId, inputTypes);
@@ -1285,6 +1287,7 @@ void DistributedInputSourceManager::RunStartCallback(
     const std::string &devId, const uint32_t &inputTypes, const int32_t &status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
+    std::lock_guard<std::mutex> startlock(startMutex_);
     for (auto iter = staCallbacks_.begin(); iter != staCallbacks_.end(); ++iter) {
         if (iter->devId == devId && iter->inputTypes == inputTypes) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_START_MSG");
@@ -1299,6 +1302,7 @@ void DistributedInputSourceManager::RunStopCallback(
     const std::string &devId, const uint32_t &inputTypes, const int32_t &status)
 {
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
+    std::lock_guard<std::mutex> stoplock(stopMutex_);
     for (auto iter = stpCallbacks_.begin(); iter != stpCallbacks_.end(); ++iter) {
         if (iter->devId == devId && iter->inputTypes == inputTypes) {
             DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_STOP_MSG");
@@ -1359,6 +1363,7 @@ void DistributedInputSourceManager::RunRelayStartDhidCallback(const std::string 
     SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
     DHLOGI("ProcessEvent DINPUT_SOURCE_MANAGER_RELAY_STARTDHID_RESULT_MMI dhIds:%{public}s, vec-size:%{public}zu",
         dhids.c_str(), dhidsVec.size());
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     bool isCbRun = false;
     sptr<IStartStopDInputsCallback> cb = nullptr;
     for (auto iter = relayStaDhidCallbacks_.begin(); iter != relayStaDhidCallbacks_.end(); ++iter) {
@@ -1383,6 +1388,7 @@ void DistributedInputSourceManager::RunRelayStopDhidCallback(const std::string &
 {
     std::vector<std::string> dhidsVec;
     SplitStringToVector(dhids, INPUT_STRING_SPLIT_POINT, dhidsVec);
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     bool isCbRun = false;
     sptr<IStartStopDInputsCallback> cb = nullptr;
     for (auto iter = relayStpDhidCallbacks_.begin(); iter != relayStpDhidCallbacks_.end(); ++iter) {
@@ -1405,6 +1411,7 @@ void DistributedInputSourceManager::RunRelayStopDhidCallback(const std::string &
 void DistributedInputSourceManager::RunRelayStartTypeCallback(const std::string &srcId, const std::string &sinkId,
     const int32_t status, uint32_t inputTypes)
 {
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     bool isCbRun = false;
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_START_START, DINPUT_START_TASK);
     for (std::vector<DInputClientStartTypeInfo>::iterator iter =
@@ -1426,6 +1433,7 @@ void DistributedInputSourceManager::RunRelayStartTypeCallback(const std::string 
 void DistributedInputSourceManager::RunRelayStopTypeCallback(const std::string &srcId, const std::string &sinkId,
     const int32_t status, uint32_t inputTypes)
 {
+    std::lock_guard<std::mutex> lock(startStopMutex_);
     bool isCbRun = false;
     FinishAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_STOP_START, DINPUT_STOP_TASK);
     for (std::vector<DInputClientStopTypeInfo>::iterator iter =
