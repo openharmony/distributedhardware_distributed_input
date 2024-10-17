@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,8 @@
 
 #include <mutex>
 #include <unordered_set>
+#include <fstream>
+#include <sstream>
 
 #include "constants_dinput.h"
 
@@ -47,7 +49,7 @@ public:
     int32_t ClearWhiteList(const std::string &deviceId);
     int32_t ClearWhiteList(void);
     int32_t GetWhiteList(const std::string &deviceId, TYPE_WHITE_LIST_VEC &vecWhiteList);
-
+    bool GetWhiteListCfgFile(std::ifstream &ifs);
     /*
      * check is event in white list of deviceId
      *
