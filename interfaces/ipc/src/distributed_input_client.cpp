@@ -59,7 +59,7 @@ void DistributedInputClient::RegisterDInputCb::OnResult(
         DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.begin();
         iter != DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.end();
         ++iter) {
-        if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
+        if (iter->devId == devId && iter->dhId == dhId && iter->callback != nullptr) {
             iter->callback->OnRegisterResult(devId, dhId, status, "");
             DistributedInputClient::GetInstance().dHardWareFwkRstInfos_.erase(iter);
             return;
@@ -75,7 +75,7 @@ void DistributedInputClient::UnregisterDInputCb::OnResult(
         DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.begin();
         iter != DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.end();
         ++iter) {
-        if (iter->devId == devId && iter->dhId == dhId && (iter->callback != nullptr)) {
+        if (iter->devId == devId && iter->dhId == dhId && iter->callback != nullptr) {
             iter->callback->OnUnregisterResult(devId, dhId, status, "");
             DistributedInputClient::GetInstance().dHardWareFwkUnRstInfos_.erase(iter);
             return;
