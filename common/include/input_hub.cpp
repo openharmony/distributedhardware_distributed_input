@@ -560,7 +560,6 @@ int32_t InputHub::OpenInputDeviceLocked(const std::string &devicePath)
     std::unique_ptr<Device> device = std::make_unique<Device>(fd, devicePath);
 
     if (QueryInputDeviceInfo(fd, device) < 0) {
-        CloseFd(fd);
         return ERR_DH_INPUT_HUB_QUERY_INPUT_DEVICE_INFO_FAIL;
     }
     GenerateDescriptor(device->identifier);
