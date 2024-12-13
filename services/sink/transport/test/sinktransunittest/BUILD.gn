@@ -85,6 +85,7 @@ ohos_unittest("distributed_input_sinktrans_test") {
     "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
+    "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "graphic_2d:librender_service_base",
     "graphic_surface:surface",
