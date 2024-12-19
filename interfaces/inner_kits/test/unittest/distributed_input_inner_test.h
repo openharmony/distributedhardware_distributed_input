@@ -46,8 +46,8 @@ class DistributedInputInnerTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
-    virtual void SetUp() override;
-    virtual void TearDown() override;
+    void SetUp() override;
+    void TearDown() override;
     int CheckSourceProxy() const;
     int CheckSinkProxy() const;
 
