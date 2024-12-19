@@ -21,6 +21,7 @@
 #include <iostream>
 #include <thread>
 
+#include <fuzzer/FuzzedDataProvider.h>
 #include <refbase.h>
 
 #include "constants_dinput.h"
@@ -139,10 +140,11 @@ void IsNeedFilterOutFuzzTest(const uint8_t *data, size_t size)
         return;
     }
 
-    std::string deviceId(reinterpret_cast<const char*>(data), size);
-    int32_t pressedKey = *(reinterpret_cast<const int32_t*>(data));
-    int32_t keyCode = *(reinterpret_cast<const int32_t*>(data));
-    int32_t keyAction = *(reinterpret_cast<const int32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    std::string deviceId = fdp.ConsumeRandomLengthString();
+    int32_t pressedKey = fdp.ConsumeIntegral<int32_t>();
+    int32_t keyCode = fdp.ConsumeIntegral<int32_t>();
+    int32_t keyAction = fdp.ConsumeIntegral<int32_t>();
     DistributedInput::BusinessEvent event;
     event.pressedKeys.push_back(pressedKey);
     event.keyCode = keyCode;
@@ -175,8 +177,9 @@ void IsTouchEventNeedFilterOutFuzzTest(const uint8_t *data, size_t size)
         return;
     }
 
-    uint32_t absX = *(reinterpret_cast<const uint32_t*>(data));
-    uint32_t absY = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t absX = fdp.ConsumeIntegral<uint32_t>();
+    uint32_t absY = fdp.ConsumeIntegral<uint32_t>();
     DistributedInput::TouchScreenEvent event;
     event.absX = absX;
     event.absY = absY;
