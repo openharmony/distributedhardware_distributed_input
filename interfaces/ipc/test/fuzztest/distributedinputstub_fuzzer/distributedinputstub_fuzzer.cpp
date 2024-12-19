@@ -15,6 +15,8 @@
 
 #include "distributedinputstub_fuzzer.h"
 
+#include <fuzzer/FuzzedDataProvider.h>
+
 #include "add_white_list_infos_call_back_stub.h"
 #include "del_white_list_infos_call_back_stub.h"
 #include "get_sink_screen_infos_call_back_stub.h"
@@ -50,17 +52,18 @@ void AddWhiteListInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
+    FuzzedDataProvider fdp(data, size);
     pdata.WriteInterfaceToken(DistributedInput::AddWhiteListInfosCallbackStub::GetDescriptor());
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     if (code == (uint32_t)DistributedInput::IAddWhiteListInfosCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -89,17 +92,18 @@ void DelWhiteListInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::DelWhiteListInfosCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IDelWhiteListInfosCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -159,11 +163,12 @@ void DistributedInputSinkStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
+    FuzzedDataProvider fdp(data, size);
     pdata.WriteInterfaceToken(DistributedInput::DistributedInputSinkStub::GetDescriptor());
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
-    uint32_t type = *(reinterpret_cast<const uint32_t*>(data));
-    std::string content(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
+    uint32_t type = fdp.ConsumeIntegral<uint32_t>();
+    std::string content = fdp.ConsumeRandomLengthString();
+    std::string devId = fdp.ConsumeRandomLengthString();
     pdata.WriteUint32(type);
     pdata.WriteString(content);
     pdata.WriteString(devId);
@@ -387,11 +392,12 @@ void DistributedInputSourceStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
+    FuzzedDataProvider fdp(data, size);
     pdata.WriteInterfaceToken(DistributedInput::DistributedInputSourceStub::GetDescriptor());
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
-    uint32_t type = *(reinterpret_cast<const uint32_t*>(data));
-    std::string content(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
+    uint32_t type = fdp.ConsumeIntegral<uint32_t>();
+    std::string content = fdp.ConsumeRandomLengthString();
+    std::string devId = fdp.ConsumeRandomLengthString();
     pdata.WriteUint32(type);
     pdata.WriteString(content);
     pdata.WriteString(devId);
@@ -444,17 +450,18 @@ void GetSinkScreenInfosCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::GetSinkScreenInfosCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IGetSinkScreenInfosCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -498,24 +505,25 @@ void InputNodeListenerStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::InputNodeListenerStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::InputNodeListener::Message::RESULT_ON) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else if (code == (uint32_t)DistributedInput::InputNodeListener::Message::RESULT_OFF) {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
     } else {
-        uint32_t type = *(reinterpret_cast<const uint32_t*>(data));
-        std::string content(reinterpret_cast<const char*>(data), size);
-        std::string devId(reinterpret_cast<const char*>(data), size);
+        uint32_t type = fdp.ConsumeIntegral<uint32_t>();
+        std::string content = fdp.ConsumeRandomLengthString();
+        std::string devId = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(type);
         pdata.WriteString(content);
         pdata.WriteString(devId);
@@ -545,17 +553,18 @@ void PrepareDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::PrepareDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IPrepareDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -584,17 +593,18 @@ void RegisterDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::RegisterDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IRegisterDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -623,17 +633,18 @@ void RegisterSessionStateCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::RegisterSessionStateCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::ISessionStateCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -669,24 +680,25 @@ void SharingDhIdListenerStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::SharingDhIdListenerStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::ISharingDhIdListener::Message::SHARING) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else if (code == (uint32_t)DistributedInput::ISharingDhIdListener::Message::NO_SHARING) {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
     } else {
-        uint32_t type = *(reinterpret_cast<const uint32_t*>(data));
-        std::string content(reinterpret_cast<const char*>(data), size);
-        std::string devId(reinterpret_cast<const char*>(data), size);
+        uint32_t type = fdp.ConsumeIntegral<uint32_t>();
+        std::string content = fdp.ConsumeRandomLengthString();
+        std::string devId = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(type);
         pdata.WriteString(content);
         pdata.WriteString(devId);
@@ -715,17 +727,18 @@ void SimulationEventListenerStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::SimulationEventListenerStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::ISimulationEventListener::Message::RESULT_ON) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -754,17 +767,18 @@ void StartDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::StartDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IStartDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -793,17 +807,18 @@ void StartStopDInputsCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::StartStopDInputsCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IStartStopDInputsCallback::Message::RESULT_STRING) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -838,24 +853,25 @@ void StartStopResultCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::StartStopResultCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IStartStopResultCallback::Message::RESULT_START) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else if (code == (uint32_t)DistributedInput::IStartStopResultCallback::Message::RESULT_STOP) {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
     } else {
-        uint32_t type = *(reinterpret_cast<const uint32_t*>(data));
-        std::string content(reinterpret_cast<const char*>(data), size);
-        std::string devId(reinterpret_cast<const char*>(data), size);
+        uint32_t type = fdp.ConsumeIntegral<uint32_t>();
+        std::string content = fdp.ConsumeRandomLengthString();
+        std::string devId = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(type);
         pdata.WriteString(content);
         pdata.WriteString(devId);
@@ -884,17 +900,18 @@ void StopDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::StopDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IStopDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -923,17 +940,18 @@ void UnprepareDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::UnprepareDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IUnprepareDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
@@ -962,17 +980,18 @@ void UnregisterDInputCallbackStubFuzzTest(const uint8_t *data, size_t size)
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data));
+    FuzzedDataProvider fdp(data, size);
+    uint32_t code = fdp.ConsumeIntegral<uint32_t>();
     pdata.WriteInterfaceToken(DistributedInput::UnregisterDInputCallbackStub::GetDescriptor());
     if (code == (uint32_t)DistributedInput::IUnprepareDInputCallback::Message::RESULT) {
-        uint32_t tag = *(reinterpret_cast<const uint32_t*>(data));
-        std::string value(reinterpret_cast<const char*>(data), size);
+        uint32_t tag = fdp.ConsumeIntegral<uint32_t>();
+        std::string value = fdp.ConsumeRandomLengthString();
         pdata.WriteUint32(tag);
         pdata.WriteString(value);
     } else {
-        int32_t fd = *(reinterpret_cast<const int32_t*>(data));
-        int32_t len = *(reinterpret_cast<const int32_t*>(data));
-        std::string name(reinterpret_cast<const char*>(data), size);
+        int32_t fd = fdp.ConsumeIntegral<int32_t>();
+        int32_t len = fdp.ConsumeIntegral<int32_t>();
+        std::string name = fdp.ConsumeRandomLengthString();
         pdata.WriteFileDescriptor(fd);
         pdata.WriteInt32(len);
         pdata.WriteString(name);
