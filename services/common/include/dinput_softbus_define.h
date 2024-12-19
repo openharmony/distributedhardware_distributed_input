@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -35,7 +35,7 @@ namespace DistributedInput {
     };
 
     const int32_t ENCRYPT_TAG_LEN = 32;
-    const int32_t MSG_MAX_SIZE = 45 * 1024;
+    const uint32_t MSG_MAX_SIZE = 45 * 1024;
 
     const uint32_t SESSION_NAME_SIZE_MAX = 256;
     const uint32_t DEVICE_ID_SIZE_MAX = 65;
