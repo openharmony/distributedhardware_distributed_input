@@ -28,8 +28,8 @@ class DistributedInputCollectorTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
-    virtual void SetUp() override;
-    virtual void TearDown() override;
+    void SetUp() override;
+    void TearDown() override;
 
     class DInputSinkCollectorEventHandler : public AppExecFwk::EventHandler {
     public:
