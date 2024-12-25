@@ -466,7 +466,7 @@ bool DistributedInputTransportBase::CheckRecivedData(const std::string &message)
 
 void DistributedInputTransportBase::OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen)
 {
-    if (sessionId < 0 || data == nullptr || dataLen <= 0) {
+    if (sessionId < 0 || data == nullptr || dataLen == 0 || dataLen > MSG_MAX_SIZE) {
         DHLOGE("OnBytesReceived param check failed");
         return;
     }
