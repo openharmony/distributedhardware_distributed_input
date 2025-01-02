@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,15 +40,15 @@ class DistributedInputSourceHandlerTest : public testing::Test {
 public:
     static void SetUpTestCase();
     static void TearDownTestCase();
-    virtual void SetUp() override;
-    virtual void TearDown() override;
+    void SetUp() override;
+    void TearDown() override;
     int32_t CheckSystemAbility();
 
     class TestRegisterDInputCallback : public OHOS::DistributedHardware::RegisterCallback {
     public:
         TestRegisterDInputCallback() = default;
         virtual ~TestRegisterDInputCallback() = default;
-        virtual int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+        int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
             const std::string &data) override;
     };
 
@@ -56,7 +56,7 @@ public:
     public:
         TestUnregisterDInputCallback() = default;
         virtual ~TestUnregisterDInputCallback() = default;
-        virtual int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+        int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
         const std::string &data) override;
     };
 };
