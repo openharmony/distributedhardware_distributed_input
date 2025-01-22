@@ -59,6 +59,7 @@ ohos_fuzztest("DinputReleaseSinkFuzzTest") {
     "json:nlohmann_json_static",
     "libevdev:libevdev",
     "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 
   defines = [
