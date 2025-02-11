@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -197,13 +197,13 @@ void DistributedInputHandler::StartInputMonitorDeviceThread()
     }
     while (isCollectingEvents_) {
         size_t count = inputHub_->StartCollectInputHandler(mEventBuffer_, inputDeviceBufferSize_);
-        if (count > 0) {
-            DHLOGI("Count: %{public}zu", count);
-            for (size_t iCnt = 0; iCnt < count; iCnt++) {
-                NotifyHardWare(iCnt);
-            }
-        } else {
+        DHLOGI("count: %{public}zu", count);
+        if (count == 0 || count > inputDeviceBufferSize_) {
+            DHLOGE("Collect input device size is invaild.");
             continue;
+        }
+        for (size_t iCnt = 0; iCnt < count; iCnt++) {
+            NotifyHardWare(iCnt);
         }
     }
     isCollectingEvents_ = false;
