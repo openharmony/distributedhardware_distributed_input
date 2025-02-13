@@ -84,8 +84,11 @@ ohos_unittest("distributed_input_sourcetrans_test") {
     "eventhandler:libeventhandler",
     "hilog:libhilog",
     "hitrace:hitrace_meter",
+    "ipc:ipc_core",
     "json:nlohmann_json_static",
     "libevdev:libevdev",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]

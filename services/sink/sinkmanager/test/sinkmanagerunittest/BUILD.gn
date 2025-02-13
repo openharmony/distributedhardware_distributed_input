@@ -108,6 +108,7 @@ ohos_unittest("distributed_input_sinkmanager_test") {
     "graphic_surface:surface",
     "hicollie:libhicollie",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
     "libevdev:libevdev",

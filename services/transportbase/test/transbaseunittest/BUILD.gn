@@ -87,6 +87,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "ipc:ipc_core",
     "json:nlohmann_json_static",
     "libevdev:libevdev",
+    "samgr:samgr_proxy",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
