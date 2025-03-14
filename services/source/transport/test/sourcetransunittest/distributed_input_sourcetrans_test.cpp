@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -44,13 +44,13 @@ void DistributedInputSourceTransTest::TearDownTestCase()
 {
 }
 
-HWTEST_F(DistributedInputSourceTransTest, Init01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, Init01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSourceTransport::GetInstance().Init();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus01, testing::ext::TestSize.Level1)
 {
     std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(remoteDevId, false);
@@ -58,14 +58,14 @@ HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus01, testing::ext::Test
     DistributedInputSourceTransport::GetInstance().Release();
 }
 
-HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus02, testing::ext::TestSize.Level1)
 {
     std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().OpenInputSoftbus(remoteDevId, true);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus03, testing::ext::TestSize.Level1)
 {
     std::string remoteDevId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     DistributedInputSourceTransport::GetInstance().latencyThreadNum = 1;
@@ -74,7 +74,7 @@ HWTEST_F(DistributedInputSourceTransTest, OpenInputSoftbus03, testing::ext::Test
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, PrepareRemoteInput_01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, PrepareRemoteInput_01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     int32_t ret = DistributedInputSourceTransport::GetInstance().PrepareRemoteInput(deviceId);
@@ -106,14 +106,14 @@ HWTEST_F(DistributedInputSourceTransTest, PrepareRemoteInput_04, testing::ext::T
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, UnprepareRemoteInput_01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, UnprepareRemoteInput_01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     int32_t ret = DistributedInputSourceTransport::GetInstance().UnprepareRemoteInput(deviceId);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_UNPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, UnprepareRemoteInput_02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, UnprepareRemoteInput_02, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().UnprepareRemoteInput(deviceId);
@@ -136,7 +136,7 @@ HWTEST_F(DistributedInputSourceTransTest, UnprepareRemoteInput_04, testing::ext:
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     int32_t ret = DistributedInputSourceTransport::GetInstance().StartRemoteInput(
@@ -144,7 +144,7 @@ HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput01, testing::ext::Test
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput02, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().StartRemoteInput(
@@ -152,7 +152,7 @@ HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput02, testing::ext::Test
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     std::string dhid = "Input_1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
@@ -162,7 +162,7 @@ HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput03, testing::ext::Test
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StartRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::string dhid = "Input_1ds56v18e1v21v8v1erv15r1v8r1j1ty8";
@@ -208,7 +208,7 @@ HWTEST_F(DistributedInputSourceTransTest, StartRemoteInputType_02, testing::ext:
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     int32_t ret = DistributedInputSourceTransport::GetInstance().StopRemoteInput(
@@ -216,7 +216,7 @@ HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput01, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput02, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t ret = DistributedInputSourceTransport::GetInstance().StopRemoteInput(
@@ -224,7 +224,7 @@ HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput02, testing::ext::TestS
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "";
     std::vector<std::string> dhids;
@@ -233,7 +233,7 @@ HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput03, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, StopRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::vector<std::string> dhids;
@@ -278,7 +278,7 @@ HWTEST_F(DistributedInputSourceTransTest, StopRemoteInputType_02, testing::ext::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyOriginPrepareResult01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyOriginPrepareResult01, testing::ext::TestSize.Level1)
 {
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::string sinkId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
@@ -288,7 +288,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyOriginPrepareResult01, testing::
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyOriginUnprepareResult01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyOriginUnprepareResult01, testing::ext::TestSize.Level1)
 {
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::string sinkId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
@@ -298,7 +298,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyOriginUnprepareResult01, testing
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyOriginStartDhidResult01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyOriginStartDhidResult01, testing::ext::TestSize.Level1)
 {
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::string sinkId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
@@ -309,7 +309,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyOriginStartDhidResult01, testing
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyOriginStopDhidResult01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyOriginStopDhidResult01, testing::ext::TestSize.Level1)
 {
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     std::string sinkId = "networkidc08647073e02e7a78f09473aa122ff57fc81c00";
@@ -411,14 +411,14 @@ HWTEST_F(DistributedInputSourceTransTest, SendRelayStopTypeRequest_01, testing::
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, LatencyCount01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, LatencyCount01, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "deviceId";
     int32_t ret = DistributedInputSourceTransport::GetInstance().LatencyCount(deviceId);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_LATENCY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, LatencyCount02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, LatencyCount02, testing::ext::TestSize.Level1)
 {
     std::string deviceId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     int32_t sessionId = 2;
@@ -483,7 +483,7 @@ HWTEST_F(DistributedInputSourceTransTest, SendRelayStopTypeRequest_02, testing::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -495,7 +495,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput01, te
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput02, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -507,7 +507,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput02, te
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput03, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -526,7 +526,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput03, te
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput04, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -538,7 +538,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponsePrepareRemoteInput04, te
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseUnprepareRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseUnprepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -552,7 +552,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponseUnprepareRemoteInput01, 
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInput01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -574,7 +574,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInput01, test
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInput01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -596,7 +596,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInput01, testi
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInputDhid01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInputDhid01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -614,7 +614,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStartRemoteInputDhid01, 
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInputDhid01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInputDhid01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;
@@ -632,7 +632,7 @@ HWTEST_F(DistributedInputSourceTransTest, NotifyResponseStopRemoteInputDhid01, t
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_SENDMESSSAGE, ret);
 }
 
-HWTEST_F(DistributedInputSourceTransTest, NotifyResponseKeyState01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceTransTest, NotifyResponseKeyState01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     nlohmann::json recMsg;

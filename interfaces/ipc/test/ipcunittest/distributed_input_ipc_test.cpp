@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -345,7 +345,7 @@ HWTEST_F(DistributedInputIpcTest, PrepareRemoteInput01, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, UnprepareRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, UnprepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "UnprepareRemoteInput01";
     sptr<IUnprepareDInputCallback> callback = nullptr;
@@ -353,7 +353,7 @@ HWTEST_F(DistributedInputIpcTest, UnprepareRemoteInput01, testing::ext::TestSize
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StartRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StartRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "StartRemoteInput01";
     sptr<IStartDInputCallback> callback = nullptr;
@@ -362,7 +362,7 @@ HWTEST_F(DistributedInputIpcTest, StartRemoteInput01, testing::ext::TestSize.Lev
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StartRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StartRemoteInput02, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "StartRemoteInput_sink";
     std::vector<std::string> dhIds = {"dhIds_test"};
@@ -371,7 +371,7 @@ HWTEST_F(DistributedInputIpcTest, StartRemoteInput02, testing::ext::TestSize.Lev
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StartRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StartRemoteInput03, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
@@ -381,7 +381,7 @@ HWTEST_F(DistributedInputIpcTest, StartRemoteInput03, testing::ext::TestSize.Lev
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StartRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StartRemoteInput04, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
@@ -391,7 +391,7 @@ HWTEST_F(DistributedInputIpcTest, StartRemoteInput04, testing::ext::TestSize.Lev
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StopRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StopRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "StopRemoteInput01";
     sptr<IStopDInputCallback> callback = nullptr;
@@ -400,7 +400,7 @@ HWTEST_F(DistributedInputIpcTest, StopRemoteInput01, testing::ext::TestSize.Leve
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StopRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StopRemoteInput02, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "StartRemoteInput_test";
     std::vector<std::string> dhIds = {"dhIds_test"};
@@ -409,7 +409,7 @@ HWTEST_F(DistributedInputIpcTest, StopRemoteInput02, testing::ext::TestSize.Leve
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StopRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StopRemoteInput03, testing::ext::TestSize.Level1)
 {
     string srcId = "StopRemoteInput03-src";
     string sinkId = "StopRemoteInput03-sink";
@@ -419,7 +419,7 @@ HWTEST_F(DistributedInputIpcTest, StopRemoteInput03, testing::ext::TestSize.Leve
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputIpcTest, StopRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputIpcTest, StopRemoteInput04, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";

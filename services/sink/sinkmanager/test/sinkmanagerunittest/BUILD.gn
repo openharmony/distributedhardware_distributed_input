@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
 
-module_out_path = "distributed_input/sink_manager"
+module_out_path = unittest_output_path
 
 group("sinkmanagerunittest") {
   testonly = true

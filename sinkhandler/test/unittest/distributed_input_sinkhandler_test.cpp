@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,38 +39,38 @@ void DistributedInputSinkHandlerTest::TearDownTestCase()
 {
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, InitSink01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, InitSink01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSinkHandler::GetInstance().InitSink("params");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, InitSink02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, InitSink02, testing::ext::TestSize.Level1)
 {
     std::string params = "";
     int32_t ret = DistributedInputSinkHandler::GetInstance().InitSink(params);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
-HWTEST_F(DistributedInputSinkHandlerTest, InitSink03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, InitSink03, testing::ext::TestSize.Level1)
 {
     std::string params = "params";
     int32_t ret = DistributedInputSinkHandler::GetInstance().InitSink(params);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, ReleaseSink01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, ReleaseSink01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSinkHandler::GetInstance().ReleaseSink();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSinkHandler::GetInstance().SubscribeLocalHardware("dhId", "params");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware02, testing::ext::TestSize.Level1)
 {
     std::string dhId = "SubscribeLocalHardware02";
     std::string params = "test2";
@@ -78,7 +78,7 @@ HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware02, testing::ext
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware03, testing::ext::TestSize.Level1)
 {
     std::string dhId = "SubscribeLocalHardware03";
     std::string params = "test3";
@@ -86,20 +86,20 @@ HWTEST_F(DistributedInputSinkHandlerTest, SubscribeLocalHardware03, testing::ext
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSinkHandler::GetInstance().UnsubscribeLocalHardware("dhId");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware02, testing::ext::TestSize.Level1)
 {
     std::string dhId = "UnsubscribeLocalHardware02";
     int32_t ret = DistributedInputSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkHandlerTest, UnsubscribeLocalHardware03, testing::ext::TestSize.Level1)
 {
     std::string dhId = "UnsubscribeLocalHardware03";
     int32_t ret = DistributedInputSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
