@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -89,21 +89,21 @@ int32_t DistributedInputSinkManagerTest::TestSharingDhIdListenerStub::OnNoSharin
     return DH_SUCCESS;
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, InitAuto, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, InitAuto, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     bool ret = sinkManager_->InitAuto();
     EXPECT_EQ(true, ret);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, Init, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, Init, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     int32_t ret = sinkManager_->Init();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, Release, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, Release, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     MockProcess::MockDinputProcess("dinput");
@@ -111,7 +111,7 @@ HWTEST_F(DistributedInputSinkManagerTest, Release, testing::ext::TestSize.Level0
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, GetStartTransFlag, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, GetStartTransFlag, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     DInputServerType flag = DInputServerType::SINK_SERVER_TYPE;
@@ -120,7 +120,7 @@ HWTEST_F(DistributedInputSinkManagerTest, GetStartTransFlag, testing::ext::TestS
     EXPECT_EQ(flag, retFlag);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     uint32_t inputTypes = static_cast<uint32_t>(DInputDeviceType::MOUSE);
@@ -129,7 +129,7 @@ HWTEST_F(DistributedInputSinkManagerTest, GetInputTypes, testing::ext::TestSize.
     EXPECT_EQ(inputTypes, retType);
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     int32_t sessionId = 1;
@@ -145,7 +145,7 @@ HWTEST_F(DistributedInputSinkManagerTest, DeleteStopDhids01, testing::ext::TestS
     EXPECT_EQ(0, sinkManager_->sharingDhIdsMap_.size());
 }
 
-HWTEST_F(DistributedInputSinkManagerTest, GetSinkScreenInfosCbackSize01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkManagerTest, GetSinkScreenInfosCbackSize01, testing::ext::TestSize.Level1)
 {
     ASSERT_NE(nullptr, sinkManager_);
     uint32_t ret = sinkManager_->GetSinkScreenInfosCbackSize();

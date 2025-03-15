@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
 
-module_out_path = "distributed_input/inner_kits"
+module_out_path = unittest_output_path
 
 group("unittest") {
   testonly = true

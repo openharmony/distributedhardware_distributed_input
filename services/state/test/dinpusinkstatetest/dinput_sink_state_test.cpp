@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -75,7 +75,7 @@ void DinputSinkStateTest::TearDown()
 {
 }
 
-HWTEST_F(DinputSinkStateTest, RecordDhIds_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, RecordDhIds_001, testing::ext::TestSize.Level1)
 {
     std::vector<std::string> dhIds;
     dhIds.push_back(DHID_1);
@@ -85,7 +85,7 @@ HWTEST_F(DinputSinkStateTest, RecordDhIds_001, testing::ext::TestSize.Level0)
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, RecordDhIds_002, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, RecordDhIds_002, testing::ext::TestSize.Level1)
 {
     std::vector<std::string> dhIds;
     dhIds.push_back(DHID_1);
@@ -96,7 +96,7 @@ HWTEST_F(DinputSinkStateTest, RecordDhIds_002, testing::ext::TestSize.Level0)
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, RemoveDhIds_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, RemoveDhIds_001, testing::ext::TestSize.Level1)
 {
     std::vector<std::string> dhIds;
     dhIds.push_back(DHID_1);
@@ -104,21 +104,21 @@ HWTEST_F(DinputSinkStateTest, RemoveDhIds_001, testing::ext::TestSize.Level0)
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, GetStateByDhid_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, GetStateByDhid_001, testing::ext::TestSize.Level1)
 {
     DInputSinkState::GetInstance().dhIdStateMap_[DHID_1] = DhIdState::THROUGH_OUT;
     DhIdState ret = DInputSinkState::GetInstance().GetStateByDhid(DHID_1);
     EXPECT_EQ(DhIdState::THROUGH_OUT, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, GetStateByDhid_002, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, GetStateByDhid_002, testing::ext::TestSize.Level1)
 {
     std::string dhId = "dhId_test";
     DhIdState ret = DInputSinkState::GetInstance().GetStateByDhid(dhId);
     EXPECT_EQ(DhIdState::THROUGH_IN, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, SimulateEventInjectToSrc_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, SimulateEventInjectToSrc_001, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 1;
     std::string dhId = "dhId_test";
@@ -134,7 +134,7 @@ HWTEST_F(DinputSinkStateTest, SimulateEventInjectToSrc_001, testing::ext::TestSi
     EXPECT_EQ(DInputSinkState::GetInstance().keyDownStateMap_.size(), 0);
 }
 
-HWTEST_F(DinputSinkStateTest, RemoveKeyDownState_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, RemoveKeyDownState_001, testing::ext::TestSize.Level1)
 {
     DInputSinkState::GetInstance().keyDownStateMap_.clear();
     std::string dhId = "dhId_test";
@@ -149,14 +149,14 @@ HWTEST_F(DinputSinkStateTest, RemoveKeyDownState_001, testing::ext::TestSize.Lev
     EXPECT_EQ(DInputSinkState::GetInstance().keyDownStateMap_.size(), 0);
 }
 
-HWTEST_F(DinputSinkStateTest, IsPositionEvent_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, IsPositionEvent_001, testing::ext::TestSize.Level1)
 {
     DInputSinkState::GetInstance().Init();
     auto ret = DInputSinkState::GetInstance().GetTouchPadEventFragMgr()->IsPositionEvent(EVENT_2);
     EXPECT_EQ(false, ret);
 }
 
-HWTEST_F(DinputSinkStateTest, PushEvent_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, PushEvent_001, testing::ext::TestSize.Level1)
 {
     auto ret = DInputSinkState::GetInstance().GetTouchPadEventFragMgr()->PushEvent(DHID_1, EVENT_1);
     EXPECT_EQ(false, ret.first);
@@ -165,7 +165,7 @@ HWTEST_F(DinputSinkStateTest, PushEvent_001, testing::ext::TestSize.Level0)
     EXPECT_EQ(false, ret.first);
 }
 
-HWTEST_F(DinputSinkStateTest, GetAndClearEvents_001, testing::ext::TestSize.Level0)
+HWTEST_F(DinputSinkStateTest, GetAndClearEvents_001, testing::ext::TestSize.Level1)
 {
     std::string dhId = "dhId_test";
     auto ret = DInputSinkState::GetInstance().GetTouchPadEventFragMgr()->GetAndClearEvents(dhId);

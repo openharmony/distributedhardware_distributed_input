@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -209,7 +209,7 @@ HWTEST_F(DistributedInputClientTest, PrepareRemoteInput02, testing::ext::TestSiz
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_PREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, PrepareRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, PrepareRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string srcId = "PrepareRemoteInput_test";
     std::string sinkId = "PrepareRemoteInput_test";
@@ -218,7 +218,7 @@ HWTEST_F(DistributedInputClientTest, PrepareRemoteInput03, testing::ext::TestSiz
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_PREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, PrepareRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, PrepareRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string srcId = "";
     std::string sinkId = "";
@@ -227,7 +227,7 @@ HWTEST_F(DistributedInputClientTest, PrepareRemoteInput04, testing::ext::TestSiz
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_PREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "UnprepareRemoteInput01";
     sptr<TestUnprepareDInputCallback> callback(new TestUnprepareDInputCallback());
@@ -235,7 +235,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput01, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput02, testing::ext::TestSize.Level1)
 {
     string deviceId = "";
     sptr<TestUnprepareDInputCallback> callback = nullptr;
@@ -243,7 +243,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput02, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_UNPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string srcId = "PrepareRemoteInput_src";
     std::string sinkId = "PrepareRemoteInput_sink";
@@ -252,7 +252,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput03, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_UNPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string srcId = "";
     std::string sinkId = "";
@@ -261,7 +261,7 @@ HWTEST_F(DistributedInputClientTest, UnprepareRemoteInput04, testing::ext::TestS
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_UNPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "StartRemoteInput01";
     sptr<TestStartDInputCallback> callback(new TestStartDInputCallback());
@@ -270,7 +270,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput01, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput02, testing::ext::TestSize.Level1)
 {
     string deviceId = "";
     sptr<TestStartDInputCallback> callback = nullptr;
@@ -279,7 +279,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput02, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "StartRemoteInput_sink";
     std::vector<std::string> dhIds = {"dhIds_test"};
@@ -288,7 +288,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput03, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "";
     std::vector<std::string> dhIds;
@@ -297,7 +297,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput04, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput05, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput05, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
@@ -307,7 +307,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput05, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput06, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput06, testing::ext::TestSize.Level1)
 {
     string srcId = "";
     string sinkId = "";
@@ -317,7 +317,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput06, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput07, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput07, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
@@ -327,7 +327,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput07, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StartRemoteInput08, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StartRemoteInput08, testing::ext::TestSize.Level1)
 {
     string srcId = "";
     string sinkId = "";
@@ -337,7 +337,7 @@ HWTEST_F(DistributedInputClientTest, StartRemoteInput08, testing::ext::TestSize.
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_START_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput01, testing::ext::TestSize.Level1)
 {
     string deviceId = "StopRemoteInput01";
     sptr<TestStopDInputCallback> callback(new TestStopDInputCallback());
@@ -346,7 +346,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput01, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput02, testing::ext::TestSize.Level1)
 {
     string deviceId = "";
     sptr<TestStopDInputCallback> callback = nullptr;
@@ -355,7 +355,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput02, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput03, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "StartRemoteInput_test";
     std::vector<std::string> dhIds = {"dhIds_test"};
@@ -364,7 +364,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput03, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput04, testing::ext::TestSize.Level1)
 {
     std::string sinkId = "";
     std::vector<std::string> dhIds;
@@ -373,7 +373,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput04, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput05, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput05, testing::ext::TestSize.Level1)
 {
     string srcId = "StopRemoteInput03-src";
     string sinkId = "StopRemoteInput03-sink";
@@ -383,7 +383,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput05, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput06, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput06, testing::ext::TestSize.Level1)
 {
     string srcId = "";
     string sinkId = "";
@@ -393,7 +393,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput06, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput07, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput07, testing::ext::TestSize.Level1)
 {
     string srcId = "StartRemoteInput01-src";
     string sinkId = "StartRemoteInput01-sink";
@@ -403,7 +403,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput07, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, StopRemoteInput08, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, StopRemoteInput08, testing::ext::TestSize.Level1)
 {
     string srcId = "";
     string sinkId = "";
@@ -428,7 +428,7 @@ HWTEST_F(DistributedInputClientTest, StopRemoteInput08, testing::ext::TestSize.L
     EXPECT_EQ(ERR_DH_INPUT_CLIENT_STOP_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputClientTest, ProcessEvent01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, ProcessEvent01, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
@@ -439,7 +439,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent01, testing::ext::TestSize.Leve
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CHECK_SOURCE_CALLBACK_REGISTER_MSG);
 }
 
-HWTEST_F(DistributedInputClientTest, ProcessEvent02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, ProcessEvent02, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
@@ -450,7 +450,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent02, testing::ext::TestSize.Leve
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG);
 }
 
-HWTEST_F(DistributedInputClientTest, ProcessEvent03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, ProcessEvent03, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);
@@ -461,7 +461,7 @@ HWTEST_F(DistributedInputClientTest, ProcessEvent03, testing::ext::TestSize.Leve
     EXPECT_EQ(event->GetInnerEventId(), DINPUT_CLIENT_CLEAR_SOURCE_CALLBACK_REGISTER_MSG);
 }
 
-HWTEST_F(DistributedInputClientTest, ProcessEvent04, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputClientTest, ProcessEvent04, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<AppExecFwk::EventRunner> runner = AppExecFwk::EventRunner::Create(true);
     DistributedInputClient::DInputClientEventHandler eventHandler(runner);

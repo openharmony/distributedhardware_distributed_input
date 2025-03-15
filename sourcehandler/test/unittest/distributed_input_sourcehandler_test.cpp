@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -51,26 +51,26 @@ int32_t DistributedInputSourceHandlerTest::TestUnregisterDInputCallback::OnUnreg
     return DH_SUCCESS;
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, InitSource01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, InitSource01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSourceHandler::GetInstance().InitSource("");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, InitSource02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, InitSource02, testing::ext::TestSize.Level1)
 {
     std::string dhId = "test";
     int32_t ret = DistributedInputSourceHandler::GetInstance().InitSource(dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, ReleaseSource01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, ReleaseSource01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSourceHandler::GetInstance().ReleaseSource();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware01, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestRegisterDInputCallback> registerCallback = std::make_shared<TestRegisterDInputCallback>();
     int32_t ret = DistributedInputSourceHandler::GetInstance().RegisterDistributedHardware(
@@ -83,7 +83,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware01, testi
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware02, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestRegisterDInputCallback> registerCallback = nullptr;
     std::string devId = "";
@@ -93,7 +93,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware02, testi
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware03, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestRegisterDInputCallback> registerCallback = std::make_shared<TestRegisterDInputCallback>();
     int32_t ret = DistributedInputSourceHandler::GetInstance().RegisterDistributedHardware(
@@ -105,7 +105,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, RegisterDistributedHardware03, testi
         registerCallback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
-HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware01, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestUnregisterDInputCallback> unregisterDInputCallback =
             std::make_shared<TestUnregisterDInputCallback>();
@@ -114,7 +114,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware01, tes
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware02, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestUnregisterDInputCallback> unregisterDInputCallback = nullptr;
     std::string devId = "";
@@ -124,7 +124,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware02, tes
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware03, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware03, testing::ext::TestSize.Level1)
 {
     std::shared_ptr<TestUnregisterDInputCallback> unregisterDInputCallback =
             std::make_shared<TestUnregisterDInputCallback>();
@@ -133,7 +133,7 @@ HWTEST_F(DistributedInputSourceHandlerTest, UnregisterDistributedHardware03, tes
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceHandlerTest, ConfigDistributedHardware01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceHandlerTest, ConfigDistributedHardware01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSourceHandler::GetInstance().ConfigDistributedHardware("devId",
         "dhId", "key", "value");

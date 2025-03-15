@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -56,7 +56,7 @@ void DistributedInputSinkTransTest::TearDownTestCase()
 {
 }
 
-HWTEST_F(DistributedInputSinkTransTest, Init, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkTransTest, Init, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputSinkTransport::GetInstance().Init();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -113,7 +113,7 @@ HWTEST_F(DistributedInputSinkTransTest, RespPrepareRemoteInput04, testing::ext::
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SINK_TRANSPORT_RESPPREPARE_FAIL, ret);
 }
 
-HWTEST_F(DistributedInputSinkTransTest, RespUnprepareRemoteInput01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSinkTransTest, RespUnprepareRemoteInput01, testing::ext::TestSize.Level1)
 {
     DistributedInputSinkManager sinkMgr(4810, false);
     std::shared_ptr<DistributedInputSinkManager::DInputSinkListener> statuslistener =

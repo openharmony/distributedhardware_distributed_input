@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,7 +46,7 @@ void DInputContextTest::TearDownTestCase()
 {
 }
 
-HWTEST_F(DInputContextTest, GetSourceWindId001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, GetSourceWindId001, testing::ext::TestSize.Level1)
 {
     std::string devId = "hello";
     uint64_t sourceWinId = 1;
@@ -54,14 +54,14 @@ HWTEST_F(DInputContextTest, GetSourceWindId001, testing::ext::TestSize.Level0)
     EXPECT_EQ("hello###1", ret);
 }
 
-HWTEST_F(DInputContextTest, RemoveSinkScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, RemoveSinkScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     int32_t ret = DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DInputContextTest, UpdateSinkScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, UpdateSinkScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SinkScreenInfo sinkScreenInfo;
@@ -69,7 +69,7 @@ HWTEST_F(DInputContextTest, UpdateSinkScreenInfo001, testing::ext::TestSize.Leve
     EXPECT_EQ(ERR_DH_INPUT_CONTEXT_KEY_NOT_EXIST, ret);
 }
 
-HWTEST_F(DInputContextTest, UpdateSinkScreenInfo002, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, UpdateSinkScreenInfo002, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SinkScreenInfo sinkScreenInfo = DInputContext::GetInstance().GetSinkScreenInfo(sourceWinId);
@@ -78,7 +78,7 @@ HWTEST_F(DInputContextTest, UpdateSinkScreenInfo002, testing::ext::TestSize.Leve
     DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, GetSinkScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, GetSinkScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SinkScreenInfo sinkScreenInfo = DInputContext::GetInstance().GetSinkScreenInfo(sourceWinId);
@@ -86,7 +86,7 @@ HWTEST_F(DInputContextTest, GetSinkScreenInfo001, testing::ext::TestSize.Level0)
     DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, GetSinkScreenInfo002, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, GetSinkScreenInfo002, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SinkScreenInfo sinkScreenInfo1;
@@ -97,14 +97,14 @@ HWTEST_F(DInputContextTest, GetSinkScreenInfo002, testing::ext::TestSize.Level0)
     DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, RemoveSrcScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, RemoveSrcScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     int32_t ret = DInputContext::GetInstance().RemoveSrcScreenInfo(sourceWinId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DInputContextTest, UpdateSrcScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, UpdateSrcScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SrcScreenInfo srcScreenInfo;
@@ -112,7 +112,7 @@ HWTEST_F(DInputContextTest, UpdateSrcScreenInfo001, testing::ext::TestSize.Level
     EXPECT_EQ(ERR_DH_INPUT_CONTEXT_KEY_NOT_EXIST, ret);
 }
 
-HWTEST_F(DInputContextTest, UpdateSrcScreenInfo002, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, UpdateSrcScreenInfo002, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SrcScreenInfo srcScreenInfo = DInputContext::GetInstance().GetSrcScreenInfo(sourceWinId);
@@ -121,7 +121,7 @@ HWTEST_F(DInputContextTest, UpdateSrcScreenInfo002, testing::ext::TestSize.Level
     DInputContext::GetInstance().RemoveSrcScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, GetSrcScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, GetSrcScreenInfo001, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SrcScreenInfo srcScreenInfo = DInputContext::GetInstance().GetSrcScreenInfo(sourceWinId);
@@ -129,7 +129,7 @@ HWTEST_F(DInputContextTest, GetSrcScreenInfo001, testing::ext::TestSize.Level0)
     DInputContext::GetInstance().RemoveSrcScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, GetSrcScreenInfo002, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, GetSrcScreenInfo002, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
     SrcScreenInfo srcScreenInfo1;
@@ -140,7 +140,7 @@ HWTEST_F(DInputContextTest, GetSrcScreenInfo002, testing::ext::TestSize.Level0)
     DInputContext::GetInstance().RemoveSrcScreenInfo(sourceWinId);
 }
 
-HWTEST_F(DInputContextTest, SetGetLocalTouchScreenInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, SetGetLocalTouchScreenInfo001, testing::ext::TestSize.Level1)
 {
     LocalTouchScreenInfo localTouchScreenInfo;
     localTouchScreenInfo.sinkShowWidth = HEIGHT;
@@ -148,14 +148,14 @@ HWTEST_F(DInputContextTest, SetGetLocalTouchScreenInfo001, testing::ext::TestSiz
     EXPECT_EQ(HEIGHT, DInputContext::GetInstance().GetLocalTouchScreenInfo().sinkShowWidth);
 }
 
-HWTEST_F(DInputContextTest, CalculateTransformInfo001, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, CalculateTransformInfo001, testing::ext::TestSize.Level1)
 {
     SinkScreenInfo sinkScreenInfo;
     int32_t ret = DInputContext::GetInstance().CalculateTransformInfo(sinkScreenInfo);
     EXPECT_EQ(ERR_DH_INPUT_CONTEXT_CALCULATE_FAIL, ret);
 }
 
-HWTEST_F(DInputContextTest, CalculateTransformInfo002, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, CalculateTransformInfo002, testing::ext::TestSize.Level1)
 {
     SinkScreenInfo sinkScreenInfo;
     sinkScreenInfo.sinkPhyHeight = 1080;
@@ -166,7 +166,7 @@ HWTEST_F(DInputContextTest, CalculateTransformInfo002, testing::ext::TestSize.Le
     EXPECT_EQ(ERR_DH_INPUT_CONTEXT_CALCULATE_FAIL, ret);
 }
 
-HWTEST_F(DInputContextTest, CalculateTransformInfo003, testing::ext::TestSize.Level0)
+HWTEST_F(DInputContextTest, CalculateTransformInfo003, testing::ext::TestSize.Level1)
 {
     SinkScreenInfo sinkScreenInfo;
     sinkScreenInfo.sinkPhyHeight = 1080;

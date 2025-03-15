@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,13 +54,13 @@ void DistributedInputTransbaseTest::TestRegisterSessionStateCallbackStub::OnResu
     (void)status;
 }
 
-HWTEST_F(DistributedInputTransbaseTest, Init01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputTransbaseTest, Init01, testing::ext::TestSize.Level1)
 {
     int32_t ret = DistributedInputTransportBase::GetInstance().Init();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputTransbaseTest, StartSession01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputTransbaseTest, StartSession01, testing::ext::TestSize.Level1)
 {
     std::string remoteDevId = "";
     int32_t ret = DistributedInputTransportBase::GetInstance().StartSession(remoteDevId);
@@ -76,7 +76,7 @@ HWTEST_F(DistributedInputTransbaseTest, StartSession02, testing::ext::TestSize.L
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     std::string srcId = "f6d4c08647073e02e7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
@@ -89,7 +89,7 @@ HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::Tes
     EXPECT_EQ("", ret);
 }
 
-HWTEST_F(DistributedInputTransbaseTest, OnSessionOpened01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputTransbaseTest, OnSessionOpened01, testing::ext::TestSize.Level1)
 {
     int32_t sessionId = 0;
     PeerSocketInfo peerSocketInfo = {

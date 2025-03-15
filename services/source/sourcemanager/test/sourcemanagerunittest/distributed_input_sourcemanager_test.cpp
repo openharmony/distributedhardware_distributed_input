@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -230,7 +230,7 @@ HWTEST_F(DistributedInputSourceManagerTest, OnStart_01, testing::ext::TestSize.L
     EXPECT_EQ(0, sourceManager_->inputDevice_.size());
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, Init01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceManagerTest, Init01, testing::ext::TestSize.Level1)
 {
     int32_t ret = sourceManager_->Init();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -1030,28 +1030,28 @@ HWTEST_F(DistributedInputSourceManagerTest, IsStringDataSame_02, testing::ext::T
     EXPECT_EQ(true, ret);
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, RegisterAddWhiteListCallback01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceManagerTest, RegisterAddWhiteListCallback01, testing::ext::TestSize.Level1)
 {
     sptr<TestAddWhiteListInfosCb> callback = nullptr;
     int32_t ret = sourceManager_->RegisterAddWhiteListCallback(callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_REG_CALLBACK_ERR, ret);
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, RegisterAddWhiteListCallback02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceManagerTest, RegisterAddWhiteListCallback02, testing::ext::TestSize.Level1)
 {
     sptr<TestAddWhiteListInfosCb> callback(new TestAddWhiteListInfosCb());
     int32_t ret = sourceManager_->RegisterAddWhiteListCallback(callback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, RegisterDelWhiteListCallback01, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceManagerTest, RegisterDelWhiteListCallback01, testing::ext::TestSize.Level1)
 {
     sptr<TestDelWhiteListInfosCb> callback = nullptr;
     int32_t ret = sourceManager_->RegisterDelWhiteListCallback(callback);
     EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_MANAGER_REG_CALLBACK_ERR, ret);
 }
 
-HWTEST_F(DistributedInputSourceManagerTest, RegisterDelWhiteListCallback02, testing::ext::TestSize.Level0)
+HWTEST_F(DistributedInputSourceManagerTest, RegisterDelWhiteListCallback02, testing::ext::TestSize.Level1)
 {
     sptr<TestDelWhiteListInfosCb> callback(new TestDelWhiteListInfosCb());
     int32_t ret = sourceManager_->RegisterDelWhiteListCallback(callback);

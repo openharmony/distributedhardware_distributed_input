@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_input/distributedinput.gni")
 
-module_out_path = "distributed_input/source_trans"
+module_out_path = unittest_output_path
 
 group("sourcetransunittest") {
   testonly = true
