@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,8 +27,15 @@ IMPLEMENT_SINGLE_INSTANCE(DInputContext);
 
 DInputContext::~DInputContext()
 {
-    sinkScreenInfoMap_.clear();
-    srcScreenInfoMap_.clear();
+    {
+        std::lock_guard<std::mutex> lock(sinkMapMutex_);
+        sinkScreenInfoMap_.clear();
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(srcMapMutex_);
+        srcScreenInfoMap_.clear();
+    }
 }
 
 std::string DInputContext::GetScreenInfoKey(const std::string &devId, const uint64_t sourceWinId)

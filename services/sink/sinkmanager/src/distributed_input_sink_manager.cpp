@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -1010,7 +1010,7 @@ void DistributedInputSinkManager::CleanExceptionalInfo(const SrcScreenInfo &srcS
     DHLOGI("CleanExceptionalInfo start!");
     std::string uuid = srcScreenInfo.uuid;
     int32_t sessionId = srcScreenInfo.sessionId;
-    auto sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
+    std::unordered_map<std::string, SinkScreenInfo> sinkInfos = DInputContext::GetInstance().GetAllSinkScreenInfo();
 
     for (const auto &[id, sinkInfo] : sinkInfos) {
         auto srcInfo = sinkInfo.srcScreenInfo;
