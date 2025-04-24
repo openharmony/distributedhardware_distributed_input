@@ -45,7 +45,9 @@
                 "graphic_surface",
                 "window_manager",
                 "openssl",
-                "graphic_2d"
+                "graphic_2d",
+                "cJSON",
+                "selinux_adapter"
             ]
         },
         "build": {

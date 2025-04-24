@@ -91,6 +91,7 @@ ohos_unittest("dinput_source_callback_test") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "access_token:libtokenid_sdk",
+    "cJSON:cjson_static",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
@@ -101,6 +102,7 @@ ohos_unittest("dinput_source_callback_test") {
     "json:nlohmann_json_static",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "selinux_adapter:librestorecon",
   ]
 
   cflags_cc = [ "-DHILOG_ENABLE" ]
