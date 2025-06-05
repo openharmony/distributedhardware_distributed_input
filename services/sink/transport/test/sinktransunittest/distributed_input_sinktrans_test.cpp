@@ -18,6 +18,7 @@
 #include "nlohmann/json.hpp"
 #include "dinput_errcode.h"
 #include "distributed_input_sink_manager.h"
+#include "softbus_permission_check.h"
 
 using namespace testing::ext;
 using namespace OHOS::DistributedHardware::DistributedInput;
@@ -38,6 +39,31 @@ namespace {
     const std::string STR_SESSIONID = "100";
     const std::string STR_INPUTTYPE = "111";
     const std::string SOFTBUSCMDTYPE = "softbus_cmd_type";
+}
+
+bool SoftBusPermissionCheck::CheckSrcPermission(const std::string &sinkNetworkId)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::CheckSinkPermission(const AccountInfo &callerAccountInfo)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::SetAccessInfoToSocket(const int32_t sessionId)
+{
+    return true;
+}
+bool SoftBusPermissionCheck::TransCallerInfo(SocketAccessInfo *callerInfo,
+    AccountInfo &callerAccountInfo, const std::string &networkId)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::FillLocalInfo(SocketAccessInfo *localInfo)
+{
+    return true;
 }
 
 void DistributedInputSinkTransTest::SetUp()

@@ -28,6 +28,7 @@
             "components": [
                 "access_token",
                 "accessibility",
+                "device_manager",
                 "eventhandler",
                 "hilog",
                 "ipc",
@@ -45,6 +46,7 @@
                 "graphic_surface",
                 "window_manager",
                 "openssl",
+                "os_account",
                 "graphic_2d",
                 "cJSON",
                 "selinux_adapter"
