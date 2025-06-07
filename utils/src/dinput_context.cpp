@@ -84,6 +84,21 @@ SinkScreenInfo DInputContext::GetSinkScreenInfo(const std::string &screenInfoKey
     return sinkScreenInfoMap_[screenInfoKey];
 }
 
+void DInputContext::CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo)
+{
+    DHLOGI("CleanExceptionalInfo start!");
+    std::string uuid = srcScreenInfo.uuid;
+    int32_t sessionId = srcScreenInfo.sessionId;
+    std::lock_guard<std::mutex> lock(sinkMapMutex_);
+    for (const auto &[id, sinkInfo] : sinkScreenInfoMap_) {
+        auto srcInfo = sinkInfo.srcScreenInfo;
+        if ((std::strcmp(srcInfo.uuid.c_str(), uuid.c_str()) == 0) && (srcInfo.sessionId != sessionId)) {
+            sinkScreenInfoMap_.erase(id);
+            DHLOGI("CleanExceptionalInfo screenInfoKey: %{public}s, sessionId: %{public}d", id.c_str(), sessionId);
+        }
+    }
+}
+
 const std::unordered_map<std::string, SinkScreenInfo> &DInputContext::GetAllSinkScreenInfo()
 {
     std::lock_guard<std::mutex> lock(sinkMapMutex_);

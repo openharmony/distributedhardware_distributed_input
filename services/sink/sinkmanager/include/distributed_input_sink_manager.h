@@ -170,7 +170,6 @@ public:
     void ClearResourcesStatus();
 
 private:
-    void CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo);
     void CallBackScreenInfoChange();
 
 private:

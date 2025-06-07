@@ -62,7 +62,7 @@ public:
     int32_t RemoveSrcScreenInfo(const std::string &screenInfoKey);
     int32_t UpdateSrcScreenInfo(const std::string &screenInfoKey, const SrcScreenInfo &srcScreenInfo);
     SrcScreenInfo GetSrcScreenInfo(const std::string &screenInfoKey);
-
+    void CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo);
     void SetLocalTouchScreenInfo(const LocalTouchScreenInfo &localTouchScreenInfo);
     LocalTouchScreenInfo GetLocalTouchScreenInfo();
     std::shared_ptr<DistributedHardwareFwkKit> GetDHFwkKit();
