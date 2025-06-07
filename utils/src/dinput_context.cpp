@@ -90,11 +90,13 @@ void DInputContext::CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo)
     std::string uuid = srcScreenInfo.uuid;
     int32_t sessionId = srcScreenInfo.sessionId;
     std::lock_guard<std::mutex> lock(sinkMapMutex_);
-    for (const auto &[id, sinkInfo] : sinkScreenInfoMap_) {
-        auto srcInfo = sinkInfo.srcScreenInfo;
+    for (auto iter = sinkScreenInfoMap_.begin(); iter != sinkScreenInfoMap_.end();) {
+        auto srcInfo = iter->second.srcScreenInfo;
         if ((std::strcmp(srcInfo.uuid.c_str(), uuid.c_str()) == 0) && (srcInfo.sessionId != sessionId)) {
-            sinkScreenInfoMap_.erase(id);
-            DHLOGI("CleanExceptionalInfo screenInfoKey: %{public}s, sessionId: %{public}d", id.c_str(), sessionId);
+            DHLOGI("CleanExceptionalInfo key: %{public}s, sessionId: %{public}d", iter->first.c_str(), sessionId);
+            iter = sinkScreenInfoMap_.erase(iter);
+        } else {
+            ++iter;
         }
     }
 }
