@@ -20,7 +20,10 @@ module_out_path = unittest_output_path
 group("transbaseunittest") {
   testonly = true
 
-  deps = [ ":distributed_input_transbase_test" ]
+  deps = [
+    ":distributed_input_transbase_test",
+    ":softbus_permission_check_test",
+  ]
 }
 
 ## UnitTest distributed_input_manager_service_test {{{
@@ -65,6 +68,7 @@ ohos_unittest("distributed_input_transbase_test") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedinpututtest\"",
     "LOG_DOMAIN=0xD004120",
+    "NORMAL_MOCK",
   ]
 
   deps = [
@@ -93,3 +97,56 @@ ohos_unittest("distributed_input_transbase_test") {
   cflags_cc = [ "-DHILOG_ENABLE" ]
 }
 ## UnitTest distributed_input_manager_service_test }}}
+
+ohos_unittest("softbus_permission_check_test") {
+  module_out_path = module_out_path
+
+  include_dirs = [
+    "${common_path}/include",
+    "${distributedinput_path}/services/transportbase/include",
+    "${utils_path}/include",
+  ]
+
+  sources = [
+    "${distributedinput_path}/services/transportbase/src/softbus_permission_check.cpp",
+    "device_manager_impl_mock.cpp",
+    "mock_other_method.cpp",
+    "socket_mock.cpp",
+    "softbus_permission_check_test.cpp",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-g3",
+    "-Dprivate=public",
+    "-Dprotected=public",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"distributedinpututtest\"",
+    "LOG_DOMAIN=0xD004120",
+    "NORMAL_MOCK",
+  ]
+
+  deps = [ "${utils_path}:libdinput_utils" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "device_manager:devicemanagersdk",
+    "dsoftbus:softbus_client",
+    "googletest:gmock_main",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "os_account:libaccountkits",
+    "os_account:os_account_innerkits",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+
+  if (check_same_account) {
+    defines += [ "SUPPORT_SAME_ACCOUNT" ]
+  }
+}

@@ -19,6 +19,7 @@
 
 #include "dinput_errcode.h"
 #include "dinput_softbus_define.h"
+#include "softbus_permission_check.h"
 
 using namespace testing::ext;
 using namespace OHOS::DistributedHardware::DistributedInput;
@@ -31,8 +32,45 @@ namespace {
     const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     const std::string DINPUT_PKG_NAME_TEST = "ohos.dhardware.dinput";
 }
+
+static bool g_checkSrc = true;
+static bool g_checkSink = true;
+static bool g_setAccess = true;
+static bool g_transCaller = true;
+static bool g_fillLocal = true;
+
+bool SoftBusPermissionCheck::CheckSrcPermission(const std::string &sinkNetworkId)
+{
+    return g_checkSrc;
+}
+
+bool SoftBusPermissionCheck::CheckSinkPermission(const AccountInfo &callerAccountInfo)
+{
+    return g_checkSink;
+}
+
+bool SoftBusPermissionCheck::SetAccessInfoToSocket(const int32_t sessionId)
+{
+    return g_setAccess;
+}
+bool SoftBusPermissionCheck::TransCallerInfo(SocketAccessInfo *callerInfo,
+    AccountInfo &callerAccountInfo, const std::string &networkId)
+{
+    return g_transCaller;
+}
+
+bool SoftBusPermissionCheck::FillLocalInfo(SocketAccessInfo *localInfo)
+{
+    return g_fillLocal;
+}
+
 void DistributedInputTransbaseTest::SetUp()
 {
+    g_checkSrc = true;
+    g_checkSink = true;
+    g_setAccess = true;
+    g_transCaller = true;
+    g_fillLocal = true;
 }
 
 void DistributedInputTransbaseTest::TearDown()
@@ -74,6 +112,15 @@ HWTEST_F(DistributedInputTransbaseTest, StartSession02, testing::ext::TestSize.L
     DistributedInputTransportBase::GetInstance().remoteDevSessionMap_[srcId] = sessionId;
     int32_t ret = DistributedInputTransportBase::GetInstance().StartSession(srcId);
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    DistributedInputTransportBase::GetInstance().remoteDevSessionMap_.clear();
+    g_setAccess = false;
+    ret = DistributedInputTransportBase::GetInstance().StartSession(srcId);
+    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_CONTEXT, ret);
+
+    g_checkSrc = false;
+    ret = DistributedInputTransportBase::GetInstance().StartSession(srcId);
+    EXPECT_EQ(ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_PERMISSION_DENIED, ret);
 }
 
 HWTEST_F(DistributedInputTransbaseTest, GetDevIdBySessionId01, testing::ext::TestSize.Level1)
@@ -218,6 +265,28 @@ HWTEST_F(DistributedInputTransbaseTest, OnSessionClosed_001, testing::ext::TestS
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
+HWTEST_F(DistributedInputTransbaseTest, OnNegotiate2_001, testing::ext::TestSize.Level1)
+{
+    PeerSocketInfo info;
+    EXPECT_TRUE(DistributedInputTransportBase::GetInstance().OnNegotiate2(0, info, nullptr, nullptr));
+
+    char networkId[10] = "networkId";
+    SocketAccessInfo peerInfo;
+    info.networkId = networkId;
+    g_transCaller = false;
+    EXPECT_FALSE(DistributedInputTransportBase::GetInstance().OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_transCaller = true;
+    g_fillLocal = false;
+    EXPECT_FALSE(DistributedInputTransportBase::GetInstance().OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_fillLocal = true;
+    g_checkSink = false;
+    EXPECT_FALSE(DistributedInputTransportBase::GetInstance().OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_checkSink = true;
+    EXPECT_TRUE(DistributedInputTransportBase::GetInstance().OnNegotiate2(0, info, &peerInfo, nullptr));
+}
 } // namespace DistributedInput
 } // namespace DistributedHardware
 } // namespace OHOS

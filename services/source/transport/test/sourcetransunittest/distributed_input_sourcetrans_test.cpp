@@ -21,6 +21,7 @@
 #include "dinput_softbus_define.h"
 #include "distributed_input_source_manager.h"
 #include "distributed_input_transport_base.h"
+#include "softbus_permission_check.h"
 
 using namespace testing::ext;
 using namespace OHOS::DistributedHardware::DistributedInput;
@@ -28,6 +29,31 @@ using namespace std;
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
+bool SoftBusPermissionCheck::CheckSrcPermission(const std::string &sinkNetworkId)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::CheckSinkPermission(const AccountInfo &callerAccountInfo)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::SetAccessInfoToSocket(const int32_t sessionId)
+{
+    return true;
+}
+bool SoftBusPermissionCheck::TransCallerInfo(SocketAccessInfo *callerInfo,
+    AccountInfo &callerAccountInfo, const std::string &networkId)
+{
+    return true;
+}
+
+bool SoftBusPermissionCheck::FillLocalInfo(SocketAccessInfo *localInfo)
+{
+    return true;
+}
+
 void DistributedInputSourceTransTest::SetUp()
 {
 }

@@ -67,7 +67,7 @@ public:
     int32_t GetSessionIdByDevId(const std::string &srcId);
     std::string GetDevIdBySessionId(int32_t sessionId);
     int32_t SendMsg(int32_t sessionId, std::string &message);
-
+    bool OnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo, SocketAccessInfo *localInfo);
 private:
     DistributedInputTransportBase() = default;
     ~DistributedInputTransportBase();

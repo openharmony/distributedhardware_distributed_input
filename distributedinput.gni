@@ -47,3 +47,11 @@ av_transport_path = "${distributedhardwarefwk_path}/av_transport"
 unittest_output_path = "distributed_input/distributed_input"
 
 distributedinput_ldflags = [ "-lpthread" ]
+
+declare_args() {
+  check_same_account = true
+  if (!defined(global_parts_info) || !defined(
+          global_parts_info.distributedhardware_distributed_hardware_adapter)) {
+    check_same_account = false
+  }
+}

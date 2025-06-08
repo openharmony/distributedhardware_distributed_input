@@ -33,6 +33,7 @@
 #include "hidumper.h"
 
 #include "softbus_common.h"
+#include "softbus_permission_check.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -101,6 +102,11 @@ void OnQos(int32_t socket, QoSEvent eventId, const QosTV *qos, uint32_t qosCount
     }
 }
 
+static bool OnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo, SocketAccessInfo *localInfo)
+{
+    return DistributedInputTransportBase::GetInstance().OnNegotiate2(socket, info, peerInfo, localInfo);
+}
+
 ISocketListener iSocketListener = {
     .OnBind = OnBind,
     .OnShutdown = OnShutdown,
@@ -108,7 +114,8 @@ ISocketListener iSocketListener = {
     .OnMessage = OnMessage,
     .OnStream = OnStream,
     .OnFile = OnFile,
-    .OnQos = OnQos
+    .OnQos = OnQos,
+    .OnNegotiate2 = OnNegotiate2
 };
 
 int32_t DistributedInputTransportBase::Init()
@@ -230,11 +237,20 @@ int32_t DistributedInputTransportBase::StartSession(const std::string &remoteDev
         DHLOGE("Softbus session has already opened, deviceId: %{public}s", GetAnonyString(remoteDevId).c_str());
         return DH_SUCCESS;
     }
+    if (!SoftBusPermissionCheck::CheckSrcPermission(remoteDevId)) {
+        DHLOGE("Permission denied");
+        return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_PERMISSION_DENIED;
+    }
 
     int socket = CreateClientSocket(remoteDevId);
     if (socket < DH_SUCCESS) {
         DHLOGE("StartSession failed, ret: %{public}d", socket);
         return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_OPEN_SESSION_FAIL;
+    }
+    if (!SoftBusPermissionCheck::SetAccessInfoToSocket(socket)) {
+        DHLOGW("Fill and set accessInfo failed");
+        Shutdown(socket);
+        return ERR_DH_INPUT_SERVER_SOURCE_TRANSPORT_CONTEXT;
     }
     StartAsyncTrace(DINPUT_HITRACE_LABEL, DINPUT_OPEN_SESSION_START, DINPUT_OPEN_SESSION_TASK);
     ret = Bind(socket, g_qosInfo, g_QosTV_Param_Index, &iSocketListener);
@@ -554,6 +570,27 @@ int32_t DistributedInputTransportBase::GetSessionIdByDevId(const std::string &sr
     }
     DHLOGE("get session id failed, srcId = %{public}s", GetAnonyString(srcId).c_str());
     return ERR_DH_INPUT_SERVER_SINK_TRANSPORT_GET_SESSIONID_FAIL;
+}
+
+bool DistributedInputTransportBase::OnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo,
+    SocketAccessInfo *localInfo)
+{
+    if (peerInfo == nullptr) {
+        DHLOGE("peerInfo is nullptr. sink must be old version");
+        return true;
+    }
+
+    AccountInfo callerAccountInfo;
+    std::string networkId = info.networkId;
+    if (!SoftBusPermissionCheck::TransCallerInfo(peerInfo, callerAccountInfo, networkId)) {
+        DHLOGE("extraAccessInfo is nullptr.");
+        return false;
+    }
+    if (!SoftBusPermissionCheck::FillLocalInfo(localInfo)) {
+        DHLOGE("FillLocalInfo failed.");
+        return false;
+    }
+    return SoftBusPermissionCheck::CheckSinkPermission(callerAccountInfo);
 }
 } // namespace DistributedInput
 } // namespace DistributedHardware
