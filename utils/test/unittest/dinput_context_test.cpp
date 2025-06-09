@@ -113,6 +113,42 @@ HWTEST_F(DInputContextTest, CleanExceptionalInfo002, testing::ext::TestSize.Leve
     DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
 }
 
+HWTEST_F(DInputContextTest, CleanExceptionalInfo003, testing::ext::TestSize.Level1)
+{
+    std::string sourceWinId = "hello";
+    SrcScreenInfo srcScreenInfo;
+    srcScreenInfo.uuid = "uuid1";
+    srcScreenInfo.sessionId = 1;
+
+    SinkScreenInfo sinkInfo;
+    sinkInfo.srcScreenInfo.uuid = "uuid2";
+    sinkInfo.srcScreenInfo.sessionId = 1;
+
+    DInputContext::GetInstance().sinkScreenInfoMap_[sourceWinId] = sinkInfo;
+    EXPECT_EQ(DInputContext::GetInstance().sinkScreenInfoMap_.size(), 1);
+    DInputContext::GetInstance().CleanExceptionalInfo(srcScreenInfo);
+
+    DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
+}
+
+HWTEST_F(DInputContextTest, CleanExceptionalInfo004, testing::ext::TestSize.Level1)
+{
+    std::string sourceWinId = "hello";
+    SrcScreenInfo srcScreenInfo;
+    srcScreenInfo.uuid = "uuid1";
+    srcScreenInfo.sessionId = 1;
+
+    SinkScreenInfo sinkInfo;
+    sinkInfo.srcScreenInfo.uuid = "uuid1";
+    sinkInfo.srcScreenInfo.sessionId = 2;
+
+    DInputContext::GetInstance().sinkScreenInfoMap_[sourceWinId] = sinkInfo;
+    EXPECT_EQ(DInputContext::GetInstance().sinkScreenInfoMap_.size(), 1);
+    DInputContext::GetInstance().CleanExceptionalInfo(srcScreenInfo);
+
+    DInputContext::GetInstance().RemoveSinkScreenInfo(sourceWinId);
+}
+
 HWTEST_F(DInputContextTest, GetSinkScreenInfo002, testing::ext::TestSize.Level1)
 {
     std::string sourceWinId = "hello";
