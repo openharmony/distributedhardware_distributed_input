@@ -93,7 +93,8 @@ void DInputContext::CleanExceptionalInfo(const SrcScreenInfo &srcScreenInfo)
     for (auto iter = sinkScreenInfoMap_.begin(); iter != sinkScreenInfoMap_.end();) {
         auto srcInfo = iter->second.srcScreenInfo;
         if ((std::strcmp(srcInfo.uuid.c_str(), uuid.c_str()) == 0) && (srcInfo.sessionId != sessionId)) {
-            DHLOGI("CleanExceptionalInfo key: %{public}s, sessionId: %{public}d", iter->first.c_str(), sessionId);
+            DHLOGI("CleanExceptionalInfo screenInfoKey: %{public}s, sessionId: %{public}d",
+                GetAnonyString(iter->first).c_str(), sessionId);
             iter = sinkScreenInfoMap_.erase(iter);
         } else {
             ++iter;
