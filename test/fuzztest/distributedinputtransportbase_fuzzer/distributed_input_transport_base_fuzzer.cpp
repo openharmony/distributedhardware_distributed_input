@@ -77,7 +77,7 @@ void HandleSessionFuzzTest(const uint8_t *data, size_t size)
 
 void OnSessionClosedFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size < (sizeof(int32_t) + sizeof(int32_t)))) {
         return;
     }
     FuzzedDataProvider fdp(data, size);
@@ -110,7 +110,6 @@ void InitFuzzTest(const uint8_t *data, size_t size)
     (void)data;
     (void)size;
     DistributedInput::DistributedInputTransportBase::GetInstance().Init();
-    DistributedInput::DistributedInputTransportBase::GetInstance().CreateServerSocket();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
