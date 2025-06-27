@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,6 +39,37 @@ void InitSourceFuzzTest(const uint8_t *data, size_t size)
     std::string params(reinterpret_cast<const char*>(data), size);
     DistributedInput::DistributedInputSourceHandler::GetInstance().InitSource(params);
 }
+
+void OnLoadSystemAbilitySuccessFuzzTest(const uint8_t *data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
+    DistributedInput::DistributedInputSourceHandler::SALoadSourceCb saLoadSourceCb;
+    saLoadSourceCb.OnLoadSystemAbilitySuccess(saId, nullptr);
+}
+
+void OnLoadSystemAbilityFailFuzzTest(const uint8_t *data, size_t size)
+{
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
+        return;
+    }
+    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
+    DistributedInput::DistributedInputSourceHandler::SALoadSourceCb saLoadSourceCb;
+    saLoadSourceCb.OnLoadSystemAbilityFail(saId);
+}
+
+void OnRemoteSourceSvrDiedFuzzTest(const uint8_t *data, size_t size)
+{
+    (void)data;
+    (void)size;
+    DistributedInput::DistributedInputSourceHandler::GetInstance().OnRemoteSourceSvrDied(nullptr);
+    DistributedInput::DistributedInputSourceHandler::GetInstance().RegisterDistributedHardwareStateListener(nullptr);
+    DistributedInput::DistributedInputSourceHandler::GetInstance().UnregisterDistributedHardwareStateListener();
+    DistributedInput::DistributedInputSourceHandler::GetInstance().RegisterDataSyncTriggerListener(nullptr);
+    DistributedInput::DistributedInputSourceHandler::GetInstance().UnregisterDataSyncTriggerListener();
+}
 } // namespace DistributedHardware
 } // namespace OHOS
 
@@ -47,5 +78,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::InitSourceFuzzTest(data, size);
+    OHOS::DistributedHardware::OnLoadSystemAbilitySuccessFuzzTest(data, size);
+    OHOS::DistributedHardware::OnLoadSystemAbilityFailFuzzTest(data, size);
+    OHOS::DistributedHardware::OnRemoteSourceSvrDiedFuzzTest(data, size);
     return 0;
 }

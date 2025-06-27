@@ -79,6 +79,7 @@ ohos_fuzztest("DistributedInputTransportBaseFuzzTest") {
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"DistributedInputTransportBaseFuzzTest\"",
     "LOG_DOMAIN=0xD004120",
+    "private=public",
   ]
 }
 
