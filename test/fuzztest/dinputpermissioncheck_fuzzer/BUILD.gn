@@ -77,6 +77,10 @@ ohos_fuzztest("DinputPermissionCheckFuzzTest") {
     "LOG_DOMAIN=0xD004120",
     "private=public",
   ]
+
+  if (check_same_account) {
+    defines += [ "SUPPORT_SAME_ACCOUNT" ]
+  }
 }
 
 ###############################################################################
