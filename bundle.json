@@ -77,7 +77,9 @@
                 "name": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits:libdinput_sdk",
                 "header": {
                     "header_base": "//foundation/distributedhardware/distributed_input/interfaces/inner_kits/include",
-                    "header_files": [ "distributed_input_kit.h" ]
+                    "header_files": [
+                        "distributed_input_kit.h"
+                    ]
                 }
             }],
             "test": [
