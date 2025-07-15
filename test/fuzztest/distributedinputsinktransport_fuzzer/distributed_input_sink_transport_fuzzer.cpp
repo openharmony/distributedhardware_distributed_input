@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,7 +33,10 @@ void RespPrepareRemoteInputFuzzTest(const uint8_t *data, size_t size)
     }
 
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    std::string smsg(reinterpret_cast<const char*>(data), size);
+    nlohmann::json jsonStr;
+    jsonStr["device_id"] = "123456";
+    jsonStr["dh_id"] = "dinput_1";
+    std::string smsg = jsonStr.dump();
 
     DistributedInput::DistributedInputSinkTransport::GetInstance().RespPrepareRemoteInput(sessionId, smsg);
     DistributedInput::DistributedInputSinkTransport::GetInstance().RespUnprepareRemoteInput(sessionId, smsg);
@@ -46,7 +49,10 @@ void RespStartRemoteInputFuzzTest(const uint8_t *data, size_t size)
     }
 
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    std::string smsg(reinterpret_cast<const char*>(data), size);
+    nlohmann::json jsonStr;
+    jsonStr["device_id"] = "123456";
+    jsonStr["dh_id"] = "dinput_1";
+    std::string smsg = jsonStr.dump();
 
     DistributedInput::DistributedInputSinkTransport::GetInstance().RespStartRemoteInput(sessionId, smsg);
     DistributedInput::DistributedInputSinkTransport::GetInstance().RespStopRemoteInput(sessionId, smsg);

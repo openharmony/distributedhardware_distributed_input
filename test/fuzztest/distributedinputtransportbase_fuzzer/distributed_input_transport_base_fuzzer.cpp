@@ -111,6 +111,26 @@ void InitFuzzTest(const uint8_t *data, size_t size)
     (void)size;
     DistributedInput::DistributedInputTransportBase::GetInstance().Init();
 }
+
+void ReleaseFuzzTest(const uint8_t *data, size_t size)
+{
+    (void)data;
+    (void)size;
+    DistributedInput::DistributedInputTransportBase::GetInstance().Release();
+}
+
+void CreateClientSocketFuzzTest(const uint8_t *data, size_t size)
+{
+    if ((data == nullptr) || (size == 0)) {
+        return;
+    }
+    FuzzedDataProvider fdp(data, size);
+    std::string remoteDevId = fdp.ConsumeRandomLengthString();
+    DistributedInput::DistributedInputTransportBase::GetInstance().CreateClientSocket(remoteDevId);
+    if (DistributedInput::DistributedInputTransportBase::GetInstance().sessionId_ > 0) {
+        Shutdown(DistributedInput::DistributedInputTransportBase::GetInstance().sessionId_);
+    }
+}
 } // namespace DistributedHardware
 } // namespace OHOS
 
@@ -125,5 +145,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     OHOS::DistributedHardware::OnSessionClosedFuzzTest(data, size);
     OHOS::DistributedHardware::EraseSessionIdFuzzTest(data, size);
     OHOS::DistributedHardware::InitFuzzTest(data, size);
+    OHOS::DistributedHardware::ReleaseFuzzTest(data, size);
+    OHOS::DistributedHardware::CreateClientSocketFuzzTest(data, size);
     return 0;
 }
