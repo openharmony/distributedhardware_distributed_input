@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -329,7 +329,7 @@ int32_t DistributedInputClient::RegisterDistributedHardware(const std::string &d
     const std::string &parameters, const std::shared_ptr<RegisterCallback> &callback)
 {
     DHLOGI("DinputRegister called, deviceId: %{public}s,  dhId: %{public}s,  parameters: %{public}s.",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), SetAnonyId(parameters).c_str());
+        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), parameters.c_str());
     if (!DInputSAManager::GetInstance().GetDInputSourceProxy()) {
         DHLOGE("DinputRegister client fail.");
         return ERR_DH_INPUT_CLIENT_GET_SOURCE_PROXY_FAIL;
