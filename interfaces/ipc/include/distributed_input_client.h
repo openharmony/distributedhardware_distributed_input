@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2021-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,18 +26,17 @@
 
 #include "add_white_list_infos_call_back_stub.h"
 #include "del_white_list_infos_call_back_stub.h"
+#include "dinput_sa_manager.h"
 #include "get_sink_screen_infos_call_back_stub.h"
 #include "i_distributed_source_input.h"
 #include "i_distributed_sink_input.h"
 #include "i_sharing_dhid_listener.h"
-#include "register_d_input_call_back_stub.h"
-#include "unregister_d_input_call_back_stub.h"
-#include "sharing_dhid_listener_stub.h"
-#include "start_stop_d_inputs_call_back_stub.h"
-
-#include "dinput_sa_manager.h"
 #include "idistributed_hardware_source.h"
 #include "idistributed_hardware_sink.h"
+#include "register_d_input_call_back_stub.h"
+#include "sharing_dhid_listener_stub.h"
+#include "start_stop_d_inputs_call_back_stub.h"
+#include "unregister_d_input_call_back_stub.h"
 
 namespace OHOS {
 namespace DistributedHardware {
