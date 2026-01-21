@@ -22,7 +22,7 @@
 
 #include "i_distributed_source_input.h"
 #include "i_distributed_sink_input.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "system_ability_status_change_stub.h"
 
 #include "idistributed_hardware_source.h"
@@ -37,7 +37,7 @@ const uint32_t DINPUT_CLIENT_CHECK_SINK_CALLBACK_REGISTER_MSG = 2;
 const uint32_t DINPUT_CLIENT_CLEAR_SOURCE_CALLBACK_REGISTER_MSG = 3;
 const uint32_t DINPUT_CLIENT_CLEAR_SINK_CALLBACK_REGISTER_MSG = 4;
 class DInputSAManager {
-DECLARE_SINGLE_INSTANCE_BASE(DInputSAManager);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DInputSAManager);
 public:
     void Init();
     bool GetDInputSourceProxy();

@@ -22,7 +22,7 @@
 
 #include "idistributed_hardware_sink.h"
 #include "iservice_registry.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "system_ability_definition.h"
 #include "system_ability_load_callback_stub.h"
 
@@ -33,7 +33,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DistributedInputSinkHandler : public IDistributedHardwareSink {
-DECLARE_SINGLE_INSTANCE_BASE(DistributedInputSinkHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DistributedInputSinkHandler);
 public:
     int32_t InitSink(const std::string &params) override;
     int32_t ReleaseSink() override;
