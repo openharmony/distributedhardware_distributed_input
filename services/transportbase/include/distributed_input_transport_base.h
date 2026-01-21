@@ -29,7 +29,7 @@
 #include "event_handler.h"
 #include "nlohmann/json.hpp"
 #include "securec.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 #include "socket.h"
 #include "softbus_bus_center.h"
@@ -44,7 +44,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DistributedInputTransportBase {
-    DECLARE_SINGLE_INSTANCE_BASE(DistributedInputTransportBase);
+    FWK_DECLARE_SINGLE_INSTANCE_BASE(DistributedInputTransportBase);
 public:
     int32_t Init();
     int32_t StartSession(const std::string &remoteDevId);

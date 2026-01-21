@@ -24,7 +24,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DistributedInputSinkHandler);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DistributedInputSinkHandler);
 
 DistributedInputSinkHandler::DistributedInputSinkHandler()
 {

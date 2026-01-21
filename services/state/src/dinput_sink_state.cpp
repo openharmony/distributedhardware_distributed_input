@@ -31,7 +31,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DInputSinkState);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DInputSinkState);
 DInputSinkState::~DInputSinkState()
 {
     Release();
