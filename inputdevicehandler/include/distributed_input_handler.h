@@ -25,7 +25,7 @@
 #include <linux/input.h>
 
 #include "ihardware_handler.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 #include "constants_dinput.h"
 #include "input_hub.h"
@@ -38,7 +38,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DistributedInputHandler : public IHardwareHandler {
-DECLARE_SINGLE_INSTANCE_BASE(DistributedInputHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DistributedInputHandler);
 public:
     API_EXPORT int32_t Initialize() override;
     API_EXPORT virtual std::vector<DHItem> QueryMeta() override;

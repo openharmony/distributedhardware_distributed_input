@@ -48,7 +48,7 @@ static QosTV g_qosInfo[] = {
 };
 static uint32_t g_QosTV_Param_Index = static_cast<uint32_t>(sizeof(g_qosInfo) / sizeof(g_qosInfo[0]));
 }
-IMPLEMENT_SINGLE_INSTANCE(DistributedInputTransportBase);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DistributedInputTransportBase);
 DistributedInputTransportBase::~DistributedInputTransportBase()
 {
     DHLOGI("Release Transport Session");

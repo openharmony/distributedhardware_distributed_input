@@ -26,7 +26,7 @@
 #include <sys/inotify.h>
 
 #include "constants_dinput.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -51,7 +51,7 @@ struct SessionInfo {
 };
 
 class HiDumper {
-DECLARE_SINGLE_INSTANCE_BASE(HiDumper);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(HiDumper);
 
 public:
     bool HiDump(const std::vector<std::string> &args, std::string &result);

@@ -27,7 +27,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DInputSAManager);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DInputSAManager);
 
 void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {}

@@ -23,7 +23,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DInputContext);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DInputContext);
 
 DInputContext::~DInputContext()
 {

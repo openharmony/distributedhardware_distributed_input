@@ -18,7 +18,7 @@
 
 #include <cstring>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "hisysevent.h"
 #include "constants_dinput.h"
 
@@ -39,7 +39,7 @@ const std::string DINPUT_OPT_FAIL = "DINPUT_OPT_FAIL";
 const std::string DINPUT_UNREGISTER_FAIL = "DINPUT_UNREGISTER_FAIL";
 
 class HisyseventUtil {
-DECLARE_SINGLE_INSTANCE_BASE(HisyseventUtil);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(HisyseventUtil);
 public:
     void SysEventWriteBehavior(std::string status, std::string msg);
     void SysEventWriteBehavior(std::string status, std::string devId, std::string msg);

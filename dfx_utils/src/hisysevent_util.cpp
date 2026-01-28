@@ -22,7 +22,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(HisyseventUtil);
+FWK_IMPLEMENT_SINGLE_INSTANCE(HisyseventUtil);
 
 void HisyseventUtil::SysEventWriteBehavior(std::string status, std::string msg)
 {

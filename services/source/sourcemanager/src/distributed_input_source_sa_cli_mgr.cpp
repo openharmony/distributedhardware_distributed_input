@@ -25,7 +25,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DInputSourceSACliMgr);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DInputSourceSACliMgr);
 DInputSourceSACliMgr::DInputSourceSACliMgr()
 {
     DHLOGI("Ctor DInputSourceSACliMgr");

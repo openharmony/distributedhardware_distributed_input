@@ -25,7 +25,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DInputSAManager);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DInputSAManager);
 const uint32_t DINPUT_CLIENT_HANDLER_MSG_DELAY_TIME = 100; // million seconds
 void DInputSAManager::SystemAbilityListener::OnRemoveSystemAbility(int32_t systemAbilityId, const std::string &deviceId)
 {
