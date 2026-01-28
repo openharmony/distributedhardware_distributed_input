@@ -23,7 +23,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(HiDumper);
+FWK_IMPLEMENT_SINGLE_INSTANCE(HiDumper);
 namespace {
     const std::string ARGS_HELP = "-h";
     const std::string ARGS_NODE_INFO = "-nodeinfo";

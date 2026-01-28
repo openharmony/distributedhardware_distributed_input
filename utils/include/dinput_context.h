@@ -25,7 +25,7 @@
 
 #include <refbase.h>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 #include "constants.h"
 #include "device_type.h"
@@ -51,7 +51,7 @@ const nlohmann::json DISABLE_LOW_LATENCY = {
     {LOW_LATENCY_ENABLE, false},
 };
 class DInputContext {
-DECLARE_SINGLE_INSTANCE_BASE(DInputContext);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DInputContext);
 public:
     std::string GetScreenInfoKey(const std::string &devId, const uint64_t sourceWinId);
     int32_t RemoveSinkScreenInfo(const std::string &screenInfoKey);

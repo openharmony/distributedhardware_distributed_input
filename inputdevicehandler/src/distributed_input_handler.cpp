@@ -40,7 +40,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
-IMPLEMENT_SINGLE_INSTANCE(DistributedInputHandler);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DistributedInputHandler);
 DistributedInputHandler::DistributedInputHandler()
     : collectThreadID_(-1), isCollectingEvents_(false), isStartCollectEventThread_(false)
 {

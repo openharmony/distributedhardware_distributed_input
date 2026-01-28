@@ -23,7 +23,7 @@
 #include <linux/input.h>
 
 #include "constants_dinput.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "touchpad_event_fragment_mgr.h"
 
 namespace OHOS {
@@ -40,7 +40,7 @@ enum class DhIdState {
 };
 
 class DInputSinkState {
-    DECLARE_SINGLE_INSTANCE_BASE(DInputSinkState);
+    FWK_DECLARE_SINGLE_INSTANCE_BASE(DInputSinkState);
 public:
     int32_t Init();
     int32_t Release();

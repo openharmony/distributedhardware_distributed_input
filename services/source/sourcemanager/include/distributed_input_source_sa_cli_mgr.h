@@ -24,13 +24,13 @@
 #include "event_handler.h"
 
 #include "i_distributed_source_input.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DInputSourceSACliMgr {
-DECLARE_SINGLE_INSTANCE_BASE(DInputSourceSACliMgr);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DInputSourceSACliMgr);
 public:
     DInputSourceSACliMgr();
     virtual ~DInputSourceSACliMgr();

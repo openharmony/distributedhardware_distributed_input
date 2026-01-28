@@ -22,7 +22,7 @@
 
 #include "idistributed_hardware_source.h"
 #include "iservice_registry.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "system_ability_load_callback_stub.h"
 #include "system_ability_definition.h"
 
@@ -35,7 +35,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace DistributedInput {
 class DistributedInputSourceHandler : public IDistributedHardwareSource {
-DECLARE_SINGLE_INSTANCE_BASE(DistributedInputSourceHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DistributedInputSourceHandler);
 public:
     int32_t InitSource(const std::string &params) override;
     int32_t ReleaseSource() override;
