@@ -78,6 +78,8 @@ ohos_unittest("distributed_input_inner_sourceinject_test") {
     "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "json:nlohmann_json_static",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
