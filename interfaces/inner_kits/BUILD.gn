@@ -37,14 +37,6 @@ ohos_shared_library("libdinput_sdk") {
   branch_protector_ret = "pac_ret"
   public_configs = [ ":input_sdk_public_config" ]
 
-  public_external_deps = [
-    "distributed_hardware_fwk:distributed_av_receiver",
-    "distributed_hardware_fwk:distributed_av_sender",
-    "distributed_hardware_fwk:distributedhardwareutils",
-    "distributed_hardware_fwk:libdhfwk_sdk",
-    "json:nlohmann_json_static",
-  ]
-
   sources = [
     "${common_path}/include/input_check_param.cpp",
     "${common_path}/include/white_list_util.cpp",
@@ -106,9 +98,14 @@ ohos_shared_library("libdinput_sdk") {
     "access_token:libtokenid_sdk",
     "c_utils:utils",
     "config_policy:configpolicy_util",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "eventhandler:libeventhandler",
     "hilog:libhilog",
+    "json:nlohmann_json_static",
     "ipc:ipc_core",
     "libevdev:libevdev",
     "safwk:system_ability_fwk",

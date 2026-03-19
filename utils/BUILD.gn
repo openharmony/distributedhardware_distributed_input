@@ -67,12 +67,11 @@ ohos_shared_library("libdinput_utils") {
     "dsoftbus:softbus_client",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
+    "json:nlohmann_json_static",
     "ipc:ipc_core",
     "openssl:libcrypto_shared",
     "samgr:samgr_proxy",
   ]
-
-  public_external_deps = [ "json:nlohmann_json_static" ]
 
   subsystem_name = "distributedhardware"
 
