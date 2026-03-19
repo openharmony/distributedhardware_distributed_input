@@ -63,6 +63,7 @@ ohos_unittest("distributed_input_dfx_test") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
+    "json:nlohmann_json_static",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
