@@ -80,6 +80,7 @@ ohos_unittest("distributed_input_transbase_test") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
@@ -139,6 +140,7 @@ ohos_unittest("softbus_permission_check_test") {
     "googletest:gmock_main",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "json:nlohmann_json_static",
     "ipc:ipc_core",
     "os_account:libaccountkits",
     "os_account:os_account_innerkits",
