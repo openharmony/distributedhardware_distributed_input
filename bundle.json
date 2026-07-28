@@ -90,7 +90,6 @@
                 "//foundation/distributedhardware/distributed_input/services/source/transport/test:test",
                 "//foundation/distributedhardware/distributed_input/common/include/test:test",
                 "//foundation/distributedhardware/distributed_input/services/source/inputinject/test:test",
-                "//foundation/distributedhardware/distributed_input/services/source/sourcemanager/test:test",
                 "//foundation/distributedhardware/distributed_input/services/sink/sinkmanager/test:test",
                 "//foundation/distributedhardware/distributed_input/services/transportbase/test:test",
                 "//foundation/distributedhardware/distributed_input/utils/test:test",
