@@ -15,6 +15,8 @@
 
 #include "white_list_util.h"
 
+#include "parse_dinput_whitelist_int32.h"
+
 #include <algorithm>
 #include <cstring>
 
@@ -104,8 +106,10 @@ int32_t WhiteListUtil::Init()
         SplitCombinationKey(line, vecKeyCode, vecCombinationKey);
 
         if (CheckIsNumber(line)) {
-            int32_t keyCode = std::stoi(line);
-            if (keyCode != 0) {
+            int32_t keyCode = 0;
+            if (!ParseDinputWhitelistInt32(line, keyCode)) {
+                DHLOGE("Parse whitelist keyCode failed, %{public}s.", line.c_str());
+            } else if (keyCode != 0) {
                 vecKeyCode.push_back(keyCode);
             }
             if (!vecKeyCode.empty()) {
@@ -169,16 +173,20 @@ void WhiteListUtil::ReadLineDataStepOne(std::string &column, TYPE_KEY_CODE_VEC &
         pos2 = column.find(SPLIT_LINE);
 
         if (CheckIsNumber(single)) {
-            int32_t keyCode = std::stoi(single);
-            if (keyCode != 0) {
+            int32_t keyCode = 0;
+            if (!ParseDinputWhitelistInt32(single, keyCode)) {
+                DHLOGE("Parse whitelist keyCode failed, %{public}s.", single.c_str());
+            } else if (keyCode != 0) {
                 vecKeyCode.push_back(keyCode);
             }
         }
     }
 
     if (CheckIsNumber(column)) {
-        int32_t keyCode = std::stoi(column);
-        if (keyCode != 0) {
+        int32_t keyCode = 0;
+        if (!ParseDinputWhitelistInt32(column, keyCode)) {
+            DHLOGE("Parse whitelist keyCode failed, %{public}s.", column.c_str());
+        } else if (keyCode != 0) {
             vecKeyCode.push_back(keyCode);
         }
     }
